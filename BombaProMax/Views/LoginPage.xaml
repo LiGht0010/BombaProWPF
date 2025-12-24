@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Views.LoginPage"
+             BackgroundColor="{StaticResource NeumorphicBackground}"
+             Title="Login">
+
+    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+        <Border Style="{StaticResource NeumorphicCardContainer}"
+                WidthRequest="400"
+                MaximumWidthRequest="450">
+            
+            <VerticalStackLayout Spacing="20">
+                <!-- Header -->
+                <VerticalStackLayout Spacing="0">
+                    <Label Text="Login Form" 
+                           Style="{StaticResource NeumorphicTitle}"/>
+                    <Label Text="Please enter your login credentials." 
+                           Style="{StaticResource NeumorphicSubtitle}"/>
+                </VerticalStackLayout>
+
+                <!-- Email Field -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Email" 
+                           Style="{StaticResource NeumorphicFieldLabel}"
+                           HorizontalTextAlignment="Start"/>
+                    <Border Style="{StaticResource NeumorphicInputContainer}">
+                        <Entry Text="{Binding Email}"
+                               Placeholder="Email"
+                               Keyboard="Email"
+                               Style="{StaticResource NeumorphicEntry}"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Password Field -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Password" 
+                           Style="{StaticResource NeumorphicFieldLabel}"
+                           HorizontalTextAlignment="Start"/>
+                    <Border Style="{StaticResource NeumorphicInputContainer}">
+                        <Entry Text="{Binding Password}"
+                               Placeholder="Password"
+                               IsPassword="True"
+                               Style="{StaticResource NeumorphicEntry}"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Forgot Password Link -->
+                <Label Text="Forgot Password?"
+                       Style="{StaticResource NeumorphicLinkLabel}"
+                       HorizontalTextAlignment="Start"
+                       Margin="0,-10,0,10">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <!-- Login Button -->
+                <Button Text="Login"
+                        Command="{Binding SignInCommand}"
+                        Style="{StaticResource NeumorphicPrimaryButton}"/>
+
+                <!-- Sign Up Link -->
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                    <Label Text="Don't have an account?"
+                           TextColor="{StaticResource NeumorphicTextSecondary}"
+                           FontSize="14"/>
+                    <Label Text="Signup"
+                           Style="{StaticResource NeumorphicLinkLabel}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SignupCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+                <!-- Error Message (optional - if you want to show validation errors) -->
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="{StaticResource Danger}"
+                       FontSize="14"
+                       IsVisible="{Binding HasError}"
+                       HorizontalTextAlignment="Center"
+                       FontAttributes="Bold"/>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

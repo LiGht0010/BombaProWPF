@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             x:Class="BombaProMax.Views.ProduitViews.ProduitPage"
+             x:DataType="viewmodels:ProduitViewModel"
+             Style="{StaticResource ProduitPageStyle}">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Main Content -->
+        <ScrollView Grid.Row="0" Style="{StaticResource ProduitPageScrollView}">
+            <VerticalStackLayout Style="{StaticResource ProduitPageMainStack}">
+
+                <!-- ========================================= -->
+                <!-- JOURNÉE PROGRESS BAR (visible when active) -->
+                <!-- ========================================= -->
+                <Border BackgroundColor="#E3F2FD"
+                        Padding="15"
+                        Margin="0,0,0,10"
+                        IsVisible="{Binding IsJourneeActive}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="#1976D2">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🚀" FontSize="24" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="{Binding JourneeStepInfo}"
+                                   FontAttributes="Bold"
+                                   TextColor="#1976D2"
+                                   FontSize="14"/>
+                            <Label Text="Journée en cours - Suivez les étapes"
+                                   TextColor="#666"
+                                   FontSize="11"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="📋" 
+                               FontSize="20" 
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- ========================================= -->
+                <!-- HEADER SECTION with Action Button         -->
+                <!-- ========================================= -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <VerticalStackLayout Style="{StaticResource ProduitPageHeaderStack}">
+                        <Label Text="Gestion des Produits" 
+                               Style="{StaticResource ProduitPageTitleLabel}"/>
+                        <Label Text="{Binding Produits.Count, StringFormat='{0} produits en stock'}" 
+                               Style="{StaticResource ProduitPageSubtitleLabel}"/>
+                    </VerticalStackLayout>
+                    
+                    <Button Grid.Column="1"
+                            Text="+ Nouveau Produit"
+                            Style="{StaticResource ProduitAddButton}"
+                            Command="{Binding AddProduitCommand}"
+                            VerticalOptions="Center"
+                            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </Grid>
+
+                <!-- ========================================= -->
+                <!-- STATS CARDS ROW - Neumorphic Raised       -->
+                <!-- ========================================= -->
+                <Grid ColumnDefinitions="*,*,*,*" 
+                      ColumnSpacing="16"
+                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    
+                    <!-- Total Produits -->
+                    <Border Grid.Column="0" Style="{StaticResource ProduitStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Produits.Count}" Style="{StaticResource ProduitStatNumber}"/>
+                            <Label Text="Total Produits" Style="{StaticResource ProduitStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Stock Low -->
+                    <Border Grid.Column="1" Style="{StaticResource ProduitStatCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowLowStockCommand}"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="—" Style="{StaticResource ProduitStatNumber}" TextColor="#E8A84C"/>
+                            <Label Text="Stock Faible" Style="{StaticResource ProduitStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Out of Stock -->
+                    <Border Grid.Column="2" Style="{StaticResource ProduitStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="—" Style="{StaticResource ProduitStatNumber}" TextColor="#E16C6C"/>
+                            <Label Text="Rupture Stock" Style="{StaticResource ProduitStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Categories -->
+                    <Border Grid.Column="3" Style="{StaticResource ProduitStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="—" Style="{StaticResource ProduitStatNumber}" TextColor="#8FA3B8"/>
+                            <Label Text="Catégories" Style="{StaticResource ProduitStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- ========================================= -->
+                <!-- SEARCH BAR - Neumorphic Inset             -->
+                <!-- ========================================= -->
+                <Border Style="{StaticResource ProduitSearchContainer}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="search.png" WidthRequest="24" HeightRequest="24"/>
+                        <Entry Grid.Column="1" Placeholder="Rechercher par nom, numéro, catégorie..."
+                               Text="{Binding SearchText}" Style="{StaticResource ProduitSearchEntry}"/>
+                        <Button Grid.Column="2" Text="Rechercher" Command="{Binding SearchProduitsCommand}"
+                                BackgroundColor="#E8ECF1" TextColor="#5A6068" FontSize="13" FontAttributes="Bold" Padding="16,10" CornerRadius="10"/>
+                    </Grid>
+                </Border>
+
+                <!-- Loading Indicator -->
+                <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                                  HeightRequest="50" WidthRequest="50" Color="#4A8FBF"/>
+
+                <!-- ========================================= -->
+                <!-- TABLE CARD - Neumorphic Raised Container  -->
+                <!-- ========================================= -->
+                <Border Style="{StaticResource ProduitTableCard}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <VerticalStackLayout Style="{StaticResource ProduitTableContainer}">
+                        <Grid Style="{StaticResource ProduitTableHeaderGrid}">
+                            <Label Grid.Column="0" Text="Num. Produit" Style="{StaticResource ProduitTableHeaderLabel}"/>
+                            <Label Grid.Column="1" Text="Description / Catégorie" Style="{StaticResource ProduitTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="2" Text="Prix TTC" Style="{StaticResource ProduitTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Marge" Style="{StaticResource ProduitTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Stock" Style="{StaticResource ProduitTableHeaderLabel}"/>
+                            <Label Grid.Column="5" Text="Stock Min" Style="{StaticResource ProduitTableHeaderLabel}"/>
+                            <Label Grid.Column="6" Text="Délai Livraison" Style="{StaticResource ProduitTableHeaderLabel}"/>
+                            <Label Grid.Column="7" Text="Actions" Style="{StaticResource ProduitTableHeaderLabel}"/>
+                        </Grid>
+
+                        <CollectionView ItemsSource="{Binding Produits}" Style="{StaticResource ProduitTableCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ProduitDto">
+                                    <SwipeView BackgroundColor="Transparent">
+                                        <SwipeView.LeftItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Détails" BackgroundColor="#8FA3B8"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProduitViewModel}}, Path=ShowDetailsCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                                <SwipeItem Text="Modifier" BackgroundColor="#4A8FBF"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProduitViewModel}}, Path=EditProduitCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.LeftItems>
+                                        <SwipeView.RightItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Supprimer" BackgroundColor="#E16C6C"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProduitViewModel}}, Path=DeleteProduitCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.RightItems>
+
+                                        <VerticalStackLayout BackgroundColor="Transparent">
+                                            <Grid Style="{StaticResource ProduitTableRowGrid}">
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProduitViewModel}}, Path=ShowProduitRowDetailsCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Grid.GestureRecognizers>
+
+                                                <!-- Product Number - Neumorphic Pill -->
+                                                <Border Grid.Column="0" 
+                                                        Style="{StaticResource ProduitNumberCell}">
+                                                    <Label Text="{Binding NumeroProduit}" 
+                                                           Style="{StaticResource ProduitNumberLabel}"/>
+                                                </Border>
+
+                                                <!-- Description / Category -->
+                                                <VerticalStackLayout Grid.Column="1" 
+                                                                    Style="{StaticResource ProduitDescriptionCell}">
+                                                    <Label Text="{Binding Description}" 
+                                                           Style="{StaticResource ProduitDescriptionLabel}"/>
+                                                    <Label Text="{Binding CategorieNom, StringFormat='📂 {0}', FallbackValue='📂 Non catégorisé'}" 
+                                                           Style="{StaticResource ProduitCategoryLabel}"/>
+                                                </VerticalStackLayout>
+
+                                                <!-- Prix TTC -->
+                                                <VerticalStackLayout Grid.Column="2" 
+                                                                    Style="{StaticResource ProduitPriceCell}">
+                                                    <Label Text="{Binding PrixTTC, StringFormat='{0:F2} MAD'}" 
+                                                           Style="{StaticResource ProduitPricePrimaryLabel}"/>
+                                                    <Label Text="{Binding PrixHT, StringFormat='HT: {0:F2}'}" 
+                                                           Style="{StaticResource ProduitPriceSecondaryLabel}"/>
+                                                </VerticalStackLayout>
+
+                                                <!-- Marge - Neumorphic Badge -->
+                                                <Border Grid.Column="3" 
+                                                        Style="{StaticResource ProduitMargeCell}">
+                                                    <Label Text="{Binding MargePourcentage, StringFormat='{0:F1}%', FallbackValue='0%'}" 
+                                                           Style="{StaticResource ProduitMargeLabel}"/>
+                                                </Border>
+
+                                                <!-- Stock - Neumorphic Badge -->
+                                                <Border Grid.Column="4" 
+                                                        Style="{StaticResource ProduitStockCell}">
+                                                    <Label Text="{Binding Stock, FallbackValue='0'}" 
+                                                           Style="{StaticResource ProduitStockLabel}"/>
+                                                </Border>
+
+                                                <!-- Stock Minimum - Neumorphic Badge -->
+                                                <Border Grid.Column="5" 
+                                                        Style="{StaticResource ProduitStockMinCell}">
+                                                    <Label Text="{Binding StockMinimum, FallbackValue='0'}" 
+                                                           Style="{StaticResource ProduitStockMinLabel}"/>
+                                                </Border>
+
+                                                <!-- Délai de Livraison -->
+                                                <Label Grid.Column="6" 
+                                                       Text="{Binding DelaiDeLivraison, StringFormat='{0}j', FallbackValue='N/A'}" 
+                                                       Style="{StaticResource ProduitDelaiCell}"/>
+
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="7" 
+                                                                       Style="{StaticResource ProduitActionsCell}">
+                                                    <Button Text="Modifier"
+                                                            Style="{StaticResource ProduitModifierButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProduitViewModel}}, Path=EditProduitCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Supprimer"
+                                                            Style="{StaticResource ProduitSupprimerButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProduitViewModel}}, Path=DeleteProduitCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+
+                                            <!-- Row Divider -->
+                                            <BoxView Style="{StaticResource ProduitRowDivider}"/>
+                                        </VerticalStackLayout>
+                                    </SwipeView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                            <!-- Modern Empty View - Neumorphic Style -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource ProduitEmptyView}">
+                                    <!-- Neumorphic Icon Container -->
+                                    <Border BackgroundColor="#EEF1F5"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="#C5CAD1"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="📦"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun produit disponible" 
+                                           Style="{StaticResource ProduitEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter votre premier produit pour gérer votre inventaire" 
+                                           Style="{StaticResource ProduitEmptySubtitle}"/>
+                                    <Button Text="+ Ajouter un Produit"
+                                            Style="{StaticResource ProduitEmptyButton}"
+                                            Command="{Binding AddProduitCommand}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ========================================= -->
+        <!-- JOURNÉE NAVIGATION BAR (bottom, visible when active) -->
+        <!-- ========================================= -->
+        <Border Grid.Row="1"
+                BackgroundColor="#F5F5F5"
+                Padding="15"
+                IsVisible="{Binding IsJourneeActive}"
+                StrokeThickness="0">
+            <Border.Shadow>
+                <Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                <!-- Précédent Button (hidden on first step) -->
+                <Button Text="← Précédent"
+                        Command="{Binding JourneePrecedentCommand}"
+                        BackgroundColor="#757575"
+                        TextColor="White"
+                        Padding="20,12"
+                        CornerRadius="8"
+                        IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                <!-- Spacer -->
+                <BoxView Grid.Column="1" Color="Transparent"/>
+
+                <!-- Passer Button -->
+                <Button Grid.Column="2"
+                        Text="Passer cette étape"
+                        Command="{Binding JourneePasserCommand}"
+                        BackgroundColor="#FFA726"
+                        TextColor="White"
+                        Padding="20,12"
+                        CornerRadius="8"/>
+
+                <!-- Suivant/Terminer Button -->
+                <Button Grid.Column="3"
+                        Text="{Binding IsLastStep, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Terminer la journée|Suivant →'}"
+                        Command="{Binding JourneeSuivantCommand}"
+                        BackgroundColor="#4CAF50"
+                        TextColor="White"
+                        Padding="20,12"
+                        CornerRadius="8"
+                        FontAttributes="Bold"/>
+            </Grid>
+        </Border>
+    </Grid>
+
+</ContentPage>

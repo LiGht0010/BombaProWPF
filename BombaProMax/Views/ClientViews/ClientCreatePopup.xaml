@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.ClientViews.ClientCreatePopup">
+
+    <Border BackgroundColor="White"       
+           Padding="20"
+           WidthRequest="550">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="➕ Créer un nouveau client" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            BackgroundColor="Transparent"
+                            TextColor="#666"
+                            FontSize="20"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Color="#E0E0E0" HeightRequest="1"/>
+
+                <!-- Client Form -->
+                <VerticalStackLayout Spacing="15">
+                    <!-- Numero Client Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Numéro Client *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="NumeroClientEntry"
+                               Placeholder="Ex: CLI-2024-001"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- Name Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Nom du client *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="NomEntry"
+                               Placeholder="Entrez le nom complet"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- Contact Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Contact (Téléphone)" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="ContactEntry"
+                               Placeholder="Ex: +212 6XX XXX XXX"
+                               Keyboard="Telephone"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- CIN Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="CIN *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="CINEntry"
+                               Placeholder="Carte d'identité nationale"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- Company Name Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Nom de la société *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="NomSocieteEntry"
+                               Placeholder="Nom de l'entreprise"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- Client Type Section -->
+                    <Border BackgroundColor="#E3F2FD" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="📋 Type de client" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#1976D2"
+                                   FontSize="14"/>
+                            <RadioButton x:Name="ParticulierRadio" 
+                                        Content="Particulier" 
+                                        IsChecked="True"
+                                        GroupName="ClientType"/>
+                            <RadioButton x:Name="EntrepriseRadio" 
+                                        Content="Entreprise" 
+                                        GroupName="ClientType"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Credit Info -->
+                    <Border BackgroundColor="#FFF3E0" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="💳 Autoriser le crédit" 
+                                       FontAttributes="Bold" 
+                                       TextColor="#E65100"
+                                       FontSize="14"/>
+                                <Label Text="Le client pourra acheter à crédit" 
+                                       TextColor="#999"
+                                       FontSize="12"/>
+                            </VerticalStackLayout>
+                            <Switch x:Name="CreditSwitch"
+                                    Grid.Column="1"
+                                    IsToggled="False"
+                                    OnColor="#FF9800"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           TextColor="#F44336"
+                           FontSize="14"
+                           IsVisible="False"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Text="Annuler" 
+                                BackgroundColor="#9E9E9E"
+                                TextColor="White"
+                                CornerRadius="8"
+                                Clicked="OnCancelClicked"/>
+
+                        <Button Grid.Column="1"
+                                Text="✓ Créer le client" 
+                                BackgroundColor="#4CAF50"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                Clicked="OnCreateClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

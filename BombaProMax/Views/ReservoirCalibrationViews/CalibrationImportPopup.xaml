@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.ReservoirCalibrationViews.CalibrationImportPopup"
+               CanBeDismissedByTappingOutsideOfPopup="False">
+
+    <Border Style="{StaticResource CalibPopupContainer}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+
+                <!-- HEADER -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="📥 Importer Calibration CSV" 
+                           Style="{StaticResource CalibPopupTitle}"/>
+                        <Label x:Name="ReservoirInfoLabel"
+                           Text="Réservoir: --"
+                           FontSize="13"
+                           TextColor="#5A6068"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1"
+                        Text="✕"
+                        Style="{StaticResource CalibPopupCloseButton}"
+                        Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <!-- RESERVOIR INFO CARD -->
+                <Border x:Name="ReservoirInfoCard" Style="{StaticResource CalibReservoirInfoCard}">
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="NUMÉRO" Style="{StaticResource CalibReservoirInfoLabel}" FontSize="10"/>
+                            <Label x:Name="ReservoirNumeroLabel" 
+                               Text="--" 
+                               Style="{StaticResource CalibReservoirInfoValue}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="CAPACITÉ" Style="{StaticResource CalibReservoirInfoLabel}" FontSize="10"/>
+                            <Label x:Name="ReservoirCapaciteLabel" 
+                               Text="--" 
+                               Style="{StaticResource CalibReservoirInfoValue}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="2">
+                            <Label Text="PRODUIT" Style="{StaticResource CalibReservoirInfoLabel}" FontSize="10"/>
+                            <Label x:Name="ReservoirProduitLabel" 
+                               Text="--" 
+                               Style="{StaticResource CalibReservoirInfoValue}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- FORMAT INFO -->
+                <Border Style="{StaticResource CalibPopupSectionCard}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="📋 Format CSV attendu" 
+                           FontSize="14" 
+                           FontAttributes="Bold" 
+                           TextColor="#2E2E2E"/>
+                        <Label Text="Collez les données au format CSV (virgule ou point-virgule comme séparateur):"
+                           FontSize="12"
+                           TextColor="#5A6068"/>
+                        <Border BackgroundColor="#F5F5F5" Padding="12" StrokeShape="RoundRectangle 8" Stroke="#E5E9EF">
+                            <Label Text="HauteurCm,VolumeLitres&#10;1,13&#10;2,38&#10;3,66&#10;...&#10;248.6,30600"
+                               FontSize="12"
+                               FontFamily="Consolas"
+                               TextColor="#5A6068"/>
+                        </Border>
+                        <Label Text="💡 Astuce: Copiez directement depuis Excel ou un fichier CSV"
+                           FontSize="11"
+                           TextColor="#8B939E"
+                           FontAttributes="Italic"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- CSV INPUT -->
+                <Border Style="{StaticResource CalibPopupSectionCard}">
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="DONNÉES CSV" Style="{StaticResource CalibPopupFieldLabel}"/>
+                            <Button Grid.Column="1"
+                                Text="📁 Ouvrir fichier"
+                                BackgroundColor="#E8ECF1"
+                                TextColor="#5A6068"
+                                FontSize="11"
+                                Padding="12,6"
+                                CornerRadius="6"
+                                Clicked="OnPickFileClicked"/>
+                        </Grid>
+                        <Border BackgroundColor="#FAFAFA" 
+                            Padding="4" 
+                            StrokeShape="RoundRectangle 10" 
+                            Stroke="#E5E9EF"
+                            HeightRequest="200">
+                            <Editor x:Name="CsvEditor"
+                                Style="{StaticResource CalibPopupEditor}"
+                                Placeholder="Collez ici les données CSV..."
+                                VerticalOptions="Fill"
+                                HorizontalOptions="Fill"/>
+                        </Border>
+                        <Label x:Name="LineCountLabel"
+                           Text="0 lignes détectées"
+                           FontSize="11"
+                           TextColor="#8B939E"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- WARNING -->
+                <Border BackgroundColor="#FFF3E0" 
+                    Padding="12" 
+                    StrokeShape="RoundRectangle 8" 
+                    Stroke="#FFB74D">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="⚠️" FontSize="18" VerticalOptions="Center"/>
+                        <Label Text="L'importation remplacera toutes les données de calibration existantes pour ce réservoir."
+                           FontSize="12"
+                           TextColor="#E65100"
+                           VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- ACTIONS -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="16" Margin="0,8,0,0">
+                    <Button Text="Annuler"
+                        Style="{StaticResource CalibPopupCancelButton}"
+                        Clicked="OnCancelClicked"/>
+                    <Button Grid.Column="1"
+                        Text="✅ Importer"
+                        Style="{StaticResource CalibPopupImportButton}"
+                        Clicked="OnImportClicked"/>
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>        
+    </Border>
+</toolkit:Popup>

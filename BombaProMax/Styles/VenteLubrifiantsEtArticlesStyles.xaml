@@ -1,0 +1,462 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="BombaProMax.Styles.VenteLubrifiantsEtArticlesStyles">
+
+    <!-- COLOR PALETTE - Oil/Lubricant Theme (Orange/Amber) -->
+    <Color x:Key="VenteLubNeuSurface">#e8e8e8</Color>
+    <Color x:Key="VenteLubNeuCardBg">#E8ECF1</Color>
+    <Color x:Key="VenteLubNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="VenteLubNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="VenteLubNeuShadowDarkSoft">#D1D5DB</Color>
+    <Color x:Key="VenteLubNeuPrimary">#E65100</Color>
+    <Color x:Key="VenteLubNeuDanger">#E16C6C</Color>
+    <Color x:Key="VenteLubNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="VenteLubNeuSuccess">#2E7D32</Color>
+    <Color x:Key="VenteLubNeuWarning">#F57C00</Color>
+    <Color x:Key="VenteLubNeuInfo">#1976D2</Color>
+    <Color x:Key="VenteLubNeuPurple">#7B1FA2</Color>
+    <Color x:Key="VenteLubNeuTeal">#00796B</Color>
+    <Color x:Key="VenteLubNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="VenteLubNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="VenteLubNeuTextMuted">#8B939E</Color>
+    <Color x:Key="VenteLubNeuTextLight">#A8B0BA</Color>
+    <Color x:Key="VenteLubNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="VenteLubMBG">#f5f5f5</Color>
+
+    <x:String x:Key="VenteLubTableColumns">1.2*,1.8*,0.8*,1*,1*,1.2*,1*,1*,1*</x:String>
+
+    <Style x:Key="VenteLubPageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Ventes Lubrifiants"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubMBG}"/>
+    </Style>
+
+    <Style x:Key="VenteLubPageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="VenteLubPageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <Style x:Key="VenteLubPageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="VenteLubPageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="VenteLubPageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="VenteLubStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubStatIcon" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <Style x:Key="VenteLubFilterContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubFilterLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextSecondary}"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubFilterDatePicker" TargetType="DatePicker">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style x:Key="VenteLubFilterPicker" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style x:Key="VenteLubFilterButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuInfo}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuInfo}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubResetButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubPageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource VenteLubNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <Style x:Key="VenteLubAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuSuccess}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <Style x:Key="VenteLubTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource VenteLubTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="8"/>
+        <Setter Property="Padding" Value="20,16"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="VenteLubTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource VenteLubTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <Style x:Key="VenteLubTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource VenteLubTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="8"/>
+        <Setter Property="Padding" Value="20,14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="70"/>
+    </Style>
+
+    <Style x:Key="VenteLubNumeroLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuInfo}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubProduitLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="VenteLubCategorieLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubQuantiteLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuPurple}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubPrixLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubTotalLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubClientLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="VenteLubPaiementLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTeal}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubDateLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubEditButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuInfo}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="MinimumWidthRequest" Value="40"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuInfo}" Offset="0,2" Radius="4" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubDeleteButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuDanger}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="MinimumWidthRequest" Value="40"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuDanger}" Offset="0,2" Radius="4" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource VenteLubNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="20,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <Style x:Key="VenteLubEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="VenteLubEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="VenteLubEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubPopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="700"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubPopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="VenteLubPopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="VenteLubPopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubPopupSectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="VenteLubPopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="VenteLubPopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource VenteLubNeuBorderLight}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubPopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource VenteLubNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="VenteLubPopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource VenteLubNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="VenteLubPopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource VenteLubNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubPopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource VenteLubNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource VenteLubNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VenteLubPopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource VenteLubNeuBorderLight}"/>
+    </Style>
+
+</ResourceDictionary>

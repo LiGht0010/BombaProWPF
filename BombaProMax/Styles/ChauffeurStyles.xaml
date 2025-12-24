@@ -1,0 +1,725 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.ChauffeurStyles">
+
+    <!-- ================================================================== -->
+    <!-- LIGHT NEUMORPHIC DESIGN SYSTEM - CHAUFFEUR MODULE                  -->
+    <!-- ================================================================== -->
+    <!-- A soft, elegant design with subtle shadows creating depth          -->
+    <!-- Elements appear to float above the surface with tactile feel       -->
+    <!-- ================================================================== -->
+
+    <!-- ================================================================== -->
+    <!-- COLOR PALETTE - Light Neumorphic Theme                             -->
+    <!-- ================================================================== -->
+    
+    <!-- Surface Colors - Soft, warm grays (not pure white) -->
+    <Color x:Key="NeuSurface">#e8e8e8</Color>
+    <Color x:Key="NeuSurfaceAlt">#ebf1f3</Color>
+    <Color x:Key="NeuCardBg">#E8ECF1</Color>
+    
+    <!-- Shadow Colors for Neumorphic Effect -->
+    <Color x:Key="NeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="NeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="NeuShadowDarkSoft">#D1D5DB</Color>
+    
+    <!-- Accent Colors -->
+    <Color x:Key="NeuPrimary">#4A8FBF</Color>
+    <Color x:Key="NeuPrimaryLight">#6BA5CC</Color>
+    <Color x:Key="NeuPrimaryDark">#3A7AA8</Color>
+    <Color x:Key="NeuDanger">#E16C6C</Color>
+    <Color x:Key="NeuDangerLight">#F08080</Color>
+    <Color x:Key="NeuSecondary">#8FA3B8</Color>
+    <Color x:Key="NeuSuccess">#5EAA8D</Color>
+    <Color x:Key="NeuWarning">#E8A84C</Color>
+    
+    <!-- Text Colors - Soft grays (not pure black) -->
+    <Color x:Key="NeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="NeuTextSecondary">#5A6068</Color>
+    <Color x:Key="NeuTextMuted">#8B939E</Color>
+    <Color x:Key="NeuTextLight">#A8B0BA</Color>
+    
+    <!-- Border Colors -->
+    <Color x:Key="NeuBorder">#D8DDE5</Color>
+    <Color x:Key="NeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="MBG">#f5f5f5</Color>
+    
+    <!-- SHARED COLUMN DEFINITIONS -->
+    <x:String x:Key="ChauffeurTableColumns">1.8*,1.5*,1.2*,1.3*,1.3*,2.2*</x:String>
+
+    <!-- ================================================================== -->
+    <!-- PAGE BASE STYLES                                                   -->
+    <!-- ================================================================== -->
+    
+    <!-- Main page with soft neumorphic surface -->
+    <Style x:Key="ChauffeurPageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Chauffeurs"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource MBG}"/>
+    </Style>
+
+    <Style x:Key="ChauffeurPageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="ChauffeurPageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- HEADER SECTION                                                     -->
+    <!-- ================================================================== -->
+    
+    <Style x:Key="ChauffeurPageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <!-- Title with subtle text shadow effect -->
+    <Style x:Key="ChauffeurPageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="ChauffeurPageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextMuted}"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- STAT CARDS - Neumorphic Raised Style                               -->
+    <!-- ================================================================== -->
+    <!-- Cards appear to float above the surface with soft shadows          -->
+    
+    <Style x:Key="ChauffeurStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2"/>
+            </Setter.Value>
+        </Setter>
+        <!-- Neumorphic outer shadow - creates floating effect -->
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuShadowDark}"
+                        Offset="6,6"
+                        Radius="12"
+                        Opacity="0.25"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChauffeurStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="ChauffeurStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- SEARCH CONTAINER - Neumorphic Inset Style                          -->
+    <!-- ================================================================== -->
+    <!-- Search bar appears pressed into the surface                        -->
+    
+    <Style x:Key="ChauffeurSearchContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSurface}"/>
+        <Setter Property="Padding" Value="16,14"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2"/>
+            </Setter.Value>
+        </Setter>
+        <!-- Subtle inner shadow effect simulated with darker background -->
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuShadowDarkSoft}"
+                        Offset="2,2"
+                        Radius="6"
+                        Opacity="0.15"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChauffeurSearchEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource NeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- LOADING INDICATOR                                                  -->
+    <!-- ================================================================== -->
+    
+    <Style x:Key="ChauffeurPageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource NeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- ADD BUTTON - Neumorphic Raised Button                              -->
+    <!-- ================================================================== -->
+    <!-- Primary action button with depth and subtle gradient feel          -->
+    
+    <Style x:Key="ChauffeurAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <!-- Soft shadow for floating effect -->
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuPrimary}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TABLE CARD - Main Neumorphic Container                             -->
+    <!-- ================================================================== -->
+    <!-- Large card with pronounced floating effect                         -->
+    
+    <Style x:Key="ChauffeurTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2"/>
+            </Setter.Value>
+        </Setter>
+        <!-- Deep neumorphic shadow for main content card -->
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuShadowDark}"
+                        Offset="8,8"
+                        Radius="20"
+                        Opacity="0.28"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChauffeurTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TABLE HEADER                                                       -->
+    <!-- ================================================================== -->
+    <!-- Subtle header with soft background tint                            -->
+    
+    <Style x:Key="ChauffeurTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource ChauffeurTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="ChauffeurTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ChauffeurTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource ChauffeurTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <Style x:Key="ChauffeurTableDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource NeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- COLLECTION VIEW                                                    -->
+    <!-- ================================================================== -->
+    
+    <Style x:Key="ChauffeurTableCollectionView" TargetType="CollectionView">
+        <Setter Property="SelectionMode" Value="None"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TABLE ROW - Hoverable Neumorphic Row                               -->
+    <!-- ================================================================== -->
+    
+    <Style x:Key="ChauffeurTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource ChauffeurTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="76"/>
+    </Style>
+
+    <!-- Row container for hover states -->
+    <Style x:Key="ChauffeurRowContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- CELL STYLES                                                        -->
+    <!-- ================================================================== -->
+    
+    <!-- Name Cell - Primary text, bold -->
+    <Style x:Key="ChauffeurNameCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource NeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- Prénom Cell - Secondary text -->
+    <Style x:Key="ChauffeurPrenomCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource NeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- CIN Badge - Neumorphic Pill Style -->
+    <Style x:Key="ChauffeurCINCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuCardBg}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16"/>
+            </Setter.Value>
+        </Setter>
+        <!-- Subtle inset shadow for badge -->
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuShadowDarkSoft}"
+                        Offset="1,1"
+                        Radius="3"
+                        Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChauffeurCINLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource NeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Téléphone Cell -->
+    <Style x:Key="ChauffeurTelephoneCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource NeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- N° Permis Cell -->
+    <Style x:Key="ChauffeurPermisCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource NeuTextMuted}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- Actions Cell Container -->
+    <Style x:Key="ChauffeurActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- ACTION BUTTONS - Neumorphic Button Styles                          -->
+    <!-- ================================================================== -->
+    
+    <!-- Details Button - Soft Blue (removed as per user request) -->
+    <Style x:Key="ChauffeurDetailsButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuSecondary}"
+                        Offset="0,3"
+                        Radius="6"
+                        Opacity="0.25"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Modifier Button - Warm Accent -->
+    <Style x:Key="ChauffeurModifierButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuPrimary}"
+                        Offset="0,3"
+                        Radius="6"
+                        Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Supprimer Button - Neumorphic Outlined Danger -->
+    <Style x:Key="ChauffeurSupprimerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuDanger}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource NeuDanger}"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuShadowDark}"
+                        Offset="2,2"
+                        Radius="4"
+                        Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Row Divider - Subtle line -->
+    <Style x:Key="ChauffeurRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource NeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="28,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- SWIPE VIEW STYLES                                                  -->
+    <!-- ================================================================== -->
+    
+    <Style x:Key="ChauffeurSwipeView" TargetType="SwipeView">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- EMPTY VIEW - Neumorphic Empty State                                -->
+    <!-- ================================================================== -->
+    
+    <Style x:Key="ChauffeurEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ChauffeurEmptyIcon" TargetType="Label">
+        <Setter Property="FontSize" Value="64"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextLight}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ChauffeurEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ChauffeurEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource NeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="ChauffeurEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuPrimary}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- POPUP STYLES - Neumorphic Modal Design                             -->
+    <!-- ================================================================== -->
+
+    <!-- Main popup container with deep neumorphic shadow -->
+    <Style x:Key="ChauffeurPopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="580"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="24"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#000000"
+                        Offset="0,12"
+                        Radius="40"
+                        Opacity="0.18"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Popup Header Title -->
+    <Style x:Key="ChauffeurPopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextPrimary}"/>
+    </Style>
+
+    <!-- Popup Close Button - Neumorphic Circle -->
+    <Style x:Key="ChauffeurPopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <!-- Section Card - Neumorphic Inset Panel -->
+    <Style x:Key="ChauffeurPopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="14"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuShadowDarkSoft}"
+                        Offset="2,2"
+                        Radius="6"
+                        Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChauffeurPopupSectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextPrimary}"/>
+    </Style>
+
+    <!-- Field Label -->
+    <Style x:Key="ChauffeurPopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <!-- Value Label (for details popup) -->
+    <Style x:Key="ChauffeurDetailsValueLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextPrimary}"/>
+        <Setter Property="Margin" Value="0,6,0,0"/>
+    </Style>
+
+    <!-- Input Container - Neumorphic Inset Field -->
+    <Style x:Key="ChauffeurPopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource NeuBorderLight}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Entry Style -->
+    <Style x:Key="ChauffeurPopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource NeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource NeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <!-- Picker Style -->
+    <Style x:Key="ChauffeurPopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource NeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource NeuTextMuted}"/>
+    </Style>
+
+    <!-- Error Label -->
+    <Style x:Key="ChauffeurPopupErrorLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource NeuDanger}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+    </Style>
+
+    <!-- Cancel Button - Neumorphic Soft Style -->
+    <Style x:Key="ChauffeurPopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuShadowDark}"
+                        Offset="3,3"
+                        Radius="6"
+                        Opacity="0.15"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Create/Save Button - Primary Neumorphic -->
+    <Style x:Key="ChauffeurPopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuSuccess}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Close Button for Details Popup -->
+    <Style x:Key="ChauffeurDetailsCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="40,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuPrimary}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Popup Divider -->
+    <Style x:Key="ChauffeurPopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource NeuBorderLight}"/>
+    </Style>
+
+    <!-- Stats Card in Popup -->
+    <Style x:Key="ChauffeurStatsCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeuSurface}"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeuShadowDark}"
+                        Offset="4,4"
+                        Radius="8"
+                        Opacity="0.18"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChauffeurStatsNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ChauffeurStatsLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="TextColor" Value="{StaticResource NeuTextMuted}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+</ResourceDictionary>

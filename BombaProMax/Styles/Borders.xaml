@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:BombaProMax.Converters"
+             x:Class="BombaProMax.Styles.Borders">
+
+    <!-- Converters -->
+    <converters:IsLessThanConverter x:Key="IsLessThanConverter"/>
+    <converters:IsZeroConverter x:Key="IsZeroConverter"/>
+
+    <!-- Colors needed for borders -->
+    <Color x:Key="NeumorphicBackground">#E0E5EC</Color>
+    <Color x:Key="NeumorphicLightShadow">#FFFFFF</Color>
+    <Color x:Key="NeumorphicDarkShadow">#A3B1C6</Color>
+    <Color x:Key="BadgePurple">#82069e</Color>
+    <Color x:Key="BadgeCyan">#06B6D4</Color>
+    <Color x:Key="BadgeGray">#9c7415</Color>
+    <Color x:Key="BadgeGreen">#70bd18</Color>
+    <Color x:Key="BadgeOrange">#F97316</Color>
+    <Color x:Key="BadgeRed">#9e0606</Color>
+    <Color x:Key="BadgeBlue">#3B82F6</Color>
+
+    <!-- Neumorphic Card Style -->
+    <Style x:Key="NeumorphicCardContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="#f0f3f3"/>
+        <Setter Property="Padding" Value="40,35"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#336860"
+                        Offset="10,10"
+                        Radius="50"
+                        Opacity="1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Client Number Badge Style -->
+    <Style x:Key="ClientNumberBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeCyan}"/>
+        <Setter Property="Padding" Value="15,8"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Product Number Badge Style -->
+    <Style x:Key="ProductNumberBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgePurple}"/>
+        <Setter Property="Padding" Value="20,8"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+    </Style>
+
+    <!-- Category Badge Style -->
+    <Style x:Key="CategoryBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeGray}"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Marge Badge Styles -->
+    <Style x:Key="MargeBadgeGreen" TargetType="Border">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MargeBadgeOrange" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeOrange}"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MargeBadgeWithTrigger" TargetType="Border" BasedOn="{StaticResource MargeBadgeGreen}">
+        <Style.Triggers>
+            <DataTrigger TargetType="Border" 
+                         Binding="{Binding MargePourcentage, Converter={StaticResource IsLessThanConverter}, ConverterParameter=10}" 
+                         Value="True">
+                <Setter Property="BackgroundColor" Value="{StaticResource BadgeOrange}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Stock Badge Styles -->
+    <Style x:Key="StockBadgeGreen" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeGreen}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="1,1,1,1"/>
+        <Setter Property="MinimumHeightRequest" Value="50"/>
+        <Setter Property="MinimumWidthRequest" Value="50"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="StockBadgeRed" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeRed}"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="StockBadgeWithTrigger" TargetType="Border" BasedOn="{StaticResource StockBadgeGreen}">
+        <Style.Triggers>
+            <DataTrigger TargetType="Border" 
+                         Binding="{Binding Stock, Converter={StaticResource IsZeroConverter}}" 
+                         Value="True">
+                <Setter Property="BackgroundColor" Value="{StaticResource BadgeRed}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="StockMinimumBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#8146b2"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+    <!-- Column 
+    
+    
+    Styles -->
+    <Style x:Key="ProductNumberContainer" TargetType="Border">
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Neumorphic Table Container -->
+    <Style x:Key="NeumorphicTableContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicLightShadow}"
+                        Offset="-8,-8"
+                        Radius="15"
+                        Opacity="1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeumorphicTableInner" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="20"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="8,8"
+                        Radius="15"
+                        Opacity="0.8"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Neumorphic Button Container -->
+    <Style x:Key="NeumorphicButtonContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeBlue}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="HeightRequest" Value="55"/>
+        <Setter Property="WidthRequest" Value="220"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="28"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="-6,-6"
+                        Radius="12"
+                        Opacity="12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeumorphicButtonInner" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeBlue}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="28"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="6,6"
+                        Radius="12"
+                        Opacity="0.8"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Neumorphic Input Container -->
+    <Style x:Key="NeumorphicInputContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="4,4"
+                        Radius="8"
+                        Opacity="0.5"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Neumorphic Section Container -->
+    <Style x:Key="NeumorphicSectionContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Margin" Value="0,5"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="15"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicLightShadow}"
+                        Offset="-4,-4"
+                        Radius="10"
+                        Opacity="1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeumorphicSectionInner" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="15"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="4,4"
+                        Radius="10"
+                        Opacity="0.6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

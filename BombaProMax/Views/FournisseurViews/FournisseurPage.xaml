@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             x:Class="BombaProMax.Views.FournisseurViews.FournisseurPage"
+             x:DataType="viewmodels:FournisseurViewModel"
+             Style="{StaticResource FournisseurPageStyle}">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Main Content -->
+        <ScrollView Grid.Row="0" Style="{StaticResource FournisseurPageScrollView}">
+            <VerticalStackLayout Style="{StaticResource FournisseurPageMainStack}">
+
+                <!-- ========================================= -->
+                <!-- JOURNÉE PROGRESS BAR (visible when active) -->
+                <!-- ========================================= -->
+                <Border BackgroundColor="#E3F2FD"
+                        Padding="15"
+                        Margin="0,0,0,10"
+                        IsVisible="{Binding IsJourneeActive}"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="#1976D2">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🚀" FontSize="24" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="{Binding JourneeStepInfo}"
+                                   FontAttributes="Bold"
+                                   TextColor="#1976D2"
+                                   FontSize="14"/>
+                            <Label Text="Journée en cours - Suivez les étapes"
+                                   TextColor="#666"
+                                   FontSize="11"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="📋" 
+                               FontSize="20" 
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- ========================================= -->
+                <!-- HEADER SECTION with Action Button         -->
+                <!-- ========================================= -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <VerticalStackLayout Style="{StaticResource FournisseurPageHeaderStack}">
+                        <Label Text="Gestion des Fournisseurs" 
+                               Style="{StaticResource FournisseurPageTitleLabel}"/>
+                        <Label Text="{Binding Fournisseurs.Count, StringFormat='{0} fournisseurs enregistrés'}" 
+                               Style="{StaticResource FournisseurPageSubtitleLabel}"/>
+                    </VerticalStackLayout>
+                    
+                    <!-- Add Button -->
+                    <Button Grid.Column="1"
+                            Text="+ Nouveau Fournisseur"
+                            Style="{StaticResource FournisseurAddButton}"
+                            Command="{Binding AddFournisseurCommand}"
+                            VerticalOptions="Center"
+                            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </Grid>
+
+                <!-- ========================================= -->
+                <!-- STATS CARDS ROW - Neumorphic Raised       -->
+                <!-- ========================================= -->
+                <Grid ColumnDefinitions="*,*,*,*" 
+                      ColumnSpacing="16"
+                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    
+                    <!-- Total Fournisseurs -->
+                    <Border Grid.Column="0" Style="{StaticResource FournisseurStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Fournisseurs.Count}" 
+                                   Style="{StaticResource FournisseurStatNumber}"/>
+                            <Label Text="Total Fournisseurs" 
+                                   Style="{StaticResource FournisseurStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Actifs -->
+                    <Border Grid.Column="1" Style="{StaticResource FournisseurStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="—" 
+                                   Style="{StaticResource FournisseurStatNumber}"
+                                   TextColor="#5EAA8D"/>
+                            <Label Text="Actifs" 
+                                   Style="{StaticResource FournisseurStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Inactifs -->
+                    <Border Grid.Column="2" Style="{StaticResource FournisseurStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="—" 
+                                   Style="{StaticResource FournisseurStatNumber}"
+                                   TextColor="#E8A84C"/>
+                            <Label Text="Inactifs" 
+                                   Style="{StaticResource FournisseurStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Ce Mois -->
+                    <Border Grid.Column="3" Style="{StaticResource FournisseurStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="—" 
+                                   Style="{StaticResource FournisseurStatNumber}"
+                                   TextColor="#8FA3B8"/>
+                            <Label Text="Ce Mois" 
+                                   Style="{StaticResource FournisseurStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- ========================================= -->
+                <!-- SEARCH BAR - Neumorphic Inset             -->
+                <!-- ========================================= -->
+                <Border Style="{StaticResource FournisseurSearchContainer}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="search.png"
+                               WidthRequest="24"
+                               HeightRequest="24"/>
+
+                        <Entry Grid.Column="1"
+                               Placeholder="Rechercher par nom, société, email..."
+                               Text="{Binding SearchText}"
+                               Style="{StaticResource FournisseurSearchEntry}"/>
+                        <Button Grid.Column="2"
+                                Text="Rechercher"
+                                Command="{Binding SearchFournisseursCommand}"
+                                BackgroundColor="#E8ECF1"
+                                TextColor="#5A6068"
+                                FontSize="13"
+                                FontAttributes="Bold"
+                                Padding="16,10"
+                                CornerRadius="10"/>
+                    </Grid>
+                </Border>
+
+                <!-- Loading Indicator -->
+                <ActivityIndicator Style="{StaticResource FournisseurPageLoadingIndicator}"
+                                  IsRunning="{Binding IsLoading}"
+                                  IsVisible="{Binding IsLoading}"/>
+
+                <!-- ========================================= -->
+                <!-- TABLE CARD - Neumorphic Raised Container  -->
+                <!-- ========================================= -->
+                <Border Style="{StaticResource FournisseurTableCard}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <VerticalStackLayout Style="{StaticResource FournisseurTableContainer}">
+
+                        <!-- Table Header -->
+                        <Grid Style="{StaticResource FournisseurTableHeaderGrid}">
+                            <Label Grid.Column="0" 
+                                   Text="Statut" 
+                                   Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="1" 
+                                   Text="Nom / Société" 
+                                   Style="{StaticResource FournisseurTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="2" 
+                                   Text="Contact" 
+                                   Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="3" 
+                                   Text="Email" 
+                                   Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="4" 
+                                   Text="Téléphone" 
+                                   Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="5" 
+                                   Text="Actions" 
+                                   Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                        </Grid>
+
+                        <!-- Table Rows with SwipeView -->
+                        <CollectionView ItemsSource="{Binding Fournisseurs}"
+                                        Style="{StaticResource FournisseurTableCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:FournisseurDto">
+                                    <SwipeView BackgroundColor="Transparent">
+                                        <!-- Left Swipe Actions -->
+                                        <SwipeView.LeftItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Détails"
+                                                           BackgroundColor="#8FA3B8"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=ShowDetailsCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                                <SwipeItem Text="Modifier"
+                                                           BackgroundColor="#4A8FBF"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=EditFournisseurCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.LeftItems>
+
+                                        <!-- Right Swipe Actions -->
+                                        <SwipeView.RightItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Supprimer"
+                                                           BackgroundColor="#E16C6C"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=DeleteFournisseurCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.RightItems>
+
+                                        <!-- Row Content -->
+                                        <VerticalStackLayout BackgroundColor="Transparent">
+                                            <Grid Style="{StaticResource FournisseurTableRowGrid}">
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=ShowFournisseurRowDetailsCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Grid.GestureRecognizers>
+
+                                                <!-- Status Badge - Neumorphic -->
+                                                <Border Grid.Column="0" 
+                                                        Style="{StaticResource FournisseurStatusBadge}"
+                                                        BackgroundColor="{Binding Statut, Converter={StaticResource StatusColorConverter}}">
+                                                    <Label Text="{Binding Statut, FallbackValue='Actif'}" 
+                                                           Style="{StaticResource FournisseurStatusLabel}"/>
+                                                </Border>
+
+                                                <!-- Name / Company -->
+                                                <VerticalStackLayout Grid.Column="1" 
+                                                                    Style="{StaticResource FournisseurNameCell}">
+                                                    <Label Style="{StaticResource FournisseurNameLabel}">
+                                                        <Label.Text>
+                                                            <MultiBinding StringFormat="{}{0} {1}">
+                                                                <Binding Path="Prenom" FallbackValue="" />
+                                                                <Binding Path="Nom" FallbackValue="" />
+                                                            </MultiBinding>
+                                                        </Label.Text>
+                                                    </Label>
+                                                    <Label Text="{Binding Societe, FallbackValue='Aucune société'}" 
+                                                           Style="{StaticResource FournisseurCompanyLabel}"/>
+                                                </VerticalStackLayout>
+
+                                                <!-- Contact -->
+                                                <Label Grid.Column="2" 
+                                                       Text="{Binding Contact, FallbackValue='N/A'}" 
+                                                       Style="{StaticResource FournisseurContactCell}"/>
+
+                                                <!-- Email -->
+                                                <Label Grid.Column="3" 
+                                                       Text="{Binding Email, FallbackValue='N/A'}" 
+                                                       Style="{StaticResource FournisseurEmailCell}"/>
+
+                                                <!-- Phone -->
+                                                <Label Grid.Column="4" 
+                                                       Text="{Binding Telephone, FallbackValue='N/A'}" 
+                                                       Style="{StaticResource FournisseurPhoneCell}"/>
+
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="5" 
+                                                                       Style="{StaticResource FournisseurActionsCell}">
+                                                    <Button Text="Détails"
+                                                            Style="{StaticResource FournisseurDetailsButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=ShowDetailsCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Modifier"
+                                                            Style="{StaticResource FournisseurModifierButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=EditFournisseurCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Supprimer"
+                                                            Style="{StaticResource FournisseurSupprimerButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=DeleteFournisseurCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+
+                                            <!-- Row Divider -->
+                                            <BoxView Style="{StaticResource FournisseurRowDivider}"/>
+                                        </VerticalStackLayout>
+                                    </SwipeView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                            <!-- Modern Empty View - Neumorphic Style -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource FournisseurEmptyView}">
+                                    <!-- Neumorphic Icon Container -->
+                                    <Border BackgroundColor="#EEF1F5"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="#C5CAD1"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="🏭"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun fournisseur disponible" 
+                                           Style="{StaticResource FournisseurEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter votre premier fournisseur pour gérer vos approvisionnements" 
+                                           Style="{StaticResource FournisseurEmptySubtitle}"/>
+                                    <Button Text="+ Ajouter un Fournisseur"
+                                            Style="{StaticResource FournisseurEmptyButton}"
+                                            Command="{Binding AddFournisseurCommand}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ========================================= -->
+        <!-- JOURNÉE NAVIGATION BAR (bottom, visible when active) -->
+        <!-- ========================================= -->
+        <Border Grid.Row="1"
+                BackgroundColor="#F5F5F5"
+                Padding="15"
+                IsVisible="{Binding IsJourneeActive}"
+                StrokeThickness="0">
+            <Border.Shadow>
+                <Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                <!-- Précédent Button (hidden on first step) -->
+                <Button Text="← Précédent"
+                        Command="{Binding JourneePrecedentCommand}"
+                        BackgroundColor="#757575"
+                        TextColor="White"
+                        Padding="20,12"
+                        CornerRadius="8"
+                        IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                <!-- Spacer -->
+                <BoxView Grid.Column="1" Color="Transparent"/>
+
+                <!-- Passer Button -->
+                <Button Grid.Column="2"
+                        Text="Passer cette étape"
+                        Command="{Binding JourneePasserCommand}"
+                        BackgroundColor="#FFA726"
+                        TextColor="White"
+                        Padding="20,12"
+                        CornerRadius="8"/>
+
+                <!-- Suivant/Terminer Button -->
+                <Button Grid.Column="3"
+                        Text="{Binding IsLastStep, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Terminer la journée|Suivant →'}"
+                        Command="{Binding JourneeSuivantCommand}"
+                        BackgroundColor="#4CAF50"
+                        TextColor="White"
+                        Padding="20,12"
+                        CornerRadius="8"
+                        FontAttributes="Bold"/>
+            </Grid>
+        </Border>
+    </Grid>
+
+</ContentPage>

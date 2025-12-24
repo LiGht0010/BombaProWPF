@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.PeriodeViews.PeriodeDetailsPopup">
+
+    <Border BackgroundColor="White"       
+           Padding="20"
+           WidthRequest="600">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label x:Name="HeaderLabel"
+                           Text="📊 Nouveau Relevé de Compteur" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            BackgroundColor="Transparent"
+                            TextColor="#666"
+                            FontSize="20"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Color="#E0E0E0" HeightRequest="1"/>
+
+                <!-- Form -->
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Pompe Selection -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="⛽ Pompe *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Picker x:Name="PompePicker"
+                                Title="Sélectionner une pompe"
+                                BackgroundColor="#F8F8F8"
+                                TextColor="#333"
+                                ItemDisplayBinding="{Binding Numero}"
+                                SelectedIndexChanged="OnPompeSelected"/>
+                    </VerticalStackLayout>
+
+                    <!-- Reservoir (auto-filled based on pompe) -->
+                    <Border BackgroundColor="#E3F2FD" 
+                           Padding="12"
+                           StrokeShape="RoundRectangle 8">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Label Text="🛢️" FontSize="18" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Margin="10,0,0,0">
+                                <Label Text="Réservoir associé" 
+                                       FontSize="12"
+                                       TextColor="#666"/>
+                                <Label x:Name="ReservoirLabel"
+                                       Text="Sélectionnez une pompe"
+                                       FontAttributes="Bold"
+                                       TextColor="#1976D2"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Produit and Prix -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="🔸 Produit *" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#666"
+                                   FontSize="14"/>
+                            <Picker x:Name="ProduitPicker"
+                                    Title="Sélectionner un produit"
+                                    BackgroundColor="#F8F8F8"
+                                    TextColor="#333"
+                                    ItemDisplayBinding="{Binding Description}"
+                                    SelectedIndexChanged="OnProduitSelected"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="5">
+                            <Label Text="💲 Prix Carburant (MAD/L) *" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#666"
+                                   FontSize="14"/>
+                            <Entry x:Name="PrixCarburantEntry"
+                                   Placeholder="0.00"
+                                   Keyboard="Numeric"
+                                   BackgroundColor="#F8F8F8"
+                                   TextColor="#333"
+                                   TextChanged="OnValuesChanged"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Electronic Meter Section -->
+                    <Border BackgroundColor="#E8F5E9" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="📟 Compteur Électronique" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#2E7D32"
+                                   FontSize="14"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Début" FontSize="12" TextColor="#666"/>
+                                    <Entry x:Name="CompteurElecDebutEntry"
+                                           Placeholder="0.00"
+                                           Keyboard="Numeric"
+                                           BackgroundColor="White"
+                                           TextColor="#333"
+                                           TextChanged="OnValuesChanged"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Final" FontSize="12" TextColor="#666"/>
+                                    <Entry x:Name="CompteurElecFinalEntry"
+                                           Placeholder="0.00"
+                                           Keyboard="Numeric"
+                                           BackgroundColor="White"
+                                           TextColor="#333"
+                                           TextChanged="OnValuesChanged"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                            <HorizontalStackLayout Spacing="10">
+                                <Label Text="Quantité:" TextColor="#666"/>
+                                <Label x:Name="QteElecLabel"
+                                       Text="0.00 L"
+                                       FontAttributes="Bold"
+                                       TextColor="#2E7D32"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Mechanical Meter Section -->
+                    <Border BackgroundColor="#FFF3E0" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="🔧 Compteur Mécanique" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#E65100"
+                                   FontSize="14"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Début" FontSize="12" TextColor="#666"/>
+                                    <Entry x:Name="CompteurMecaDebutEntry"
+                                           Placeholder="0.00"
+                                           Keyboard="Numeric"
+                                           BackgroundColor="White"
+                                           TextColor="#333"
+                                           TextChanged="OnValuesChanged"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Final" FontSize="12" TextColor="#666"/>
+                                    <Entry x:Name="CompteurMecaFinalEntry"
+                                           Placeholder="0.00"
+                                           Keyboard="Numeric"
+                                           BackgroundColor="White"
+                                           TextColor="#333"
+                                           TextChanged="OnValuesChanged"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                            <HorizontalStackLayout Spacing="10">
+                                <Label Text="Quantité:" TextColor="#666"/>
+                                <Label x:Name="QteMecaLabel"
+                                       Text="0.00 L"
+                                       FontAttributes="Bold"
+                                       TextColor="#E65100"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Difference Alert -->
+                    <Border x:Name="DifferenceSection"
+                           BackgroundColor="#FFEBEE" 
+                           Padding="12"
+                           StrokeShape="RoundRectangle 8"
+                           IsVisible="False">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Label Text="⚠️" FontSize="18" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Margin="10,0,0,0">
+                                <Label Text="Écart entre compteurs" 
+                                       FontSize="12"
+                                       TextColor="#666"/>
+                                <Label x:Name="DifferenceLabel"
+                                       Text="0.00 L"
+                                       FontAttributes="Bold"
+                                       TextColor="#C62828"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Summary -->
+                    <Border BackgroundColor="#1976D2" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
+                            <VerticalStackLayout>
+                                <Label Text="Quantité Vendue" 
+                                       FontSize="12"
+                                       TextColor="#B3E5FC"/>
+                                <Label x:Name="QuantiteVendueLabel"
+                                       Text="0.00 L"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Prix Total" 
+                                       FontSize="12"
+                                       TextColor="#B3E5FC"/>
+                                <Label x:Name="PrixTotalLabel"
+                                       Text="0.00 MAD"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           TextColor="#F44336"
+                           FontSize="14"
+                           IsVisible="False"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Text="Annuler" 
+                                BackgroundColor="#9E9E9E"
+                                TextColor="White"
+                                CornerRadius="8"
+                                Clicked="OnCancelClicked"/>
+
+                        <Button x:Name="SaveButton"
+                                Grid.Column="1"
+                                Text="✓ Enregistrer" 
+                                BackgroundColor="#4CAF50"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                Clicked="OnSaveClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.VenteLubEtArticles.VenteLubrifiantsEtArticlesCreatePopup"
+               Color="Transparent">
+
+    <toolkit:Popup.Resources>
+        <ResourceDictionary>
+            <!-- Local colors for consistent theming -->
+            <Color x:Key="PopupBg">#F5F5F5</Color>
+            <Color x:Key="CardBg">#FFFFFF</Color>
+            <Color x:Key="CardBgAlt">#FAFAFA</Color>
+            <Color x:Key="TextPrimary">#212121</Color>
+            <Color x:Key="TextSecondary">#616161</Color>
+            <Color x:Key="TextMuted">#9E9E9E</Color>
+            <Color x:Key="BorderLight">#E0E0E0</Color>
+            <Color x:Key="AccentOrange">#E65100</Color>
+            <Color x:Key="AccentBlue">#1976D2</Color>
+            <Color x:Key="AccentGreen">#2E7D32</Color>
+            <Color x:Key="AccentPurple">#7B1FA2</Color>
+            <Color x:Key="AccentTeal">#00796B</Color>
+            <Color x:Key="AccentRed">#C62828</Color>
+        </ResourceDictionary>
+    </toolkit:Popup.Resources>
+
+    <Border BackgroundColor="{StaticResource PopupBg}"       
+            Padding="0"
+            WidthRequest="720"
+            HeightRequest="700"
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 16">
+        <Border.Shadow>
+            <Shadow Brush="#000000" Offset="0,8" Radius="32" Opacity="0.2"/>
+        </Border.Shadow>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" 
+                    BackgroundColor="{StaticResource AccentOrange}" 
+                    Padding="24,20"
+                    StrokeThickness="0">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <!-- Icon -->
+                    <Border BackgroundColor="#FFFFFF"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 24"
+                            Opacity="0.2">
+                    </Border>
+                    <Label Text="🛢️" 
+                           FontSize="24" 
+                           HorizontalOptions="Start" 
+                           VerticalOptions="Center"
+                           Margin="12,0,0,0"/>
+                    
+                    <!-- Title -->
+                    <VerticalStackLayout Grid.Column="1" Margin="16,0,0,0" VerticalOptions="Center">
+                        <Label x:Name="HeaderLabel"
+                               Text="Nouvelle Vente" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                        <Label Text="Enregistrer une vente de lubrifiant ou article" 
+                               FontSize="12"
+                               TextColor="#FFCC80"/>
+                    </VerticalStackLayout>
+                    
+                    <!-- Close Button -->
+                    <Button Grid.Column="2" 
+                            Text="✕" 
+                            BackgroundColor="#00000030"
+                            TextColor="White"
+                            FontSize="16"
+                            WidthRequest="36"
+                            HeightRequest="36"
+                            CornerRadius="18"
+                            Padding="0"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+            </Border>
+
+            <!-- ========================================= -->
+            <!-- FORM CONTENT                              -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="24,20">
+                <VerticalStackLayout Spacing="16">
+                    
+                    <!-- Date & Numéro -->
+                    <Border BackgroundColor="{StaticResource CardBg}" 
+                            Padding="16"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="0">
+                        <Border.Shadow>
+                            <Shadow Brush="#000" Offset="0,2" Radius="8" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="📅" FontSize="16"/>
+                                <Label Text="Informations de Vente" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"/>
+                            </HorizontalStackLayout>
+                            
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="DATE" 
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource TextMuted}"/>
+                                    <Border BackgroundColor="{StaticResource CardBgAlt}" 
+                                            Padding="10,8"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="{StaticResource BorderLight}">
+                                        <DatePicker x:Name="DateVentePicker"
+                                                    FontSize="13"
+                                                    TextColor="{StaticResource TextPrimary}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                    <Label Text="HEURE" 
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource TextMuted}"/>
+                                    <Border BackgroundColor="{StaticResource CardBgAlt}" 
+                                            Padding="10,8"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="{StaticResource BorderLight}">
+                                        <TimePicker x:Name="TimeVentePicker"
+                                                    FontSize="13"
+                                                    TextColor="{StaticResource TextPrimary}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="2" Spacing="6">
+                                    <Label Text="N° VENTE (AUTO)" 
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource TextMuted}"/>
+                                    <Border BackgroundColor="#EEEEEE" 
+                                            Padding="10,8"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="{StaticResource BorderLight}">
+                                        <Entry x:Name="NumeroVenteEntry"
+                                               Placeholder="Généré auto"
+                                               IsReadOnly="True"
+                                               FontSize="13"
+                                               TextColor="{StaticResource TextSecondary}"
+                                               BackgroundColor="Transparent"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Produit Selection -->
+                    <Border BackgroundColor="#FFF8E1" 
+                            Padding="16"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="#FFB300"
+                            StrokeThickness="1">
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="📦" FontSize="16"/>
+                                <Label Text="Sélection du Produit" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource AccentOrange}"/>
+                                <Label Text="*" TextColor="{StaticResource AccentRed}" FontSize="14" FontAttributes="Bold"/>
+                            </HorizontalStackLayout>
+                            
+                            <!-- Produit Picker with dropdown icon -->
+                            <Border BackgroundColor="White" 
+                                    Padding="0"
+                                    StrokeShape="RoundRectangle 8"
+                                    Stroke="{StaticResource BorderLight}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Picker x:Name="ProduitPicker"
+                                            Title="Sélectionner un produit..."
+                                            FontSize="14"
+                                            TextColor="{StaticResource TextPrimary}"
+                                            TitleColor="{StaticResource TextMuted}"
+                                            BackgroundColor="Transparent"
+                                            Margin="12,8"
+                                            ItemDisplayBinding="{Binding Description}"
+                                            SelectedIndexChanged="OnProduitSelected"/>
+                                    <Label Grid.Column="1" 
+                                           Text="▼" 
+                                           FontSize="12"
+                                           TextColor="{StaticResource AccentOrange}"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,14,0"/>
+                                </Grid>
+                            </Border>
+                            
+                            <!-- Product Info Card -->
+                            <Border x:Name="ProductInfoCard"
+                                    BackgroundColor="White" 
+                                    Padding="14"
+                                    StrokeShape="RoundRectangle 8"
+                                    StrokeThickness="0"
+                                    IsVisible="False">
+                                <Border.Shadow>
+                                    <Shadow Brush="#000" Offset="0,2" Radius="6" Opacity="0.08"/>
+                                </Border.Shadow>
+                                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                                    <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="💵 Prix TTC" FontSize="10" TextColor="{StaticResource TextMuted}" HorizontalTextAlignment="Center"/>
+                                        <Label x:Name="PrixTTCLabel"
+                                               Text="0.00"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentOrange}"
+                                               FontSize="14"
+                                               HorizontalTextAlignment="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="📊 Stock" FontSize="10" TextColor="{StaticResource TextMuted}" HorizontalTextAlignment="Center"/>
+                                        <Label x:Name="StockLabel"
+                                               Text="0"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentPurple}"
+                                               FontSize="14"
+                                               HorizontalTextAlignment="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="🏷️ Catégorie" FontSize="10" TextColor="{StaticResource TextMuted}" HorizontalTextAlignment="Center"/>
+                                        <Label x:Name="CategorieLabel"
+                                               Text="-"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentTeal}"
+                                               FontSize="14"
+                                               HorizontalTextAlignment="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="⚠️ Stock Min" FontSize="10" TextColor="{StaticResource TextMuted}" HorizontalTextAlignment="Center"/>
+                                        <Label x:Name="StockMinLabel"
+                                               Text="0"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentRed}"
+                                               FontSize="14"
+                                               HorizontalTextAlignment="Center"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Quantité et Prix -->
+                    <Border BackgroundColor="{StaticResource CardBg}" 
+                            Padding="16"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="0">
+                        <Border.Shadow>
+                            <Shadow Brush="#000" Offset="0,2" Radius="8" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="💰" FontSize="16"/>
+                                <Label Text="Quantité et Prix" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"/>
+                            </HorizontalStackLayout>
+                            
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                <VerticalStackLayout Spacing="6">
+                                    <HorizontalStackLayout Spacing="4">
+                                        <Label Text="QUANTITÉ" 
+                                               FontSize="10"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource TextMuted}"/>
+                                        <Label Text="*" TextColor="{StaticResource AccentRed}" FontSize="10" FontAttributes="Bold"/>
+                                    </HorizontalStackLayout>
+                                    <Border BackgroundColor="{StaticResource CardBgAlt}" 
+                                            Padding="12,10"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="{StaticResource BorderLight}">
+                                        <Entry x:Name="QuantiteEntry"
+                                               Placeholder="Entrer la quantité"
+                                               Keyboard="Numeric"
+                                               FontSize="14"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               PlaceholderColor="{StaticResource TextMuted}"
+                                               BackgroundColor="Transparent"
+                                               TextChanged="OnQuantiteChanged"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                    <HorizontalStackLayout Spacing="4">
+                                        <Label Text="PRIX UNITAIRE TTC (MAD)" 
+                                               FontSize="10"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource TextMuted}"/>
+                                        <Label Text="*" TextColor="{StaticResource AccentRed}" FontSize="10" FontAttributes="Bold"/>
+                                    </HorizontalStackLayout>
+                                    <Border BackgroundColor="{StaticResource CardBgAlt}" 
+                                            Padding="12,10"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="{StaticResource BorderLight}">
+                                        <Entry x:Name="PrixUnitaireEntry"
+                                               Placeholder="Prix per unité"
+                                               Keyboard="Numeric"
+                                               FontSize="14"
+                                               TextColor="{StaticResource TextPrimary}"
+                                               PlaceholderColor="{StaticResource TextMuted}"
+                                               BackgroundColor="Transparent"
+                                               TextChanged="OnPrixChanged"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Client, Employé & Paiement -->
+                    <Border BackgroundColor="{StaticResource CardBg}" 
+                            Padding="16"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="0">
+                        <Border.Shadow>
+                            <Shadow Brush="#000" Offset="0,2" Radius="8" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="👥" FontSize="16"/>
+                                <Label Text="Client et Paiement" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"/>
+                            </HorizontalStackLayout>
+                            
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                                <!-- Client Picker with dropdown icon -->
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="CLIENT (OPTIONNEL)" 
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource TextMuted}"/>
+                                    <Border BackgroundColor="{StaticResource CardBgAlt}" 
+                                            Padding="0"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="{StaticResource BorderLight}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Picker x:Name="ClientPicker"
+                                                    Title="Anonyme..."
+                                                    FontSize="13"
+                                                    TextColor="{StaticResource TextPrimary}"
+                                                    TitleColor="{StaticResource TextMuted}"
+                                                    BackgroundColor="Transparent"
+                                                    Margin="12,8"
+                                                    ItemDisplayBinding="{Binding Nom}"/>
+                                            <Label Grid.Column="1" 
+                                                   Text="▼" 
+                                                   FontSize="10"
+                                                   TextColor="{StaticResource TextMuted}"
+                                                   VerticalOptions="Center"
+                                                   Margin="0,0,12,0"/>
+                                        </Grid>
+                                    </Border>
+                                </VerticalStackLayout>
+                                
+                                <!-- Vendeur Picker with dropdown icon -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                    <Label Text="VENDEUR (OPTIONNEL)" 
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource TextMuted}"/>
+                                    <Border BackgroundColor="{StaticResource CardBgAlt}" 
+                                            Padding="0"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="{StaticResource BorderLight}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Picker x:Name="EmployePicker"
+                                                    Title="Sélectionner..."
+                                                    FontSize="13"
+                                                    TextColor="{StaticResource TextPrimary}"
+                                                    TitleColor="{StaticResource TextMuted}"
+                                                    BackgroundColor="Transparent"
+                                                    Margin="12,8"
+                                                    ItemDisplayBinding="{Binding Nom}"/>
+                                            <Label Grid.Column="1" 
+                                                   Text="▼" 
+                                                   FontSize="10"
+                                                   TextColor="{StaticResource TextMuted}"
+                                                   VerticalOptions="Center"
+                                                   Margin="0,0,12,0"/>
+                                        </Grid>
+                                    </Border>
+                                </VerticalStackLayout>
+                                
+                                <!-- Mode de Paiement Picker with dropdown icon -->
+                                <VerticalStackLayout Grid.Column="2" Spacing="6">
+                                    <Label Text="MODE DE PAIEMENT" 
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource TextMuted}"/>
+                                    <Border BackgroundColor="{StaticResource CardBgAlt}" 
+                                            Padding="0"
+                                            StrokeShape="RoundRectangle 8"
+                                            Stroke="{StaticResource BorderLight}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Picker x:Name="MoyenPaiementPicker"
+                                                    Title="Espèces..."
+                                                    FontSize="13"
+                                                    TextColor="{StaticResource TextPrimary}"
+                                                    TitleColor="{StaticResource TextMuted}"
+                                                    BackgroundColor="Transparent"
+                                                    Margin="12,8"
+                                                    ItemDisplayBinding="{Binding Nom}"/>
+                                            <Label Grid.Column="1" 
+                                                   Text="▼" 
+                                                   FontSize="10"
+                                                   TextColor="{StaticResource TextMuted}"
+                                                   VerticalOptions="Center"
+                                                   Margin="0,0,12,0"/>
+                                        </Grid>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Notes -->
+                    <Border BackgroundColor="{StaticResource CardBg}" 
+                            Padding="16"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="0">
+                        <Border.Shadow>
+                            <Shadow Brush="#000" Offset="0,2" Radius="8" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="10">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="📝" FontSize="16"/>
+                                <Label Text="Notes (optionnel)" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"/>
+                            </HorizontalStackLayout>
+                            
+                            <Border BackgroundColor="{StaticResource CardBgAlt}" 
+                                    Padding="12,10"
+                                    StrokeShape="RoundRectangle 8"
+                                    Stroke="{StaticResource BorderLight}">
+                                <Editor x:Name="NotesEditor"
+                                        Placeholder="Observations ou remarques..."
+                                        HeightRequest="60"
+                                        FontSize="13"
+                                        TextColor="{StaticResource TextPrimary}"
+                                        PlaceholderColor="{StaticResource TextMuted}"
+                                        BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Summary Card -->
+                    <Border BackgroundColor="#E8F5E9" 
+                            Padding="18"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource AccentGreen}"
+                            StrokeThickness="1">
+                        <Border.Shadow>
+                            <Shadow Brush="#4CAF50" Offset="0,3" Radius="10" Opacity="0.15"/>
+                        </Border.Shadow>
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="TOTAL HT" 
+                                       FontSize="10" 
+                                       TextColor="{StaticResource TextSecondary}"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label x:Name="TotalHTLabel"
+                                       Text="0.00 MAD"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource AccentGreen}"
+                                       FontSize="16"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="TVA (20%)" 
+                                       FontSize="10" 
+                                       TextColor="{StaticResource TextSecondary}"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label x:Name="TVALabel"
+                                       Text="0.00 MAD"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource AccentTeal}"
+                                       FontSize="16"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                <Label Text="TOTAL TTC" 
+                                       FontSize="10" 
+                                       TextColor="{StaticResource TextSecondary}"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label x:Name="TotalTTCLabel"
+                                       Text="0.00 MAD"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource AccentOrange}"
+                                       FontSize="20"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER: Error + Actions                   -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" 
+                    BackgroundColor="{StaticResource CardBg}" 
+                    Padding="20,16"
+                    StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.06"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <!-- Error Message -->
+                    <Border BackgroundColor="#FFEBEE"
+                            Padding="12,8"
+                            StrokeShape="RoundRectangle 8"
+                            StrokeThickness="0"
+                            IsVisible="False"
+                            x:Name="ErrorBorder"
+                            VerticalOptions="Center">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="⚠️" FontSize="14" VerticalOptions="Center"/>
+                            <Label x:Name="ErrorLabel"
+                                   TextColor="{StaticResource AccentRed}"
+                                   FontSize="12"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Cancel Button -->
+                    <Button Grid.Column="1"
+                            Text="Annuler" 
+                            BackgroundColor="#EEEEEE"
+                            TextColor="{StaticResource TextSecondary}"
+                            Padding="24,12"
+                            CornerRadius="10"
+                            FontSize="14"
+                            Clicked="OnCancelClicked"/>
+
+                    <!-- Save Button -->
+                    <Button x:Name="SaveButton"
+                            Grid.Column="2"
+                            Text="✓ Enregistrer la Vente" 
+                            BackgroundColor="{StaticResource AccentGreen}"
+                            TextColor="White"
+                            Padding="24,12"
+                            CornerRadius="10"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            Clicked="OnSaveClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="#4CAF50" Offset="0,3" Radius="8" Opacity="0.3"/>
+                        </Button.Shadow>
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

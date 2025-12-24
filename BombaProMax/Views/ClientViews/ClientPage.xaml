@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             x:Class="BombaProMax.Views.ClientViews.ClientPage"
+             x:DataType="viewmodels:ClientViewModel"
+             Style="{StaticResource ClientPageStyle}">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Main Content -->
+        <ScrollView Grid.Row="0" Style="{StaticResource ClientPageScrollView}">
+            <VerticalStackLayout Style="{StaticResource ClientPageMainStack}">
+
+                <!-- JOURNÉE PROGRESS BAR -->
+                <Border BackgroundColor="#E3F2FD" Padding="15" Margin="0,0,0,10"
+                        IsVisible="{Binding IsJourneeActive}" StrokeShape="RoundRectangle 10" Stroke="#1976D2">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🚀" FontSize="24" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="{Binding JourneeStepInfo}" FontAttributes="Bold" TextColor="#1976D2" FontSize="14"/>
+                            <Label Text="Journée en cours - Suivez les étapes" TextColor="#666" FontSize="11"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="📋" FontSize="20" VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- ========================================= -->
+                <!-- HEADER SECTION with Action Button         -->
+                <!-- ========================================= -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <VerticalStackLayout Style="{StaticResource ClientPageHeaderStack}">
+                        <Label Text="Gestion des Clients" 
+                               Style="{StaticResource ClientPageTitleLabel}"/>
+                        <Label Text="{Binding Clients.Count, StringFormat='{0} clients enregistrés'}" 
+                               Style="{StaticResource ClientPageSubtitleLabel}"/>
+                    </VerticalStackLayout>
+                    
+                    <!-- Add Button -->
+                    <Button Grid.Column="1"
+                            Text="+ Nouveau Client"
+                            Style="{StaticResource ClientAddButton}"
+                            Command="{Binding AddClientCommand}"
+                            VerticalOptions="Center"
+                            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </Grid>
+
+                <!-- ========================================= -->
+                <!-- STATS CARDS ROW - Neumorphic Raised       -->
+                <!-- ========================================= -->
+                <Grid ColumnDefinitions="*,*,*,*" 
+                      ColumnSpacing="16"
+                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    
+                    <!-- Total Clients -->
+                    <Border Grid.Column="0" Style="{StaticResource ClientStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Clients.Count}" 
+                                   Style="{StaticResource ClientStatNumber}"/>
+                            <Label Text="Total Clients" 
+                                   Style="{StaticResource ClientStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- With Company -->
+                    <Border Grid.Column="1" Style="{StaticResource ClientStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding WithCompanyCount}" 
+                                   Style="{StaticResource ClientStatNumber}"
+                                   TextColor="#5EAA8D"/>
+                            <Label Text="Avec Société" 
+                                   Style="{StaticResource ClientStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- With Credit -->
+                    <Border Grid.Column="2" Style="{StaticResource ClientStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="—" 
+                                   Style="{StaticResource ClientStatNumber}"
+                                   TextColor="#E8A84C"/>
+                            <Label Text="Crédit Actif" 
+                                   Style="{StaticResource ClientStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- New This Month -->
+                    <Border Grid.Column="3" Style="{StaticResource ClientStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding ThisMonthCount}" 
+                                   Style="{StaticResource ClientStatNumber}"
+                                   TextColor="#8FA3B8"/>
+                            <Label Text="Ce Mois" 
+                                   Style="{StaticResource ClientStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- ========================================= -->
+                <!-- SEARCH BAR - Neumorphic Inset             -->
+                <!-- ========================================= -->
+                <Border Style="{StaticResource ClientSearchContainer}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="search.png"
+                               WidthRequest="24"
+                               HeightRequest="24"/>
+
+                        <Entry Grid.Column="1"
+                               Placeholder="Rechercher par nom, contact, société..."
+                               Text="{Binding SearchText}"
+                               Style="{StaticResource ClientSearchEntry}"/>
+                        <Button Grid.Column="2"
+                                Text="Rechercher"
+                                Command="{Binding SearchClientsCommand}"
+                                BackgroundColor="#E8ECF1"
+                                TextColor="#5A6068"
+                                FontSize="13"
+                                FontAttributes="Bold"
+                                Padding="16,10"
+                                CornerRadius="10"/>
+                    </Grid>
+                </Border>
+
+                <!-- Loading Indicator -->
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                  IsVisible="{Binding IsLoading}"
+                                  HeightRequest="50"
+                                  WidthRequest="50"
+                                  Color="#4A8FBF"/>
+
+                <!-- ========================================= -->
+                <!-- TABLE CARD - Neumorphic Raised Container  -->
+                <!-- ========================================= -->
+                <Border Style="{StaticResource ClientTableCard}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <VerticalStackLayout Style="{StaticResource ClientTableContainer}">
+
+                        <!-- Table Header -->
+                        <Grid Style="{StaticResource ClientTableHeaderGrid}">
+                            <Label Grid.Column="0" 
+                                   Text="Num. Client" 
+                                   Style="{StaticResource ClientTableHeaderLabel}"/>
+                            <Label Grid.Column="1" 
+                                   Text="Nom" 
+                                   Style="{StaticResource ClientTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="2" 
+                                   Text="Contact" 
+                                   Style="{StaticResource ClientTableHeaderLabel}"/>
+                            <Label Grid.Column="3" 
+                                   Text="Société" 
+                                   Style="{StaticResource ClientTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="4" 
+                                   Text="Actions" 
+                                   Style="{StaticResource ClientTableHeaderLabel}"/>
+                        </Grid>
+
+                        <!-- Table Rows with SwipeView -->
+                        <CollectionView ItemsSource="{Binding Clients}"
+                                        Style="{StaticResource ClientTableCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ClientDto">
+                                    <SwipeView BackgroundColor="Transparent">
+                                        <!-- Left Swipe Actions -->
+                                        <SwipeView.LeftItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Détails"
+                                                           BackgroundColor="#8FA3B8"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientViewModel}}, Path=ShowDetailsCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                                <SwipeItem Text="Modifier"
+                                                           BackgroundColor="#4A8FBF"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientViewModel}}, Path=EditClientCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.LeftItems>
+
+                                        <!-- Right Swipe Actions -->
+                                        <SwipeView.RightItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Supprimer"
+                                                           BackgroundColor="#E16C6C"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientViewModel}}, Path=DeleteClientCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.RightItems>
+
+                                        <!-- Row Content -->
+                                        <VerticalStackLayout BackgroundColor="Transparent">
+                                            <Grid Style="{StaticResource ClientTableRowGrid}">
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientViewModel}}, Path=ShowClientRowDetailsCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Grid.GestureRecognizers>
+
+                                                <!-- Client Number - Neumorphic Pill -->
+                                                <Border Grid.Column="0" 
+                                                        Style="{StaticResource ClientNumberCell}">
+                                                    <Label Text="{Binding NumeroClient}" 
+                                                           Style="{StaticResource ClientNumberLabel}"/>
+                                                </Border>
+
+                                                <!-- Client Name -->
+                                                <Label Grid.Column="1" 
+                                                       Text="{Binding Nom, FallbackValue='Sans nom'}" 
+                                                       Style="{StaticResource ClientNameCell}"/>
+
+                                                <!-- Contact -->
+                                                <Label Grid.Column="2" 
+                                                       Text="{Binding Contact, FallbackValue='N/A'}" 
+                                                       Style="{StaticResource ClientContactCell}"/>
+
+                                                <!-- Company -->
+                                                <Label Grid.Column="3" 
+                                                       Text="{Binding NomSociete, FallbackValue='Aucune'}" 
+                                                       Style="{StaticResource ClientCompanyCell}"/>
+
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="4" 
+                                                                       Style="{StaticResource ClientActionsCell}">
+                                                    <Button Text="Détails"
+                                                            Style="{StaticResource ClientDetailsButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientViewModel}}, Path=ShowDetailsCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Crédit"
+                                                            Style="{StaticResource ClientCreditButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientViewModel}}, Path=ShowCreditCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Modifier"
+                                                            Style="{StaticResource ClientModifierButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientViewModel}}, Path=EditClientCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Supprimer"
+                                                            Style="{StaticResource ClientSupprimerButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientViewModel}}, Path=DeleteClientCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+
+                                            <!-- Row Divider -->
+                                            <BoxView Style="{StaticResource ClientRowDivider}"/>
+                                        </VerticalStackLayout>
+                                    </SwipeView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                            <!-- Modern Empty View - Neumorphic Style -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource ClientEmptyView}">
+                                    <!-- Neumorphic Icon Container -->
+                                    <Border BackgroundColor="#EEF1F5"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="#C5CAD1"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="👤"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun client disponible" 
+                                           Style="{StaticResource ClientEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter votre premier client pour gérer vos relations" 
+                                           Style="{StaticResource ClientEmptySubtitle}"/>
+                                    <Button Text="+ Ajouter un Client"
+                                            Style="{StaticResource ClientEmptyButton}"
+                                            Command="{Binding AddClientCommand}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- JOURNÉE NAVIGATION BAR -->
+        <Border Grid.Row="1" BackgroundColor="#F5F5F5" Padding="15" IsVisible="{Binding IsJourneeActive}" StrokeThickness="0">
+            <Border.Shadow><Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/></Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                <Button Text="← Précédent" Command="{Binding JourneePrecedentCommand}"
+                        BackgroundColor="#757575" TextColor="White" Padding="20,12" CornerRadius="8"
+                        IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
+                <BoxView Grid.Column="1" Color="Transparent"/>
+                <Button Grid.Column="2" Text="Passer cette étape" Command="{Binding JourneePasserCommand}"
+                        BackgroundColor="#FFA726" TextColor="White" Padding="20,12" CornerRadius="8"/>
+                <Button Grid.Column="3" Text="{Binding IsLastStep, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Terminer la journée|Suivant →'}"
+                        Command="{Binding JourneeSuivantCommand}" BackgroundColor="#4CAF50" TextColor="White"
+                        Padding="20,12" CornerRadius="8" FontAttributes="Bold"/>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

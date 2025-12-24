@@ -1,0 +1,472 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="BombaProMax.Styles.CamionStyles">
+
+    <!-- COLOR PALETTE -->
+    <Color x:Key="CamionNeuSurface">#e8e8e8</Color>
+    <Color x:Key="CamionNeuCardBg">#E8ECF1</Color>
+    <Color x:Key="CamionNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="CamionNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="CamionNeuShadowDarkSoft">#D1D5DB</Color>
+    <Color x:Key="CamionNeuPrimary">#4A8FBF</Color>
+    <Color x:Key="CamionNeuDanger">#E16C6C</Color>
+    <Color x:Key="CamionNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="CamionNeuSuccess">#5EAA8D</Color>
+    <Color x:Key="CamionNeuWarning">#E8A84C</Color>
+    <Color x:Key="CamionNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="CamionNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="CamionNeuTextMuted">#8B939E</Color>
+    <Color x:Key="CamionNeuTextLight">#A8B0BA</Color>
+    <Color x:Key="CamionNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="CamionMBG">#f5f5f5</Color>
+
+    <x:String x:Key="CamionTableColumns">0.8*,1.5*,1.2*,1.5*,1.2*,2.3*</x:String>
+
+    <Style x:Key="CamionPageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Camions"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionMBG}"/>
+    </Style>
+
+    <Style x:Key="CamionPageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="CamionPageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <Style x:Key="CamionPageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="CamionPageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="CamionPageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="CamionStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="CamionStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <Style x:Key="CamionSearchContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSurface}"/>
+        <Setter Property="Padding" Value="16,14"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionSearchEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource CamionNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="CamionPageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource CamionNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <Style x:Key="CamionAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <Style x:Key="CamionTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource CamionTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="CamionTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CamionTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource CamionTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="76"/>
+    </Style>
+
+    <Style x:Key="CamionIdCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuCardBg}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionIdLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CamionMatriculeCell" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="4"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CamionMatriculeLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="CamionMarqueLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="CamionFournisseurLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="CamionCiterneStatusBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSuccess}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionCiterneStatusLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CamionActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CamionDetailsButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="70"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionModifierButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="75"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuPrimary}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionSupprimerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuDanger}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource CamionNeuDanger}"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuShadowDark}" Offset="2,2" Radius="4" Opacity="0.12"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource CamionNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="28,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <Style x:Key="CamionEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CamionEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CamionEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="CamionEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionPopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="650"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionPopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="CamionPopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="CamionPopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionPopupSectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="CamionPopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="CamionDetailsValueLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextPrimary}"/>
+        <Setter Property="Margin" Value="0,6,0,0"/>
+    </Style>
+
+    <Style x:Key="CamionPopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource CamionNeuBorderLight}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionPopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource CamionNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="CamionPopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource CamionNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="CamionPopupErrorLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuDanger}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+    </Style>
+
+    <Style x:Key="CamionPopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource CamionNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionPopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionDetailsCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CamionNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="40,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CamionNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CamionPopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource CamionNeuBorderLight}"/>
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             x:Class="BombaProMax.Views.ReservoirViews.ReservoirPage"
+             x:DataType="viewmodels:ReservoirViewModel"
+             Style="{StaticResource ReservoirPageStyle}">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Main Content -->
+        <ScrollView Grid.Row="0" Style="{StaticResource ReservoirPageScrollView}">
+            <VerticalStackLayout Style="{StaticResource ReservoirPageMainStack}">
+
+                <!-- JOURNÉE PROGRESS BAR -->
+                <Border BackgroundColor="#E3F2FD" Padding="15" Margin="0,0,0,10"
+                        IsVisible="{Binding IsJourneeActive}" StrokeShape="RoundRectangle 10" Stroke="#1976D2">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🚀" FontSize="24" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="{Binding JourneeStepInfo}" FontAttributes="Bold" TextColor="#1976D2" FontSize="14"/>
+                            <Label Text="Journée en cours - Suivez les étapes" TextColor="#666" FontSize="11"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="📋" FontSize="20" VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- ========================================= -->
+                <!-- HEADER SECTION with Action Button         -->
+                <!-- ========================================= -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <VerticalStackLayout Style="{StaticResource ReservoirPageHeaderStack}">
+                        <Label Text="Gestion des Réservoirs" 
+                               Style="{StaticResource ReservoirPageTitleLabel}"/>
+                        <Label Text="{Binding Reservoirs.Count, StringFormat='{0} réservoirs enregistrés'}" 
+                               Style="{StaticResource ReservoirPageSubtitleLabel}"/>
+                    </VerticalStackLayout>
+                    
+                    <!-- Add Button -->
+                    <Button Grid.Column="1"
+                            Text="+ Nouveau Réservoir"
+                            Style="{StaticResource ReservoirAddButton}"
+                            Command="{Binding AddReservoirCommand}"
+                            VerticalOptions="Center"
+                            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </Grid>
+
+                <!-- ========================================= -->
+                <!-- STATS CARDS ROW - Neumorphic Raised       -->
+                <!-- ========================================= -->
+                <Grid ColumnDefinitions="*,*,*,*" 
+                      ColumnSpacing="16"
+                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    
+                    <!-- Total Réservoirs -->
+                    <Border Grid.Column="0" Style="{StaticResource ReservoirStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Reservoirs.Count}" 
+                                   Style="{StaticResource ReservoirStatNumber}"/>
+                            <Label Text="Total Réservoirs" 
+                                   Style="{StaticResource ReservoirStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Capacité Totale -->
+                    <Border Grid.Column="1" Style="{StaticResource ReservoirStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding TotalCapacity, StringFormat='{0:N0}'}" 
+                                   Style="{StaticResource ReservoirStatNumber}"
+                                   TextColor="#5EAA8D"/>
+                            <Label Text="Capacité (L)" 
+                                   Style="{StaticResource ReservoirStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Stock Total -->
+                    <Border Grid.Column="2" Style="{StaticResource ReservoirStatCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowLowFuelCommand}"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding TotalFuelLevel, StringFormat='{0:N0}'}" 
+                                   Style="{StaticResource ReservoirStatNumber}"
+                                   TextColor="#E8A84C"/>
+                            <Label Text="Stock (L)" 
+                                   Style="{StaticResource ReservoirStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Taux Remplissage -->
+                    <Border Grid.Column="3" Style="{StaticResource ReservoirStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding FillPercentage, StringFormat='{0:F1}%'}" 
+                                   Style="{StaticResource ReservoirStatNumber}"
+                                   TextColor="#8FA3B8"/>
+                            <Label Text="Remplissage" 
+                                   Style="{StaticResource ReservoirStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- ========================================= -->
+                <!-- SEARCH BAR - Neumorphic Inset             -->
+                <!-- ========================================= -->
+                <Border Style="{StaticResource ReservoirSearchContainer}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="search.png"
+                               WidthRequest="24"
+                               HeightRequest="24"/>
+
+                        <Entry Grid.Column="1"
+                               Placeholder="Rechercher par numéro, type carburant..."
+                               Text="{Binding SearchText}"
+                               Style="{StaticResource ReservoirSearchEntry}"/>
+                        <Button Grid.Column="2"
+                                Text="Rechercher"
+                                Command="{Binding SearchReservoirsCommand}"
+                                BackgroundColor="#E8ECF1"
+                                TextColor="#5A6068"
+                                FontSize="13"
+                                FontAttributes="Bold"
+                                Padding="16,10"
+                                CornerRadius="10"/>
+                    </Grid>
+                </Border>
+
+                <!-- Loading Indicator -->
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                  IsVisible="{Binding IsLoading}"
+                                  HeightRequest="50"
+                                  WidthRequest="50"
+                                  Color="#4A8FBF"/>
+
+                <!-- ========================================= -->
+                <!-- TABLE CARD - Neumorphic Raised Container  -->
+                <!-- ========================================= -->
+                <Border Style="{StaticResource ReservoirTableCard}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <VerticalStackLayout Style="{StaticResource ReservoirTableContainer}">
+
+                        <!-- Table Header -->
+                        <Grid Style="{StaticResource ReservoirTableHeaderGrid}">
+                            <Label Grid.Column="0" 
+                                   Text="ID" 
+                                   Style="{StaticResource ReservoirTableHeaderLabel}"/>
+                            <Label Grid.Column="1" 
+                                   Text="Numéro" 
+                                   Style="{StaticResource ReservoirTableHeaderLabel}"/>
+                            <Label Grid.Column="2" 
+                                   Text="Type Carburant" 
+                                   Style="{StaticResource ReservoirTableHeaderLabel}"/>
+                            <Label Grid.Column="3" 
+                                   Text="Capacité (L)" 
+                                   Style="{StaticResource ReservoirTableHeaderLabel}"/>
+                            <Label Grid.Column="4" 
+                                   Text="Niveau (L)" 
+                                   Style="{StaticResource ReservoirTableHeaderLabel}"/>
+                            <Label Grid.Column="5" 
+                                   Text="Actions" 
+                                   Style="{StaticResource ReservoirTableHeaderLabel}"/>
+                        </Grid>
+
+                        <!-- Table Rows with SwipeView -->
+                        <CollectionView ItemsSource="{Binding Reservoirs}"
+                                        Style="{StaticResource ReservoirTableCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ReservoirDto">
+                                    <SwipeView BackgroundColor="Transparent">
+                                        <!-- Left Swipe Actions -->
+                                        <SwipeView.LeftItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Détails"
+                                                           BackgroundColor="#8FA3B8"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ReservoirViewModel}}, Path=ShowDetailsCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                                <SwipeItem Text="Modifier"
+                                                           BackgroundColor="#4A8FBF"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ReservoirViewModel}}, Path=EditReservoirCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.LeftItems>
+
+                                        <!-- Right Swipe Actions -->
+                                        <SwipeView.RightItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Supprimer"
+                                                           BackgroundColor="#E16C6C"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ReservoirViewModel}}, Path=DeleteReservoirCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.RightItems>
+
+                                        <!-- Row Content -->
+                                        <VerticalStackLayout BackgroundColor="Transparent">
+                                            <Grid Style="{StaticResource ReservoirTableRowGrid}">
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ReservoirViewModel}}, Path=ShowReservoirRowDetailsCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Grid.GestureRecognizers>
+
+                                                <!-- ID - Neumorphic Pill -->
+                                                <Border Grid.Column="0" 
+                                                        Style="{StaticResource ReservoirIdCell}">
+                                                    <Label Text="{Binding ID}" 
+                                                           Style="{StaticResource ReservoirIdLabel}"/>
+                                                </Border>
+
+                                                <!-- Numero Badge - Neumorphic -->
+                                                <Border Grid.Column="1" 
+                                                        Style="{StaticResource ReservoirNumeroBadge}">
+                                                    <Label Text="{Binding Numero, FallbackValue='N/A'}" 
+                                                           Style="{StaticResource ReservoirNumeroLabel}"/>
+                                                </Border>
+
+                                                <!-- Type Carburant -->
+                                                <Label Grid.Column="2" 
+                                                       Text="{Binding ProduitNom, FallbackValue='Non assigné'}" 
+                                                       Style="{StaticResource ReservoirProduitLabel}"/>
+
+                                                <!-- Capacité -->
+                                                <Label Grid.Column="3" 
+                                                       Text="{Binding Capacite, StringFormat='{0:N0} L'}" 
+                                                       Style="{StaticResource ReservoirCapacityLabel}"/>
+
+                                                <!-- Niveau Badge - Neumorphic -->
+                                                <Border Grid.Column="4" 
+                                                        Style="{StaticResource ReservoirFuelLevelBadge}">
+                                                    <Label Text="{Binding NiveauDeCarburant, StringFormat='{0:N0} L'}" 
+                                                           Style="{StaticResource ReservoirFuelLevelLabel}"/>
+                                                </Border>
+
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="5" 
+                                                                       Style="{StaticResource ReservoirActionsCell}">
+                                                    <Button Text="Détails"
+                                                            Style="{StaticResource ReservoirDetailsButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ReservoirViewModel}}, Path=ShowDetailsCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Modifier"
+                                                            Style="{StaticResource ReservoirModifierButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ReservoirViewModel}}, Path=EditReservoirCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Supprimer"
+                                                            Style="{StaticResource ReservoirSupprimerButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ReservoirViewModel}}, Path=DeleteReservoirCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+
+                                            <!-- Row Divider -->
+                                            <BoxView Style="{StaticResource ReservoirRowDivider}"/>
+                                        </VerticalStackLayout>
+                                    </SwipeView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                            <!-- Modern Empty View - Neumorphic Style -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource ReservoirEmptyView}">
+                                    <!-- Neumorphic Icon Container -->
+                                    <Border BackgroundColor="#EEF1F5"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="#C5CAD1"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="🛢️"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun réservoir disponible" 
+                                           Style="{StaticResource ReservoirEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter votre premier réservoir pour gérer votre stock de carburant" 
+                                           Style="{StaticResource ReservoirEmptySubtitle}"/>
+                                    <Button Text="+ Ajouter un Réservoir"
+                                            Style="{StaticResource ReservoirEmptyButton}"
+                                            Command="{Binding AddReservoirCommand}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- JOURNÉE NAVIGATION BAR -->
+        <Border Grid.Row="1" BackgroundColor="#F5F5F5" Padding="15" IsVisible="{Binding IsJourneeActive}" StrokeThickness="0">
+            <Border.Shadow><Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/></Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                <Button Text="← Précédent" Command="{Binding JourneePrecedentCommand}"
+                        BackgroundColor="#757575" TextColor="White" Padding="20,12" CornerRadius="8"
+                        IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
+                <BoxView Grid.Column="1" Color="Transparent"/>
+                <Button Grid.Column="2" Text="Passer cette étape" Command="{Binding JourneePasserCommand}"
+                        BackgroundColor="#FFA726" TextColor="White" Padding="20,12" CornerRadius="8"/>
+                <Button Grid.Column="3" Text="{Binding IsLastStep, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Terminer la journée|Suivant →'}"
+                        Command="{Binding JourneeSuivantCommand}" BackgroundColor="#4CAF50" TextColor="White"
+                        Padding="20,12" CornerRadius="8" FontAttributes="Bold"/>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

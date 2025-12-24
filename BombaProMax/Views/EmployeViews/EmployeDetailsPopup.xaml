@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.EmployeViews.EmployeDetailsPopup">
+
+    <Border Style="{StaticResource EmployePopupContainer}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="👤 Détails de l'Employé" 
+                           Style="{StaticResource EmployePopupTitle}"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource EmployePopupCloseButton}"
+                            Clicked="OnCloseClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource EmployePopupDivider}"/>
+
+                <!-- Employee Header Card with Photo Placeholder -->
+                <Border BackgroundColor="#336860"
+                        Padding="20"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20">
+                        <!-- Photo Placeholder -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="White"
+                                WidthRequest="80"
+                                HeightRequest="80"
+                                StrokeThickness="3"
+                                Stroke="White"
+                                StrokeShape="RoundRectangle 40">
+                            <Label Text="👤" 
+                                   FontSize="40"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Name and Position -->
+                        <VerticalStackLayout Grid.Column="1" 
+                                           VerticalOptions="Center" 
+                                           Spacing="8">
+                            <Label x:Name="EmployeNameLabel"
+                                   FontSize="24" 
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Border BackgroundColor="#27AE60"
+                                   Padding="10,5"
+                                   HorizontalOptions="Start"
+                                   StrokeThickness="0"
+                                   StrokeShape="RoundRectangle 6">
+                                <Label x:Name="EmployePosteLabel"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                            </Border>
+                            <Label x:Name="EmployeIdLabel"
+                                   FontSize="12"
+                                   TextColor="#E0E0E0"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Statistics Cards -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
+                    <!-- Jaugeages Card -->
+                    <Border Grid.Column="0" Style="{StaticResource EmployeStatsCard}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="📊" 
+                                   FontSize="28"
+                                   HorizontalOptions="Center"/>
+                            <Label x:Name="JaugeagesCountLabel"
+                                   Text="0"
+                                   Style="{StaticResource EmployeStatsNumber}"/>
+                            <Label Text="Jaugeages"
+                                   Style="{StaticResource EmployeStatsLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Credit Transactions Card -->
+                    <Border Grid.Column="1" Style="{StaticResource EmployeStatsCard}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="💳" 
+                                   FontSize="28"
+                                   HorizontalOptions="Center"/>
+                            <Label x:Name="CreditTransactionsCountLabel"
+                                   Text="0"
+                                   Style="{StaticResource EmployeStatsNumber}"/>
+                            <Label Text="Transactions"
+                                   Style="{StaticResource EmployeStatsLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Credit Balance Card -->
+                    <Border Grid.Column="2" Style="{StaticResource EmployeStatsCard}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="💰" 
+                                   FontSize="28"
+                                   HorizontalOptions="Center"/>
+                            <Label x:Name="CreditBalanceLabel"
+                                   Text="0,00 MAD"
+                                   Style="{StaticResource EmployeStatsNumber}"/>
+                            <Label Text="Solde Crédit"
+                                   Style="{StaticResource EmployeStatsLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Personal Information Section -->
+                <Border Style="{StaticResource EmployePopupSectionCard}">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="ℹ️ Informations Personnelles" 
+                               Style="{StaticResource EmployePopupSectionTitle}"/>
+
+                        <BoxView Style="{StaticResource EmployePopupDivider}"/>
+
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                              ColumnDefinitions="150,*"
+                              RowSpacing="12">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="CIN:" 
+                                   Style="{StaticResource EmployePopupFieldLabel}"/>
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   x:Name="CINLabel"
+                                   Style="{StaticResource EmployeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Text="Téléphone:" 
+                                   Style="{StaticResource EmployePopupFieldLabel}"/>
+                            <Label Grid.Row="1" Grid.Column="1" 
+                                   x:Name="TelephoneLabel"
+                                   Style="{StaticResource EmployeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" 
+                                   Text="Adresse:" 
+                                   Style="{StaticResource EmployePopupFieldLabel}"/>
+                            <Label Grid.Row="2" Grid.Column="1" 
+                                   x:Name="AddressLabel"
+                                   Style="{StaticResource EmployeDetailsValueLabel}"
+                                   LineBreakMode="WordWrap"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" 
+                                   Text="Salaire:" 
+                                   Style="{StaticResource EmployePopupFieldLabel}"/>
+                            <Border Grid.Row="3" Grid.Column="1"
+                                    BackgroundColor="#27AE60"
+                                    Padding="12,8"
+                                    HorizontalOptions="Start"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 6">
+                                <Label x:Name="SalaireLabel"
+                                       TextColor="White"
+                                       FontSize="16"
+                                       FontAttributes="Bold"/>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Employment Information Section -->
+                <Border Style="{StaticResource EmployePopupSectionCard}">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="💼 Informations d'Emploi" 
+                               Style="{StaticResource EmployePopupSectionTitle}"/>
+
+                        <BoxView Style="{StaticResource EmployePopupDivider}"/>
+
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                              ColumnDefinitions="150,*"
+                              RowSpacing="12">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="Poste:" 
+                                   Style="{StaticResource EmployePopupFieldLabel}"/>
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   x:Name="PosteDetailLabel"
+                                   Style="{StaticResource EmployeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Text="Créé le:" 
+                                   Style="{StaticResource EmployePopupFieldLabel}"/>
+                            <Label Grid.Row="1" Grid.Column="1" 
+                                   x:Name="DateCreationLabel"
+                                   Style="{StaticResource EmployeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" 
+                                   Text="Modifié le:" 
+                                   Style="{StaticResource EmployePopupFieldLabel}"/>
+                            <Label Grid.Row="2" Grid.Column="1" 
+                                   x:Name="DateModificationLabel"
+                                   Style="{StaticResource EmployeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" 
+                                   Text="Ajouté par:" 
+                                   Style="{StaticResource EmployePopupFieldLabel}"/>
+                            <Label Grid.Row="3" Grid.Column="1" 
+                                   x:Name="AjouteParLabel"
+                                   Style="{StaticResource EmployeDetailsValueLabel}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Activity Summary -->
+                <Border BackgroundColor="#E3F2FD"
+                        Padding="15"
+                        StrokeThickness="1"
+                        Stroke="#2196F3"
+                        StrokeShape="RoundRectangle 10">
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Label Text="📈" FontSize="20"/>
+                        <Label Text="Résumé d'Activité:"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#2196F3"
+                               VerticalOptions="Center"/>
+                        <Label x:Name="ActivitySummaryLabel"
+                               FontSize="14"
+                               TextColor="#2C3E50"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Close Button -->
+                <Button Text="✓ Fermer" 
+                        Style="{StaticResource EmployeDetailsCloseButton}"
+                        Clicked="OnCloseClicked"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

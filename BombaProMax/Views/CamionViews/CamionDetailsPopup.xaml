@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.CamionViews.CamionDetailsPopup">
+
+    <Border Style="{StaticResource CamionPopupContainer}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                <!-- Header with Matricule -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="🚛 Détails du Camion" 
+                               Style="{StaticResource CamionPopupTitle}"
+                               FontSize="20"
+                               TextColor="#7F8C8D"/>
+                        <Label x:Name="MatriculeLabel"
+                               Text="Camion" 
+                               Style="{StaticResource CamionPopupTitle}"/>
+                    </VerticalStackLayout>
+
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource CamionPopupCloseButton}"
+                            Clicked="OnCloseClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource CamionPopupDivider}"/>
+
+                <!-- Sections -->
+                <VerticalStackLayout Spacing="18">
+
+                    <!-- Basic Information Section -->
+                    <Border Style="{StaticResource CamionPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="ℹ️ Informations de Base" 
+                                   Style="{StaticResource CamionPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource CamionPopupDivider}"/>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="15" RowDefinitions="Auto,Auto">
+                                <!-- ID -->
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="5">
+                                    <Label Text="ID" 
+                                           Style="{StaticResource CamionPopupFieldLabel}"/>
+                                    <Label x:Name="IdLabel"
+                                           Text="N/A"
+                                           Style="{StaticResource CamionDetailsValueLabel}"/>
+                                </VerticalStackLayout>
+
+                                <!-- Marque -->
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
+                                    <Label Text="Marque" 
+                                           Style="{StaticResource CamionPopupFieldLabel}"/>
+                                    <Label x:Name="MarqueLabel"
+                                           Text="N/A"
+                                           Style="{StaticResource CamionDetailsValueLabel}"/>
+                                </VerticalStackLayout>
+
+                                <!-- Matricule (full width) -->
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Spacing="5">
+                                    <Label Text="Matricule" 
+                                           Style="{StaticResource CamionPopupFieldLabel}"/>
+                                    <Label x:Name="MatriculeValueLabel"
+                                           Text="N/A"
+                                           Style="{StaticResource CamionDetailsValueLabel}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Assignment Information Section -->
+                    <Border Style="{StaticResource CamionPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="🔗 Informations d'Affectation" 
+                                   Style="{StaticResource CamionPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource CamionPopupDivider}"/>
+
+                            <VerticalStackLayout Spacing="15">
+                                <!-- Fournisseur -->
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Fournisseur" 
+                                           Style="{StaticResource CamionPopupFieldLabel}"/>
+                                    <Label x:Name="FournisseurLabel"
+                                           Text="Non assigné"
+                                           Style="{StaticResource CamionDetailsValueLabel}"/>
+                                </VerticalStackLayout>
+
+                                <!-- Citerne -->
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Citerne" 
+                                           Style="{StaticResource CamionPopupFieldLabel}"/>
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Border x:Name="CiterneStatusBadge"
+                                                Style="{StaticResource CamionCiterneStatusBadge}"
+                                                WidthRequest="120">
+                                            <Label x:Name="CiterneStatusLabel"
+                                                   Text="Non assignée"
+                                                   Style="{StaticResource CamionCiterneStatusLabel}"/>
+                                        </Border>
+                                        <Label x:Name="CiterneDetailsLabel"
+                                               Text=""
+                                               Style="{StaticResource CamionDetailsValueLabel}"
+                                               VerticalTextAlignment="Center"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Metadata Section -->
+                    <Border Style="{StaticResource CamionPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="📅 Informations Système" 
+                                   Style="{StaticResource CamionPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource CamionPopupDivider}"/>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="15">
+                                <!-- Date de Création -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="Date de Création" 
+                                           Style="{StaticResource CamionPopupFieldLabel}"/>
+                                    <Label x:Name="DateCreationLabel"
+                                           Text="N/A"
+                                           Style="{StaticResource CamionDetailsValueLabel}"/>
+                                </VerticalStackLayout>
+
+                                <!-- Date de Modification -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Dernière Modification" 
+                                           Style="{StaticResource CamionPopupFieldLabel}"/>
+                                    <Label x:Name="DateModificationLabel"
+                                           Text="N/A"
+                                           Style="{StaticResource CamionDetailsValueLabel}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Related Records Statistics -->
+                    <Border Style="{StaticResource CamionPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="📊 Enregistrements Associés" 
+                                   Style="{StaticResource CamionPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource CamionPopupDivider}"/>
+
+                            <Grid ColumnDefinitions="*" ColumnSpacing="10">
+                                <!-- Achats -->
+                                <Border Grid.Column="0" Style="{StaticResource CamionStatsCard}">
+                                    <VerticalStackLayout Spacing="5">
+                                        <Label Text="🛒" 
+                                               FontSize="24"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label x:Name="AchatsCountLabel"
+                                               Text="0"
+                                               Style="{StaticResource CamionStatsNumber}"/>
+                                        <Label Text="Achats" 
+                                               Style="{StaticResource CamionStatsLabel}"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Close Button -->
+                    <Button Text="Fermer"
+                            Style="{StaticResource CamionDetailsCloseButton}"
+                            Margin="0,10,0,0"
+                            Clicked="OnCloseClicked"/>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

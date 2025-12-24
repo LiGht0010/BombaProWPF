@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:models="clr-namespace:BombaProMax.Models.Dashboard"
+               x:Class="BombaProMax.Views.DashboardViews.VenteCarburantPerProductPopup"
+               x:DataType="models:ProductCardModel"
+               Color="Transparent">
+
+    <Border BackgroundColor="#e8e8e8"
+            Padding="0"
+            WidthRequest="850"
+            HeightRequest="550"
+            StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="20"/>
+        </Border.StrokeShape>
+        <Border.Shadow>
+            <Shadow Brush="#000000" Offset="0,8" Radius="30" Opacity="0.2"/>
+        </Border.Shadow>
+
+        <VerticalStackLayout Spacing="0">
+            
+            <!-- Header - Blue theme for fuel sales -->
+            <Grid Padding="24,20" ColumnDefinitions="*,Auto" BackgroundColor="#3B82F6">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="{Binding ProduitNom}" 
+                           FontSize="20" 
+                           FontAttributes="Bold" 
+                           TextColor="White"/>
+                    <Label Text="Quantite Vendue par Reservoir" 
+                           FontSize="13" 
+                           TextColor="#FFFFFF" 
+                           Opacity="0.9"/>
+                </VerticalStackLayout>
+                <Button Grid.Column="1"
+                        Text="X"
+                        BackgroundColor="#FFFFFF"
+                        TextColor="#3B82F6"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        CornerRadius="20"
+                        Padding="0"
+                        Clicked="OnCloseClicked"/>
+            </Grid>
+
+            <!-- Table Header -->
+            <Grid Padding="24,14" 
+                  BackgroundColor="#E8ECF1"
+                  ColumnDefinitions="1.5*,*,*,*,1.2*">
+                <Label Grid.Column="0" 
+                       Text="RESERVOIR" 
+                       FontSize="11" 
+                       FontAttributes="Bold" 
+                       TextColor="#5A6068"
+                       TextTransform="Uppercase"
+                       CharacterSpacing="0.5"/>
+                <Label Grid.Column="1" 
+                       Text="QTE ELEC" 
+                       FontSize="11" 
+                       FontAttributes="Bold" 
+                       TextColor="#5A6068"
+                       TextTransform="Uppercase"
+                       CharacterSpacing="0.5"
+                       HorizontalTextAlignment="Center"/>
+                <Label Grid.Column="2" 
+                       Text="QTE MECA" 
+                       FontSize="11" 
+                       FontAttributes="Bold" 
+                       TextColor="#5A6068"
+                       TextTransform="Uppercase"
+                       CharacterSpacing="0.5"
+                       HorizontalTextAlignment="Center"/>
+                <Label Grid.Column="3" 
+                       Text="DIFF" 
+                       FontSize="11" 
+                       FontAttributes="Bold" 
+                       TextColor="#5A6068"
+                       TextTransform="Uppercase"
+                       CharacterSpacing="0.5"
+                       HorizontalTextAlignment="Center"/>
+                <Label Grid.Column="4" 
+                       Text="TOTAL (DH)" 
+                       FontSize="11" 
+                       FontAttributes="Bold" 
+                       TextColor="#5A6068"
+                       TextTransform="Uppercase"
+                       CharacterSpacing="0.5"
+                       HorizontalTextAlignment="End"/>
+            </Grid>
+
+            <!-- Divider -->
+            <BoxView HeightRequest="1" Color="#D1D5DB" HorizontalOptions="Fill"/>
+
+            <!-- Table Content - Grouped by Reservoir -->
+            <CollectionView x:Name="VentesCollectionView"
+                            MaximumHeightRequest="300"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:VenteCarburantParReservoirDto">
+                        <VerticalStackLayout>
+                            <Grid Padding="24,14" 
+                                  ColumnDefinitions="1.5*,*,*,*,1.2*"
+                                  BackgroundColor="Transparent">
+                                <!-- Reservoir -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding ReservoirNumero}" 
+                                           FontSize="14" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2E2E2E"/>
+                                    <Label Text="{Binding NombrePeriodes, StringFormat='{0} periode(s)'}" 
+                                           FontSize="11" 
+                                           TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                                
+                                <!-- Quantite Electronique -->
+                                <Label Grid.Column="1" 
+                                       Text="{Binding TotalQuantiteElectronique, StringFormat='{0:N2}'}" 
+                                       FontSize="14" 
+                                       FontAttributes="Bold"
+                                       TextColor="#3B82F6"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"/>
+                                
+                                <!-- Quantite Mecanique -->
+                                <Label Grid.Column="2" 
+                                       Text="{Binding TotalQuantiteMecanique, StringFormat='{0:N2}'}" 
+                                       FontSize="14" 
+                                       TextColor="#6B7280"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"/>
+                                
+                                <!-- Difference -->
+                                <Label Grid.Column="3" 
+                                       Text="{Binding TotalDifference, StringFormat='{0:N2}'}" 
+                                       FontSize="14" 
+                                       FontAttributes="Bold"
+                                       TextColor="#EF4444"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"/>
+                                
+                                <!-- Prix Total -->
+                                <Label Grid.Column="4" 
+                                       Text="{Binding TotalPrix, StringFormat='{0:N2} DH'}" 
+                                       FontSize="14" 
+                                       FontAttributes="Bold"
+                                       TextColor="#22C55E"
+                                       HorizontalTextAlignment="End"
+                                       VerticalTextAlignment="Center"/>
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="#E5E9EF" HorizontalOptions="Fill" Margin="24,0"/>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="40" HorizontalOptions="Center">
+                        <Label Text="Aucune vente carburant trouvee" 
+                               FontSize="14" 
+                               TextColor="#8B939E"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <!-- Total Row -->
+            <BoxView HeightRequest="2" Color="#3B82F6" HorizontalOptions="Fill"/>
+            <Grid Padding="24,16" 
+                  BackgroundColor="#EFF6FF"
+                  ColumnDefinitions="1.5*,*,*,*,1.2*">
+                <Label Grid.Column="0" 
+                       Text="TOTAL GENERAL" 
+                       FontSize="14" 
+                       FontAttributes="Bold" 
+                       TextColor="#3B82F6"
+                       VerticalTextAlignment="Center"/>
+                <Label Grid.Column="1" 
+                       x:Name="TotalQuantiteElecLabel"
+                       FontSize="16" 
+                       FontAttributes="Bold"
+                       TextColor="#3B82F6"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"/>
+                <Label Grid.Column="2" 
+                       x:Name="TotalQuantiteMecaLabel"
+                       FontSize="16" 
+                       TextColor="#6B7280"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"/>
+                <Label Grid.Column="3" 
+                       x:Name="TotalDifferenceLabel"
+                       FontSize="16" 
+                       FontAttributes="Bold"
+                       TextColor="#EF4444"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"/>
+                <Label Grid.Column="4" 
+                       x:Name="TotalPrixLabel"
+                       FontSize="16" 
+                       FontAttributes="Bold"
+                       TextColor="#22C55E"
+                       HorizontalTextAlignment="End"
+                       VerticalTextAlignment="Center"/>
+            </Grid>
+
+            <!-- Footer with count -->
+            <Grid Padding="24,14" BackgroundColor="#E8ECF1">
+                <Label x:Name="CountLabel"
+                       FontSize="12" 
+                       TextColor="#5A6068"
+                       HorizontalTextAlignment="Center"/>
+            </Grid>
+
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>

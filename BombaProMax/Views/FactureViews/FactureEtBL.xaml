@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             x:Class="BombaProMax.Views.FactureViews.FactureEtBL"
+             x:DataType="viewmodels:FactureEtBLViewModel"
+             Style="{StaticResource FBLPageStyle}">
+
+    <ScrollView Style="{StaticResource FBLPageScrollView}">
+        <VerticalStackLayout Style="{StaticResource FBLPageMainStack}">
+
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+                <Button Grid.Column="0"
+                        Text="← Crédits Client"
+                        Style="{StaticResource FBLRefreshButton}"
+                        Clicked="OnNavigateToClientCreditClicked"/>
+                
+                <VerticalStackLayout Grid.Column="1" Style="{StaticResource FBLHeaderStack}">
+                    <Label Text="Factures &amp; Bons de Livraison" 
+                           Style="{StaticResource FBLTitleLabel}"/>
+                    <Label Text="Consultez et gérez vos factures et bons de livraison" 
+                           Style="{StaticResource FBLSubtitleLabel}"/>
+                </VerticalStackLayout>
+                
+                <Button Grid.Column="2"
+                        Text="🧾 Facturation"
+                        Style="{StaticResource FBLRefreshButton}"
+                        Clicked="OnNavigateToFacturationClicked"/>
+                
+                <Button Grid.Column="3"
+                        Text="⟳ Rafraîchir"
+                        Command="{Binding RefreshAllCommand}"
+                        Style="{StaticResource FBLRefreshButton}"/>
+            </Grid>
+
+            <!-- ========================================= -->
+            <!-- CLIENT HEADER BANNER                      -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource FBLSearchFilterCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Label Text="👤" 
+                           Grid.Column="0"
+                           Style="{StaticResource FBLSearchIconLabel}"
+                           FontSize="24"/>
+                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                        <Label Text="{Binding CurrentClient.Nom}" 
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource FBLTextPrimary}"/>
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="{Binding CurrentClient.NomSociete, StringFormat='Société: {0}'}" 
+                                   FontSize="13"
+                                   TextColor="{StaticResource FBLTextMuted}"
+                                   IsVisible="{Binding CurrentClient.NomSociete, Converter={StaticResource IsNotNullConverter}}"/>
+                            <Label Text="•" 
+                                   FontSize="13"
+                                   TextColor="{StaticResource FBLTextMuted}"
+                                   IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
+                            <Label Text="{Binding CurrentClient.Contact, StringFormat='Tél: {0}'}" 
+                                   FontSize="13"
+                                   TextColor="{StaticResource FBLTextMuted}"
+                                   IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
+                        </HorizontalStackLayout>
+                        <Label Text="{Binding CurrentClient.NumeroClient, StringFormat='ID: {0}'}" 
+                               FontSize="12"
+                               TextColor="{StaticResource FBLTextMuted}"/>
+                    </VerticalStackLayout>
+                    <!-- Search Entry -->
+                    <Entry Grid.Column="2"
+                           Placeholder="Rechercher..."
+                           Text="{Binding SearchText}"
+                           Style="{StaticResource FBLSearchEntry}"
+                           WidthRequest="200"/>
+                </Grid>
+            </Border>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                              IsVisible="{Binding IsLoading}"
+                              Style="{StaticResource FBLLoadingIndicator}"/>
+
+            <!-- ========================================= -->
+            <!-- STATISTICS CARDS                          -->
+            <!-- ========================================= -->
+            <Grid Style="{StaticResource FBLStatsGrid}"
+                  IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                
+                <!-- Total Factures -->
+                <Border Grid.Column="0" Style="{StaticResource FBLStatCardBase}">
+                    <VerticalStackLayout Style="{StaticResource FBLStatStack}">
+                        <Label Text="{Binding TotalFactures}" 
+                               Style="{StaticResource FBLStatValuePrimary}"/>
+                        <Label Text="Total Factures" 
+                               Style="{StaticResource FBLStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Montant Factures -->
+                <Border Grid.Column="1" Style="{StaticResource FBLStatCardBase}">
+                    <VerticalStackLayout Style="{StaticResource FBLStatStack}">
+                        <Label Text="{Binding TotalMontantFactures, StringFormat='{0:N2}'}" 
+                               Style="{StaticResource FBLStatValueGreen}"/>
+                        <Label Text="Montant Factures (MAD)" 
+                               Style="{StaticResource FBLStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Total BL -->
+                <Border Grid.Column="2" Style="{StaticResource FBLStatCardBase}">
+                    <VerticalStackLayout Style="{StaticResource FBLStatStack}">
+                        <Label Text="{Binding TotalBonsLivraison}" 
+                               Style="{StaticResource FBLStatValueBlue}"/>
+                        <Label Text="Total BL" 
+                               Style="{StaticResource FBLStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Montant BL -->
+                <Border Grid.Column="3" Style="{StaticResource FBLStatCardBase}">
+                    <VerticalStackLayout Style="{StaticResource FBLStatStack}">
+                        <Label Text="{Binding TotalMontantBL, StringFormat='{0:N2}'}" 
+                               Style="{StaticResource FBLStatValueOrange}"/>
+                        <Label Text="Montant BL (MAD)" 
+                               Style="{StaticResource FBLStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- ========================================= -->
+            <!-- TABS CARD - FACTURES & BL                 -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource FBLTabsCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                <VerticalStackLayout Style="{StaticResource FBLTabsContainer}">
+                    
+                    <!-- Tab Headers - Primary Color Bar -->
+                    <Grid Style="{StaticResource FBLTabsHeaderGrid}">
+                        <Button x:Name="FacturesTabButton"
+                                Grid.Column="0"
+                                Text="📄 Factures"
+                                Style="{StaticResource FBLTabButtonActive}"
+                                Clicked="OnFacturesTabClicked"/>
+                        <Button x:Name="BLTabButton"
+                                Grid.Column="1"
+                                Text="📦 Bons de Livraison"
+                                Style="{StaticResource FBLTabButtonInactive}"
+                                Clicked="OnBLTabClicked"/>
+                    </Grid>
+
+                    <!-- ========================================= -->
+                    <!-- TAB 1: FACTURES                           -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="FacturesTab" 
+                                         Style="{StaticResource FBLTabContent}">
+                        
+                        <!-- Filter Buttons Row -->
+                        <HorizontalStackLayout Style="{StaticResource FBLFilterButtonsStack}">
+                            <Button Text="Tout Sélectionner"
+                                    Command="{Binding SelectAllFacturesCommand}"
+                                    Style="{StaticResource FBLFilterButtonInactive}"/>
+                            <Button Text="Désélectionner"
+                                    Command="{Binding DeselectAllFacturesCommand}"
+                                    Style="{StaticResource FBLFilterButtonInactive}"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Factures Table Header -->
+                        <Grid Style="{StaticResource FBLFactureHeaderGrid}">
+                            <Label Grid.Column="0" Text="✓" Style="{StaticResource FBLTableHeaderLabelCenter}"/>
+                            <Label Grid.Column="1" Text="Date" Style="{StaticResource FBLTableHeaderLabel}"/>
+                            <Label Grid.Column="2" Text="Numéro" Style="{StaticResource FBLTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Client" Style="{StaticResource FBLTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Montant" Style="{StaticResource FBLTableHeaderLabelEnd}"/>
+                            <Label Grid.Column="5" Text="Actions" Style="{StaticResource FBLTableHeaderLabelCenter}"/>
+                        </Grid>
+
+                        <!-- Factures List -->
+                        <CollectionView ItemsSource="{Binding Factures}"
+                                       Style="{StaticResource FBLCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:FactureDto">
+                                    <VerticalStackLayout>
+                                        <Border BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToSelectionColorConverter}}"
+                                                Style="{StaticResource FBLRowBorder}">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FactureEtBLViewModel}}, Path=ToggleFactureSelectionCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
+                                            <Grid Style="{StaticResource FBLFactureRowGrid}">
+                                                
+                                                <!-- CheckBox for selection -->
+                                                <CheckBox Grid.Column="0" 
+                                                          IsChecked="{Binding IsSelected}"
+                                                          CheckedChanged="OnFactureCheckBoxChanged"
+                                                          VerticalOptions="Center"
+                                                          HorizontalOptions="Center"/>
+                                                
+                                                <!-- Date -->
+                                                <Label Grid.Column="1" 
+                                                       Text="{Binding DateFacture, StringFormat='{0:dd/MM/yyyy}'}"
+                                                       Style="{StaticResource FBLTableCellText}"/>
+                                                
+                                                <!-- Numéro - Pill Style -->
+                                                <Border Grid.Column="2" Style="{StaticResource FBLNumberCell}">
+                                                    <Label Text="{Binding NumeroFacture}" 
+                                                           Style="{StaticResource FBLNumberLabel}"/>
+                                                </Border>
+                                                
+                                                <!-- Client -->
+                                                <Label Grid.Column="3" 
+                                                       Text="{Binding ClientNom}"
+                                                       Style="{StaticResource FBLTableCellText}"
+                                                       LineBreakMode="TailTruncation"
+                                                       MaxLines="1"/>
+                                                
+                                                <!-- Montant -->
+                                                <Label Grid.Column="4" 
+                                                       Text="{Binding MontantTotal, StringFormat='{0:N2} MAD'}"
+                                                       Style="{StaticResource FBLTableCellAmountGreen}"/>
+                                                
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="5" 
+                                                                       Style="{StaticResource FBLRowActionsStack}">
+                                                    <Button Text="Détails"
+                                                            Style="{StaticResource FBLDetailsButton}"
+                                                            Clicked="OnFactureDetailsClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="🗑️"
+                                                            Style="{StaticResource FBLDeleteButton}"
+                                                            Clicked="OnDeleteFactureClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Row Divider -->
+                                        <BoxView Style="{StaticResource FBLRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            
+                            <!-- Empty View -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource FBLEmptyView}">
+                                    <Border BackgroundColor="{StaticResource FBLNeuCardBg}"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="{StaticResource FBLNeuShadowDark}"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="📄"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucune facture" 
+                                           Style="{StaticResource FBLEmptyTitle}"/>
+                                    <Label Text="Ce client n'a pas de factures correspondant aux critères" 
+                                           Style="{StaticResource FBLEmptySubtitle}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+
+                        <!-- Facture Selection Summary & Merge Button -->
+                        <Border Style="{StaticResource FBLSummaryBar}"
+                                IsVisible="{Binding SelectedFactureCount, Converter={StaticResource IntToVisibilityConverter}}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Padding="16,12">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding SelectedFactureCount, StringFormat='{0} facture(s) sélectionnée(s)'}" 
+                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource FBLTextPrimary}"/>
+                                    <Label Text="{Binding SelectedFactureTotal, StringFormat='Total: {0:N2} MAD'}" 
+                                           FontSize="13" TextColor="{StaticResource FBLTextMuted}"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1"
+                                        Text="🧾 Fusionner Factures"
+                                        Command="{Binding MergeFacturesCommand}"
+                                        IsEnabled="{Binding CanMergeFactures}"
+                                        BackgroundColor="#5EAA8D"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        Padding="16,10"
+                                        CornerRadius="8"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- ========================================= -->
+                    <!-- TAB 2: BONS DE LIVRAISON                  -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="BLTab" 
+                                         Style="{StaticResource FBLTabContent}" 
+                                         IsVisible="False">
+                        
+                        <!-- Filter Buttons Row -->
+                        <HorizontalStackLayout Style="{StaticResource FBLFilterButtonsStack}">
+                            <Button x:Name="BLFilterAllBtn"
+                                    Text="Tous"
+                                    Command="{Binding SetBLFilterAllCommand}"
+                                    Style="{StaticResource FBLFilterButtonActive}"/>
+                            <Button x:Name="BLFilterInvoicedBtn"
+                                    Text="Facturés"
+                                    Command="{Binding SetBLFilterInvoicedCommand}"
+                                    Style="{StaticResource FBLFilterButtonInactive}"/>
+                            <Button x:Name="BLFilterNotInvoicedBtn"
+                                    Text="Non Facturés"
+                                    Command="{Binding SetBLFilterNotInvoicedCommand}"
+                                    Style="{StaticResource FBLFilterButtonInactive}"/>
+                            <Button Text="Tout Sélectionner"
+                                    Command="{Binding SelectAllBLsCommand}"
+                                    Style="{StaticResource FBLFilterButtonInactive}"/>
+                            <Button Text="Désélectionner"
+                                    Command="{Binding DeselectAllBLsCommand}"
+                                    Style="{StaticResource FBLFilterButtonInactive}"/>
+                        </HorizontalStackLayout>
+
+                        <!-- BL Table Header -->
+                        <Grid Style="{StaticResource FBLBLHeaderGrid}">
+                            <Label Grid.Column="0" Text="✓" Style="{StaticResource FBLTableHeaderLabelCenter}"/>
+                            <Label Grid.Column="1" Text="Date" Style="{StaticResource FBLTableHeaderLabel}"/>
+                            <Label Grid.Column="2" Text="Numéro" Style="{StaticResource FBLTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Client" Style="{StaticResource FBLTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Montant" Style="{StaticResource FBLTableHeaderLabelEnd}"/>
+                            <Label Grid.Column="5" Text="Statut" Style="{StaticResource FBLTableHeaderLabelCenter}"/>
+                            <Label Grid.Column="6" Text="Actions" Style="{StaticResource FBLTableHeaderLabelCenter}"/>
+                        </Grid>
+
+                        <!-- BL List -->
+                        <CollectionView ItemsSource="{Binding BonsLivraison}"
+                                       Style="{StaticResource FBLCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:BonLivraisonDto">
+                                    <VerticalStackLayout>
+                                        <Border BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToSelectionColorConverter}}"
+                                                Style="{StaticResource FBLRowBorder}">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FactureEtBLViewModel}}, Path=ToggleBLSelectionCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
+                                            <Grid Style="{StaticResource FBLBLRowGrid}">
+                                                
+                                                <!-- CheckBox for selection (only for non-invoiced) -->
+                                                <CheckBox Grid.Column="0" 
+                                                          IsChecked="{Binding IsSelected}"
+                                                          IsEnabled="{Binding EstFacture, Converter={StaticResource InverseBoolConverter}}"
+                                                          CheckedChanged="OnBLCheckBoxChanged"
+                                                          VerticalOptions="Center"
+                                                          HorizontalOptions="Center"/>
+                                                
+                                                <!-- Date -->
+                                                <Label Grid.Column="1" 
+                                                       Text="{Binding DateBL, StringFormat='{0:dd/MM/yyyy}'}"
+                                                       Style="{StaticResource FBLTableCellText}"/>
+                                                
+                                                <!-- Numéro - Pill Style -->
+                                                <Border Grid.Column="2" Style="{StaticResource FBLNumberCell}">
+                                                    <Label Text="{Binding NumeroBL}" 
+                                                           Style="{StaticResource FBLNumberLabel}"/>
+                                                </Border>
+                                                
+                                                <!-- Client -->
+                                                <Label Grid.Column="3" 
+                                                       Text="{Binding ClientNom}"
+                                                       Style="{StaticResource FBLTableCellText}"
+                                                       LineBreakMode="TailTruncation"
+                                                       MaxLines="1"/>
+                                                
+                                                <!-- Montant -->
+                                                <Label Grid.Column="4" 
+                                                       Text="{Binding MontantTotal, StringFormat='{0:N2} MAD'}"
+                                                       Style="{StaticResource FBLTableCellAmountBlue}"/>
+                                                
+                                                <!-- Status Badge -->
+                                                <Border Grid.Column="5"
+                                                        BackgroundColor="{Binding EstFacture, Converter={StaticResource BoolToColorConverter}}"
+                                                        Style="{StaticResource FBLStatusBadge}">
+                                                    <Label Text="{Binding EstFacture, Converter={StaticResource BoolToFactureStatusConverter}}"
+                                                           Style="{StaticResource FBLStatusBadgeLabel}"/>
+                                                </Border>
+                                                
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="6" 
+                                                                       Style="{StaticResource FBLRowActionsStack}">
+                                                    <Button Text="Détails"
+                                                            Style="{StaticResource FBLDetailsButton}"
+                                                            Clicked="OnBLDetailsClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="🗑️"
+                                                            Style="{StaticResource FBLDeleteButton}"
+                                                            Clicked="OnDeleteBLClicked"
+                                                            CommandParameter="{Binding .}"
+                                                            IsVisible="{Binding EstFacture, Converter={StaticResource InverseBoolConverter}}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Row Divider -->
+                                        <BoxView Style="{StaticResource FBLRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            
+                            <!-- Empty View -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource FBLEmptyView}">
+                                    <Border BackgroundColor="{StaticResource FBLNeuCardBg}"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="{StaticResource FBLNeuShadowDark}"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="📦"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun bon de livraison" 
+                                           Style="{StaticResource FBLEmptyTitle}"/>
+                                    <Label Text="Ce client n'a pas de bons de livraison correspondant aux critères" 
+                                           Style="{StaticResource FBLEmptySubtitle}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+
+                        <!-- BL Selection Summary & Action Buttons -->
+                        <Border Style="{StaticResource FBLSummaryBar}"
+                                IsVisible="{Binding SelectedBLCount, Converter={StaticResource IntToVisibilityConverter}}">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12" Padding="16,12">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding SelectedBLCount, StringFormat='{0} BL(s) sélectionné(s)'}" 
+                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource FBLTextPrimary}"/>
+                                    <Label Text="{Binding SelectedBLTotal, StringFormat='Total: {0:N2} MAD'}" 
+                                           FontSize="13" TextColor="{StaticResource FBLTextMuted}"/>
+                                </VerticalStackLayout>
+                                <!-- Create Facture Button (main action) -->
+                                <Button Grid.Column="1"
+                                        Text="🧾 Créer Facture"
+                                        Command="{Binding CreateFactureFromBLsCommand}"
+                                        IsEnabled="{Binding CanCreateFactureFromBLs}"
+                                        BackgroundColor="#5EAA8D"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        Padding="16,10"
+                                        CornerRadius="8"/>
+                                <!-- Merge BLs Button -->
+                                <Button Grid.Column="2"
+                                        Text="📦 Fusionner BLs"
+                                        Command="{Binding MergeBLsCommand}"
+                                        IsEnabled="{Binding CanMergeBLs}"
+                                        BackgroundColor="#4A8FBF"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        Padding="16,10"
+                                        CornerRadius="8"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Empty State when no client (fallback for direct navigation) -->
+            <Border Style="{StaticResource FBLTabsCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNullConverter}}">
+                <VerticalStackLayout Style="{StaticResource FBLEmptyView}" Padding="40">
+                    <Border BackgroundColor="{StaticResource FBLNeuCardBg}"
+                            WidthRequest="100"
+                            HeightRequest="100"
+                            StrokeThickness="0"
+                            Margin="0,0,0,16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="50"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="{StaticResource FBLNeuShadowDark}"
+                                    Offset="6,6"
+                                    Radius="12"
+                                    Opacity="0.25"/>
+                        </Border.Shadow>
+                        <Label Text="👆"
+                               FontSize="48"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="Aucun client sélectionné" 
+                           Style="{StaticResource FBLEmptyTitle}"/>
+                    <Label Text="Veuillez sélectionner un client depuis la liste des clients pour afficher ses factures et bons de livraison."
+                           Style="{StaticResource FBLEmptySubtitle}"/>
+                    <Button Text="← Retour à la liste des clients"
+                            Style="{StaticResource FBLRefreshButton}"
+                            Clicked="OnNavigateToClientsClicked"
+                            Margin="0,16,0,0"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

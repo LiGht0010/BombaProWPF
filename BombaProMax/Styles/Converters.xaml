@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:BombaProMax.Converters"
+             x:Class="BombaProMax.Styles.Converters">
+
+    <!-- ============================================ -->
+    <!-- CONVERTERS - MUST BE FIRST -->
+    <!-- ============================================ -->
+    <converters:IsLessThanConverter x:Key="IsLessThanConverter"/>
+    <converters:IsZeroConverter x:Key="IsZeroConverter"/>
+    <converters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    <converters:InvertedBoolConverter x:Key="InverseBoolConverter"/>
+    <converters:FirstLetterConverter x:Key="FirstLetterConverter"/>
+    <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
+    <converters:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmptyConverter"/>
+    <converters:IsNullConverter x:Key="IsNullConverter"/>
+    <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    <converters:BoolToSelectionColorConverter x:Key="BoolToSelectionColorConverter"/>
+    <converters:BoolToFilterColorConverter x:Key="BoolToFilterColorConverter"/>
+    <converters:BoolToFilterTextColorConverter x:Key="BoolToFilterTextColorConverter"/>
+    <converters:StatusToColorConverter x:Key="StatusToColorConverter"/>
+    <converters:BoolToFactureStatusConverter x:Key="BoolToFactureStatusConverter"/>
+    <converters:IsNotPaidConverter x:Key="IsNotPaidConverter"/>
+    <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+    <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+    <converters:CiterneIdToColorConverter x:Key="CiterneIdToColorConverter"/>
+    <converters:EqualityToColorConverter x:Key="EqualityToColorConverter"/>
+
+</ResourceDictionary>

@@ -1,0 +1,284 @@
+# Client Navigation Refactor Plan
+
+## Objective
+Remove client Picker controls from `ClientCreditManagement`, `FactureEtBL`, and `FacturationPage`. Instead, pass the selected client from `ClientPage` through navigation, displaying data only for the clicked client.
+
+---
+
+## Current State
+
+### Pages Affected
+| Page | Current Behavior |
+|------|------------------|
+| `ClientPage.xaml` | Shows client list with "Crédit" button ? calls `ShowCreditCommand` |
+| `ClientCreditManagement.xaml` | Has Picker to select client manually |
+| `FactureEtBL.xaml` | Has Picker to filter by client (optional) |
+| `FacturationPage.xaml` | Has Picker to select client for transactions |
+
+### Current Navigation
+- `ClientPage` ? `ClientCreditManagement` (no client context passed)
+- Navigation between invoice pages exists but without consistent client context
+
+---
+
+## Proposed Architecture
+
+### Navigation Strategy: **Shell Query Parameters**
+
+**Why Query Parameters?**
+- Native .NET MAUI pattern
+- Clean separation of concerns
+- Easy to implement with `[QueryProperty]` attribute
+- Supports deep linking if needed later
+- Client ID is lightweight to pass
+
+### New Navigation Flow
+```
+ClientPage
+    ?
+    ? (Crédit button clicked)
+    ? Pass: ?clientId={Id}
+    ?
+ClientCreditManagement
+    ? Display: Client header with name
+    ? Data: Transactions & Règlements for this client only
+    ?
+    ???? FactureEtBL (via "?? Factures & BL" button)
+    ?    Pass: ?clientId={Id}
+    ?    Display: Client header, filtered data
+    ?
+    ???? FacturationPage (via navigation)
+         Pass: ?clientId={Id}
+         Display: Client header, filtered transactions
+```
+
+---
+
+## Implementation Steps
+
+### Phase 1: Shell Route Registration
+1. Register routes in `AppShell.xaml.cs` (if not already)
+2. Define query parameter names consistently: `clientId`
+
+### Phase 2: ViewModel Changes
+
+#### 2.1 ClientCreditManagementViewModel
+- [ ] Add `[QueryProperty(nameof(ClientId), "clientId")]` attribute
+- [ ] Add `ClientId` property with setter that triggers data load
+- [ ] Remove `Clients` collection (no longer needed for picker)
+- [ ] Remove `SelectedClient` two-way binding logic
+- [ ] Add `CurrentClient` property (read-only, for display)
+- [ ] Modify `LoadDataAsync()` to use `ClientId` directly
+- [ ] Add method `LoadClientByIdAsync(int clientId)`
+
+#### 2.2 FactureEtBLViewModel
+- [ ] Add `[QueryProperty(nameof(ClientId), "clientId")]` attribute
+- [ ] Add `ClientId` property (nullable int to support "all clients" mode?)
+- [ ] Add `CurrentClient` property for header display
+- [ ] Modify data loading to filter by `ClientId` when set
+- [ ] Remove or hide the client Picker logic
+- [ ] Update navigation commands to pass `clientId` forward
+
+#### 2.3 FactureViewModel (FacturationPage)
+- [ ] Add `[QueryProperty(nameof(ClientId), "clientId")]` attribute
+- [ ] Add `ClientId` property
+- [ ] Add `CurrentClient` property for header display
+- [ ] Remove `Clients` picker source
+- [ ] Modify `LoadAvailableCTsAsync()` to use `ClientId`
+- [ ] Auto-load data when `ClientId` is set
+
+### Phase 3: XAML Changes
+
+#### 3.1 ClientCreditManagement.xaml
+- [ ] Remove entire client selector `<Border>` containing the Picker
+- [ ] Add new client header section:
+  ```
+  ??????????????????????????????????????????
+  ? ?? {Client.Nom}                        ?
+  ?    {Client.NomSociete} • {Contact}     ?
+  ??????????????????????????????????????????
+  ```
+- [ ] Remove "empty state when no client selected" section
+- [ ] Remove `IsVisible` bindings that depend on `SelectedClient`
+- [ ] Always show data sections (client is always set)
+
+#### 3.2 FactureEtBL.xaml
+- [ ] Remove client Picker from search/filter card
+- [ ] Add client header banner (similar to above)
+- [ ] Update "? Crédits Client" button to pass `clientId` back
+- [ ] Update "?? Facturation" button to pass `clientId` forward
+
+#### 3.3 FacturationPage.xaml
+- [ ] Remove entire client picker grid
+- [ ] Add client header banner
+- [ ] Update "? Crédits Client" button to pass `clientId`
+- [ ] Update "?? Factures & BL" button to pass `clientId`
+
+### Phase 4: Code-Behind Navigation Updates
+
+#### 4.1 ClientPage.xaml.cs / ClientViewModel
+- [ ] Update `ShowCreditCommand` to navigate with query parameter:
+  ```csharp
+  await Shell.Current.GoToAsync($"ClientCreditManagement?clientId={client.Id}");
+  ```
+
+#### 4.2 ClientCreditManagement.xaml.cs
+- [ ] Update `OnNavigateToFactureEtBLClicked` to pass `clientId`
+- [ ] Update any other navigation methods
+
+#### 4.3 FactureEtBL.xaml.cs
+- [ ] Update `OnNavigateToClientCreditClicked` to pass `clientId`
+- [ ] Update `OnNavigateToFacturationClicked` to pass `clientId`
+
+#### 4.4 FacturationPage.xaml.cs
+- [ ] Update navigation methods to pass `clientId`
+
+### Phase 5: Style Cleanup
+- [ ] Remove unused Picker styles if no longer referenced elsewhere
+- [ ] Add new client header banner style (or reuse existing)
+- [ ] Ensure consistent spacing after removing Picker sections
+
+---
+
+## UI Design - Client Header Banner
+
+Replace picker with a consistent header across all pages:
+
+```
+???????????????????????????????????????????????????????????
+?  ????????                                               ?
+?  ?  ??  ?  Client: Ahmed Benali                         ?
+?  ????????  Société: ABC SARL • Tél: 0612345678         ?
+?            ID: CLT-00042                                ?
+???????????????????????????????????????????????????????????
+```
+
+**Characteristics:**
+- Neumorphic card style (matches existing design)
+- Shows key client info at a glance
+- Non-interactive (read-only display)
+- Optional: "Changer Client" link to go back to ClientPage
+
+---
+
+## Edge Cases to Handle
+
+### 1. Direct URL Navigation (No ClientId)
+**Scenario:** User bookmarks or deep-links to page without `clientId`
+**Solution:** 
+- Check if `ClientId` is 0 or null
+- Show friendly message: "Veuillez sélectionner un client depuis la liste"
+- Provide button to navigate to `ClientPage`
+
+### 2. Invalid ClientId
+**Scenario:** Client was deleted or ID doesn't exist
+**Solution:**
+- API returns null/error
+- Display error message
+- Navigate back to `ClientPage`
+
+### 3. Back Navigation
+**Scenario:** User presses back from `FactureEtBL` to `ClientCreditManagement`
+**Solution:**
+- Shell back navigation preserves query parameters
+- Or: store `clientId` in ViewModel, re-apply on appearing
+
+### 4. Cross-Page Consistency
+**Scenario:** User modifies data on one page, navigates to another
+**Solution:**
+- Use `OnAppearing` to refresh data
+- Or: implement messaging (WeakReferenceMessenger) for updates
+
+---
+
+## Testing Checklist
+
+### Functional Tests
+- [ ] Click "Crédit" on ClientPage ? navigates to ClientCreditManagement with correct client
+- [ ] Client header displays correct information
+- [ ] Transactions/Règlements load for the correct client
+- [ ] Navigation to FactureEtBL passes clientId
+- [ ] Navigation to FacturationPage passes clientId
+- [ ] Back navigation works correctly
+- [ ] Data refreshes on page appearing
+
+### Edge Case Tests
+- [ ] Navigate to ClientCreditManagement without clientId ? shows error/redirect
+- [ ] Navigate with invalid clientId ? handles gracefully
+- [ ] Delete client, then navigate ? handles gracefully
+
+### UI Tests
+- [ ] Client header banner displays correctly on all pages
+- [ ] No empty Picker space remains
+- [ ] Responsive layout still works
+- [ ] Loading states display correctly
+
+---
+
+## Files to Modify
+
+### ViewModels
+1. `ViewModels/ClientCreditManagementViewModel.cs`
+2. `ViewModels/FactureEtBLViewModel.cs`
+3. `ViewModels/FactureViewModel.cs`
+4. `ViewModels/ClientViewModel.cs` (navigation command)
+
+### Views (XAML)
+1. `Views/ClientViews/ClientCreditManagement.xaml`
+2. `Views/FactureViews/FactureEtBL.xaml`
+3. `Views/FactureViews/FacturationPage.xaml`
+
+### Views (Code-Behind)
+1. `Views/ClientViews/ClientCreditManagement.xaml.cs`
+2. `Views/FactureViews/FactureEtBL.xaml.cs`
+3. `Views/FactureViews/FacturationPage.xaml.cs`
+
+### Shell
+1. `AppShell.xaml.cs` (route registration if needed)
+
+### Styles (Optional)
+1. `Styles/ClientStyles.xaml` (new client header style)
+
+---
+
+## Estimated Effort
+
+| Phase | Effort |
+|-------|--------|
+| Phase 1: Shell Routes | 15 min |
+| Phase 2: ViewModel Changes | 1-2 hours |
+| Phase 3: XAML Changes | 1 hour |
+| Phase 4: Code-Behind Navigation | 30 min |
+| Phase 5: Style Cleanup | 30 min |
+| Testing | 1 hour |
+| **Total** | **4-5 hours** |
+
+---
+
+## Alternative Approaches Considered
+
+### 1. Shared Service (Rejected)
+- Store selected client in singleton service
+- **Con:** State management complexity, risk of stale data
+
+### 2. MessagingCenter (Rejected)
+- Publish selected client via messaging
+- **Con:** Loose coupling makes debugging harder, memory leak risk
+
+### 3. Keep Optional Picker (Hybrid)
+- Pass clientId but allow changing via picker
+- **Con:** Inconsistent UX, maintains complexity
+
+---
+
+## Next Steps
+
+1. Review this plan
+2. Approve approach or suggest modifications
+3. Begin implementation starting with Phase 1
+4. Implement incrementally, testing each phase
+
+---
+
+*Created: June 2025*
+*Status: Draft - Awaiting Review*

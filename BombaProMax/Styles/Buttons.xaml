@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.Buttons">
+
+    <!-- Colors needed for buttons -->
+    <Color x:Key="NeumorphicLink">#3860e8</Color>
+    <Color x:Key="NeumorphicAccent">#15969c</Color>
+    <Color x:Key="BadgeRed">#9e0606</Color>
+    <Color x:Key="BadgeBlue">#3B82F6</Color>
+    <Color x:Key="BadgeCyan">#06B6D4</Color>
+
+    <!-- Neumorphic Primary Button Style -->
+    <Style x:Key="NeumorphicPrimaryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#2265b6"/>
+        <!--<Setter Property="BackgroundColor" Value="{StaticResource NeumorphicLink}"/>-->
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="CornerRadius" Value="25"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#000000"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Action Button Styles -->
+    <Style x:Key="ActionButtonModifier" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicAccent}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="13,7"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="HeightRequest" Value="45"/>
+        <Setter Property="MinimumWidthRequest" Value="90"/>
+    </Style>
+
+    <Style x:Key="ActionButtonSupprimer" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeRed}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="13,7"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="HeightRequest" Value="45"/>
+        <Setter Property="MinimumWidthRequest" Value="90"/>
+    </Style>
+
+    <!-- Client Specific Action Buttons -->
+    <Style x:Key="ClientActionButtonDetails" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeBlue}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="13,7"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="HeightRequest" Value="45"/>
+        <Setter Property="MinimumWidthRequest" Value="90"/>
+    </Style>
+
+    <Style x:Key="ClientActionButtonCredit" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeCyan}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="13,7"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="HeightRequest" Value="45"/>
+        <Setter Property="MinimumWidthRequest" Value="90"/>
+    </Style>
+
+</ResourceDictionary>

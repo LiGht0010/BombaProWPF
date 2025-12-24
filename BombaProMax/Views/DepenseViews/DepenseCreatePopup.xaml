@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.DepenseViews.DepenseCreatePopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="White"       
+           Padding="0"
+           WidthRequest="550"
+           HeightRequest="550"
+           StrokeShape="RoundRectangle 12">
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" 
+                    BackgroundColor="#E53935" 
+                    Padding="20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label x:Name="HeaderLabel"
+                               Text="💸 Nouvelle Dépense" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                        <Label Text="Enregistrer une nouvelle dépense" 
+                               FontSize="12"
+                               TextColor="#FFCDD2"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            FontSize="20"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+            </Border>
+
+            <!-- ========================================= -->
+            <!-- FORM CONTENT                              -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Date & Numéro -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                        <Border BackgroundColor="#F8F8F8" 
+                               Padding="12"
+                               StrokeShape="RoundRectangle 8"
+                               Stroke="#E0E0E0">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="📅 Date *" 
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#666"/>
+                                <DatePicker x:Name="DatePicker"
+                                            FontSize="14"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        
+                        <Border Grid.Column="1"
+                                BackgroundColor="#F8F8F8" 
+                               Padding="12"
+                               StrokeShape="RoundRectangle 8"
+                               Stroke="#E0E0E0">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="🔢 N° Dépense (auto)" 
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#666"/>
+                                <Entry x:Name="NumeroEntry"
+                                       Placeholder="Généré automatiquement"
+                                       IsReadOnly="True"
+                                       BackgroundColor="#EEEEEE"
+                                       FontSize="14"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Catégorie -->
+                    <Border BackgroundColor="#FFF3E0" 
+                           Padding="12"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="#FFB300">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="📁 Catégorie *" 
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="#E65100"/>
+                            <Picker x:Name="CategoriePicker"
+                                    Title="Sélectionner une catégorie..."
+                                    FontSize="14"/>
+                            <Entry x:Name="CustomCategorieEntry"
+                                   Placeholder="Ou entrer une nouvelle catégorie..."
+                                   FontSize="14"
+                                   IsVisible="True"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Montant -->
+                    <Border BackgroundColor="#FFEBEE" 
+                           Padding="12"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="#E53935">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="💰 Montant (MAD) *" 
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="#C62828"/>
+                            <Entry x:Name="MontantEntry"
+                                   Placeholder="0.00"
+                                   Keyboard="Numeric"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="#E53935"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Description -->
+                    <Border BackgroundColor="#F8F8F8" 
+                           Padding="12"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="#E0E0E0">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="📝 Description (optionnel)" 
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="#666"/>
+                            <Editor x:Name="DescriptionEditor"
+                                    Placeholder="Détails ou remarques sur la dépense..."
+                                    HeightRequest="80"
+                                    FontSize="14"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Summary -->
+                    <Border BackgroundColor="#E8F5E9" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="#4CAF50"
+                           IsVisible="False"
+                           x:Name="SummaryCard">
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                            <VerticalStackLayout HorizontalOptions="Center">
+                                <Label Text="Montant Total" FontSize="11" TextColor="#666"/>
+                                <Label x:Name="TotalLabel"
+                                       Text="0.00 MAD"
+                                       FontAttributes="Bold"
+                                       TextColor="#2E7D32"
+                                       FontSize="18"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER: Error + Actions                   -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" 
+                    BackgroundColor="#F5F5F5" 
+                    Padding="15">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="15">
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           TextColor="#F44336"
+                           FontSize="12"
+                           IsVisible="False"
+                           VerticalOptions="Center"/>
+
+                    <!-- Cancel Button -->
+                    <Button Grid.Column="1"
+                            Text="Annuler" 
+                            BackgroundColor="#9E9E9E"
+                            TextColor="White"
+                            Padding="20,10"
+                            CornerRadius="8"
+                            Clicked="OnCancelClicked"/>
+
+                    <!-- Save Button -->
+                    <Button x:Name="SaveButton"
+                            Grid.Column="2"
+                            Text="✓ Enregistrer" 
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            Padding="20,10"
+                            CornerRadius="8"
+                            FontAttributes="Bold"
+                            Clicked="OnSaveClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

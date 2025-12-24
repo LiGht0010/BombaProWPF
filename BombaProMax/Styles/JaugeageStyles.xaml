@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.JaugeageStyles">
+
+    <!-- COLOR PALETTE - Calibration/Measurement Theme (Teal/Cyan) -->
+    <Color x:Key="CalibNeuSurface">#e8e8e8</Color>
+    <Color x:Key="CalibNeuCardBg">#E8ECF1</Color>
+    <Color x:Key="CalibNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="CalibNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="CalibNeuShadowDarkSoft">#D1D5DB</Color>
+    <Color x:Key="CalibNeuPrimary">#00796B</Color>
+    <Color x:Key="CalibNeuPrimaryLight">#4DB6AC</Color>
+    <Color x:Key="CalibNeuDanger">#E16C6C</Color>
+    <Color x:Key="CalibNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="CalibNeuSuccess">#2E7D32</Color>
+    <Color x:Key="CalibNeuWarning">#F57C00</Color>
+    <Color x:Key="CalibNeuInfo">#1976D2</Color>
+    <Color x:Key="CalibNeuPurple">#7B1FA2</Color>
+    <Color x:Key="CalibNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="CalibNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="CalibNeuTextMuted">#8B939E</Color>
+    <Color x:Key="CalibNeuTextLight">#A8B0BA</Color>
+    <Color x:Key="CalibNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="CalibMBG">#f5f5f5</Color>
+
+    <x:String x:Key="CalibTableColumns">0.8*,1.2*,1*</x:String>
+
+    <!-- PAGE STYLES -->
+    <Style x:Key="CalibPageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Calibration Réservoirs"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibMBG}"/>
+    </Style>
+
+    <Style x:Key="CalibPageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="CalibPageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <Style x:Key="CalibPageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="CalibPageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="CalibPageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextMuted}"/>
+    </Style>
+
+    <!-- STAT CARDS -->
+    <Style x:Key="CalibStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CalibStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CalibStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CalibStatIcon" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <!-- RESERVOIR SELECTOR -->
+    <Style x:Key="CalibSelectorCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CalibSelectorLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextSecondary}"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CalibSelectorPicker" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <!-- BUTTONS -->
+    <Style x:Key="CalibImportButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CalibDeleteAllButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuDanger}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="Padding" Value="16,0"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuDanger}" Offset="0,3" Radius="8" Opacity="0.3"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CalibRefreshButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuInfo}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuInfo}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- LOADING -->
+    <Style x:Key="CalibLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource CalibNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <!-- TABLE STYLES -->
+    <Style x:Key="CalibTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CalibTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <Style x:Key="CalibTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource CalibTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="8"/>
+        <Setter Property="Padding" Value="20,16"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="CalibTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CalibTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource CalibTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="8"/>
+        <Setter Property="Padding" Value="20,12"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="CalibHauteurLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuInfo}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CalibVolumeLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CalibIndexLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CalibRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource CalibNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="20,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <!-- EMPTY VIEW -->
+    <Style x:Key="CalibEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CalibEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CalibEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="CalibEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- POPUP STYLES -->
+    <Style x:Key="CalibPopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="600"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CalibPopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="CalibPopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="CalibPopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CalibPopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="CalibPopupEditor" TargetType="Editor">
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource CalibNeuTextLight}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuSurface}"/>
+    </Style>
+
+    <Style x:Key="CalibPopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource CalibNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CalibPopupImportButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource CalibNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- RESERVOIR INFO CARD -->
+    <Style x:Key="CalibReservoirInfoCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CalibNeuPrimaryLight}"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="12"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CalibReservoirInfoLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style x:Key="CalibReservoirInfoValue" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+</ResourceDictionary>

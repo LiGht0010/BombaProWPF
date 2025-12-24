@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.ReservoirViews.ReservoirDetailsPopup">
+
+    <Border Style="{StaticResource ReservoirPopupContainer}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="📋 Détails du Réservoir" 
+                           Style="{StaticResource ReservoirPopupTitle}"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource ReservoirPopupCloseButton}"
+                            Clicked="OnCloseClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource ReservoirPopupDivider}"/>
+
+                <!-- Reservoir Header Card -->
+                <Border BackgroundColor="#336860"
+                        Padding="20"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20">
+                        <!-- Icon -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="White"
+                                WidthRequest="80"
+                                HeightRequest="80"
+                                StrokeThickness="3"
+                                Stroke="White"
+                                StrokeShape="RoundRectangle 40">
+                            <Label Text="🛢️" 
+                                   FontSize="40"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Reservoir Info -->
+                        <VerticalStackLayout Grid.Column="1" 
+                                           VerticalOptions="Center" 
+                                           Spacing="8">
+                            <Label x:Name="ReservoirNumeroLabel"
+                                   FontSize="24" 
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label x:Name="ReservoirProduitLabel"
+                                   FontSize="16"
+                                   TextColor="#E0E0E0"/>
+                            <Label x:Name="ReservoirIdLabel"
+                                   FontSize="12"
+                                   TextColor="#E0E0E0"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Statistics Cards -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
+                    <!-- Capacity Card -->
+                    <Border Grid.Column="0" Style="{StaticResource ReservoirStatsCard}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="📊" 
+                                   FontSize="28"
+                                   HorizontalOptions="Center"/>
+                            <Label x:Name="CapaciteLabel"
+                                   Text="0.00 L"
+                                   Style="{StaticResource ReservoirStatsNumber}"/>
+                            <Label Text="Capacité Totale"
+                                   Style="{StaticResource ReservoirStatsLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Current Level Card -->
+                    <Border Grid.Column="1" Style="{StaticResource ReservoirStatsCard}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="⛽" 
+                                   FontSize="28"
+                                   HorizontalOptions="Center"/>
+                            <Label x:Name="NiveauLabel"
+                                   Text="0.00 L"
+                                   Style="{StaticResource ReservoirStatsNumber}"/>
+                            <Label Text="Niveau Actuel"
+                                   Style="{StaticResource ReservoirStatsLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Available Space Card -->
+                    <Border Grid.Column="2" Style="{StaticResource ReservoirStatsCard}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="📈" 
+                                   FontSize="28"
+                                   HorizontalOptions="Center"/>
+                            <Label x:Name="EspaceDisponibleLabel"
+                                   Text="0.00 L"
+                                   Style="{StaticResource ReservoirStatsNumber}"/>
+                            <Label Text="Espace Disponible"
+                                   Style="{StaticResource ReservoirStatsLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Percentage Bar -->
+                <Border BackgroundColor="#F8F9FA"
+                        Padding="20"
+                        StrokeThickness="1"
+                        Stroke="#E0E0E0"
+                        StrokeShape="RoundRectangle 10">
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="💧" FontSize="20"/>
+                            <Label Text="Niveau de Remplissage:"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Label x:Name="PercentageLabel"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#336860"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Progress Bar -->
+                        <ProgressBar x:Name="FuelProgressBar"
+                                    HeightRequest="20"
+                                    ProgressColor="#27AE60"
+                                    BackgroundColor="#E0E0E0"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Reservoir Details Section -->
+                <Border Style="{StaticResource ReservoirPopupSectionCard}">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="ℹ️ Informations Détaillées" 
+                               Style="{StaticResource ReservoirPopupSectionTitle}"/>
+
+                        <BoxView Style="{StaticResource ReservoirPopupDivider}"/>
+
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" 
+                              ColumnDefinitions="150,*"
+                              RowSpacing="12">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="Numéro:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   x:Name="NumeroDetailLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Text="Type Carburant:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="1" Grid.Column="1" 
+                                   x:Name="ProduitDetailLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" 
+                                   Text="Capacité:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="2" Grid.Column="1" 
+                                   x:Name="CapaciteDetailLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" 
+                                   Text="Niveau Actuel:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="3" Grid.Column="1" 
+                                   x:Name="NiveauDetailLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+
+                            <Label Grid.Row="4" Grid.Column="0" 
+                                   Text="Espace Disponible:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="4" Grid.Column="1" 
+                                   x:Name="EspaceDetailLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Related Records Section -->
+                <Border Style="{StaticResource ReservoirPopupSectionCard}">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="🔗 Enregistrements Liés" 
+                               Style="{StaticResource ReservoirPopupSectionTitle}"/>
+
+                        <BoxView Style="{StaticResource ReservoirPopupDivider}"/>
+
+                        <Grid RowDefinitions="Auto,Auto,Auto" 
+                              ColumnDefinitions="150,*"
+                              RowSpacing="12">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="Pompes:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   x:Name="PompesCountLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Text="Allocations:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="1" Grid.Column="1" 
+                                   x:Name="AllocationsCountLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" 
+                                   Text="Jaugeages:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="2" Grid.Column="1" 
+                                   x:Name="JaugeagesCountLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Audit Information Section -->
+                <Border Style="{StaticResource ReservoirPopupSectionCard}">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="📅 Informations d'Audit" 
+                               Style="{StaticResource ReservoirPopupSectionTitle}"/>
+
+                        <BoxView Style="{StaticResource ReservoirPopupDivider}"/>
+
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                              ColumnDefinitions="150,*"
+                              RowSpacing="12">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="Créé le:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   x:Name="DateCreationLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Text="Ajouté par:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="1" Grid.Column="1" 
+                                   x:Name="AjouteParLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" 
+                                   Text="Modifié le:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="2" Grid.Column="1" 
+                                   x:Name="DateModificationLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" 
+                                   Text="Modifié par:" 
+                                   Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                            <Label Grid.Row="3" Grid.Column="1" 
+                                   x:Name="ModifieParLabel"
+                                   Style="{StaticResource ReservoirDetailsValueLabel}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Close Button -->
+                <Button Text="✓ Fermer" 
+                        Style="{StaticResource ReservoirDetailsCloseButton}"
+                        Clicked="OnCloseClicked"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

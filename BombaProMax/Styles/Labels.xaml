@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:BombaProMax.Converters"
+             x:Class="BombaProMax.Styles.Labels">
+
+    <!-- Converters -->
+    <converters:IsZeroConverter x:Key="IsZeroConverter"/>
+
+    <!-- Colors needed for labels -->
+    <Color x:Key="black">#000000</Color>
+    <Color x:Key="NeumorphicTextPrimary">#4A5568</Color>
+    <Color x:Key="NeumorphicTextSecondary">#718096</Color>
+    <Color x:Key="NeumorphicLink">#3860e8</Color>
+    <Color x:Key="BadgeGreen">#70bd18</Color>
+    <Color x:Key="BadgeRed">#9e0606</Color>
+
+    <!-- Page Title and Subtitle Labels -->
+    <Style x:Key="PageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource black}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="PageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource black}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Table Header Labels -->
+    <Style x:Key="TableHeaderColumnLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+    </Style>
+
+    <Style x:Key="TableHeaderColumnLabelLeft" TargetType="Label" BasedOn="{StaticResource TableHeaderColumnLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <!-- Client Specific Labels -->
+    <Style x:Key="ClientNameLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="ClientContactLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="#4A5568"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="ClientCompanyLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="#4A5568"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- Product Related Labels -->
+    <Style x:Key="ProductIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="ProductNameLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+        <Setter Property="MinimumWidthRequest" Value="50"/>
+    </Style>
+
+    <Style x:Key="ProductNumberLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ProductNumberIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+    <!-- Category Labels -->
+    <Style x:Key="CategoryIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+    </Style>
+
+    <Style x:Key="CategoryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <!-- Stock Related Labels -->
+    <Style x:Key="StockIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style x:Key="StockBadgeLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="StockStatusLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,2,0,0"/>
+    </Style>
+
+    <Style x:Key="StockStatusLabelWithTrigger" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Text" Value="✅ Disponible"/>
+        <Setter Property="TextColor" Value="{StaticResource BadgeGreen}"/>
+        <Style.Triggers>
+            <DataTrigger TargetType="Label" 
+                         Binding="{Binding Stock, Converter={StaticResource IsZeroConverter}}" 
+                         Value="True">
+                <Setter Property="Text" Value="❌ Épuisé"/>
+                <Setter Property="TextColor" Value="{StaticResource BadgeRed}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="StockMinimumIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style x:Key="StockMinimumLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Marge Labels -->
+    <Style x:Key="MargeIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style x:Key="MargeBadgeLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Price Labels -->
+    <Style x:Key="PricePrimaryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="#70bd18"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="PriceSecondaryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="#3B82F6"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,2,0,0"/>
+    </Style>
+
+    <!-- Délai de Livraison Label -->
+    <Style x:Key="DelaiLivraisonLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Empty View Labels -->
+    <Style x:Key="EmptyViewIcon" TargetType="Label">
+        <Setter Property="FontSize" Value="48"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmptyViewTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmptyViewSubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Neumorphic Title Styles -->
+    <Style x:Key="NeumorphicTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,5"/>
+    </Style>
+
+    <Style x:Key="NeumorphicSubtitle" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextSecondary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,25"/>
+    </Style>
+
+    <Style x:Key="NeumorphicLinkLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicLink}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="TextDecorations" Value="None"/>
+    </Style>
+
+    <Style x:Key="NeumorphicFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextPrimary}"/>
+        <Setter Property="Margin" Value="0,0,0,5"/>
+    </Style>
+
+    <Style x:Key="NeumorphicHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="NeumorphicContentLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="NeumorphicButtonLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+</ResourceDictionary>

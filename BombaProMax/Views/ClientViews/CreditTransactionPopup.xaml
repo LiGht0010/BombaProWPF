@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:sys="clr-namespace:System;assembly=netstandard"
+               x:Class="BombaProMax.Views.ClientViews.CreditTransactionPopup">
+
+    <Border BackgroundColor="White"       
+           Padding="20"
+           WidthRequest="550">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label x:Name="HeaderLabel"
+                           Text="➕ Nouvelle Transaction Crédit" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            BackgroundColor="Transparent"
+                            TextColor="#666"
+                            FontSize="20"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Color="#E0E0E0" HeightRequest="1"/>
+
+                <!-- Client Info Badge -->
+                <Border BackgroundColor="#E3F2FD" 
+                       Padding="10"
+                       StrokeShape="RoundRectangle 8">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="👤" FontSize="20"/>
+                        <VerticalStackLayout>
+                            <Label Text="Client" FontSize="12" TextColor="#666"/>
+                            <Label x:Name="ClientNameLabel"
+                                   Text="Nom du client" 
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#1976D2"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Transaction Form -->
+                <VerticalStackLayout Spacing="15">
+                    <!-- Numero Transaction -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Numéro Transaction" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="NumeroEntry"
+                               Placeholder="Auto-généré"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"
+                               IsReadOnly="True"/>
+                    </VerticalStackLayout>
+
+                    <!-- Date -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Date du Crédit *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <DatePicker x:Name="DateCreditPicker"
+                                    BackgroundColor="#F8F8F8"/>
+                    </VerticalStackLayout>
+
+                    <!-- Type Selection -->
+                    <Border BackgroundColor="#FFF3E0" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="📦 Type d'article" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#E65100"
+                                   FontSize="14"/>
+                            <HorizontalStackLayout Spacing="20">
+                                <RadioButton x:Name="ProduitRadio" 
+                                            Content="Produit" 
+                                            IsChecked="True"
+                                            GroupName="ArticleType"
+                                            CheckedChanged="OnArticleTypeChanged"/>
+                                <RadioButton x:Name="ServiceRadio" 
+                                            Content="Service" 
+                                            GroupName="ArticleType"
+                                            CheckedChanged="OnArticleTypeChanged"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Produit Picker -->
+                    <VerticalStackLayout x:Name="ProduitSection" Spacing="5">
+                        <Label Text="Produit *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Picker x:Name="ProduitPicker"
+                                Title="Sélectionner un produit"
+                                BackgroundColor="#F8F8F8"
+                                TextColor="#333"
+                                ItemDisplayBinding="{Binding Description}"
+                                SelectedIndexChanged="OnProduitSelected"/>
+                    </VerticalStackLayout>
+
+                    <!-- Service Picker -->
+                    <VerticalStackLayout x:Name="ServiceSection" Spacing="5" IsVisible="False">
+                        <Label Text="Service *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Picker x:Name="ServicePicker"
+                                Title="Sélectionner un service"
+                                BackgroundColor="#F8F8F8"
+                                TextColor="#333"
+                                ItemDisplayBinding="{Binding Description}"
+                                SelectedIndexChanged="OnServiceSelected"/>
+                    </VerticalStackLayout>
+
+                    <!-- Quantity and Price Row -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <!-- Quantité -->
+                        <VerticalStackLayout Grid.Column="0" Spacing="5">
+                            <Label Text="Quantité *" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#666"
+                                   FontSize="14"/>
+                            <Entry x:Name="QuantiteEntry"
+                                   Placeholder="1"
+                                   Keyboard="Numeric"
+                                   BackgroundColor="#F8F8F8"
+                                   TextColor="#333"
+                                   PlaceholderColor="#999"
+                                   TextChanged="OnQuantityOrPriceChanged"/>
+                        </VerticalStackLayout>
+
+                        <!-- Prix TTC -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="5">
+                            <Label Text="Prix TTC (MAD) *" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#666"
+                                   FontSize="14"/>
+                            <Entry x:Name="PrixTTCEntry"
+                                   Placeholder="0.00"
+                                   Keyboard="Numeric"
+                                   BackgroundColor="#F8F8F8"
+                                   TextColor="#333"
+                                   PlaceholderColor="#999"
+                                   TextChanged="OnQuantityOrPriceChanged"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Montant Total (Calculated) -->
+                    <Border BackgroundColor="#E8F5E9" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="💰 Montant Total" 
+                                       FontSize="14"
+                                       TextColor="#2E7D32"/>
+                                <Label Text="Quantité × Prix TTC" 
+                                       FontSize="11"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                            <Label x:Name="MontantTotalLabel"
+                                   Grid.Column="1"
+                                   Text="0.00 MAD" 
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#2E7D32"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Facture Status -->
+                    <Border BackgroundColor="#F3E5F5" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="📄 Statut Facture" 
+                                       FontAttributes="Bold" 
+                                       TextColor="#7B1FA2"
+                                       FontSize="14"/>
+                                <Label Text="Cette transaction est-elle facturée?" 
+                                       TextColor="#999"
+                                       FontSize="12"/>
+                            </VerticalStackLayout>
+                            <Switch x:Name="FactureSwitch"
+                                    Grid.Column="1"
+                                    IsToggled="False"
+                                    OnColor="#9C27B0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           TextColor="#F44336"
+                           FontSize="14"
+                           IsVisible="False"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Text="Annuler" 
+                                BackgroundColor="#9E9E9E"
+                                TextColor="White"
+                                CornerRadius="8"
+                                Clicked="OnCancelClicked"/>
+
+                        <Button x:Name="SaveButton"
+                                Grid.Column="1"
+                                Text="✓ Enregistrer" 
+                                BackgroundColor="#4CAF50"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                Clicked="OnSaveClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

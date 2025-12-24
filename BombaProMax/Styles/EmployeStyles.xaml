@@ -1,0 +1,497 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.EmployeStyles">
+
+    <!-- ================================================================== -->
+    <!-- LIGHT NEUMORPHIC DESIGN SYSTEM - EMPLOYE MODULE                    -->
+    <!-- ================================================================== -->
+
+    <!-- COLOR PALETTE -->
+    <Color x:Key="EmployeNeuSurface">#e8e8e8</Color>
+    <Color x:Key="EmployeNeuCardBg">#E8ECF1</Color>
+    <Color x:Key="EmployeNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="EmployeNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="EmployeNeuShadowDarkSoft">#D1D5DB</Color>
+    <Color x:Key="EmployeNeuPrimary">#4A8FBF</Color>
+    <Color x:Key="EmployeNeuDanger">#E16C6C</Color>
+    <Color x:Key="EmployeNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="EmployeNeuSuccess">#5EAA8D</Color>
+    <Color x:Key="EmployeNeuWarning">#E8A84C</Color>
+    <Color x:Key="EmployeNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="EmployeNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="EmployeNeuTextMuted">#8B939E</Color>
+    <Color x:Key="EmployeNeuTextLight">#A8B0BA</Color>
+    <Color x:Key="EmployeNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="EmployeMBG">#f5f5f5</Color>
+
+    <x:String x:Key="EmployeTableColumns">0.6*,1.3*,1.3*,1.2*,1*,1*,2.6*</x:String>
+
+    <!-- PAGE BASE STYLES -->
+    <Style x:Key="EmployePageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Employés"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeMBG}"/>
+    </Style>
+
+    <Style x:Key="EmployePageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="EmployePageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <!-- HEADER SECTION -->
+    <Style x:Key="EmployePageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="EmployePageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="EmployePageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextMuted}"/>
+    </Style>
+
+    <!-- STAT CARDS -->
+    <Style x:Key="EmployeStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="EmployeStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- SEARCH CONTAINER -->
+    <Style x:Key="EmployeSearchContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSurface}"/>
+        <Setter Property="Padding" Value="16,14"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeSearchEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource EmployeNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- LOADING INDICATOR -->
+    <Style x:Key="EmployePageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource EmployeNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <!-- ADD BUTTON -->
+    <Style x:Key="EmployeAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- TABLE CARD -->
+    <Style x:Key="EmployeTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- TABLE HEADER -->
+    <Style x:Key="EmployeTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource EmployeTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="EmployeTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmployeTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource EmployeTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <Style x:Key="EmployeTableDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource EmployeNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <Style x:Key="EmployeTableCollectionView" TargetType="CollectionView">
+        <Setter Property="SelectionMode" Value="None"/>
+    </Style>
+
+    <!-- TABLE ROW -->
+    <Style x:Key="EmployeTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource EmployeTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="76"/>
+    </Style>
+
+    <!-- CELL STYLES -->
+    <Style x:Key="EmployeIdCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuCardBg}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeIdLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmployeNameLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- CIN Badge - Neumorphic -->
+    <Style x:Key="EmployeCINBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E8F5ED"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeCINLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuSuccess}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmployeTelephoneLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="EmployePosteLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- Salaire Badge - Neumorphic -->
+    <Style x:Key="EmployeSalaireBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#FDF4E8"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeSalaireLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuWarning}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmployeActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ACTION BUTTONS -->
+    <Style x:Key="EmployeDetailsButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="70"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeModifierButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="75"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuPrimary}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeSupprimerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuDanger}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource EmployeNeuDanger}"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDark}" Offset="2,2" Radius="4" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource EmployeNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="28,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <!-- EMPTY VIEW -->
+    <Style x:Key="EmployeEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmployeEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmployeEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="EmployeEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- POPUP STYLES -->
+    <Style x:Key="EmployePopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="650"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployePopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="EmployePopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="EmployePopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployePopupSectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="EmployePopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="EmployeDetailsValueLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextPrimary}"/>
+        <Setter Property="Margin" Value="0,6,0,0"/>
+    </Style>
+
+    <Style x:Key="EmployePopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource EmployeNeuBorderLight}"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployePopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource EmployeNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="EmployePopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource EmployeNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="EmployePopupErrorLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuDanger}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+    </Style>
+
+    <Style x:Key="EmployePopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployePopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeDetailsCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="40,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployePopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource EmployeNeuBorderLight}"/>
+    </Style>
+
+    <Style x:Key="EmployeStatsCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource EmployeNeuSurface}"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="12"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource EmployeNeuShadowDark}" Offset="4,4" Radius="8" Opacity="0.18"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="EmployeStatsNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmployeStatsLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="TextColor" Value="{StaticResource EmployeNeuTextMuted}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+</ResourceDictionary>

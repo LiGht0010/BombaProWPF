@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.DashboardStyles">
+
+    <!-- LIGHT NEUMORPHIC DESIGN SYSTEM - DASHBOARD MODULE -->
+
+    <!-- COLOR PALETTE -->
+    <Color x:Key="DashNeuSurface">#e8e8e8</Color>
+    <Color x:Key="DashNeuCardBg">#E8ECF1</Color>
+    <Color x:Key="DashNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="DashNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="DashNeuShadowDarkSoft">#D1D5DB</Color>
+    <Color x:Key="DashNeuPrimary">#3B82F6</Color>
+    <Color x:Key="DashNeuDanger">#EF4444</Color>
+    <Color x:Key="DashNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="DashNeuSuccess">#22C55E</Color>
+    <Color x:Key="DashNeuWarning">#F97316</Color>
+    <Color x:Key="DashNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="DashNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="DashNeuTextMuted">#8B939E</Color>
+    <Color x:Key="DashNeuTextLight">#A8B0BA</Color>
+    <Color x:Key="DashNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="DashMBG">#f5f5f5</Color>
+
+    <!-- KPI Card Colors -->
+    <Color x:Key="DashKpiBlue">#3B82F6</Color>
+    <Color x:Key="DashKpiOrange">#F97316</Color>
+    <Color x:Key="DashKpiGreen">#22C55E</Color>
+    <Color x:Key="DashKpiRed">#EF4444</Color>
+
+    <!-- Section Border Colors -->
+    <Color x:Key="DashAchatsBorder">#F97316</Color>
+    <Color x:Key="DashVentesBorder">#22C55E</Color>
+    <Color x:Key="DashDepensesBorder">#EF4444</Color>
+
+    <!-- PAGE BASE STYLES -->
+    <Style x:Key="DashPageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Tableau de Bord"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource DashMBG}"/>
+    </Style>
+
+    <Style x:Key="DashPageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="DashPageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <!-- HEADER SECTION -->
+    <Style x:Key="DashPageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="DashPageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="DashPageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextMuted}"/>
+    </Style>
+
+    <!-- FILTER SECTION -->
+    <Style x:Key="DashFilterCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource DashNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource DashNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DashFilterLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="DashFilterDatePicker" TargetType="DatePicker">
+        <Setter Property="BackgroundColor" Value="{StaticResource DashNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="DashFilterEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource DashNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource DashNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="DashFilterButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DashNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="42"/>
+        <Setter Property="Padding" Value="20,0"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource DashNeuPrimary}" Offset="0,4" Radius="8" Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DashFilterClearButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DashNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="42"/>
+        <Setter Property="Padding" Value="20,0"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource DashNeuShadowDark}" Offset="2,2" Radius="4" Opacity="0.15"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- KPI CARDS -->
+    <Style x:Key="DashKpiCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource DashNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="MinimumWidthRequest" Value="180"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource DashNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DashKpiValue" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="DashKpiLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- SECTION CONTAINERS -->
+    <Style x:Key="DashSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource DashNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeThickness" Value="2"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource DashNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.2"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DashSectionHeader" TargetType="Grid">
+        <Setter Property="Padding" Value="20,16"/>
+        <Setter Property="ColumnSpacing" Value="16"/>
+    </Style>
+
+    <Style x:Key="DashSectionTotalLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DashSectionTotalValue" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DashSectionToggleButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DashNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="Padding" Value="16,0"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource DashNeuShadowDark}" Offset="2,2" Radius="4" Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- PRODUCT CARDS GRID -->
+    <Style x:Key="DashProductCardsContainer" TargetType="FlexLayout">
+        <Setter Property="Wrap" Value="Wrap"/>
+        <Setter Property="JustifyContent" Value="Start"/>
+        <Setter Property="AlignItems" Value="Start"/>
+        <Setter Property="Padding" Value="16"/>
+    </Style>
+
+    <Style x:Key="DashProductCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="White"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="Margin" Value="8"/>
+        <Setter Property="MinimumWidthRequest" Value="140"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource DashNeuBorderLight}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource DashNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DashProductCardLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="DashProductCardName" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextPrimary}"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="DashProductCardQuantityLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextMuted}"/>
+        <Setter Property="HorizontalTextAlignment" Value="End"/>
+    </Style>
+
+    <Style x:Key="DashProductCardQuantity" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="End"/>
+    </Style>
+
+    <!-- LOADING INDICATOR -->
+    <Style x:Key="DashPageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource DashNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <!-- EMPTY VIEW -->
+    <Style x:Key="DashEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="40"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DashEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextColor" Value="{StaticResource DashNeuTextSecondary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+</ResourceDictionary>

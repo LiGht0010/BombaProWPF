@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BombaProMax.ViewModels"
+             xmlns:models="clr-namespace:BombaProMax.Models.Dashboard"
+             xmlns:styles="clr-namespace:BombaProMax.Styles"
+             x:Class="BombaProMax.Views.DashboardViews.DashboardPage"
+             x:DataType="vm:DashboardViewModel"
+             Title="Tableau de Bord"
+             BackgroundColor="#f5f5f5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:DashboardStyles/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView Style="{StaticResource DashPageScrollView}">
+        <VerticalStackLayout Style="{StaticResource DashPageMainStack}">
+
+            <!-- HEADER -->
+            <VerticalStackLayout Style="{StaticResource DashPageHeaderStack}">
+                <Label Text="Tableau de Bord" Style="{StaticResource DashPageTitleLabel}"/>
+                <Label Text="Vue d'ensemble des achats et ventes" Style="{StaticResource DashPageSubtitleLabel}"/>
+            </VerticalStackLayout>
+
+            <!-- FILTER SECTION -->
+            <Border Style="{StaticResource DashFilterCard}">
+                <Grid ColumnDefinitions="*,*,*,*,Auto,Auto" ColumnSpacing="16" RowSpacing="12">
+                    
+                    <!-- Date Specifique -->
+                    <VerticalStackLayout Grid.Column="0">
+                        <Label Text="Date Specifique:" Style="{StaticResource DashFilterLabel}"/>
+                        <DatePicker Style="{StaticResource DashFilterDatePicker}"
+                                    Date="{Binding DateSpecifique, Mode=TwoWay}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Date de Debut -->
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Date de Debut:" Style="{StaticResource DashFilterLabel}"/>
+                        <DatePicker Style="{StaticResource DashFilterDatePicker}"
+                                    Date="{Binding DateDebut, Mode=TwoWay}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Date de Fin -->
+                    <VerticalStackLayout Grid.Column="2">
+                        <Label Text="Date de Fin:" Style="{StaticResource DashFilterLabel}"/>
+                        <DatePicker Style="{StaticResource DashFilterDatePicker}"
+                                    Date="{Binding DateFin, Mode=TwoWay}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Mois/Annee -->
+                    <VerticalStackLayout Grid.Column="3">
+                        <Label Text="Mois/Annee:" Style="{StaticResource DashFilterLabel}"/>
+                        <Entry Style="{StaticResource DashFilterEntry}"
+                               Placeholder="2025-03"
+                               Text="{Binding MoisAnnee, Mode=TwoWay}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Effacer le filtre -->
+                    <Button Grid.Column="4"
+                            Text="Effacer le filtre"
+                            Style="{StaticResource DashFilterClearButton}"
+                            Command="{Binding ClearFilterCommand}"
+                            VerticalOptions="End"/>
+
+                    <!-- Effectuer -->
+                    <Button Grid.Column="5"
+                            Text="Effectuer"
+                            Style="{StaticResource DashFilterButton}"
+                            Command="{Binding ApplyFilterCommand}"
+                            VerticalOptions="End"/>
+                </Grid>
+            </Border>
+
+            <!-- LOADING INDICATOR -->
+            <ActivityIndicator Style="{StaticResource DashPageLoadingIndicator}"
+                               IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"/>
+
+            <!-- ACHATS SECTION -->
+            <Border Style="{StaticResource DashSectionCard}" Stroke="{StaticResource DashAchatsBorder}">
+                <VerticalStackLayout Spacing="0">
+                    
+                    <!-- Section Header -->
+                    <Grid Style="{StaticResource DashSectionHeader}" ColumnDefinitions="Auto,*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="Total Achat :" 
+                                   Style="{StaticResource DashSectionTotalLabel}"
+                                   TextColor="{StaticResource DashAchatsBorder}"/>
+                            <Label Text="{Binding TotalAchats, StringFormat='{0:N2} DH'}" 
+                                   Style="{StaticResource DashSectionTotalValue}"
+                                   TextColor="{StaticResource DashAchatsBorder}"/>
+                        </HorizontalStackLayout>
+
+                        <Button Grid.Column="2"
+                                Text="{Binding AchatsToggleButtonText}"
+                                Style="{StaticResource DashSectionToggleButton}"
+                                Command="{Binding ToggleAchatsCardsVisibilityCommand}"/>
+                    </Grid>
+
+                    <!-- Product Cards Grid -->
+                    <FlexLayout Style="{StaticResource DashProductCardsContainer}"
+                                IsVisible="{Binding IsAchatsCardsVisible}"
+                                BindableLayout.ItemsSource="{Binding AchatsParProduit}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:ProductCardModel">
+                                <Border Style="{StaticResource DashProductCard}">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DashboardViewModel}}, Path=ShowProductAchatsDetailCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="4">
+                                        <Label Grid.Row="0" Grid.Column="0"
+                                               Text="Prod" 
+                                               Style="{StaticResource DashProductCardLabel}"/>
+                                        <Label Grid.Row="0" Grid.Column="1"
+                                               Text="QTE" 
+                                               Style="{StaticResource DashProductCardQuantityLabel}"/>
+                                        
+                                        <Label Grid.Row="1" Grid.Column="0"
+                                               Text="{Binding ProduitNom}" 
+                                               Style="{StaticResource DashProductCardName}"
+                                               TextColor="{StaticResource DashAchatsBorder}"/>
+                                        <Label Grid.Row="1" Grid.Column="1"
+                                               Text="{Binding TotalQuantite}" 
+                                               Style="{StaticResource DashProductCardQuantity}"
+                                               TextColor="{StaticResource DashAchatsBorder}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+
+                        <BindableLayout.EmptyView>
+                            <VerticalStackLayout Style="{StaticResource DashEmptyView}">
+                                <Label Text="Aucun achat pour cette periode" 
+                                       Style="{StaticResource DashEmptyTitle}"/>
+                            </VerticalStackLayout>
+                        </BindableLayout.EmptyView>
+                    </FlexLayout>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- VENTES SECTION -->
+            <Border Style="{StaticResource DashSectionCard}" Stroke="{StaticResource DashVentesBorder}">
+                <VerticalStackLayout Spacing="0">
+                    
+                    <!-- Section Header -->
+                    <Grid Style="{StaticResource DashSectionHeader}" ColumnDefinitions="Auto,*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="Total Vente :" 
+                                   Style="{StaticResource DashSectionTotalLabel}"
+                                   TextColor="{StaticResource DashVentesBorder}"/>
+                            <Label Text="{Binding TotalVentes, StringFormat='{0:N2} DH'}" 
+                                   Style="{StaticResource DashSectionTotalValue}"
+                                   TextColor="{StaticResource DashVentesBorder}"/>
+                        </HorizontalStackLayout>
+
+                        <Button Grid.Column="2"
+                                Text="{Binding VentesToggleButtonText}"
+                                Style="{StaticResource DashSectionToggleButton}"
+                                Command="{Binding ToggleVentesCardsVisibilityCommand}"/>
+                    </Grid>
+
+                    <!-- Product Cards Grid -->
+                    <FlexLayout Style="{StaticResource DashProductCardsContainer}"
+                                IsVisible="{Binding IsVentesCardsVisible}"
+                                BindableLayout.ItemsSource="{Binding VentesParProduit}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:ProductCardModel">
+                                <Border Style="{StaticResource DashProductCard}">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DashboardViewModel}}, Path=ShowProductVentesDetailCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="4">
+                                        <Label Grid.Row="0" Grid.Column="0"
+                                               Text="Prod" 
+                                               Style="{StaticResource DashProductCardLabel}"/>
+                                        <Label Grid.Row="0" Grid.Column="1"
+                                               Text="QTE" 
+                                               Style="{StaticResource DashProductCardQuantityLabel}"/>
+                                        
+                                        <Label Grid.Row="1" Grid.Column="0"
+                                               Text="{Binding ProduitNom}" 
+                                               Style="{StaticResource DashProductCardName}"
+                                               TextColor="{StaticResource DashVentesBorder}"/>
+                                        <Label Grid.Row="1" Grid.Column="1"
+                                               Text="{Binding TotalQuantite}" 
+                                               Style="{StaticResource DashProductCardQuantity}"
+                                               TextColor="{StaticResource DashVentesBorder}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+
+                        <BindableLayout.EmptyView>
+                            <VerticalStackLayout Style="{StaticResource DashEmptyView}">
+                                <Label Text="Aucune vente pour cette periode" 
+                                       Style="{StaticResource DashEmptyTitle}"/>
+                            </VerticalStackLayout>
+                        </BindableLayout.EmptyView>
+                    </FlexLayout>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- VENTES CARBURANT SECTION (from Periode/PeriodeDetails) -->
+            <Border Style="{StaticResource DashSectionCard}" Stroke="#3B82F6">
+                <VerticalStackLayout Spacing="0">
+                    
+                    <!-- Section Header -->
+                    <Grid Style="{StaticResource DashSectionHeader}" ColumnDefinitions="Auto,*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="Total Vente Carburant :" 
+                                   Style="{StaticResource DashSectionTotalLabel}"
+                                   TextColor="#3B82F6"/>
+                            <Label Text="{Binding TotalVentesCarburant, StringFormat='{0:N2} DH'}" 
+                                   Style="{StaticResource DashSectionTotalValue}"
+                                   TextColor="#3B82F6"/>
+                        </HorizontalStackLayout>
+
+                        <Button Grid.Column="2"
+                                Text="{Binding VentesCarburantToggleButtonText}"
+                                Style="{StaticResource DashSectionToggleButton}"
+                                Command="{Binding ToggleVentesCarburantCardsVisibilityCommand}"/>
+                    </Grid>
+
+                    <!-- Product Cards Grid -->
+                    <FlexLayout Style="{StaticResource DashProductCardsContainer}"
+                                IsVisible="{Binding IsVentesCarburantCardsVisible}"
+                                BindableLayout.ItemsSource="{Binding VentesCarburantParProduit}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:ProductCardModel">
+                                <Border Style="{StaticResource DashProductCard}">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DashboardViewModel}}, Path=ShowProductVentesCarburantDetailCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="4">
+                                        <Label Grid.Row="0" Grid.Column="0"
+                                               Text="Carburant" 
+                                               Style="{StaticResource DashProductCardLabel}"/>
+                                        <Label Grid.Row="0" Grid.Column="1"
+                                               Text="QTE" 
+                                               Style="{StaticResource DashProductCardQuantityLabel}"/>
+                                        
+                                        <Label Grid.Row="1" Grid.Column="0"
+                                               Text="{Binding ProduitNom}" 
+                                               Style="{StaticResource DashProductCardName}"
+                                               TextColor="#3B82F6"/>
+                                        <Label Grid.Row="1" Grid.Column="1"
+                                               Text="{Binding TotalQuantite}" 
+                                               Style="{StaticResource DashProductCardQuantity}"
+                                               TextColor="#3B82F6"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+
+                        <BindableLayout.EmptyView>
+                            <VerticalStackLayout Style="{StaticResource DashEmptyView}">
+                                <Label Text="Aucune vente carburant pour cette periode" 
+                                       Style="{StaticResource DashEmptyTitle}"/>
+                            </VerticalStackLayout>
+                        </BindableLayout.EmptyView>
+                    </FlexLayout>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- DEPENSES SECTION (Placeholder) -->
+            <Border Style="{StaticResource DashSectionCard}" Stroke="{StaticResource DashDepensesBorder}" IsVisible="False">
+                <VerticalStackLayout Spacing="0">
+                    <Grid Style="{StaticResource DashSectionHeader}" ColumnDefinitions="Auto,*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="TOTAL DEPENSES:" 
+                                   Style="{StaticResource DashSectionTotalLabel}"
+                                   TextColor="{StaticResource DashDepensesBorder}"/>
+                            <Label Text="0 DH" 
+                                   Style="{StaticResource DashSectionTotalValue}"
+                                   TextColor="{StaticResource DashDepensesBorder}"/>
+                        </HorizontalStackLayout>
+                        <Button Grid.Column="2" Text="Afficher" Style="{StaticResource DashSectionToggleButton}"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

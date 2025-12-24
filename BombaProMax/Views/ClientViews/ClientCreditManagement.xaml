@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             x:Class="BombaProMax.Views.ClientViews.ClientCreditManagement"
+             x:DataType="viewmodels:ClientCreditManagementViewModel"
+             Style="{StaticResource CreditPageStyle}">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior TextOverride="← Clients"
+                            IsVisible="True"
+                            IsEnabled="True"/>
+    </Shell.BackButtonBehavior>
+
+    <ScrollView Style="{StaticResource CreditPageScrollView}">
+        <VerticalStackLayout Style="{StaticResource CreditPageMainStack}">
+
+            <!-- ========================================= -->
+            <!-- HEADER with Back Navigation               -->
+            <!-- ========================================= -->
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12" Margin="0,0,0,8">
+                <Button Grid.Column="0"
+                        Text="← Retour Clients"
+                        Style="{StaticResource CreditBackButton}"
+                        Clicked="OnBackToClientsClicked"/>
+
+                <VerticalStackLayout Grid.Column="1" 
+                                     Style="{StaticResource CreditHeaderStack}">
+                    <Label Text="Gestion du Crédit Client" 
+                           Style="{StaticResource CreditTitleLabel}"/>
+                    <Label Text="Gérez les transactions et règlements de crédit" 
+                           Style="{StaticResource CreditSubtitleLabel}"/>
+                </VerticalStackLayout>
+                
+                <Button Grid.Column="2"
+                        Text="📄 Factures &amp; BL"
+                        Style="{StaticResource CreditRefreshButton}"
+                        Clicked="OnNavigateToFactureEtBLClicked"/>
+                
+                <Button Grid.Column="3"
+                        Text="Rafraîchir"
+                        Command="{Binding RefreshBilanCommand}"
+                        Style="{StaticResource CreditRefreshButton}"
+                        IsEnabled="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}"/>
+            </Grid>
+
+            <!-- Client Header Banner - Shows selected client info -->
+            <Border Style="{StaticResource CreditClientSelectorCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                <Grid Style="{StaticResource CreditClientSelectorGrid}">
+                    <Label Text="👤" 
+                           Style="{StaticResource CreditClientIconLabel}"/>
+                    <VerticalStackLayout Grid.Column="1" 
+                                         Style="{StaticResource CreditClientSelectorStack}">
+                        <Label Text="{Binding CurrentClient.Nom}" 
+                               Style="{StaticResource CreditClientSelectorLabel}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource ClientTextPrimary}"/>
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="{Binding CurrentClient.NomSociete, StringFormat='Société: {0}'}" 
+                                   Style="{StaticResource CreditClientSelectorLabel}"
+                                   IsVisible="{Binding CurrentClient.NomSociete, Converter={StaticResource IsNotNullConverter}}"/>
+                            <Label Text="•" 
+                                   Style="{StaticResource CreditClientSelectorLabel}"
+                                   IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
+                            <Label Text="{Binding CurrentClient.Contact, StringFormat='Tél: {0}'}" 
+                                   Style="{StaticResource CreditClientSelectorLabel}"
+                                   IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
+                        </HorizontalStackLayout>
+                        <Label Text="{Binding CurrentClient.NumeroClient, StringFormat='ID: {0}'}" 
+                               Style="{StaticResource CreditClientSelectorLabel}"
+                               FontSize="12"
+                               TextColor="{StaticResource ClientTextMuted}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                              IsVisible="{Binding IsLoading}"
+                              Style="{StaticResource CreditLoadingIndicator}"/>
+
+            <!-- ========================================= -->
+            <!-- BILAN CARDS - Neumorphic Stats Row        -->
+            <!-- ========================================= -->
+            <Grid Style="{StaticResource CreditBilanGrid}"
+                  IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                
+                <!-- Total Credit -->
+                <Border Grid.Column="0" Style="{StaticResource CreditBilanCardOrange}">
+                    <VerticalStackLayout Style="{StaticResource CreditBilanStack}">
+                        <Label Text="{Binding Bilan.TotalCredit, StringFormat='{0:N2} MAD'}" 
+                               Style="{StaticResource CreditBilanValueOrange}"/>
+                        <Label Text="Total Crédit" 
+                               Style="{StaticResource CreditBilanLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Total Paid -->
+                <Border Grid.Column="1" Style="{StaticResource CreditBilanCardGreen}">
+                    <VerticalStackLayout Style="{StaticResource CreditBilanStack}">
+                        <Label Text="{Binding Bilan.TotalPaye, StringFormat='{0:N2} MAD'}" 
+                               Style="{StaticResource CreditBilanValueGreen}"/>
+                        <Label Text="Total Payé" 
+                               Style="{StaticResource CreditBilanLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Balance -->
+                <Border Grid.Column="2" Style="{StaticResource CreditBilanCardRed}">
+                    <VerticalStackLayout Style="{StaticResource CreditBilanStack}">
+                        <Label Text="{Binding Bilan.Balance, StringFormat='{0:N2} MAD'}" 
+                               Style="{StaticResource CreditBilanValueRed}"/>
+                        <Label Text="Balance" 
+                               Style="{StaticResource CreditBilanLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Credit Facturé -->
+                <Border Grid.Column="3" Style="{StaticResource CreditBilanCardBlue}">
+                    <VerticalStackLayout Style="{StaticResource CreditBilanStack}">
+                        <Label Text="{Binding Bilan.CreditFacture, StringFormat='{0:N2} MAD'}" 
+                               Style="{StaticResource CreditBilanValueBlue}"/>
+                        <Label Text="Facturé" 
+                               Style="{StaticResource CreditBilanLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Credit Non Facturé -->
+                <Border Grid.Column="4" Style="{StaticResource CreditBilanCardPurple}">
+                    <VerticalStackLayout Style="{StaticResource CreditBilanStack}">
+                        <Label Text="{Binding Bilan.CreditNonFacture, StringFormat='{0:N2} MAD'}" 
+                               Style="{StaticResource CreditBilanValuePurple}"/>
+                        <Label Text="Non Facturé" 
+                               Style="{StaticResource CreditBilanLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- ========================================= -->
+            <!-- TABS CARD - Neumorphic Table Card         -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource CreditTabsCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                <VerticalStackLayout Style="{StaticResource ClientTableContainer}">
+                    
+                    <!-- Tab Headers - Primary Color Bar -->
+                    <Grid Style="{StaticResource CreditTabsHeaderGrid}">
+                        <Button x:Name="TransactionsTabButton"
+                                Grid.Column="0"
+                                Text="Transactions Crédit"
+                                Style="{StaticResource CreditTabButtonActive}"
+                                Clicked="OnTransactionsTabClicked"/>
+                        <Button x:Name="ReglementsTabButton"
+                                Grid.Column="1"
+                                Text="Règlements"
+                                Style="{StaticResource CreditTabButtonInactive}"
+                                Clicked="OnReglementsTabClicked"/>
+                    </Grid>
+
+                    <!-- ========================================= -->
+                    <!-- TAB 1: TRANSACTIONS                       -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="TransactionsTab" 
+                                         Style="{StaticResource CreditTabContent}">
+                        
+                        <!-- Add Button Row -->
+                        <HorizontalStackLayout Style="{StaticResource CreditAddButtonStack}">
+                            <Button Text="+ Nouvelle Transaction"
+                                    Style="{StaticResource CreditAddButton}"
+                                    Clicked="OnAddTransactionClicked"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Transactions Table Header -->
+                        <Grid Style="{StaticResource CreditTransactionHeaderGrid}">
+                            <Label Grid.Column="0" Text="Date" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="1" Text="Numéro" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="2" Text="Article" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Qté" Style="{StaticResource CreditTableHeaderLabelCenter}"/>
+                            <Label Grid.Column="4" Text="Montant" Style="{StaticResource CreditTableHeaderLabelEnd}"/>
+                            <Label Grid.Column="5" Text="Statut" Style="{StaticResource CreditTableHeaderLabelCenter}"/>
+                            <Label Grid.Column="6" Text="Actions" Style="{StaticResource CreditTableHeaderLabelCenter}"/>
+                        </Grid>
+
+                        <!-- Transactions List -->
+                        <CollectionView ItemsSource="{Binding Transactions}"
+                                       Style="{StaticResource CreditTransactionCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:CreditTransactionDto">
+                                    <VerticalStackLayout>
+                                        <Grid Style="{StaticResource CreditTransactionRowGrid}">
+                                            <!-- Date -->
+                                            <Label Grid.Column="0" 
+                                                   Text="{Binding DateCredit, StringFormat='{0:dd/MM/yyyy}'}"
+                                                   Style="{StaticResource CreditTableCellText}"/>
+                                            
+                                            <!-- Numéro - Pill Style -->
+                                            <Border Grid.Column="1" Style="{StaticResource ClientNumberCell}"
+                                                    HorizontalOptions="Start">
+                                                <Label Text="{Binding NumeroTransaction}" 
+                                                       Style="{StaticResource ClientNumberLabel}"/>
+                                            </Border>
+                                            
+                                            <!-- Article -->
+                                            <VerticalStackLayout Grid.Column="2" VerticalOptions="Center"
+                                                             HorizontalOptions="Start">
+                                                <Label Text="{Binding ProduitNom}" 
+                                                       Style="{StaticResource ClientNameCell}"
+                                                       IsVisible="{Binding ProduitNom, Converter={StaticResource IsNotNullConverter}}"/>
+                                                <Label Text="{Binding ServiceNom}" 
+                                                       Style="{StaticResource ClientNameCell}"
+                                                       IsVisible="{Binding ServiceNom, Converter={StaticResource IsNotNullConverter}}"/>
+                                            </VerticalStackLayout>
+                                            
+                                            <!-- Quantity -->
+                                            <Label Grid.Column="3" 
+                                                   Text="{Binding Quantite}"
+                                                   Style="{StaticResource CreditTableCellTextCenter}"/>
+                                            
+                                            <!-- Amount -->
+                                            <Label Grid.Column="4" 
+                                                   Text="{Binding MontantTotal, StringFormat='{0:N2} MAD'}"
+                                                   Style="{StaticResource CreditTableCellAmountOrange}"/>
+                                            
+                                            <!-- Status Badge -->
+                                            <Border Grid.Column="5"
+                                                    BackgroundColor="{Binding Facture, Converter={StaticResource BoolToColorConverter}}"
+                                                    Style="{StaticResource CreditStatusBadge}">
+                                                <Label Text="{Binding Facture, Converter={StaticResource BoolToFactureStatusConverter}}"
+                                                       Style="{StaticResource CreditStatusBadgeLabel}"/>
+                                            </Border>
+                                            
+                                            <!-- Actions -->
+                                            <HorizontalStackLayout Grid.Column="6" 
+                                                                   Style="{StaticResource CreditRowActionsStack}">
+                                                <Button Text="✏️"
+                                                        Style="{StaticResource CreditEditButton}"
+                                                        Clicked="OnEditTransactionClicked"
+                                                        CommandParameter="{Binding .}"/>
+                                                <Button Text="🗑️"
+                                                        Style="{StaticResource CreditDeleteButton}"
+                                                        Clicked="OnDeleteTransactionClicked"
+                                                        CommandParameter="{Binding .}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        
+                                        <!-- Row Divider -->
+                                        <BoxView Style="{StaticResource CreditRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            
+                            <!-- Empty View -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource ClientEmptyView}">
+                                    <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="{StaticResource ClientNeuShadowDark}"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="📦"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucune transaction" 
+                                           Style="{StaticResource ClientEmptyTitle}"/>
+                                    <Label Text="Ce client n'a pas encore de transactions de crédit enregistrées" 
+                                           Style="{StaticResource ClientEmptySubtitle}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- ========================================= -->
+                    <!-- TAB 2: RÈGLEMENTS                         -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="ReglementsTab" 
+                                         Style="{StaticResource CreditTabContent}" 
+                                         IsVisible="False">
+                        
+                        <!-- Add Button Row -->
+                        <HorizontalStackLayout Style="{StaticResource CreditAddButtonStack}">
+                            <Button Text="+ Nouveau Règlement"
+                                    Style="{StaticResource CreditAddButton}"
+                                    Clicked="OnAddReglementClicked"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Reglements Table Header -->
+                        <Grid Style="{StaticResource CreditReglementHeaderGrid}">
+                            <Label Grid.Column="0" Text="Date" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="1" Text="Montant" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="2" Text="Mode" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Référence" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Validé Par" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="5" Text="Actions" Style="{StaticResource CreditTableHeaderLabelCenter}"/>
+                        </Grid>
+
+                        <!-- Reglements List -->
+                        <CollectionView ItemsSource="{Binding Reglements}"
+                                       Style="{StaticResource CreditTransactionCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ReglementCreditDto">
+                                    <VerticalStackLayout>
+                                        <Grid Style="{StaticResource CreditReglementRowGrid}">
+                                            <!-- Date -->
+                                            <Label Grid.Column="0" 
+                                                   Text="{Binding DateReglement, StringFormat='{0:dd/MM/yyyy}'}"
+                                                   Style="{StaticResource CreditTableCellText}"/>
+                                            
+                                            <!-- Montant -->
+                                            <Label Grid.Column="1" 
+                                                   Text="{Binding MontantPaye, StringFormat='{0:N2} MAD'}"
+                                                   Style="{StaticResource CreditTableCellAmountGreen}"/>
+                                            
+                                            <!-- Mode Badge -->
+                                            <Border Grid.Column="2" Style="{StaticResource CreditModeBadge}">
+                                                <Label Text="{Binding ModePaiementNom}"
+                                                       Style="{StaticResource CreditModeBadgeLabel}"/>
+                                            </Border>
+                                            
+                                            <!-- Reference -->
+                                            <Label Grid.Column="3" 
+                                                   Text="{Binding ReferenceTransaction}"
+                                                   Style="{StaticResource CreditTableCellTextMuted}"/>
+                                            
+                                            <!-- Validated By -->
+                                            <Label Grid.Column="4" 
+                                                   Text="{Binding ValidePar}"
+                                                   Style="{StaticResource CreditTableCellTextMuted}"/>
+                                            
+                                            <!-- Actions -->
+                                            <HorizontalStackLayout Grid.Column="5" 
+                                                                   Style="{StaticResource CreditRowActionsStack}">
+                                                <Button Text="✏️"
+                                                        Style="{StaticResource CreditEditButton}"
+                                                        Clicked="OnEditReglementClicked"
+                                                        CommandParameter="{Binding .}"/>
+                                                <Button Text="🗑️"
+                                                        Style="{StaticResource CreditDeleteButton}"
+                                                        Clicked="OnDeleteReglementClicked"
+                                                        CommandParameter="{Binding .}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        
+                                        <!-- Row Divider -->
+                                        <BoxView Style="{StaticResource CreditRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            
+                            <!-- Empty View -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource ClientEmptyView}">
+                                    <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="{StaticResource ClientNeuShadowDark}"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="💵"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun règlement" 
+                                           Style="{StaticResource ClientEmptyTitle}"/>
+                                    <Label Text="Ce client n'a pas encore de règlements enregistrés" 
+                                           Style="{StaticResource ClientEmptySubtitle}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Empty State when no client (fallback for direct navigation) -->
+            <Border Style="{StaticResource CreditEmptyStateCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNullConverter}}">
+                <VerticalStackLayout Style="{StaticResource CreditEmptyStateStack}">
+                    <!-- Neumorphic Icon Container -->
+                    <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                            WidthRequest="100"
+                            HeightRequest="100"
+                            StrokeThickness="0"
+                            Margin="0,0,0,16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="50"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="{StaticResource ClientNeuShadowDark}"
+                                    Offset="6,6"
+                                    Radius="12"
+                                    Opacity="0.25"/>
+                        </Border.Shadow>
+                        <Label Text="👆"
+                               FontSize="48"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="Aucun client sélectionné" 
+                           Style="{StaticResource CreditEmptyStateTitle}"/>
+                    <Label Text="Veuillez sélectionner un client depuis la liste des clients pour afficher ses transactions de crédit."
+                           Style="{StaticResource CreditEmptyStateSubtitle}"/>
+                    <Button Text="← Retour à la liste des clients"
+                            Style="{StaticResource CreditBackButton}"
+                            Clicked="OnBackToClientsClicked"
+                            Margin="0,16,0,0"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

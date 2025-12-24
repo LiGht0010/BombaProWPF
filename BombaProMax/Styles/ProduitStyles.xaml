@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.ProduitStyles">
+
+    <!-- ================================================================== -->
+    <!-- LIGHT NEUMORPHIC DESIGN SYSTEM - PRODUIT MODULE                    -->
+    <!-- ================================================================== -->
+    <!-- A soft, elegant design with subtle shadows creating depth          -->
+    <!-- Elements appear to float above the surface with tactile feel       -->
+    <!-- ================================================================== -->
+
+    <!-- ================================================================== -->
+    <!-- COLOR PALETTE - Light Neumorphic Theme                             -->
+    <!-- ================================================================== -->
+    
+    <!-- Surface Colors - Soft, warm grays (not pure white) -->
+    <Color x:Key="ProduitNeuSurface">#e8e8e8</Color>
+    <Color x:Key="ProduitNeuSurfaceAlt">#ebf1f3</Color>
+    <Color x:Key="ProduitNeuCardBg">#E8ECF1</Color>
+    
+    <!-- Shadow Colors for Neumorphic Effect -->
+    <Color x:Key="ProduitNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="ProduitNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="ProduitNeuShadowDarkSoft">#D1D5DB</Color>
+    
+    <!-- Accent Colors -->
+    <Color x:Key="ProduitNeuPrimary">#4A8FBF</Color>
+    <Color x:Key="ProduitNeuPrimaryLight">#6BA5CC</Color>
+    <Color x:Key="ProduitNeuPrimaryDark">#3A7AA8</Color>
+    <Color x:Key="ProduitNeuDanger">#E16C6C</Color>
+    <Color x:Key="ProduitNeuDangerLight">#F08080</Color>
+    <Color x:Key="ProduitNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="ProduitNeuSuccess">#5EAA8D</Color>
+    <Color x:Key="ProduitNeuWarning">#E8A84C</Color>
+    
+    <!-- Text Colors - Soft grays (not pure black) -->
+    <Color x:Key="ProduitNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="ProduitNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="ProduitNeuTextMuted">#8B939E</Color>
+    <Color x:Key="ProduitNeuTextLight">#A8B0BA</Color>
+    
+    <!-- Border Colors -->
+    <Color x:Key="ProduitNeuBorder">#D8DDE5</Color>
+    <Color x:Key="ProduitNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="ProduitMBG">#f5f5f5</Color>
+
+    <!-- SHARED COLUMN DEFINITIONS - THIS IS THE KEY TO ALIGNMENT! -->
+    <x:String x:Key="ProduitTableColumns">1*,2*,1*,0.8*,0.8*,1*,1.2*,2.5*</x:String>
+
+    <!-- ================================================================== -->
+    <!-- PAGE BASE STYLES                                                   -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitPageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Produits"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitMBG}"/>
+    </Style>
+
+    <Style x:Key="ProduitPageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="ProduitPageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- HEADER SECTION                                                     -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitPageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="ProduitPageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="ProduitPageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextMuted}"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- STAT CARDS - Neumorphic Raised Style                               -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDark}"
+                        Offset="6,6"
+                        Radius="12"
+                        Opacity="0.25"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="ProduitStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- SEARCH CONTAINER - Neumorphic Inset Style                          -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitSearchContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuSurface}"/>
+        <Setter Property="Padding" Value="16,14"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDarkSoft}"
+                        Offset="2,2"
+                        Radius="6"
+                        Opacity="0.15"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitSearchEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource ProduitNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- LOADING INDICATOR                                                  -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitPageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource ProduitNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- ADD BUTTON - Neumorphic Raised Button                              -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuPrimary}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TABLE CARD - Main Neumorphic Container                             -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDark}"
+                        Offset="8,8"
+                        Radius="20"
+                        Opacity="0.28"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TABLE HEADER                                                       -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource ProduitTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="ProduitTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ProduitTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource ProduitTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <Style x:Key="ProduitTableDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource ProduitNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- COLLECTION VIEW                                                    -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitTableCollectionView" TargetType="CollectionView">
+        <Setter Property="SelectionMode" Value="None"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TABLE ROW                                                          -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource ProduitTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="76"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- CELL STYLES                                                        -->
+    <!-- ================================================================== -->
+
+    <!-- Product Number Cell - Neumorphic Pill Style -->
+    <Style x:Key="ProduitNumberCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuCardBg}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDarkSoft}"
+                        Offset="1,1"
+                        Radius="3"
+                        Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitNumberLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Description/Category Cell -->
+    <Style x:Key="ProduitDescriptionCell" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="4"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ProduitDescriptionLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="ProduitCategoryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- Price Cell -->
+    <Style x:Key="ProduitPriceCell" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="2"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ProduitPricePrimaryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuSuccess}"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ProduitPriceSecondaryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Marge Cell - Neumorphic Badge -->
+    <Style x:Key="ProduitMargeCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E8F5ED"/>
+        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDarkSoft}"
+                        Offset="1,1"
+                        Radius="2"
+                        Opacity="0.1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitMargeLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuSuccess}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Stock Cell - Neumorphic Badge -->
+    <Style x:Key="ProduitStockCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E8F1F8"/>
+        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDarkSoft}"
+                        Offset="1,1"
+                        Radius="2"
+                        Opacity="0.1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitStockLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Stock Minimum Cell - Neumorphic Badge -->
+    <Style x:Key="ProduitStockMinCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#FDF4E8"/>
+        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDarkSoft}"
+                        Offset="1,1"
+                        Radius="2"
+                        Opacity="0.1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitStockMinLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuWarning}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Delai Livraison Cell -->
+    <Style x:Key="ProduitDelaiCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Actions Cell -->
+    <Style x:Key="ProduitActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- ACTION BUTTONS - Neumorphic Button Styles                          -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitModifierButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuPrimary}"
+                        Offset="0,3"
+                        Radius="6"
+                        Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitSupprimerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuDanger}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource ProduitNeuDanger}"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDark}"
+                        Offset="2,2"
+                        Radius="4"
+                        Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Row Divider -->
+    <Style x:Key="ProduitRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource ProduitNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="28,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- EMPTY VIEW - Neumorphic Empty State                                -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ProduitEmptyIcon" TargetType="Label">
+        <Setter Property="FontSize" Value="64"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextLight}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ProduitEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ProduitEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="ProduitEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuPrimary}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- POPUP STYLES - Neumorphic Modal Design                             -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ProduitPopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="700"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="24"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#000000"
+                        Offset="0,12"
+                        Radius="40"
+                        Opacity="0.18"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitPopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="14"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDarkSoft}"
+                        Offset="2,2"
+                        Radius="6"
+                        Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitPopupSectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource ProduitNeuBorderLight}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitPopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource ProduitNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource ProduitNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupPriceDisplay" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E8F5ED"/>
+        <Setter Property="Padding" Value="15,12"/>
+        <Setter Property="StrokeThickness" Value="2"/>
+        <Setter Property="Stroke" Value="{StaticResource ProduitNeuSuccess}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitPopupPriceLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuSuccess}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupMarginLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupMarginValue" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupErrorLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuDanger}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+    </Style>
+
+    <Style x:Key="ProduitPopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource ProduitNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuShadowDark}"
+                        Offset="3,3"
+                        Radius="6"
+                        Opacity="0.15"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitPopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ProduitNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ProduitNeuSuccess}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ProduitPopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource ProduitNeuBorderLight}"/>
+    </Style>
+
+</ResourceDictionary>

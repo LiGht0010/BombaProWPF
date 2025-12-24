@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             x:Class="BombaProMax.Views.ReservoirCalibrationViews.ReservoirCalibrationPage"
+             x:DataType="viewmodels:ReservoirCalibrationViewModel"
+             Style="{StaticResource CalibPageStyle}">
+
+    <ScrollView Style="{StaticResource CalibPageScrollView}">
+        <VerticalStackLayout Style="{StaticResource CalibPageMainStack}">
+
+            <!-- HEADER -->
+            <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,8">
+                <VerticalStackLayout Style="{StaticResource CalibPageHeaderStack}">
+                    <Label Text="📏 Calibration des Réservoirs" 
+                           Style="{StaticResource CalibPageTitleLabel}"/>
+                    <Label Text="Gérez les tables de jaugeage (hauteur → volume) pour chaque réservoir" 
+                           Style="{StaticResource CalibPageSubtitleLabel}"/>
+                </VerticalStackLayout>
+                
+                <Button Grid.Column="1"
+                        Text="🔄 Actualiser"
+                        Style="{StaticResource CalibRefreshButton}"
+                        Command="{Binding RefreshCalibrationsCommand}"
+                        IsEnabled="{Binding HasSelectedReservoir}"
+                        Margin="0,0,10,0"
+                        VerticalOptions="Center"/>
+                
+                <Button Grid.Column="2"
+                        Text="📥 Importer CSV"
+                        Style="{StaticResource CalibImportButton}"
+                        Clicked="OnImportClicked"
+                        IsEnabled="{Binding HasSelectedReservoir}"
+                        VerticalOptions="Center"/>
+            </Grid>
+
+            <!-- RESERVOIR SELECTOR -->
+            <Border Style="{StaticResource CalibSelectorCard}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                    <Label Text="🛢️ Réservoir:" 
+                           Style="{StaticResource CalibSelectorLabel}"
+                           VerticalOptions="Center"/>
+                    <Picker Grid.Column="1"
+                            ItemsSource="{Binding Reservoirs}"
+                            SelectedItem="{Binding SelectedReservoir}"
+                            ItemDisplayBinding="{Binding Numero}"
+                            Title="Sélectionner un réservoir"
+                            Style="{StaticResource CalibSelectorPicker}"/>
+                    
+                    <!-- Reservoir Info -->
+                    <HorizontalStackLayout Grid.Column="2" 
+                                           Spacing="20"
+                                           IsVisible="{Binding HasSelectedReservoir}">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="CAPACITÉ" FontSize="9" TextColor="#8B939E" FontAttributes="Bold"/>
+                            <Label Text="{Binding SelectedReservoir.Capacite, StringFormat='{0:N0} L'}" 
+                                   FontSize="14" FontAttributes="Bold" TextColor="#00796B"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="PRODUIT" FontSize="9" TextColor="#8B939E" FontAttributes="Bold"/>
+                            <Label Text="{Binding SelectedReservoir.ProduitNom, TargetNullValue='Non assigné'}" 
+                                   FontSize="14" FontAttributes="Bold" TextColor="#1976D2"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- STATS CARDS -->
+            <Grid ColumnDefinitions="*,*,*,*" 
+                  ColumnSpacing="16"
+                  IsVisible="{Binding HasSelectedReservoir}">
+                
+                <Border Grid.Column="0" Style="{StaticResource CalibStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="📊" Style="{StaticResource CalibStatIcon}"/>
+                        <Label Text="{Binding TotalCalibrations}" 
+                               Style="{StaticResource CalibStatNumber}"
+                               TextColor="#1976D2"/>
+                        <Label Text="Entrées" Style="{StaticResource CalibStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CalibStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="📏" Style="{StaticResource CalibStatIcon}"/>
+                        <Label Text="{Binding MinHauteur, StringFormat='{0:N1} cm'}" 
+                               Style="{StaticResource CalibStatNumber}"
+                               TextColor="#7B1FA2"/>
+                        <Label Text="Hauteur Min" Style="{StaticResource CalibStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource CalibStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="📐" Style="{StaticResource CalibStatIcon}"/>
+                        <Label Text="{Binding MaxHauteur, StringFormat='{0:N1} cm'}" 
+                               Style="{StaticResource CalibStatNumber}"
+                               TextColor="#00796B"/>
+                        <Label Text="Hauteur Max" Style="{StaticResource CalibStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="3" Style="{StaticResource CalibStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="🛢️" Style="{StaticResource CalibStatIcon}"/>
+                        <Label Text="{Binding MaxVolume, StringFormat='{0:N0} L'}" 
+                               Style="{StaticResource CalibStatNumber}"
+                               TextColor="#E65100"/>
+                        <Label Text="Volume Max" Style="{StaticResource CalibStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Error Message -->
+            <Border BackgroundColor="#FFEBEE" 
+                    Padding="16" 
+                    StrokeShape="RoundRectangle 10"
+                    Stroke="#E57373"
+                    IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                <Label Text="{Binding ErrorMessage}" TextColor="#C62828" FontSize="13"/>
+            </Border>
+
+            <!-- Loading -->
+            <ActivityIndicator Style="{StaticResource CalibLoadingIndicator}"
+                               IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"/>
+
+            <!-- NO RESERVOIR SELECTED -->
+            <Border Style="{StaticResource CalibTableCard}"
+                    IsVisible="{Binding HasSelectedReservoir, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Style="{StaticResource CalibEmptyView}">
+                    <Border BackgroundColor="#EEF1F5"
+                            WidthRequest="100"
+                            HeightRequest="100"
+                            StrokeThickness="0"
+                            Margin="0,0,0,16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="50"/>
+                        </Border.StrokeShape>
+                        <Label Text="🛢️" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="Sélectionnez un réservoir" Style="{StaticResource CalibEmptyTitle}"/>
+                    <Label Text="Choisissez un réservoir dans la liste ci-dessus pour voir ou importer sa table de calibration" 
+                           Style="{StaticResource CalibEmptySubtitle}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- TABLE CARD -->
+            <Border Style="{StaticResource CalibTableCard}"
+                    IsVisible="{Binding HasSelectedReservoir}">
+                <VerticalStackLayout Style="{StaticResource CalibTableContainer}">
+
+                    <!-- Table Header with Actions -->
+                    <Grid BackgroundColor="#00796B" Padding="20,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="TABLE DE CALIBRATION" 
+                               FontSize="13" 
+                               FontAttributes="Bold" 
+                               TextColor="White"
+                               VerticalOptions="Center"/>
+                        <Button Grid.Column="1"
+                                Text="🗑️ Supprimer tout"
+                                Style="{StaticResource CalibDeleteAllButton}"
+                                Clicked="OnDeleteAllClicked"
+                                IsEnabled="{Binding HasCalibrationData}"
+                                IsVisible="{Binding HasCalibrationData}"/>
+                    </Grid>
+
+                    <!-- Column Headers -->
+                    <Grid Style="{StaticResource CalibTableHeaderGrid}">
+                        <Label Grid.Column="0" Text="#" Style="{StaticResource CalibTableHeaderLabel}"/>
+                        <Label Grid.Column="1" Text="Hauteur (cm)" Style="{StaticResource CalibTableHeaderLabel}"/>
+                        <Label Grid.Column="2" Text="Volume (L)" Style="{StaticResource CalibTableHeaderLabel}"/>
+                    </Grid>
+
+                    <!-- Rows -->
+                    <ScrollView HeightRequest="400">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Calibrations}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:ReservoirCalibrationDto">
+                                    <VerticalStackLayout BackgroundColor="Transparent">
+                                        <Grid Style="{StaticResource CalibTableRowGrid}">
+                                            <Label Grid.Column="0" 
+                                                   Text="{Binding ID}" 
+                                                   Style="{StaticResource CalibIndexLabel}"/>
+                                            <Label Grid.Column="1" 
+                                                   Text="{Binding HauteurCm, StringFormat='{0:N1}'}" 
+                                                   Style="{StaticResource CalibHauteurLabel}"/>
+                                            <Label Grid.Column="2" 
+                                                   Text="{Binding VolumeLitres, StringFormat='{0:N0}'}" 
+                                                   Style="{StaticResource CalibVolumeLabel}"/>
+                                        </Grid>
+                                        <BoxView Style="{StaticResource CalibRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                            
+                            <BindableLayout.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource CalibEmptyView}" Padding="40,60">
+                                    <Border BackgroundColor="#EEF1F5"
+                                            WidthRequest="80"
+                                            HeightRequest="80"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="40"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="📏" FontSize="36" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucune donnée de calibration" Style="{StaticResource CalibEmptyTitle}"/>
+                                    <Label Text="Importez un fichier CSV contenant les données hauteur/volume du certificat de jaugeage" 
+                                           Style="{StaticResource CalibEmptySubtitle}"/>
+                                    <Button Text="📥 Importer CSV"
+                                            Style="{StaticResource CalibEmptyButton}"
+                                            Clicked="OnImportClicked"/>
+                                </VerticalStackLayout>
+                            </BindableLayout.EmptyView>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- VOLUME LOOKUP TEST -->
+            <Border Style="{StaticResource CalibSelectorCard}"
+                    IsVisible="{Binding HasCalibrationData}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="🔍 Test de Lookup Volume" 
+                           FontSize="15" 
+                           FontAttributes="Bold" 
+                           TextColor="#2E2E2E"/>
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+                        <Label Text="Hauteur:" 
+                               Style="{StaticResource CalibSelectorLabel}"
+                               VerticalOptions="Center"/>
+                        <Entry x:Name="TestHauteurEntry"
+                               Grid.Column="1"
+                               Placeholder="Ex: 201"
+                               Keyboard="Numeric"
+                               BackgroundColor="#E8ECF1"
+                               FontSize="14"/>
+                        <Button Grid.Column="2"
+                                Text="Calculer"
+                                BackgroundColor="#1976D2"
+                                TextColor="White"
+                                Padding="16,10"
+                                CornerRadius="8"
+                                Clicked="OnTestLookupClicked"/>
+                        <Label x:Name="TestResultLabel"
+                               Grid.Column="3"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#00796B"
+                               VerticalOptions="Center"
+                               Text="-- L"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

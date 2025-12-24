@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:models="clr-namespace:BombaProMax.Models"
+               x:Class="BombaProMax.Views.User.UserEditPopup"
+               x:DataType="models:UserDto">
+
+    <Border Style="{StaticResource UserPopupContainer}" WidthRequest="550">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="✏️ Modifier l'utilisateur" 
+                           Style="{StaticResource UserPopupTitle}"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource UserPopupCloseButton}"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource UserPopupDivider}"/>
+
+                <!-- User Info Badge -->
+                <Border BackgroundColor="#EDE7F6" 
+                        Padding="16"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12">
+                    <Border.Shadow>
+                        <Shadow Brush="#9B6DD8" Offset="0,2" Radius="8" Opacity="0.15"/>
+                    </Border.Shadow>
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Border BackgroundColor="#9B6DD8"
+                                WidthRequest="48"
+                                HeightRequest="48"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 24"
+                                Margin="0,0,14,0">
+                            <Label Text="👤" 
+                                   FontSize="22"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                            <Label Text="{Binding Name, TargetNullValue='N/A'}" 
+                                   FontAttributes="Bold"
+                                   TextColor="#5E35B1"
+                                   FontSize="16"/>
+                            <Label Text="{Binding Email, TargetNullValue='N/A'}" 
+                                   TextColor="#7E57C2"
+                                   FontSize="12"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- User Information Section -->
+                <Border Style="{StaticResource UserPopupSectionCard}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="👤 Informations utilisateur" Style="{StaticResource UserPopupSectionTitle}"/>
+                        
+                        <!-- Name Field -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Nom d'utilisateur *" Style="{StaticResource UserPopupFieldLabel}"/>
+                            <Border Style="{StaticResource UserPopupInputContainer}">
+                                <Entry x:Name="NameEntry"
+                                       Text="{Binding Name}"
+                                       Placeholder="Entrez le nom complet"
+                                       Style="{StaticResource UserPopupEntry}"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Email Field -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Adresse Email *" Style="{StaticResource UserPopupFieldLabel}"/>
+                            <Border Style="{StaticResource UserPopupInputContainer}">
+                                <Entry x:Name="EmailEntry"
+                                       Text="{Binding Email}"
+                                       Placeholder="exemple@email.com"
+                                       Keyboard="Email"
+                                       Style="{StaticResource UserPopupEntry}"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Change Password Section -->
+                <Border Style="{StaticResource UserPopupSectionCard}" BackgroundColor="#FFF8E1">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="🔑 Changer le mot de passe" Style="{StaticResource UserPopupSectionTitle}" TextColor="#E65100"/>
+                            <Switch x:Name="ChangePasswordSwitch"
+                                    Grid.Column="1"
+                                    OnColor="#FF9800"
+                                    Toggled="OnChangePasswordToggled"/>
+                        </Grid>
+
+                        <VerticalStackLayout x:Name="PasswordSection" 
+                                            Spacing="16"
+                                            IsVisible="False">
+                            <!-- New Password Field -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Nouveau mot de passe" Style="{StaticResource UserPopupFieldLabel}"/>
+                                <Border Style="{StaticResource UserPopupInputContainer}" BackgroundColor="White">
+                                    <Entry x:Name="NewPasswordEntry"
+                                           Placeholder="Minimum 8 caractères"
+                                           IsPassword="True"
+                                           Style="{StaticResource UserPopupEntry}"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- Confirm Password Field -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Confirmer le mot de passe" Style="{StaticResource UserPopupFieldLabel}"/>
+                                <Border Style="{StaticResource UserPopupInputContainer}" BackgroundColor="White">
+                                    <Entry x:Name="ConfirmPasswordEntry"
+                                           Placeholder="Répétez le mot de passe"
+                                           IsPassword="True"
+                                           Style="{StaticResource UserPopupEntry}"/>
+                                </Border>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Role & Status Section -->
+                <Border Style="{StaticResource UserPopupSectionCard}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="⚙️ Rôle et Statut" Style="{StaticResource UserPopupSectionTitle}"/>
+                        
+                        <!-- Role Selection -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Rôle *" Style="{StaticResource UserPopupFieldLabel}"/>
+                            <Border Style="{StaticResource UserPopupInputContainer}">
+                                <Picker x:Name="RolePicker"
+                                        Title="Sélectionnez un rôle"
+                                        Style="{StaticResource UserPopupPicker}">
+                                    <Picker.Items>
+                                        <x:String>Utilisateur</x:String>
+                                        <x:String>Administrateur</x:String>
+                                        <x:String>Superviseur</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Status Switch -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Statut du compte" Style="{StaticResource UserPopupFieldLabel}"/>
+                            <Border Style="{StaticResource UserPopupInputContainer}" Padding="14,10">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout VerticalOptions="Center" Spacing="2">
+                                        <Label Text="Compte actif" 
+                                               TextColor="#5A6068"
+                                               FontSize="14"/>
+                                        <Label x:Name="StatusLabel"
+                                               Text="Peut se connecter" 
+                                               TextColor="#5EAA8D"
+                                               FontSize="10"/>
+                                    </VerticalStackLayout>
+                                    <Switch x:Name="StatusSwitch"
+                                            Grid.Column="1"
+                                            IsToggled="{Binding IsActive}"
+                                            OnColor="#5EAA8D"
+                                            Toggled="OnStatusToggled"
+                                            VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Permissions Section -->
+                <Border Style="{StaticResource UserPopupSectionCard}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="🔐 Permissions" Style="{StaticResource UserPopupSectionTitle}"/>
+                        
+                        <ScrollView HeightRequest="200" Orientation="Vertical">
+                            <VerticalStackLayout Spacing="10">
+                                <!-- Permission 1 -->
+                                <Border BackgroundColor="#F8F9FA" 
+                                        Padding="14,12" 
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <CheckBox x:Name="ViewReportsPermission" 
+                                                  IsChecked="{Binding CanViewReports}"
+                                                  Color="#9B6DD8" 
+                                                  VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="Consulter les rapports" 
+                                               TextColor="#5A6068"
+                                               FontSize="14"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Permission 2 -->
+                                <Border BackgroundColor="#F8F9FA" 
+                                        Padding="14,12" 
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <CheckBox x:Name="EditReportsPermission" 
+                                                  IsChecked="{Binding CanViewReports}"
+                                                  Color="#9B6DD8" 
+                                                  VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="Modifier les rapports" 
+                                               TextColor="#5A6068"
+                                               FontSize="14"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Permission 3 -->
+                                <Border BackgroundColor="#F8F9FA" 
+                                        Padding="14,12" 
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <CheckBox x:Name="ManageUsersPermission" 
+                                                  IsChecked="{Binding CanManageUsers}"
+                                                  Color="#9B6DD8" 
+                                                  VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="Gérer les utilisateurs" 
+                                               TextColor="#5A6068"
+                                               FontSize="14"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Permission 4 -->
+                                <Border BackgroundColor="#F8F9FA" 
+                                        Padding="14,12" 
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <CheckBox x:Name="SystemSettingsPermission" 
+                                                  IsChecked="{Binding CanManageSettings}"
+                                                  Color="#9B6DD8" 
+                                                  VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="Paramètres système" 
+                                               TextColor="#5A6068"
+                                               FontSize="14"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Permission 5 -->
+                                <Border BackgroundColor="#F8F9FA" 
+                                        Padding="14,12" 
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <CheckBox x:Name="ManageProductsPermission" 
+                                                  IsChecked="{Binding CanManageProducts}"
+                                                  Color="#9B6DD8" 
+                                                  VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="Gérer les produits" 
+                                               TextColor="#5A6068"
+                                               FontSize="14"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Permission 6 -->
+                                <Border BackgroundColor="#F8F9FA" 
+                                        Padding="14,12" 
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <CheckBox x:Name="ManageClientsPermission" 
+                                                  IsChecked="{Binding CanManageCustomers}"
+                                                  Color="#9B6DD8" 
+                                                  VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="Gérer les clients" 
+                                               TextColor="#5A6068"
+                                               FontSize="14"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Permission 7 -->
+                                <Border BackgroundColor="#F8F9FA" 
+                                        Padding="14,12" 
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <CheckBox x:Name="ManageSalesPermission" 
+                                                  IsChecked="{Binding CanManageSales}"
+                                                  Color="#9B6DD8" 
+                                                  VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="Gérer les ventes" 
+                                               TextColor="#5A6068"
+                                               FontSize="14"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Permission 8 -->
+                                <Border BackgroundColor="#F8F9FA" 
+                                        Padding="14,12" 
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <CheckBox x:Name="ManageExpensesPermission" 
+                                                  IsChecked="{Binding ShowDepenses}"
+                                                  Color="#9B6DD8" 
+                                                  VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="Gérer les dépenses" 
+                                               TextColor="#5A6068"
+                                               FontSize="14"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+                        </ScrollView>
+                        
+                        <Label Text="↕ Faites défiler pour voir toutes les permissions" 
+                               TextColor="#8B939E"
+                               FontSize="10"
+                               HorizontalTextAlignment="Center"
+                               FontAttributes="Italic"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Last Modified Info -->
+                <Label Text="{Binding UpdatedAt, StringFormat='Dernière modification: {0:dd/MM/yyyy HH:mm}'}"
+                       TextColor="#8B939E"
+                       FontSize="12"
+                       HorizontalTextAlignment="Center"/>
+
+                <!-- Error Message -->
+                <Label x:Name="ErrorLabel"
+                       Style="{StaticResource UserPopupErrorLabel}"
+                       IsVisible="False"/>
+
+                <!-- Action Buttons -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="16" Margin="0,8,0,0">
+                    <Button Grid.Column="0"
+                            Text="Annuler" 
+                            Style="{StaticResource UserPopupCancelButton}"
+                            Clicked="OnCancelClicked"/>
+
+                    <Button Grid.Column="1"
+                            Text="💾 Enregistrer" 
+                            Style="{StaticResource UserPopupCreateButton}"
+                            BackgroundColor="#E8A84C"
+                            Clicked="OnSaveClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="#E8A84C" Offset="0,4" Radius="10" Opacity="0.35"/>
+                        </Button.Shadow>
+                    </Button>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

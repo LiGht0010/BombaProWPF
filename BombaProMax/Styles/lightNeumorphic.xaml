@@ -1,0 +1,730 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:BombaProMax.Converters"
+             x:Class="BombaProMax.Styles.lightNeumorphic">
+
+    <!-- ============================================ -->
+    <!-- CONVERTERS - MUST BE FIRST -->
+    <!-- ============================================ -->
+    <converters:IsLessThanConverter x:Key="IsLessThanConverter"/>
+    <converters:IsZeroConverter x:Key="IsZeroConverter"/>
+
+    <!-- Neumorphic Colors -->
+    <Color x:Key="NeumorphicBackground">#E0E5EC</Color>
+    <Color x:Key="NeumorphicLightShadow">#FFFFFF</Color>
+    <Color x:Key="NeumorphicDarkShadow">#A3B1C6</Color>
+    <Color x:Key="NeumorphicTextPrimary">#4A5568</Color>
+    <Color x:Key="NeumorphicTextSecondary">#718096</Color>
+    <Color x:Key="NeumorphicDivider">#CBD5E0</Color>
+    <Color x:Key="NeumorphicAccent">#15969c</Color>
+    <Color x:Key="NeumorphicLink">#3860e8</Color>
+    <Color x:Key="black">#000000</Color>
+
+    <!-- Product Badge Colors -->
+    <Color x:Key="BadgePurple">#82069e</Color>
+    <Color x:Key="BadgeCyan">#06B6D4</Color>
+    <Color x:Key="BadgeGray">#9c7415</Color>
+    <Color x:Key="BadgeOrange">#F97316</Color>
+    <Color x:Key="BadgeGreen">#70bd18</Color>
+    <Color x:Key="BadgeRed">#9e0606</Color>
+    <Color x:Key="BadgeBlue">#3B82F6</Color>
+    <Color x:Key="DarkBlue">#132e59</Color>
+    <Color x:Key="BadgeYellow">#F59E0B</Color>
+    
+    <!-- Additional Colors -->
+    <Color x:Key="Danger">#F44336</Color>
+    <Color x:Key="Success">#4CAF50</Color>
+    <Color x:Key="Warning">#FFC107</Color>
+    <Color x:Key="Info">#2196F3</Color>
+    <Color x:Key="Primary">#7C4DFF</Color>
+    <Color x:Key="Secondary">#2C3E50</Color>
+
+    <!-- ============================================ -->
+    <!-- PAGE LAYOUT STYLES -->
+    <!-- ============================================ -->
+
+    <!-- Main Page Container -->
+    <Style x:Key="PageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="20"/>
+    </Style>
+
+    <Style x:Key="PageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="30"/>
+    </Style>
+
+    <!-- Header Section Styles -->
+    <Style x:Key="PageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="Margin" Value="0,2,0,2"/>
+    </Style>
+
+    <Style x:Key="PageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource black}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="PageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource black}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- TABLE STYLES -->
+    <!-- ============================================ -->
+
+    <!-- Table Container -->
+    <Style x:Key="TableContainerGrid" TargetType="Grid">
+        <Setter Property="RowDefinitions" Value="Auto,Auto,*,Auto"/>
+        <Setter Property="Padding" Value="20"/>
+    </Style>
+
+    <!-- Table Header Grid -->
+    <Style x:Key="TableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="140,250,140,120,140,140,140,240"/>
+        <Setter Property="ColumnSpacing" Value="15"/>
+        <Setter Property="Margin" Value="0,0,0,20"/>
+    </Style>
+
+    <!-- Table Header Labels -->
+    <Style x:Key="TableHeaderColumnLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="TableHeaderColumnLabelLeft" TargetType="Label" BasedOn="{StaticResource TableHeaderColumnLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <!-- Table Row Divider -->
+    <Style x:Key="TableHeaderDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="2"/>
+        <Setter Property="Color" Value="{StaticResource NeumorphicDivider}"/>
+        <Setter Property="Margin" Value="0,0,0,15"/>
+    </Style>
+
+    <Style x:Key="TableRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource NeumorphicDivider}"/>
+        <Setter Property="Margin" Value="0,15,0,0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- DATA TEMPLATE ROW STYLES -->
+    <!-- ============================================ -->
+
+    <!-- Row Container -->
+    <Style x:Key="TableRowContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- Row Content Grid -->
+    <Style x:Key="TableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="140,250,140,120,140,140,140,240"/>
+        <Setter Property="ColumnSpacing" Value="15"/>
+        <Setter Property="Padding" Value="0,15"/>
+        <Setter Property="RowSpacing" Value="0"/>
+        <Setter Property="MinimumHeightRequest" Value="80"/>
+    </Style>
+
+    <!-- Column Container Styles -->
+    <Style x:Key="ProductNumberContainer" TargetType="Border">
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DescriptionContainer" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="PriceContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="2"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="StockContainer" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="8"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ActionsContainer" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- DESCRIPTION COLUMN STYLES -->
+    <!-- ============================================ -->
+
+    <Style x:Key="ProductNameStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+    </Style>
+
+    <Style x:Key="ProductIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="CategoryIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+    </Style>
+
+    <Style x:Key="CategoryStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- STOCK COLUMN STYLES -->
+    <!-- ============================================ -->
+
+    <Style x:Key="StockBadgeStack" TargetType="HorizontalStackLayout">
+        
+    </Style>
+
+    <Style x:Key="StockIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style x:Key="StockMinimumStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+
+    </Style>
+
+    <Style x:Key="StockMinimumIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- BADGE STYLES - DEFINED BEFORE TRIGGERS -->
+    <!-- ============================================ -->
+
+    <!-- Marge Badge Styles -->
+    <Style x:Key="MargeBadgeGreen" TargetType="Border">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MargeBadgeOrange" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeOrange}"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Stock Badge Styles -->
+    <Style x:Key="StockBadgeGreen" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeGreen}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="MinimumHeightRequest" Value="10"/>
+        <Setter Property="MinimumWidthRequest" Value="100"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="StockBadgeRed" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeRed}"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- MARGE COLUMN STYLES WITH DATA TRIGGERS -->
+    <!-- ============================================ -->
+
+    <Style x:Key="MargeBadgeWithTrigger" TargetType="Border" BasedOn="{StaticResource MargeBadgeGreen}">
+        <Style.Triggers>
+            <DataTrigger TargetType="Border" 
+                         Binding="{Binding MargePourcentage, Converter={StaticResource IsLessThanConverter}, ConverterParameter=10}" 
+                         Value="True">
+                <Setter Property="BackgroundColor" Value="{StaticResource BadgeOrange}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MargeBadgeContent" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="3"/>
+    </Style>
+
+    <Style x:Key="MargeIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style x:Key="MargeBadgeLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- STOCK BADGE WITH DATA TRIGGERS -->
+    <!-- ============================================ -->
+
+    <Style x:Key="StockBadgeWithTrigger" TargetType="Border" BasedOn="{StaticResource StockBadgeGreen}">
+        <Style.Triggers>
+            <DataTrigger TargetType="Border" 
+                         Binding="{Binding Stock, Converter={StaticResource IsZeroConverter}}" 
+                         Value="True">
+                <Setter Property="BackgroundColor" Value="{StaticResource BadgeRed}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="StockStatusLabelWithTrigger" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Text" Value="✅ Disponible"/>
+        <Setter Property="TextColor" Value="{StaticResource BadgeGreen}"/>
+        <Style.Triggers>
+            <DataTrigger TargetType="Label" 
+                         Binding="{Binding Stock, Converter={StaticResource IsZeroConverter}}" 
+                         Value="True">
+                <Setter Property="Text" Value="❌ Épuisé"/>
+                <Setter Property="TextColor" Value="{StaticResource BadgeRed}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- EMPTY VIEW STYLES -->
+    <!-- ============================================ -->
+
+    <Style x:Key="EmptyViewContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="Padding" Value="40"/>
+    </Style>
+
+    <Style x:Key="EmptyViewIcon" TargetType="Label">
+        <Setter Property="FontSize" Value="48"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmptyViewTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="EmptyViewSubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- EXISTING STYLES (KEPT FOR COMPATIBILITY) -->
+    <!-- ============================================ -->
+
+    <!-- Neumorphic Card Style for Login Form -->
+    <Style x:Key="NeumorphicCardContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="#FFFFFF"/>
+        <Setter Property="Padding" Value="40,35"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#A3B1C6"
+                        Offset="10,10"
+                        Radius="20"
+                        Opacity="0.4"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Neumorphic Primary Button Style -->
+    <Style x:Key="NeumorphicPrimaryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicLink}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="CornerRadius" Value="25"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicLink}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Neumorphic Title Style -->
+    <Style x:Key="NeumorphicTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,5"/>
+    </Style>
+
+    <!-- Neumorphic Subtitle Style -->
+    <Style x:Key="NeumorphicSubtitle" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextSecondary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,25"/>
+    </Style>
+
+    <!-- Neumorphic Link Label Style -->
+    <Style x:Key="NeumorphicLinkLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicLink}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="TextDecorations" Value="None"/>
+    </Style>
+
+    <!-- Product Number Badge Style -->
+    <Style x:Key="ProductNumberBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgePurple}"/>
+        <Setter Property="Padding" Value="20,8"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+    </Style>
+
+    <Style x:Key="ProductNumberStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <Style x:Key="ProductNumberLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ProductNumberIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+    <!-- Category Badge Style -->
+    <Style x:Key="CategoryBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeGray}"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CategoryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <Style x:Key="StockBadgeLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="StockStatusLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,2,0,0"/>
+    </Style>
+
+    <!-- Action Button Styles - Matching Login Button Style -->
+    <Style x:Key="ActionButtonModifier" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicAccent}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="13,7"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="HeightRequest" Value="45"/>
+        <Setter Property="MinimumWidthRequest" Value="90"/>
+
+    </Style>
+
+    <Style x:Key="ActionButtonSupprimer" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeRed}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="13,7"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="HeightRequest" Value="45"/>
+        <Setter Property="MinimumWidthRequest" Value="90"/>
+
+    </Style>
+
+    <!-- Price Display Styles -->
+    <Style x:Key="PricePrimaryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="#70bd18"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="PriceSecondaryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="#3B82F6"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,2,0,0"/>
+    </Style>
+
+    <!-- Product Name Style -->
+    <Style x:Key="ProductNameLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+        <Setter Property="MinimumWidthRequest" Value="50"/>
+    </Style>
+
+    <!-- Stock Minimum Badge Style -->
+    <Style x:Key="StockMinimumBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#8146b2"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+    <Style x:Key="StockMinimumLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Délai de Livraison Style -->
+    <Style x:Key="DelaiLivraisonLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Neumorphic Table Style -->
+    <Style x:Key="NeumorphicTableContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicLightShadow}"
+                        Offset="-8,-8"
+                        Radius="15"
+                        Opacity="1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeumorphicTableInner" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="20"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="8,8"
+                        Radius="15"
+                        Opacity="0.8"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Neumorphic Button Style -->
+    <Style x:Key="NeumorphicButtonContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeBlue}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="HeightRequest" Value="55"/>
+        <Setter Property="WidthRequest" Value="220"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="28"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="-6,-6"
+                        Radius="12"
+                        Opacity="12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeumorphicButtonInner" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource BadgeBlue}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="28"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="6,6"
+                        Radius="12"
+                        Opacity="0.8"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Neumorphic Label Styles -->
+    <Style x:Key="NeumorphicHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="NeumorphicContentLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="NeumorphicButtonLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicLightShadow}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Neumorphic Input Field Styles -->
+    <Style x:Key="NeumorphicInputContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="4,4"
+                        Radius="8"
+                        Opacity="0.5"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeumorphicEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource NeumorphicTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Margin" Value="15,12"/>
+    </Style>
+
+    <Style x:Key="NeumorphicPicker" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextPrimary}"/>
+        <Setter Property="TitleColor" Value="{StaticResource NeumorphicTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="NeumorphicFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource NeumorphicTextPrimary}"/>
+        <Setter Property="Margin" Value="0,0,0,5"/>
+    </Style>
+
+    <!-- Neumorphic Section Container -->
+    <Style x:Key="NeumorphicSectionContainer" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Margin" Value="0,5"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="15"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicLightShadow}"
+                        Offset="-4,-4"
+                        Radius="10"
+                        Opacity="1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeumorphicSectionInner" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource NeumorphicBackground}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="15"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource NeumorphicDarkShadow}"
+                        Offset="4,4"
+                        Radius="10"
+                        Opacity="0.6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             x:Class="BombaProMax.Views.User.User"
+             x:DataType="viewmodels:UserViewModel"
+             Style="{StaticResource UserPageStyle}">
+
+    <ScrollView Padding="28">
+        <VerticalStackLayout Spacing="24">
+
+            <!-- HEADER -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                <VerticalStackLayout Style="{StaticResource UserPageHeaderStack}">
+                    <Label Text="Gestion des Utilisateurs" 
+                           Style="{StaticResource UserPageTitleLabel}"/>
+                    <Label Text="{Binding Users.Count, StringFormat='{0} utilisateurs'}" 
+                           Style="{StaticResource UserPageSubtitleLabel}"/>
+                </VerticalStackLayout>
+                
+                <Button Grid.Column="1"
+                        Text="+ Nouvel Utilisateur"
+                        Style="{StaticResource UserAddButton}"
+                        Clicked="OnAddUserClicked"
+                        VerticalOptions="Center"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+            </Grid>
+
+            <!-- STATS CARDS -->
+            <Grid ColumnDefinitions="*,*,*,*" 
+                  ColumnSpacing="16"
+                  IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                
+                <Border Grid.Column="0" Style="{StaticResource UserStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding TotalUsers}" 
+                               Style="{StaticResource UserStatNumber}"/>
+                        <Label Text="Total Utilisateurs" 
+                               Style="{StaticResource UserStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource UserStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding AdminUsers}" 
+                               Style="{StaticResource UserStatNumber}"
+                               TextColor="#9B6DD8"/>
+                        <Label Text="Administrateurs" 
+                               Style="{StaticResource UserStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource UserStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding ActiveUsers}" 
+                               Style="{StaticResource UserStatNumber}"
+                               TextColor="#5EAA8D"/>
+                        <Label Text="Actifs" 
+                               Style="{StaticResource UserStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="3" Style="{StaticResource UserStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding InactiveUsers}" 
+                               Style="{StaticResource UserStatNumber}"
+                               TextColor="#E16C6C"/>
+                        <Label Text="Inactifs" 
+                               Style="{StaticResource UserStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- SEARCH BAR -->
+            <Border Style="{StaticResource UserSearchContainer}"
+                    IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Image Source="search.png" WidthRequest="24" HeightRequest="24"/>
+                    <Entry Grid.Column="1"
+                           Text="{Binding SearchText}"
+                           Placeholder="Rechercher par nom, email..."
+                           Style="{StaticResource UserSearchEntry}"/>
+                    <Button Grid.Column="2"
+                            Text="Filtres"
+                            BackgroundColor="#E8ECF1"
+                            TextColor="#5A6068"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            Padding="16,10"
+                            CornerRadius="10"/>
+                </Grid>
+            </Border>
+
+            <!-- Loading -->
+            <ActivityIndicator Style="{StaticResource UserPageLoadingIndicator}"
+                               IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"/>
+
+            <!-- TABLE CARD -->
+            <Border Style="{StaticResource UserTableCard}"
+                    IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Style="{StaticResource UserTableContainer}">
+
+                    <!-- Header -->
+                    <Grid Style="{StaticResource UserTableHeaderGrid}">
+                        <Label Grid.Column="0" Text="Nom" Style="{StaticResource UserTableHeaderLabelLeft}"/>
+                        <Label Grid.Column="1" Text="Email" Style="{StaticResource UserTableHeaderLabelLeft}"/>
+                        <Label Grid.Column="2" Text="Rôle" Style="{StaticResource UserTableHeaderLabel}"/>
+                        <Label Grid.Column="3" Text="Statut" Style="{StaticResource UserTableHeaderLabel}"/>
+                        <Label Grid.Column="4" Text="Actions" Style="{StaticResource UserTableHeaderLabel}"/>
+                    </Grid>
+
+                    <!-- Rows using BindableLayout -->
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Users}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:UserDto">
+                                <VerticalStackLayout BackgroundColor="Transparent">
+                                    <Grid Style="{StaticResource UserTableRowGrid}">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnRowTapped"/>
+                                        </Grid.GestureRecognizers>
+
+                                        <!-- Name -->
+                                        <Label Grid.Column="0" 
+                                               Text="{Binding Name, TargetNullValue='N/A'}" 
+                                               Style="{StaticResource UserNameLabel}"/>
+
+                                        <!-- Email -->
+                                        <Label Grid.Column="1" 
+                                               Text="{Binding Email, TargetNullValue='N/A'}" 
+                                               Style="{StaticResource UserEmailLabel}"/>
+
+                                        <!-- Role Badge -->
+                                        <Border Grid.Column="2" 
+                                                Style="{StaticResource UserRoleBadgeAdmin}"
+                                                IsVisible="{Binding IsAdmin}">
+                                            <Label Text="Admin" Style="{StaticResource UserRoleLabel}"/>
+                                        </Border>
+                                        <Border Grid.Column="2" 
+                                                Style="{StaticResource UserRoleBadgeUser}"
+                                                IsVisible="{Binding IsAdmin, Converter={StaticResource InvertedBoolConverter}}">
+                                            <Label Text="Utilisateur" Style="{StaticResource UserRoleLabel}"/>
+                                        </Border>
+
+                                        <!-- Status Badge -->
+                                        <Border Grid.Column="3" 
+                                                Style="{StaticResource UserStatusBadgeActive}"
+                                                IsVisible="{Binding IsActive}">
+                                            <Label Text="Actif" Style="{StaticResource UserStatusLabelActive}"/>
+                                        </Border>
+                                        <Border Grid.Column="3" 
+                                                Style="{StaticResource UserStatusBadgeInactive}"
+                                                IsVisible="{Binding IsActive, Converter={StaticResource InvertedBoolConverter}}">
+                                            <Label Text="Inactif" Style="{StaticResource UserStatusLabelInactive}"/>
+                                        </Border>
+
+                                        <!-- Actions -->
+                                        <HorizontalStackLayout Grid.Column="4" Style="{StaticResource UserActionsCell}">
+                                            <Button Text="Détails"
+                                                    Style="{StaticResource UserDetailsButton}"
+                                                    CommandParameter="{Binding .}"
+                                                    Clicked="OnDetailsClicked"/>
+                                            <Button Text="Modifier"
+                                                    Style="{StaticResource UserModifierButton}"
+                                                    CommandParameter="{Binding .}"
+                                                    Clicked="OnEditUserClicked"/>
+                                            <Button Text="Supprimer"
+                                                    Style="{StaticResource UserSupprimerButton}"
+                                                    CommandParameter="{Binding .}"
+                                                    Clicked="OnDeleteUserClicked"/>
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                    <BoxView Style="{StaticResource UserRowDivider}"/>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                        
+                        <BindableLayout.EmptyView>
+                            <VerticalStackLayout Style="{StaticResource UserEmptyView}">
+                                <Border BackgroundColor="#EEF1F5"
+                                        WidthRequest="100"
+                                        HeightRequest="100"
+                                        StrokeThickness="0"
+                                        Margin="0,0,0,16">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="50"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="#C5CAD1" Offset="6,6" Radius="12" Opacity="0.25"/>
+                                    </Border.Shadow>
+                                    <Label Text="👤" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
+                                <Label Text="Aucun utilisateur" Style="{StaticResource UserEmptyTitle}"/>
+                                <Label Text="Commencez par ajouter votre premier utilisateur" 
+                                       Style="{StaticResource UserEmptySubtitle}"/>
+                                <Button Text="+ Ajouter un Utilisateur"
+                                        Style="{StaticResource UserEmptyButton}"
+                                        Clicked="OnAddUserClicked"/>
+                            </VerticalStackLayout>
+                        </BindableLayout.EmptyView>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

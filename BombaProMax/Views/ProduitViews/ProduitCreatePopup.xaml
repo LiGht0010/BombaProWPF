@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.ProduitViews.ProduitCreatePopup">
+
+    <Border Style="{StaticResource ProduitPopupContainer}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="📦 Créer un nouveau produit" 
+                           Style="{StaticResource ProduitPopupTitle}"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource ProduitPopupCloseButton}"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource ProduitPopupDivider}"/>
+
+                <!-- Product Form -->
+                <VerticalStackLayout Spacing="18">
+
+                    <!-- Basic Product Information Section -->
+                    <Border Style="{StaticResource ProduitPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="📦 Informations de Base" 
+                                   Style="{StaticResource ProduitPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource ProduitPopupDivider}"/>
+
+                            <!-- Numero Produit Field -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Numéro Produit *" 
+                                       Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ProduitPopupInputContainer}">
+                                    <Entry x:Name="NumeroProduitEntry"
+                                           Placeholder="Ex: PROD-2024-001"
+                                           Style="{StaticResource ProduitPopupEntry}"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- Description Field -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Description *" 
+                                       Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ProduitPopupInputContainer}">
+                                    <Entry x:Name="DescriptionEntry"
+                                           Placeholder="Description du produit"
+                                           Style="{StaticResource ProduitPopupEntry}"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- Category Picker -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Catégorie" 
+                                       Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ProduitPopupInputContainer}">
+                                    <Picker x:Name="CategoriePicker"
+                                            Title="Sélectionnez une catégorie"
+                                            Style="{StaticResource ProduitPopupPicker}"/>
+                                </Border>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Pricing Section -->
+                    <Border Style="{StaticResource ProduitPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="💰 Informations de Prix" 
+                                   Style="{StaticResource ProduitPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource ProduitPopupDivider}"/>
+
+                            <!-- Prix d'Achat -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Prix d'Achat" 
+                                       Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ProduitPopupInputContainer}">
+                                    <Entry x:Name="PrixAchatEntry"
+                                           Placeholder="0.00"
+                                           Keyboard="Numeric"
+                                           Style="{StaticResource ProduitPopupEntry}"
+                                           TextChanged="OnPrixAchatChanged"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- Prix HT -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Prix HT (Hors Taxe)" 
+                                       Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ProduitPopupInputContainer}">
+                                    <Entry x:Name="PrixHTEntry"
+                                           Placeholder="0.00"
+                                           Keyboard="Numeric"
+                                           Style="{StaticResource ProduitPopupEntry}"
+                                           TextChanged="OnPrixHTChanged"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- TVA -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="TVA (%)" 
+                                       Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ProduitPopupInputContainer}">
+                                    <Entry x:Name="TVAEntry"
+                                           Placeholder="20"
+                                           Keyboard="Numeric"
+                                           Text="20"
+                                           Style="{StaticResource ProduitPopupEntry}"
+                                           TextChanged="OnTVAChanged"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- Prix TTC (Read-only) -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Prix TTC (Prix de Vente) - Calculé automatiquement" 
+                                       Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ProduitPopupPriceDisplay}">
+                                    <Label x:Name="PrixTTCLabel"
+                                           Text="0.00 DH"
+                                           Style="{StaticResource ProduitPopupPriceLabel}"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- Marge Display -->
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="Marge Bénéficiaire" 
+                                           Style="{StaticResource ProduitPopupMarginLabel}"/>
+                                    <Label x:Name="MargeBeneficiaireLabel"
+                                           Text="0.00 DH"
+                                           Style="{StaticResource ProduitPopupMarginValue}"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Marge (%)" 
+                                           Style="{StaticResource ProduitPopupMarginLabel}"/>
+                                    <Label x:Name="MargePourcentageLabel"
+                                           Text="0.00%"
+                                           Style="{StaticResource ProduitPopupMarginValue}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Stock Section -->
+                    <Border Style="{StaticResource ProduitPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="📊 Gestion du Stock" 
+                                   Style="{StaticResource ProduitPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource ProduitPopupDivider}"/>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <!-- Stock Initial -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Stock Initial" 
+                                           Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ProduitPopupInputContainer}">
+                                        <Entry x:Name="StockEntry"
+                                               Placeholder="0"
+                                               Keyboard="Numeric"
+                                               Text="0"
+                                               Style="{StaticResource ProduitPopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <!-- Stock Minimum -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Stock Minimum" 
+                                           Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ProduitPopupInputContainer}">
+                                        <Entry x:Name="StockMinimumEntry"
+                                               Placeholder="0"
+                                               Keyboard="Numeric"
+                                               Text="0"
+                                               Style="{StaticResource ProduitPopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Delai de Livraison -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Délai de Livraison (jours)" 
+                                       Style="{StaticResource ProduitPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ProduitPopupInputContainer}">
+                                    <Entry x:Name="DelaiLivraisonEntry"
+                                           Placeholder="Ex: 7"
+                                           Keyboard="Numeric"
+                                           Style="{StaticResource ProduitPopupEntry}"/>
+                                </Border>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           Style="{StaticResource ProduitPopupErrorLabel}"
+                           IsVisible="False"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
+                        <!-- Cancel Button -->
+                        <Button Grid.Column="0"
+                                Text="Annuler"
+                                Style="{StaticResource ProduitPopupCancelButton}"
+                                Clicked="OnCancelClicked"/>
+
+                        <!-- Create Button -->
+                        <Button Grid.Column="1"
+                                Text="✓ Créer le produit"
+                                Style="{StaticResource ProduitPopupCreateButton}"
+                                Clicked="OnCreateClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

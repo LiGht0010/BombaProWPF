@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.PompeViews.PompeDetailsPopup">
+
+    <Border Style="{StaticResource PompePopupContainer}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="📋 Détails de la Pompe" 
+                           Style="{StaticResource PompePopupTitle}"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource PompePopupCloseButton}"
+                            Clicked="OnCloseClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource PompePopupDivider}"/>
+
+                <!-- Pompe Header Card -->
+                <Border BackgroundColor="#336860"
+                        Padding="20"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20">
+                        <!-- Icon -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="White"
+                                WidthRequest="80"
+                                HeightRequest="80"
+                                StrokeThickness="3"
+                                Stroke="White"
+                                StrokeShape="RoundRectangle 40">
+                            <Label Text="⛽" 
+                                   FontSize="40"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Pompe Info -->
+                        <VerticalStackLayout Grid.Column="1" 
+                                           VerticalOptions="Center" 
+                                           Spacing="8">
+                            <Label x:Name="PompeNumeroLabel"
+                                   FontSize="24" 
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label x:Name="PompeStatutLabel"
+                                   FontSize="16"
+                                   TextColor="#E0E0E0"/>
+                            <Label x:Name="PompeIdLabel"
+                                   FontSize="12"
+                                   TextColor="#E0E0E0"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Statistics Cards -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="15" RowDefinitions="Auto,Auto" RowSpacing="15">
+                    <!-- Electronic Meter Card -->
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource PompeStatsCard}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="📊" 
+                                   FontSize="28"
+                                   HorizontalOptions="Center"/>
+                            <Label x:Name="CompteurElectroniqueLabel"
+                                   Text="0.00 L"
+                                   Style="{StaticResource PompeStatsNumber}"/>
+                            <Label Text="Compteur Électronique"
+                                   Style="{StaticResource PompeStatsLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Mechanical Meter Card -->
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource PompeStatsCard}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="⚙️" 
+                                   FontSize="28"
+                                   HorizontalOptions="Center"/>
+                            <Label x:Name="CompteurMecaniqueLabel"
+                                   Text="0.00 L"
+                                   Style="{StaticResource PompeStatsNumber}"/>
+                            <Label Text="Compteur Mécanique"
+                                   Style="{StaticResource PompeStatsLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Discrepancy Card (spans 2 columns) -->
+                    <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                            Style="{StaticResource PompeStatsCard}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="🔍" 
+                                   FontSize="28"
+                                   HorizontalOptions="Center"/>
+                            <Label x:Name="DiscrepancyLabel"
+                                   Text="0.00 L"
+                                   Style="{StaticResource PompeStatsNumber}"/>
+                            <Label Text="Écart entre Compteurs"
+                                   Style="{StaticResource PompeStatsLabel}"/>
+                            <Label x:Name="DiscrepancyStatusLabel"
+                                   FontSize="11"
+                                   HorizontalOptions="Center"
+                                   Margin="0,5,0,0"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Pompe Details Section -->
+                <Border Style="{StaticResource PompePopupSectionCard}">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="ℹ️ Informations Détaillées" 
+                               Style="{StaticResource PompePopupSectionTitle}"/>
+
+                        <BoxView Style="{StaticResource PompePopupDivider}"/>
+
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" 
+                              ColumnDefinitions="180,*"
+                              RowSpacing="12">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="Numéro:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   x:Name="NumeroDetailLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Text="Statut:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="1" Grid.Column="1" 
+                                   x:Name="StatutDetailLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" 
+                                   Text="Réservoir Associé:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="2" Grid.Column="1" 
+                                   x:Name="ReservoirDetailLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" 
+                                   Text="Type de Carburant:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="3" Grid.Column="1" 
+                                   x:Name="CarburantDetailLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="4" Grid.Column="0" 
+                                   Text="Compteur Électronique:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="4" Grid.Column="1" 
+                                   x:Name="CompteurElectroniqueDetailLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="5" Grid.Column="0" 
+                                   Text="Compteur Mécanique:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="5" Grid.Column="1" 
+                                   x:Name="CompteurMecaniqueDetailLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Reservoir Information Section -->
+                <Border Style="{StaticResource PompePopupSectionCard}">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="🛢️ Informations Réservoir" 
+                               Style="{StaticResource PompePopupSectionTitle}"/>
+
+                        <BoxView Style="{StaticResource PompePopupDivider}"/>
+
+                        <Grid RowDefinitions="Auto,Auto,Auto" 
+                              ColumnDefinitions="180,*"
+                              RowSpacing="12">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="Numéro Réservoir:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   x:Name="ReservoirNumeroLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Text="Capacité Réservoir:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="1" Grid.Column="1" 
+                                   x:Name="ReservoirCapaciteLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" 
+                                   Text="Niveau Actuel:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="2" Grid.Column="1" 
+                                   x:Name="ReservoirNiveauLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Audit Information Section -->
+                <Border Style="{StaticResource PompePopupSectionCard}">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="📅 Informations d'Audit" 
+                               Style="{StaticResource PompePopupSectionTitle}"/>
+
+                        <BoxView Style="{StaticResource PompePopupDivider}"/>
+
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                              ColumnDefinitions="180,*"
+                              RowSpacing="12">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="Créé le:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   x:Name="DateCreationLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Text="Ajouté par:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="1" Grid.Column="1" 
+                                   x:Name="AjouteParLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" 
+                                   Text="Modifié le:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="2" Grid.Column="1" 
+                                   x:Name="DateModificationLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" 
+                                   Text="Modifié par:" 
+                                   Style="{StaticResource PompePopupFieldLabel}"/>
+                            <Label Grid.Row="3" Grid.Column="1" 
+                                   x:Name="ModifieParLabel"
+                                   Style="{StaticResource PompeDetailsValueLabel}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Close Button -->
+                <Button Text="✓ Fermer" 
+                        Style="{StaticResource PompeDetailsCloseButton}"
+                        Clicked="OnCloseClicked"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

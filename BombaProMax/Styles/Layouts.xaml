@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.Layouts">
+
+    <!-- Page Layout Styles -->
+    <Style x:Key="PageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="20"/>
+    </Style>
+
+    <Style x:Key="PageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="30"/>
+    </Style>
+
+    <Style x:Key="PageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="Margin" Value="0,2,0,2"/>
+    </Style>
+
+    <!-- Table Layout Styles -->
+    <Style x:Key="TableContainerGrid" TargetType="Grid">
+        <Setter Property="RowDefinitions" Value="Auto,Auto,*,Auto"/>
+        <Setter Property="Padding" Value="20"/>
+    </Style>
+
+    <Style x:Key="TableHeaderGrid" TargetType="Grid">
+        <!--<Setter Property="ColumnDefinitions" Value="*,*,*,*,*,*,*,*"/>-->
+
+        <Setter Property="ColumnDefinitions" Value="120,210,140,120,140,140,200,110"/>
+        <Setter Property="ColumnSpacing" Value="15"/>
+        <Setter Property="Margin" Value="0,0,0,20"/>
+    </Style>
+
+    <Style x:Key="TableRowGrid" TargetType="Grid">
+        <!--<Setter Property="ColumnDefinitions" Value="*,*,*,*,*,*,*,*"/>-->
+
+        <Setter Property="ColumnDefinitions" Value="110,230,130,130,140,150,150,200"/>
+        <Setter Property="ColumnSpacing" Value="15"/>
+        <Setter Property="Padding" Value="0,15"/>
+        <Setter Property="RowSpacing" Value="0"/>
+        <Setter Property="MinimumHeightRequest" Value="80"/>
+    </Style>
+
+    <!-- Row Container Styles -->
+    <Style x:Key="TableRowContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- Column Container Styles -->
+    <Style x:Key="DescriptionContainer" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="PriceContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="2"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="StockContainer" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="8"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ActionsContainer" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Description Column Specific Layouts -->
+    <Style x:Key="ProductNameStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+    </Style>
+
+    <Style x:Key="CategoryStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+    </Style>
+
+    <!-- Stock Column Specific Layouts -->
+    <Style x:Key="StockBadgeStack" TargetType="HorizontalStackLayout">
+        <!-- No specific setters, kept for consistency -->
+    </Style>
+
+    <Style x:Key="StockMinimumStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Product Number Layout -->
+    <Style x:Key="ProductNumberStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- Marge Badge Content Layout -->
+    <Style x:Key="MargeBadgeContent" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="3"/>
+    </Style>
+
+    <!-- Empty View Container -->
+    <Style x:Key="EmptyViewContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="Padding" Value="40"/>
+    </Style>
+
+</ResourceDictionary>

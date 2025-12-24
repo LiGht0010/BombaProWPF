@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.ReservoirViews.ReservoirEditPopup">
+
+    <Border Style="{StaticResource ReservoirPopupContainer}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="✏️ Modifier le réservoir" 
+                           Style="{StaticResource ReservoirPopupTitle}"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource ReservoirPopupCloseButton}"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource ReservoirPopupDivider}"/>
+
+                <!-- Reservoir Form -->
+                <VerticalStackLayout Spacing="18">
+
+                    <!-- Basic Information Section -->
+                    <Border Style="{StaticResource ReservoirPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="ℹ️ Informations de Base" 
+                                   Style="{StaticResource ReservoirPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource ReservoirPopupDivider}"/>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <!-- Numero -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Numéro *" 
+                                           Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ReservoirPopupInputContainer}">
+                                        <Entry x:Name="NumeroEntry"
+                                               Placeholder="Ex: RES-001"
+                                               Style="{StaticResource ReservoirPopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <!-- Type de Carburant (Produit) -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Type de Carburant *" 
+                                           Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ReservoirPopupInputContainer}">
+                                        <Picker x:Name="ProduitPicker"
+                                                Title="Sélectionnez un carburant"
+                                                Style="{StaticResource ReservoirPopupPicker}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Capacity Information Section -->
+                    <Border Style="{StaticResource ReservoirPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="📊 Capacité et Niveau" 
+                                   Style="{StaticResource ReservoirPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource ReservoirPopupDivider}"/>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <!-- Capacite -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Capacité (Litres) *" 
+                                           Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ReservoirPopupInputContainer}">
+                                        <Entry x:Name="CapaciteEntry"
+                                               Placeholder="Ex: 10000.00"
+                                               Keyboard="Numeric"
+                                               Style="{StaticResource ReservoirPopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <!-- Niveau De Carburant -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Niveau Actuel (Litres) *" 
+                                           Style="{StaticResource ReservoirPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ReservoirPopupInputContainer}">
+                                        <Entry x:Name="NiveauEntry"
+                                               Placeholder="Ex: 5000.00"
+                                               Keyboard="Numeric"
+                                               Style="{StaticResource ReservoirPopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Info Label -->
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="💡" FontSize="16"/>
+                                <Label Text="Le niveau ne peut pas dépasser la capacité totale"
+                                       FontSize="12"
+                                       TextColor="#7F8C8D"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           Style="{StaticResource ReservoirPopupErrorLabel}"
+                           IsVisible="False"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
+                        <!-- Cancel Button -->
+                        <Button Grid.Column="0"
+                                Text="Annuler"
+                                Style="{StaticResource ReservoirPopupCancelButton}"
+                                Clicked="OnCancelClicked"/>
+
+                        <!-- Update Button -->
+                        <Button Grid.Column="1"
+                                Text="✓ Modifier le réservoir"
+                                Style="{StaticResource ReservoirPopupCreateButton}"
+                                Clicked="OnUpdateClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

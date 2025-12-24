@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.ChauffeurViews.ChauffeurCreatePopup">
+
+    <Border Style="{StaticResource ChauffeurPopupContainer}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="➕ Créer un nouveau chauffeur" 
+                           Style="{StaticResource ChauffeurPopupTitle}"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource ChauffeurPopupCloseButton}"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource ChauffeurPopupDivider}"/>
+
+                <!-- Chauffeur Form -->
+                <VerticalStackLayout Spacing="18">
+
+                    <!-- Personal Information Section -->
+                    <Border Style="{StaticResource ChauffeurPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="ℹ️ Informations Personnelles" 
+                                   Style="{StaticResource ChauffeurPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource ChauffeurPopupDivider}"/>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <!-- Nom -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Nom *" 
+                                           Style="{StaticResource ChauffeurPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ChauffeurPopupInputContainer}">
+                                        <Entry x:Name="NomEntry"
+                                               Placeholder="Ex: Alami"
+                                               Style="{StaticResource ChauffeurPopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <!-- Prénom -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Prénom" 
+                                           Style="{StaticResource ChauffeurPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ChauffeurPopupInputContainer}">
+                                        <Entry x:Name="PrenomEntry"
+                                               Placeholder="Ex: Mohammed"
+                                               Style="{StaticResource ChauffeurPopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <!-- CIN -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="CIN" 
+                                           Style="{StaticResource ChauffeurPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ChauffeurPopupInputContainer}">
+                                        <Entry x:Name="CINEntry"
+                                               Placeholder="Ex: AB123456"
+                                               Style="{StaticResource ChauffeurPopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <!-- Téléphone -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Téléphone" 
+                                           Style="{StaticResource ChauffeurPopupFieldLabel}"/>
+                                    <Border Style="{StaticResource ChauffeurPopupInputContainer}">
+                                        <Entry x:Name="TelephoneEntry"
+                                               Placeholder="Ex: 0612345678"
+                                               Keyboard="Telephone"
+                                               Style="{StaticResource ChauffeurPopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Numéro Permis -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Numéro de Permis" 
+                                       Style="{StaticResource ChauffeurPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ChauffeurPopupInputContainer}">
+                                    <Entry x:Name="NumeroPermisEntry"
+                                           Placeholder="Numéro de permis de conduire"
+                                           Style="{StaticResource ChauffeurPopupEntry}"/>
+                                </Border>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Fournisseur Section -->
+                    <Border Style="{StaticResource ChauffeurPopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="🚚 Fournisseur associé" 
+                                   Style="{StaticResource ChauffeurPopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource ChauffeurPopupDivider}"/>
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Fournisseur" 
+                                       Style="{StaticResource ChauffeurPopupFieldLabel}"/>
+                                <Border Style="{StaticResource ChauffeurPopupInputContainer}">
+                                    <Picker x:Name="FournisseurPicker"
+                                            Title="Sélectionner un fournisseur"
+                                            Style="{StaticResource ChauffeurPopupPicker}"/>
+                                </Border>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           Style="{StaticResource ChauffeurPopupErrorLabel}"
+                           IsVisible="False"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
+                        <!-- Cancel Button -->
+                        <Button Grid.Column="0"
+                                Text="Annuler"
+                                Style="{StaticResource ChauffeurPopupCancelButton}"
+                                Clicked="OnCancelClicked"/>
+
+                        <!-- Create Button -->
+                        <Button Grid.Column="1"
+                                Text="✓ Créer le chauffeur"
+                                Style="{StaticResource ChauffeurPopupCreateButton}"
+                                Clicked="OnCreateClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

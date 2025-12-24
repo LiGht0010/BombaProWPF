@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.AchatViews.AchatEditPopup"
+               CanBeDismissedByTappingOutsideOfPopup="False">
+
+    <Border Style="{StaticResource AchatPopupBorder}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="✏️ Modifier l'Achat" 
+                           Style="{StaticResource AchatPopupTitle}"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource AchatPopupCloseButton}"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource AchatPopupDivider}"/>
+
+                <!-- Achat Form -->
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Numero Achat Field (Read-only) -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Numéro d'Achat" 
+                               Style="{StaticResource AchatPopupFieldLabel}"/>
+                        <Entry x:Name="NumeroEntry"
+                               Placeholder="Ex: ACH-2024-001"
+                               Style="{StaticResource AchatPopupEntry}"
+                               IsReadOnly="True"/>
+                    </VerticalStackLayout>
+
+                    <!-- Date Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Date d'Achat *" 
+                               Style="{StaticResource AchatPopupFieldLabel}"/>
+                        <DatePicker x:Name="AchatDatePicker"
+                                    Format="dd/MM/yyyy"
+                                    BackgroundColor="#F8F8F8"
+                                    TextColor="#333"/>
+                    </VerticalStackLayout>
+
+                    <!-- Fournisseur Picker -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Fournisseur *" 
+                               Style="{StaticResource AchatPopupFieldLabel}"/>
+                        <Picker x:Name="FournisseurPicker"
+                                Title="Sélectionner un fournisseur"
+                                ItemDisplayBinding="{Binding Societe}"
+                                BackgroundColor="#F8F8F8"
+                                TextColor="#333"
+                                TitleColor="#999"
+                                SelectedIndexChanged="OnFournisseurChanged"/>
+                    </VerticalStackLayout>
+
+                    <!-- Produit Picker -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Produit *" 
+                               Style="{StaticResource AchatPopupFieldLabel}"/>
+                        <Picker x:Name="ProduitPicker"
+                                Title="Sélectionner un produit"
+                                ItemDisplayBinding="{Binding Description}"
+                                BackgroundColor="#F8F8F8"
+                                TextColor="#333"
+                                TitleColor="#999"
+                                SelectedIndexChanged="OnProduitChanged"/>
+                    </VerticalStackLayout>
+
+                    <!-- Quantity and Unit Price Row -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                        <!-- Quantité Field -->
+                        <VerticalStackLayout Grid.Column="0" Spacing="5">
+                            <Label Text="Quantité (L) *" 
+                                   Style="{StaticResource AchatPopupFieldLabel}"/>
+                            <Entry x:Name="QuantiteEntry"
+                                   Placeholder="Ex: 5000"
+                                   Keyboard="Numeric"
+                                   Style="{StaticResource AchatPopupEntry}"
+                                   TextChanged="OnQuantityOrPriceChanged"/>
+                        </VerticalStackLayout>
+
+                        <!-- Prix Unitaire Field -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="5">
+                            <Label Text="Prix Unitaire (DH) *" 
+                                   Style="{StaticResource AchatPopupFieldLabel}"/>
+                            <Entry x:Name="PrixUnitaireEntry"
+                                   Placeholder="Ex: 10.50"
+                                   Keyboard="Numeric"
+                                   Style="{StaticResource AchatPopupEntry}"
+                                   TextChanged="OnQuantityOrPriceChanged"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Coût Total (Calculated) -->
+                    <Border Style="{StaticResource AchatPopupTotalBorder}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="💰 Coût Total" 
+                                   Style="{StaticResource AchatPopupTotalLabel}"/>
+                            <Label x:Name="CoutTotalLabel"
+                                   Text="0.00 DH"
+                                   Grid.Column="1"
+                                   Style="{StaticResource AchatPopupTotalValue}"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Transport Section -->
+                    <Border Style="{StaticResource AchatPopupSectionBorder}">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="🚚 Informations de Transport" 
+                                   Style="{StaticResource AchatPopupSectionTitle}"/>
+
+                            <!-- Chauffeur Picker -->
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Chauffeur" 
+                                       Style="{StaticResource AchatPopupFieldLabelSmall}"/>
+                                <Picker x:Name="ChauffeurPicker"
+                                        Title="Sélectionner un chauffeur"
+                                        ItemDisplayBinding="{Binding Nom}"
+                                        BackgroundColor="White"
+                                        TextColor="#333"
+                                        TitleColor="#999"/>
+                            </VerticalStackLayout>
+
+                            <!-- Camion Picker -->
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Camion" 
+                                       Style="{StaticResource AchatPopupFieldLabelSmall}"/>
+                                <Picker x:Name="CamionPicker"
+                                        Title="Sélectionner un camion"
+                                        ItemDisplayBinding="{Binding Matricule}"
+                                        BackgroundColor="White"
+                                        TextColor="#333"
+                                        TitleColor="#999"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Livraison Défectueuse -->
+                    <Border Style="{StaticResource AchatPopupWarningBorder}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="⚠️ Livraison Défectueuse" 
+                                       Style="{StaticResource AchatPopupWarningTitle}"/>
+                                <Label Text="Cocher si la livraison présente des problèmes" 
+                                       Style="{StaticResource AchatPopupWarningSubtitle}"/>
+                            </VerticalStackLayout>
+                            <Switch x:Name="LivraisonDefectueuseSwitch"
+                                    Grid.Column="1"
+                                    IsToggled="False"
+                                    OnColor="#F44336"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Warning about stock changes -->
+                    <Border BackgroundColor="#FFF3E0" Padding="12" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="ℹ️" FontSize="16" VerticalTextAlignment="Center"/>
+                            <Label Text="La modification de la quantité ou du produit peut affecter le stock."
+                                   FontSize="12"
+                                   TextColor="#E65100"
+                                   VerticalTextAlignment="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           TextColor="#F44336"
+                           FontSize="14"
+                           IsVisible="False"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Text="Annuler" 
+                                Style="{StaticResource AchatPopupCancelButton}"
+                                Clicked="OnCancelClicked"/>
+
+                        <Button Grid.Column="1"
+                                Text="✓ Enregistrer" 
+                                Style="{StaticResource AchatPopupSaveButton}"
+                                Clicked="OnSaveClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

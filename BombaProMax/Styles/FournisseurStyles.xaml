@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.FournisseurStyles">
+
+    <!-- ================================================================== -->
+    <!-- LIGHT NEUMORPHIC DESIGN SYSTEM - FOURNISSEUR MODULE                -->
+    <!-- ================================================================== -->
+
+    <!-- COLOR PALETTE -->
+    <Color x:Key="FournisseurNeuSurface">#e8e8e8</Color>
+    <Color x:Key="FournisseurNeuCardBg">#E8ECF1</Color>
+    <Color x:Key="FournisseurNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="FournisseurNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="FournisseurNeuShadowDarkSoft">#D1D5DB</Color>
+    <Color x:Key="FournisseurNeuPrimary">#2265b6</Color>
+    <Color x:Key="FournisseurNeuDanger">#E16C6C</Color>
+    <Color x:Key="FournisseurNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="FournisseurNeuSuccess">#5EAA8D</Color>
+    <Color x:Key="FournisseurNeuWarning">#E8A84C</Color>
+    <Color x:Key="FournisseurNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="FournisseurNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="FournisseurNeuTextMuted">#8B939E</Color>
+    <Color x:Key="FournisseurNeuTextLight">#A8B0BA</Color>
+    <Color x:Key="FournisseurNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="FournisseurMBG">#f5f5f5</Color>
+
+    <x:String x:Key="FournisseurTableColumns">1*,1.8*,1.2*,1.5*,1.2*,2.3*</x:String>
+
+    <!-- PAGE BASE STYLES -->
+    <Style x:Key="FournisseurPageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Fournisseurs"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurMBG}"/>
+    </Style>
+
+    <Style x:Key="FournisseurPageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="FournisseurPageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <!-- HEADER SECTION -->
+    <Style x:Key="FournisseurPageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="FournisseurPageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="FournisseurPageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextMuted}"/>
+    </Style>
+
+    <!-- STAT CARDS -->
+    <Style x:Key="FournisseurStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="FournisseurStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- SEARCH CONTAINER -->
+    <Style x:Key="FournisseurSearchContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSurface}"/>
+        <Setter Property="Padding" Value="16,14"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurSearchEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource FournisseurNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- LOADING INDICATOR -->
+    <Style x:Key="FournisseurPageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource FournisseurNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <!-- ADD BUTTON -->
+    <Style x:Key="FournisseurAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- TABLE CARD -->
+    <Style x:Key="FournisseurTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- TABLE HEADER -->
+    <Style x:Key="FournisseurTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource FournisseurTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="FournisseurTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FournisseurTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource FournisseurTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <Style x:Key="FournisseurTableDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource FournisseurNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <Style x:Key="FournisseurTableCollectionView" TargetType="CollectionView">
+        <Setter Property="SelectionMode" Value="None"/>
+    </Style>
+
+    <!-- TABLE ROW -->
+    <Style x:Key="FournisseurTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource FournisseurTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="76"/>
+    </Style>
+
+    <!-- CELL STYLES -->
+    <Style x:Key="FournisseurStatusBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSuccess}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurStatusLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FournisseurNameCell" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="4"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FournisseurNameLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="FournisseurCompanyLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="FournisseurContactCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="FournisseurEmailCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="FournisseurPhoneCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="FournisseurActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ACTION BUTTONS -->
+    <Style x:Key="FournisseurDetailsButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="70"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurModifierButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="75"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuPrimary}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurSupprimerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuDanger}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource FournisseurNeuDanger}"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuShadowDark}" Offset="2,2" Radius="4" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource FournisseurNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="28,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <!-- EMPTY VIEW -->
+    <Style x:Key="FournisseurEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FournisseurEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FournisseurEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="FournisseurEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- POPUP STYLES -->
+    <Style x:Key="FournisseurPopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="650"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurPopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="FournisseurPopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="FournisseurPopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurPopupSectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="FournisseurPopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="FournisseurDetailsValueLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextPrimary}"/>
+        <Setter Property="Margin" Value="0,6,0,0"/>
+    </Style>
+
+    <Style x:Key="FournisseurPopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource FournisseurNeuBorderLight}"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurPopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource FournisseurNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="FournisseurPopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource FournisseurNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="FournisseurPopupErrorLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuDanger}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+    </Style>
+
+    <Style x:Key="FournisseurPopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurPopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurDetailsCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="40,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurPopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource FournisseurNeuBorderLight}"/>
+    </Style>
+
+    <Style x:Key="FournisseurStatsCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource FournisseurNeuSurface}"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="12"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource FournisseurNeuShadowDark}" Offset="4,4" Radius="8" Opacity="0.18"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FournisseurStatsNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FournisseurStatsLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="TextColor" Value="{StaticResource FournisseurNeuTextMuted}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+</ResourceDictionary>

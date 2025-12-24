@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.Colors">
+
+    <!-- Neumorphic Core Colors -->
+    <Color x:Key="NeumorphicBackground">#E0E5EC</Color>
+    <Color x:Key="NeumorphicLightShadow">#FFFFFF</Color>
+    <Color x:Key="NeumorphicDarkShadow">#A3B1C6</Color>
+    <Color x:Key="NeumorphicTextPrimary">#336860</Color>
+    <Color x:Key="NeumorphicTextSecondary">#336860</Color>
+    <Color x:Key="NeumorphicDivider">#CBD5E0</Color>
+    <Color x:Key="NeumorphicAccent">#15969c</Color>
+    <Color x:Key="NeumorphicLink">#3860e8</Color>
+
+    <!-- Basic Colors -->
+    <Color x:Key="black">#000000</Color>
+    <Color x:Key="white">#FFFFFF</Color>
+
+    <!-- Badge Colors -->
+    <Color x:Key="BadgePurple">#82069e</Color>
+    <Color x:Key="BadgeCyan">#06B6D4</Color>
+    <Color x:Key="BadgeGray">#9c7415</Color>
+    <Color x:Key="BadgeOrange">#F97316</Color>
+    <Color x:Key="BadgeGreen">#70bd18</Color>
+    <Color x:Key="BadgeRed">#9e0606</Color>
+    <Color x:Key="BadgeBlue">#3B82F6</Color>
+    <Color x:Key="BadgeYellow">#F59E0B</Color>
+    
+    <!-- Special Colors -->
+    <Color x:Key="DarkBlue">#132e59</Color>
+    <Color x:Key="StockMinimumPurple">#8146b2</Color>
+    
+    <!-- Status/Alert Colors -->
+    <Color x:Key="Danger">#F44336</Color>
+    <Color x:Key="Success">#4CAF50</Color>
+    <Color x:Key="Warning">#FFC107</Color>
+    <Color x:Key="Info">#2196F3</Color>
+    <Color x:Key="Primary">#7C4DFF</Color>
+    <Color x:Key="Secondary">#2C3E50</Color>
+
+</ResourceDictionary>

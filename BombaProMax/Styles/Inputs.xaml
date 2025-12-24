@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.Inputs">
+
+    <!-- Colors needed for inputs -->
+    <Color x:Key="NeumorphicBackground">#E0E5EC</Color>
+    <Color x:Key="NeumorphicTextPrimary">#4A5568</Color>
+    <Color x:Key="NeumorphicTextSecondary">#718096</Color>
+
+    <!-- Neumorphic Entry Style -->
+    <Style x:Key="NeumorphicEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="#E0E5EC"/>
+        <Setter Property="TextColor" Value="#4A5568"/>
+        <Setter Property="PlaceholderColor" Value="#4A5568"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Margin" Value="1,1"/>
+
+    </Style>
+
+    <!-- Neumorphic Picker Style -->
+    <Style x:Key="NeumorphicPicker" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="#336860"/>
+        <Setter Property="TextColor" Value="#4A5568"/>
+        <Setter Property="TitleColor" Value="#FFFFFF"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+</ResourceDictionary>

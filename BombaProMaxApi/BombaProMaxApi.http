@@ -1,0 +1,21 @@
+﻿@BombaProMaxApi_HostAddress = https://localhost:7100
+
+POST {{BombaProMaxApi_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "name" : "rachida",
+  "email" : "rachida@example.com",
+  "password" : "Test@1234"
+}
+
+###
+
+@Email=rachida@example.com
+@Password=Test@1234
+GET {{BombaProMaxApi_HostAddress}}/api/users/Login/{{Email}}/{{Password}}
+
+###
+GET {{BombaProMaxApi_HostAddress}}/api/users/Login/{{Email}}/{{Password}}
+
+###

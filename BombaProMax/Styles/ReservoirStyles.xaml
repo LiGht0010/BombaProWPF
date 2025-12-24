@@ -1,0 +1,485 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.ReservoirStyles">
+
+    <!-- ================================================================== -->
+    <!-- LIGHT NEUMORPHIC DESIGN SYSTEM - RESERVOIR MODULE                  -->
+    <!-- ================================================================== -->
+
+    <!-- COLOR PALETTE -->
+    <Color x:Key="ReservoirNeuSurface">#e8e8e8</Color>
+    <Color x:Key="ReservoirNeuCardBg">#E8ECF1</Color>
+    <Color x:Key="ReservoirNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="ReservoirNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="ReservoirNeuShadowDarkSoft">#D1D5DB</Color>
+    <Color x:Key="ReservoirNeuPrimary">#4A8FBF</Color>
+    <Color x:Key="ReservoirNeuDanger">#E16C6C</Color>
+    <Color x:Key="ReservoirNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="ReservoirNeuSuccess">#5EAA8D</Color>
+    <Color x:Key="ReservoirNeuWarning">#E8A84C</Color>
+    <Color x:Key="ReservoirNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="ReservoirNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="ReservoirNeuTextMuted">#8B939E</Color>
+    <Color x:Key="ReservoirNeuTextLight">#A8B0BA</Color>
+    <Color x:Key="ReservoirNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="ReservoirMBG">#f5f5f5</Color>
+
+    <x:String x:Key="ReservoirTableColumns">0.6*,1*,1.3*,1.2*,1.3*,2.6*</x:String>
+
+    <!-- PAGE BASE STYLES -->
+    <Style x:Key="ReservoirPageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Réservoirs"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirMBG}"/>
+    </Style>
+
+    <Style x:Key="ReservoirPageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="ReservoirPageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <!-- HEADER SECTION -->
+    <Style x:Key="ReservoirPageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="ReservoirPageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="ReservoirPageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextMuted}"/>
+    </Style>
+
+    <!-- STAT CARDS -->
+    <Style x:Key="ReservoirStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="ReservoirStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- SEARCH CONTAINER -->
+    <Style x:Key="ReservoirSearchContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSurface}"/>
+        <Setter Property="Padding" Value="16,14"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirSearchEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource ReservoirNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- LOADING INDICATOR -->
+    <Style x:Key="ReservoirPageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource ReservoirNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <!-- ADD BUTTON -->
+    <Style x:Key="ReservoirAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- TABLE CARD -->
+    <Style x:Key="ReservoirTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- TABLE HEADER -->
+    <Style x:Key="ReservoirTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource ReservoirTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="ReservoirTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ReservoirTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource ReservoirTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <Style x:Key="ReservoirTableDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource ReservoirNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <Style x:Key="ReservoirTableCollectionView" TargetType="CollectionView">
+        <Setter Property="SelectionMode" Value="None"/>
+    </Style>
+
+    <!-- TABLE ROW -->
+    <Style x:Key="ReservoirTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource ReservoirTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="76"/>
+    </Style>
+
+    <!-- CELL STYLES -->
+    <Style x:Key="ReservoirIdCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuCardBg}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirIdLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Numero Badge - Neumorphic -->
+    <Style x:Key="ReservoirNumeroBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E8F5ED"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirNumeroLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuSuccess}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ReservoirProduitLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="ReservoirCapacityLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Fuel Level Badge - Neumorphic -->
+    <Style x:Key="ReservoirFuelLevelBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSuccess}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirFuelLevelLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ReservoirActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ACTION BUTTONS -->
+    <Style x:Key="ReservoirDetailsButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="70"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirModifierButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="75"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuPrimary}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirSupprimerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuDanger}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource ReservoirNeuDanger}"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDark}" Offset="2,2" Radius="4" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource ReservoirNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="28,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <!-- EMPTY VIEW -->
+    <Style x:Key="ReservoirEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ReservoirEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ReservoirEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="ReservoirEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- POPUP STYLES -->
+    <Style x:Key="ReservoirPopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="650"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirPopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="ReservoirPopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="ReservoirPopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirPopupSectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="ReservoirPopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="ReservoirDetailsValueLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextPrimary}"/>
+        <Setter Property="Margin" Value="0,6,0,0"/>
+    </Style>
+
+    <Style x:Key="ReservoirPopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource ReservoirNeuBorderLight}"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirPopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource ReservoirNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="ReservoirPopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource ReservoirNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="ReservoirPopupErrorLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuDanger}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+    </Style>
+
+    <Style x:Key="ReservoirPopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirPopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirDetailsCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="40,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirPopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource ReservoirNeuBorderLight}"/>
+    </Style>
+
+    <Style x:Key="ReservoirStatsCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ReservoirNeuSurface}"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="12"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ReservoirNeuShadowDark}" Offset="4,4" Radius="8" Opacity="0.18"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="ReservoirStatsNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ReservoirStatsLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="TextColor" Value="{StaticResource ReservoirNeuTextMuted}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+</ResourceDictionary>

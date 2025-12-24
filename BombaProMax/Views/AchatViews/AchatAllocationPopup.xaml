@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.AchatViews.AchatAllocationPopup"
+               CanBeDismissedByTappingOutsideOfPopup="False">
+
+    <Border Style="{StaticResource AchatAllocationPopupBorder}">
+        <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" RowSpacing="15">
+            
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                <Label Text="⛽ Allocation du Carburant" 
+                       Style="{StaticResource AchatPopupTitle}"/>
+                <Button Grid.Column="1" 
+                        Text="✕" 
+                        Style="{StaticResource AchatPopupCloseButton}"
+                        Clicked="OnCancelClicked"/>
+            </Grid>
+
+            <!-- Achat Info Section -->
+            <Border Grid.Row="1" Style="{StaticResource AchatAllocationInfoBorder}">
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="20">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="ACHAT" Style="{StaticResource AchatAllocationInfoLabel}"/>
+                        <Label x:Name="AchatNumeroLabel" 
+                               Text="-" 
+                               Style="{StaticResource AchatAllocationInfoValue}"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                        <Label Text="PRODUIT" Style="{StaticResource AchatAllocationInfoLabel}"/>
+                        <Label x:Name="ProduitNomLabel" 
+                               Text="-" 
+                               Style="{StaticResource AchatAllocationInfoValue}"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="2" Spacing="4">
+                        <Label Text="QUANTITÉ À ALLOUER" Style="{StaticResource AchatAllocationInfoLabel}"/>
+                        <Label x:Name="QuantiteRestanteLabel" 
+                               Text="0 L" 
+                               Style="{StaticResource AchatAllocationInfoValueHighlight}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Reservoirs List -->
+            <ScrollView Grid.Row="2">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Réservoirs Disponibles" 
+                           Style="{StaticResource AchatAllocationSectionTitle}"/>
+                    
+                    <!-- Loading Indicator -->
+                    <ActivityIndicator x:Name="LoadingIndicator"
+                                       IsRunning="False"
+                                       IsVisible="False"
+                                       Color="{StaticResource AchatNeuPrimary}"
+                                       HeightRequest="40"/>
+                    
+                    <!-- Reservoirs Collection -->
+                    <CollectionView x:Name="ReservoirsCollectionView"
+                                    SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource AchatAllocationReservoirCard}">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
+                                        <!-- Checkbox -->
+                                        <CheckBox Grid.Column="0"
+                                                  x:Name="ReservoirCheckBox"
+                                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                  Color="{StaticResource AchatNeuPrimary}"
+                                                  CheckedChanged="OnReservoirCheckedChanged"
+                                                  VerticalOptions="Center"/>
+                                        
+                                        <!-- Reservoir Info -->
+                                        <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                            <HorizontalStackLayout Spacing="10">
+                                                <Label Text="{Binding Numero}" 
+                                                       Style="{StaticResource AchatAllocationReservoirNumero}"/>
+                                                <Border Style="{StaticResource AchatAllocationCompatibilityBadge}"
+                                                        IsVisible="{Binding EstCompatible}">
+                                                    <Label Text="Compatible" 
+                                                           Style="{StaticResource AchatAllocationBadgeText}"/>
+                                                </Border>
+                                                <Border Style="{StaticResource AchatAllocationEmptyBadge}"
+                                                        IsVisible="{Binding EstVide}">
+                                                    <Label Text="Vide" 
+                                                           Style="{StaticResource AchatAllocationBadgeTextWarning}"/>
+                                                </Border>
+                                            </HorizontalStackLayout>
+                                            
+                                            <Label Style="{StaticResource AchatAllocationReservoirProduit}">
+                                                <Label.Text>
+                                                    <MultiBinding StringFormat="{}{0} • Capacité: {1:N0} L">
+                                                        <Binding Path="ProduitNom" TargetNullValue="Non assigné"/>
+                                                        <Binding Path="Capacite"/>
+                                                    </MultiBinding>
+                                                </Label.Text>
+                                            </Label>
+                                            
+                                            <!-- Progress Bar for fuel level -->
+                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                <ProgressBar Grid.Column="0"
+                                                             Progress="{Binding FillPercentage}"
+                                                             ProgressColor="{StaticResource AchatNeuPrimary}"
+                                                             BackgroundColor="{StaticResource AchatNeuCardBg}"
+                                                             HeightRequest="8"/>
+                                                <Label Grid.Column="1" 
+                                                       Style="{StaticResource AchatAllocationReservoirLevel}">
+                                                    <Label.Text>
+                                                        <MultiBinding StringFormat="{}{0:N0} / {1:N0} L">
+                                                            <Binding Path="NiveauActuel"/>
+                                                            <Binding Path="Capacite"/>
+                                                        </MultiBinding>
+                                                    </Label.Text>
+                                                </Label>
+                                            </Grid>
+                                            
+                                            <Label Style="{StaticResource AchatAllocationEspaceDisponible}">
+                                                <Label.Text>
+                                                    <Binding Path="EspaceDisponible" StringFormat="Espace disponible: {0:N0} L"/>
+                                                </Label.Text>
+                                            </Label>
+                                        </VerticalStackLayout>
+                                        
+                                        <!-- Quantity Entry -->
+                                        <VerticalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
+                                            <Label Text="Quantité (L)" 
+                                                   Style="{StaticResource AchatAllocationQuantityLabel}"/>
+                                            <Border Style="{StaticResource AchatAllocationQuantityBorder}">
+                                                <Entry Text="{Binding QuantiteAllouee, Mode=TwoWay}"
+                                                       Keyboard="Numeric"
+                                                       HorizontalTextAlignment="Center"
+                                                       Style="{StaticResource AchatAllocationQuantityEntry}"
+                                                       TextChanged="OnQuantityChanged"
+                                                       IsEnabled="{Binding IsSelected}"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                        
+                        <CollectionView.EmptyView>
+                            <VerticalStackLayout Spacing="10" 
+                                                 Padding="20"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center">
+                                <Label Text="🔍" FontSize="40" HorizontalTextAlignment="Center"/>
+                                <Label Text="Aucun réservoir compatible trouvé"
+                                       Style="{StaticResource AchatEmptyTitle}"/>
+                                <Label Text="Assurez-vous qu'il existe des réservoirs pour ce type de carburant"
+                                       Style="{StaticResource AchatEmptySubtitle}"/>
+                            </VerticalStackLayout>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Allocation Summary -->
+            <Border Grid.Row="3" Style="{StaticResource AchatAllocationSummaryBorder}">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="20">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="TOTAL ALLOUÉ" Style="{StaticResource AchatAllocationSummaryLabel}"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Label x:Name="TotalAlloueLabel" 
+                                   Text="0" 
+                                   Style="{StaticResource AchatAllocationSummaryValue}"/>
+                            <Label x:Name="TotalRequiredLabel" 
+                                   Text="/ 0 L" 
+                                   Style="{StaticResource AchatAllocationSummaryRequired}"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                    
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="RESTANT" Style="{StaticResource AchatAllocationSummaryLabel}"/>
+                        <Label x:Name="RestantLabel" 
+                               Text="0 L" 
+                               Style="{StaticResource AchatAllocationRestantValue}"/>
+                    </VerticalStackLayout>
+                    
+                    <Border Grid.Column="2" 
+                            x:Name="ValidationBadge"
+                            Style="{StaticResource AchatAllocationValidationBadge}">
+                        <Label x:Name="ValidationLabel" 
+                               Text="❌ Incomplet" 
+                               Style="{StaticResource AchatAllocationValidationText}"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Error Message & Action Buttons -->
+            <VerticalStackLayout Grid.Row="4" Spacing="12">
+                <Label x:Name="ErrorLabel"
+                       TextColor="#F44336"
+                       FontSize="14"
+                       IsVisible="False"
+                       HorizontalTextAlignment="Center"/>
+                
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Button Grid.Column="0"
+                            Text="Annuler" 
+                            Style="{StaticResource AchatPopupCancelButton}"
+                            Clicked="OnCancelClicked"/>
+
+                    <Button Grid.Column="1"
+                            x:Name="ConfirmButton"
+                            Text="✓ Confirmer Allocation" 
+                            Style="{StaticResource AchatPopupCreateButton}"
+                            Clicked="OnConfirmClicked"
+                            IsEnabled="False"/>
+                </Grid>
+            </VerticalStackLayout>
+        </Grid>
+    </Border>
+</toolkit:Popup>

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:BombaProMax"
+             xmlns:converters="clr-namespace:BombaProMax.Converters"
+             x:Class="BombaProMax.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Define converters FIRST -->
+            <converters:IsLessThanConverter x:Key="IsLessThanConverter"/>
+            <converters:IsZeroConverter x:Key="IsZeroConverter"/>
+            <converters:StatusColorConverter x:Key="StatusColorConverter"/>
+            <converters:CiterneStatusColorConverter x:Key="CiterneStatusColorConverter"/>
+            <converters:CiterneStatusTextConverter x:Key="CiterneStatusTextConverter"/>
+            <converters:CamionCountColorConverter x:Key="CamionCountColorConverter"/>
+
+            <!-- Then merge dictionaries -->
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="/Styles/lightNeumorphic.xaml" />-->
+                <ResourceDictionary Source="Styles/Converters.xaml" />
+                <ResourceDictionary Source="Styles/Colors.xaml" />
+                <ResourceDictionary Source="Styles/Dividers.xaml" />
+                <ResourceDictionary Source="Styles/Borders.xaml" />
+                <ResourceDictionary Source="Styles/Buttons.xaml" />
+                <ResourceDictionary Source="Styles/Labels.xaml" />
+                <ResourceDictionary Source="Styles/Layouts.xaml" />
+                <ResourceDictionary Source="Styles/Inputs.xaml" />
+                <ResourceDictionary Source="Styles/ClientStyles.xaml" />
+                <ResourceDictionary Source="Styles/ProduitStyles.xaml" />
+                <ResourceDictionary Source="Styles/FournisseurStyles.xaml" />
+                <ResourceDictionary Source="Styles/CamionStyles.xaml" />
+                <ResourceDictionary Source="Styles/CiterneStyles.xaml" />
+                <ResourceDictionary Source="Styles/EmployeStyles.xaml" />
+                <ResourceDictionary Source="Styles/ReservoirStyles.xaml" />
+                <ResourceDictionary Source="Styles/PompeStyles.xaml" />
+                <ResourceDictionary Source="Styles/AchatStyles.xaml" />
+                <ResourceDictionary Source="Styles/ChauffeurStyles.xaml" />
+                <ResourceDictionary Source="Styles/UserStyles.xaml" />
+                <ResourceDictionary Source="Styles/FactureBL.xaml" />
+                <ResourceDictionary Source="Styles/FacturationStyles.xaml" />
+                <ResourceDictionary Source="Styles/HomeStyles.xaml" />
+                <ResourceDictionary Source="Styles/VenteLubrifiantsEtArticlesStyles.xaml" />
+                <ResourceDictionary Source="Styles/PeriodeStyles.xaml" />
+                <ResourceDictionary Source="Styles/DepenseStyles.xaml" />
+                <ResourceDictionary Source="Styles/JaugeageStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

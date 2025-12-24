@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             x:Class="BombaProMax.Views.FactureViews.FacturationPage"
+             x:DataType="viewmodels:FactureViewModel"
+             Style="{StaticResource FactPageStyle}">
+
+    <ScrollView Style="{StaticResource FactPageScrollView}">
+        <VerticalStackLayout Style="{StaticResource FactPageMainStack}">
+
+            <!-- ========================================= -->
+            <!-- HEADER with Navigation                    -->
+            <!-- ========================================= -->
+            <Grid Style="{StaticResource FactHeaderGrid}">
+                <Button Grid.Column="0"
+                        Text="← Crédits Client"
+                        Style="{StaticResource FactBackButton}"
+                        Clicked="OnNavigateToClientCreditClicked"/>
+                
+                <VerticalStackLayout Grid.Column="1" Style="{StaticResource FactHeaderStack}">
+                    <Label Text="Gestion Crédits &amp; Facturation" 
+                           Style="{StaticResource FactTitleLabel}"/>
+                    <Label Text="Convertissez les transactions crédit en BL ou Facture" 
+                           Style="{StaticResource FactSubtitleLabel}"/>
+                </VerticalStackLayout>
+                
+                <Button Grid.Column="2"
+                        Text="📄 Factures &amp; BL"
+                        Style="{StaticResource FactNavButton}"
+                        Clicked="OnNavigateToFactureEtBLClicked"/>
+            </Grid>
+
+            <!-- ========================================= -->
+            <!-- STATS CARDS ROW - Neumorphic              -->
+            <!-- ========================================= -->
+            <Grid Style="{StaticResource FactStatsGrid}"
+                  IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                
+                <!-- Transactions Disponibles -->
+                <Border Grid.Column="0" Style="{StaticResource FactStatCard}">
+                    <VerticalStackLayout Style="{StaticResource FactStatStack}">
+                        <Label Text="{Binding TotalCTsDisponibles}" 
+                               Style="{StaticResource FactStatValueOrange}"/>
+                        <Label Text="Transactions Affichées" 
+                               Style="{StaticResource FactStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Montant Total -->
+                <Border Grid.Column="1" Style="{StaticResource FactStatCard}">
+                    <VerticalStackLayout Style="{StaticResource FactStatStack}">
+                        <Label Text="{Binding TotalMontantDisponible, StringFormat='{0:N2}'}" 
+                               Style="{StaticResource FactStatValueGreen}"/>
+                        <Label Text="DH Total" 
+                               Style="{StaticResource FactStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Total Factures -->
+                <Border Grid.Column="2" Style="{StaticResource FactStatCard}">
+                    <VerticalStackLayout Style="{StaticResource FactStatStack}">
+                        <Label Text="{Binding TotalFactures}" 
+                               Style="{StaticResource FactStatValueBlue}"/>
+                        <Label Text="Factures Récentes" 
+                               Style="{StaticResource FactStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- ========================================= -->
+            <!-- CLIENT HEADER BANNER + FILTERS            -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource FactFilterCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                <VerticalStackLayout Style="{StaticResource FactFilterStack}">
+                    <!-- Client Header Banner -->
+                    <Grid Style="{StaticResource FactClientPickerGrid}">
+                        <Label Text="👤" 
+                               Style="{StaticResource FactClientIconLabel}"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="{Binding CurrentClient.Nom}" 
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource ClientNeuTextPrimary}"/>
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="{Binding CurrentClient.NomSociete, StringFormat='Société: {0}'}" 
+                                       FontSize="13"
+                                       TextColor="{StaticResource ClientNeuTextMuted}"
+                                       IsVisible="{Binding CurrentClient.NomSociete, Converter={StaticResource IsNotNullConverter}}"/>
+                                <Label Text="•" 
+                                       FontSize="13"
+                                       TextColor="{StaticResource ClientNeuTextMuted}"
+                                       IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
+                                <Label Text="{Binding CurrentClient.Contact, StringFormat='Tél: {0}'}" 
+                                       FontSize="13"
+                                       TextColor="{StaticResource ClientNeuTextMuted}"
+                                       IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
+                            </HorizontalStackLayout>
+                            <Label Text="{Binding CurrentClient.NumeroClient, StringFormat='ID: {0}'}" 
+                                   FontSize="12"
+                                   TextColor="{StaticResource ClientNeuTextMuted}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Filter Buttons Row -->
+                    <HorizontalStackLayout Style="{StaticResource FactFilterButtonsStack}">
+                        <Button Text="📋 Disponibles"
+                                Command="{Binding SetFilterAvailableCommand}"
+                                BackgroundColor="{Binding IsFilterAvailable, Converter={StaticResource BoolToFilterColorConverter}}"
+                                TextColor="{Binding IsFilterAvailable, Converter={StaticResource BoolToFilterTextColorConverter}}"
+                                Style="{StaticResource FactFilterButtonInactive}"/>
+                        <Button Text="📦 En BL"
+                                Command="{Binding SetFilterInBLCommand}"
+                                BackgroundColor="{Binding IsFilterInBL, Converter={StaticResource BoolToFilterColorConverter}}"
+                                TextColor="{Binding IsFilterInBL, Converter={StaticResource BoolToFilterTextColorConverter}}"
+                                Style="{StaticResource FactFilterButtonInactive}"/>
+                        <Button Text="🧾 Facturés"
+                                Command="{Binding SetFilterInvoicedCommand}"
+                                BackgroundColor="{Binding IsFilterInvoiced, Converter={StaticResource BoolToFilterColorConverter}}"
+                                TextColor="{Binding IsFilterInvoiced, Converter={StaticResource BoolToFilterTextColorConverter}}"
+                                Style="{StaticResource FactFilterButtonInactive}"/>
+                        <Button Text="Tout Sélectionner"
+                                Command="{Binding SelectAllCTsCommand}"
+                                Style="{StaticResource FactSelectAllButton}"/>
+                        <Button Text="Désélectionner"
+                                Command="{Binding DeselectAllCTsCommand}"
+                                Style="{StaticResource FactDeselectButton}"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                              IsVisible="{Binding IsLoading}"
+                              Style="{StaticResource FactLoadingIndicator}"/>
+
+            <!-- ========================================= -->
+            <!-- CREDIT TRANSACTIONS TABLE - Neumorphic    -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource FactTransactionsCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                <VerticalStackLayout Style="{StaticResource FactTransactionsStack}">
+                    
+                    <!-- Table Title Header - Primary Color Bar -->
+                    <VerticalStackLayout Style="{StaticResource FactSectionTitleStack}">
+                        <Label Text="Transactions Crédit" 
+                               Style="{StaticResource FactSectionTitle}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Table Header -->
+                    <Grid Style="{StaticResource FactTransactionHeaderGrid}">
+                        <Label Grid.Column="0" Text="✓" Style="{StaticResource FactTableHeaderLabelCenter}"/>
+                        <Label Grid.Column="1" Text="N° Trans" Style="{StaticResource FactTableHeaderLabel}"/>
+                        <Label Grid.Column="2" Text="Date" Style="{StaticResource FactTableHeaderLabel}"/>
+                        <Label Grid.Column="3" Text="Produit/Service" Style="{StaticResource FactTableHeaderLabel}"/>
+                        <Label Grid.Column="4" Text="Qté" Style="{StaticResource FactTableHeaderLabelCenter}"/>
+                        <Label Grid.Column="5" Text="Montant" Style="{StaticResource FactTableHeaderLabelEnd}"/>
+                    </Grid>
+
+                    <!-- Transactions List -->
+                    <CollectionView ItemsSource="{Binding AvailableCTs}"
+                                    Style="{StaticResource FactTransactionCollectionView}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:CreditTransactionDto">
+                                <VerticalStackLayout>
+                                    <!-- Row with subtle selection highlight -->
+                                    <Border BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToSelectionColorConverter}}"
+                                            Style="{StaticResource FactTransactionRowBorder}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FactureViewModel}}, Path=ToggleCTSelectionCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Grid Style="{StaticResource FactTransactionRowGrid}">
+                                            <CheckBox Grid.Column="0" 
+                                                      IsChecked="{Binding IsSelected}"
+                                                      CheckedChanged="OnTransactionCheckBoxChanged"
+                                                      Style="{StaticResource FactCheckBox}"/>
+                                            
+                                            <!-- Numéro - Pill Style -->
+                                            <Border Grid.Column="1" Style="{StaticResource FactNumberCell}">
+                                                <Label Text="{Binding NumeroTransaction}" 
+                                                       Style="{StaticResource FactNumberLabel}"/>
+                                            </Border>
+                                            
+                                            <Label Grid.Column="2" 
+                                                   Text="{Binding DateCredit, StringFormat='{0:dd/MM/yy}'}" 
+                                                   Style="{StaticResource FactTransactionDate}"/>
+                                            <Label Grid.Column="3" 
+                                                   Text="{Binding ItemDescription}" 
+                                                   Style="{StaticResource FactTransactionItem}"/>
+                                            <Label Grid.Column="4" 
+                                                   Text="{Binding Quantite}" 
+                                                   Style="{StaticResource FactTransactionQty}"/>
+                                            <Label Grid.Column="5" 
+                                                   Text="{Binding MontantTotal, StringFormat='{0:N2} DH'}" 
+                                                   Style="{StaticResource FactTransactionAmount}"/>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <!-- Row Divider -->
+                                    <BoxView Style="{StaticResource FactRowDivider}"/>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                        <CollectionView.EmptyView>
+                            <VerticalStackLayout Style="{StaticResource FactEmptyViewStack}">
+                                <!-- Neumorphic Icon Container -->
+                                <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                                        WidthRequest="100"
+                                        HeightRequest="100"
+                                        StrokeThickness="0"
+                                        Margin="0,0,0,16">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="50"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="{StaticResource ClientNeuShadowDark}"
+                                                Offset="6,6"
+                                                Radius="12"
+                                                Opacity="0.25"/>
+                                    </Border.Shadow>
+                                    <Label Text="📋"
+                                           FontSize="48"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                <Label Text="Aucune transaction" 
+                                       Style="{StaticResource FactEmptyTitle}"/>
+                                <Label Text="Ce client n'a pas de transactions disponibles" 
+                                       Style="{StaticResource FactEmptySubtitle}"/>
+                            </VerticalStackLayout>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ========================================= -->
+            <!-- SELECTION SUMMARY & ACTION BUTTONS        -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource FactSummaryBar}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                <Grid Style="{StaticResource FactSummaryGrid}">
+                    <VerticalStackLayout Style="{StaticResource FactSummaryStack}">
+                        <Label Text="{Binding CountSelected, StringFormat='{0} transaction(s) sélectionnée(s)'}" 
+                               Style="{StaticResource FactSummaryCountLabel}"/>
+                        <Label Text="{Binding TotalSelected, StringFormat='Total: {0:N2} DH'}" 
+                               Style="{StaticResource FactSummaryTotalLabel}"/>
+                    </VerticalStackLayout>
+                    
+                    <!-- Create BL Button -->
+                    <Button Grid.Column="1"
+                            Text="📦 Créer BL"
+                            Command="{Binding CreateBLFromSelectedCommand}"
+                            IsEnabled="{Binding CanCreateBL}"
+                            Style="{StaticResource FactCreateBLButton}"/>
+                    
+                    <!-- Direct Invoice Button -->
+                    <Button Grid.Column="2"
+                            Text="🧾 Facturer Direct"
+                            Command="{Binding CreateFactureDirectCommand}"
+                            IsEnabled="{Binding CanCreateFacture}"
+                            Style="{StaticResource FactCreateFactureButton}"/>
+                </Grid>
+            </Border>
+
+            <!-- ========================================= -->
+            <!-- RECENT FACTURES - Neumorphic Table        -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource FactFacturesCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                <VerticalStackLayout Style="{StaticResource FactFacturesStack}">
+                    
+                    <!-- Table Title Header - Primary Color Bar -->
+                    <VerticalStackLayout Style="{StaticResource FactSectionTitleStack}">
+                        <Label Text="Factures Récentes" 
+                               Style="{StaticResource FactSectionTitle}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Factures Header -->
+                    <Grid Style="{StaticResource FactFacturesHeaderGrid}">
+                        <Label Grid.Column="0" Text="Numéro" Style="{StaticResource FactTableHeaderLabel}"/>
+                        <Label Grid.Column="1" Text="Date" Style="{StaticResource FactTableHeaderLabel}"/>
+                        <Label Grid.Column="2" Text="Client" Style="{StaticResource FactTableHeaderLabel}"/>
+                        <Label Grid.Column="3" Text="Montant" Style="{StaticResource FactTableHeaderLabelEnd}"/>
+                        <Label Grid.Column="4" Text="Statut" Style="{StaticResource FactTableHeaderLabelCenter}"/>
+                        <Label Grid.Column="5" Text="Actions" Style="{StaticResource FactTableHeaderLabelCenter}"/>
+                    </Grid>
+
+                    <!-- Factures List -->
+                    <CollectionView ItemsSource="{Binding Factures}"
+                                    Style="{StaticResource FactFacturesCollectionView}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:FactureDto">
+                                <VerticalStackLayout>
+                                    <Grid Style="{StaticResource FactFactureRowGrid}">
+                                        <!-- Numéro - Pill Style -->
+                                        <Border Grid.Column="0" Style="{StaticResource FactNumberCell}">
+                                            <Label Text="{Binding NumeroFacture}" 
+                                                   Style="{StaticResource FactNumberLabel}"/>
+                                        </Border>
+                                        
+                                        <Label Grid.Column="1" 
+                                               Text="{Binding DateFacture, StringFormat='{0:dd/MM/yy}'}" 
+                                               Style="{StaticResource FactFactureDate}"/>
+                                        <Label Grid.Column="2" 
+                                               Text="{Binding ClientNom}" 
+                                               Style="{StaticResource FactFactureClient}"/>
+                                        <Label Grid.Column="3" 
+                                               Text="{Binding MontantTotal, StringFormat='{0:N2} DH'}" 
+                                               Style="{StaticResource FactFactureAmount}"/>
+                                        
+                                        <!-- Status Badge -->
+                                        <Border Grid.Column="4"
+                                                BackgroundColor="{Binding Statut, Converter={StaticResource StatusToColorConverter}}"
+                                                Style="{StaticResource FactStatusBadge}">
+                                            <Label Text="{Binding Statut}" 
+                                                   Style="{StaticResource FactStatusBadgeLabel}"/>
+                                        </Border>
+                                        
+                                        <!-- Actions -->
+                                        <HorizontalStackLayout Grid.Column="5" 
+                                                               Style="{StaticResource FactActionsStack}">
+                                            <Button Text="👁"
+                                                    Style="{StaticResource FactViewButton}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FactureViewModel}}, Path=ViewFactureDetailsCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Text="✓"
+                                                    Style="{StaticResource FactPayButton}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FactureViewModel}}, Path=MarkFactureAsPaidCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Text="🗑"
+                                                    Style="{StaticResource FactDeleteButton}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FactureViewModel}}, Path=DeleteFactureCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                    
+                                    <!-- Row Divider -->
+                                    <BoxView Style="{StaticResource FactRowDivider}"/>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                        <CollectionView.EmptyView>
+                            <VerticalStackLayout Style="{StaticResource FactFacturesEmptyStack}">
+                                <!-- Neumorphic Icon Container -->
+                                <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                                        WidthRequest="100"
+                                        HeightRequest="100"
+                                        StrokeThickness="0"
+                                        Margin="0,0,0,16">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="50"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="{StaticResource ClientNeuShadowDark}"
+                                                Offset="6,6"
+                                                Radius="12"
+                                                Opacity="0.25"/>
+                                    </Border.Shadow>
+                                    <Label Text="🧾"
+                                           FontSize="48"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                <Label Text="Aucune facture" 
+                                       Style="{StaticResource FactFacturesEmptyTitle}"/>
+                            </VerticalStackLayout>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Empty State when no client (fallback for direct navigation) -->
+            <Border Style="{StaticResource FactTransactionsCard}"
+                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNullConverter}}">
+                <VerticalStackLayout Style="{StaticResource FactEmptyViewStack}" Padding="40">
+                    <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                            WidthRequest="100"
+                            HeightRequest="100"
+                            StrokeThickness="0"
+                            Margin="0,0,0,16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="50"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="{StaticResource ClientNeuShadowDark}"
+                                    Offset="6,6"
+                                    Radius="12"
+                                    Opacity="0.25"/>
+                        </Border.Shadow>
+                        <Label Text="👆"
+                               FontSize="48"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="Aucun client sélectionné" 
+                           Style="{StaticResource FactEmptyTitle}"/>
+                    <Label Text="Veuillez sélectionner un client depuis la liste des clients pour afficher ses transactions."
+                           Style="{StaticResource FactEmptySubtitle}"/>
+                    <Button Text="← Retour à la liste des clients"
+                            Style="{StaticResource FactBackButton}"
+                            Clicked="OnNavigateToClientsClicked"
+                            Margin="0,16,0,0"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

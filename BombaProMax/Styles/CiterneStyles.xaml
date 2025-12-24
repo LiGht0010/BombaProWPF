@@ -1,0 +1,488 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.CiterneStyles">
+
+    <!-- ================================================================== -->
+    <!-- LIGHT NEUMORPHIC DESIGN SYSTEM - CITERNE MODULE                    -->
+    <!-- ================================================================== -->
+
+    <!-- COLOR PALETTE -->
+    <Color x:Key="CiterneNeuSurface">#e8e8e8</Color>
+    <Color x:Key="CiterneNeuCardBg">#E8ECF1</Color>
+    <Color x:Key="CiterneNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="CiterneNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="CiterneNeuShadowDarkSoft">#D1D5DB</Color>
+    <Color x:Key="CiterneNeuPrimary">#4A8FBF</Color>
+    <Color x:Key="CiterneNeuDanger">#E16C6C</Color>
+    <Color x:Key="CiterneNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="CiterneNeuSuccess">#5EAA8D</Color>
+    <Color x:Key="CiterneNeuWarning">#E8A84C</Color>
+    <Color x:Key="CiterneNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="CiterneNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="CiterneNeuTextMuted">#8B939E</Color>
+    <Color x:Key="CiterneNeuTextLight">#A8B0BA</Color>
+    <Color x:Key="CiterneNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="CiterneMBG">#f5f5f5</Color>
+
+    <x:String x:Key="CiterneTableColumns">0.8*,1.3*,1.5*,1.5*,1.3*,2.5*</x:String>
+
+    <!-- PAGE BASE STYLES -->
+    <Style x:Key="CiternePageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Citernes"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneMBG}"/>
+    </Style>
+
+    <Style x:Key="CiternePageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="CiternePageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <!-- HEADER SECTION -->
+    <Style x:Key="CiternePageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="CiternePageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="CiternePageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextMuted}"/>
+    </Style>
+
+    <!-- STAT CARDS -->
+    <Style x:Key="CiterneStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="CiterneStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- SEARCH CONTAINER -->
+    <Style x:Key="CiterneSearchContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSurface}"/>
+        <Setter Property="Padding" Value="16,14"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneSearchEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource CiterneNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- LOADING INDICATOR -->
+    <Style x:Key="CiternePageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource CiterneNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <!-- ADD BUTTON -->
+    <Style x:Key="CiterneAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- TABLE CARD -->
+    <Style x:Key="CiterneTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- TABLE HEADER -->
+    <Style x:Key="CiterneTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource CiterneTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="CiterneTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CiterneTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource CiterneTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <Style x:Key="CiterneTableDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource CiterneNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <Style x:Key="CiterneTableCollectionView" TargetType="CollectionView">
+        <Setter Property="SelectionMode" Value="None"/>
+    </Style>
+
+    <!-- TABLE ROW -->
+    <Style x:Key="CiterneTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource CiterneTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="76"/>
+    </Style>
+
+    <!-- CELL STYLES -->
+    <Style x:Key="CiterneIdCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuCardBg}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneIdLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Capacity Badge - Neumorphic -->
+    <Style x:Key="CiterneCapacityBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E8F5ED"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneCapacityLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuSuccess}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CiterneProduitLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="CiterneFournisseurLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- Camion Status Badge - Neumorphic -->
+    <Style x:Key="CiterneCamionStatusBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSuccess}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneCamionStatusLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CiterneActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ACTION BUTTONS -->
+    <Style x:Key="CiterneDetailsButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="70"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneModifierButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="75"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuPrimary}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneSupprimerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuDanger}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource CiterneNeuDanger}"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDark}" Offset="2,2" Radius="4" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource CiterneNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="28,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <!-- EMPTY VIEW -->
+    <Style x:Key="CiterneEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CiterneEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CiterneEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="CiterneEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- POPUP STYLES -->
+    <Style x:Key="CiternePopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="650"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiternePopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="CiternePopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="CiternePopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiternePopupSectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="CiternePopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="CiterneDetailsValueLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextPrimary}"/>
+        <Setter Property="Margin" Value="0,6,0,0"/>
+    </Style>
+
+    <Style x:Key="CiternePopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource CiterneNeuBorderLight}"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiternePopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource CiterneNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="CiternePopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource CiterneNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="CiternePopupErrorLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuDanger}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+    </Style>
+
+    <Style x:Key="CiternePopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiternePopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneDetailsCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="40,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiternePopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource CiterneNeuBorderLight}"/>
+    </Style>
+
+    <Style x:Key="CiterneStatsCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CiterneNeuSurface}"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="12"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource CiterneNeuShadowDark}" Offset="4,4" Radius="8" Opacity="0.18"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="CiterneStatsNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CiterneStatsLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="TextColor" Value="{StaticResource CiterneNeuTextMuted}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+</ResourceDictionary>

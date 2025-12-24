@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             x:Class="BombaProMax.Views.VenteLubEtArticles.VenteLubrifiantsEtArticlesPage"
+             x:DataType="viewmodels:VenteLubrifiantsEtArticlesViewModel"
+             Style="{StaticResource VenteLubPageStyle}">
+
+    <Grid RowDefinitions="*,Auto">
+        
+        <ScrollView Grid.Row="0" Style="{StaticResource VenteLubPageScrollView}">
+            <VerticalStackLayout Style="{StaticResource VenteLubPageMainStack}">
+
+                <!-- JOURNÉE PROGRESS BAR -->
+                <Border BackgroundColor="#E3F2FD" 
+                        Padding="15" 
+                        Margin="0,0,0,10"
+                        IsVisible="{Binding IsJourneeActive}" 
+                        StrokeShape="RoundRectangle 10" 
+                        Stroke="#1976D2">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🚀" FontSize="24" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="{Binding JourneeStepInfo}" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#1976D2" 
+                                   FontSize="14"/>
+                            <Label Text="Journée en cours - Suivez les étapes" 
+                                   TextColor="#666" 
+                                   FontSize="11"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="📋" FontSize="20" VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- HEADER -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <VerticalStackLayout Style="{StaticResource VenteLubPageHeaderStack}">
+                        <Label Text="🛢️ Ventes Lubrifiants et Articles" 
+                               Style="{StaticResource VenteLubPageTitleLabel}"/>
+                        <Label Text="Gérez les ventes de lubrifiants et articles divers" 
+                               Style="{StaticResource VenteLubPageSubtitleLabel}"/>
+                    </VerticalStackLayout>
+                    
+                    <Button Grid.Column="1"
+                            Text="+ Nouvelle Vente"
+                            Style="{StaticResource VenteLubAddButton}"
+                            Clicked="OnAddVenteClicked"
+                            VerticalOptions="Center"
+                            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </Grid>
+
+                <!-- STATS CARDS -->
+                <Grid ColumnDefinitions="*,*,*,*,*" 
+                      ColumnSpacing="16"
+                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    
+                    <Border Grid.Column="0" Style="{StaticResource VenteLubStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="📊" Style="{StaticResource VenteLubStatIcon}"/>
+                            <Label Text="{Binding TotalVentes}" 
+                                   Style="{StaticResource VenteLubStatNumber}"
+                                   TextColor="#1976D2"/>
+                            <Label Text="Ventes" 
+                                   Style="{StaticResource VenteLubStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource VenteLubStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="📦" Style="{StaticResource VenteLubStatIcon}"/>
+                            <Label Text="{Binding TotalQuantite}" 
+                                   Style="{StaticResource VenteLubStatNumber}"
+                                   TextColor="#7B1FA2"/>
+                            <Label Text="Articles" 
+                                   Style="{StaticResource VenteLubStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource VenteLubStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="💰" Style="{StaticResource VenteLubStatIcon}"/>
+                            <Label Text="{Binding TotalMontantTTC, StringFormat='{0:N2}'}" 
+                                   Style="{StaticResource VenteLubStatNumber}"
+                                   TextColor="#E65100"/>
+                            <Label Text="MAD TTC" 
+                                   Style="{StaticResource VenteLubStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="3" Style="{StaticResource VenteLubStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="🏛️" Style="{StaticResource VenteLubStatIcon}"/>
+                            <Label Text="{Binding TotalTVA, StringFormat='{0:N2}'}" 
+                                   Style="{StaticResource VenteLubStatNumber}"
+                                   TextColor="#00796B"/>
+                            <Label Text="MAD TVA" 
+                                   Style="{StaticResource VenteLubStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="4" Style="{StaticResource VenteLubStatCard}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="📈" Style="{StaticResource VenteLubStatIcon}"/>
+                            <Label Text="{Binding TotalMarge, StringFormat='{0:N2}'}" 
+                                   Style="{StaticResource VenteLubStatNumber}"
+                                   TextColor="#2E7D32"/>
+                            <Label Text="MAD Marge" 
+                                   Style="{StaticResource VenteLubStatLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- FILTERS -->
+                <Border Style="{StaticResource VenteLubFilterContainer}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*,Auto,Auto" ColumnSpacing="12">
+                        <Label Text="📅 Du:" Style="{StaticResource VenteLubFilterLabel}"/>
+                        <DatePicker Grid.Column="1"
+                                    Date="{Binding FilterStartDate}"
+                                    Style="{StaticResource VenteLubFilterDatePicker}"/>
+                        <Label Grid.Column="2" Text="Au:" Style="{StaticResource VenteLubFilterLabel}"/>
+                        <DatePicker Grid.Column="3"
+                                    Date="{Binding FilterEndDate}"
+                                    Style="{StaticResource VenteLubFilterDatePicker}"/>
+                        <Label Grid.Column="4" Text="Catégorie:" Style="{StaticResource VenteLubFilterLabel}"/>
+                        <Picker Grid.Column="5"
+                                ItemsSource="{Binding Categories}"
+                                SelectedItem="{Binding SelectedCategory}"
+                                Style="{StaticResource VenteLubFilterPicker}"/>
+                        <Button Grid.Column="6"
+                                Text="🔍 Filtrer"
+                                Command="{Binding LoadVentesByDateRangeCommand}"
+                                Style="{StaticResource VenteLubFilterButton}"/>
+                        <Button Grid.Column="7"
+                                Text="🔄"
+                                Command="{Binding LoadVentesCommand}"
+                                Style="{StaticResource VenteLubResetButton}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Loading -->
+                <ActivityIndicator Style="{StaticResource VenteLubPageLoadingIndicator}"
+                                   IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"/>
+
+                <!-- TABLE CARD -->
+                <Border Style="{StaticResource VenteLubTableCard}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <VerticalStackLayout Style="{StaticResource VenteLubTableContainer}">
+
+                        <!-- Header -->
+                        <Grid Style="{StaticResource VenteLubTableHeaderGrid}">
+                            <Label Grid.Column="0" Text="N° Vente" Style="{StaticResource VenteLubTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="1" Text="Produit" Style="{StaticResource VenteLubTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="2" Text="Qté" Style="{StaticResource VenteLubTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Prix Unit." Style="{StaticResource VenteLubTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Total TTC" Style="{StaticResource VenteLubTableHeaderLabel}"/>
+                            <Label Grid.Column="5" Text="Client" Style="{StaticResource VenteLubTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="6" Text="Paiement" Style="{StaticResource VenteLubTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="7" Text="Date" Style="{StaticResource VenteLubTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="8" Text="Actions" Style="{StaticResource VenteLubTableHeaderLabel}"/>
+                        </Grid>
+
+                        <!-- Rows using BindableLayout -->
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ventes}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:VenteLubrifiantsEtArticlesDto">
+                                    <VerticalStackLayout BackgroundColor="Transparent">
+                                        <Grid Style="{StaticResource VenteLubTableRowGrid}">
+                                            
+                                            <!-- N° Vente -->
+                                            <Label Grid.Column="0" 
+                                                   Text="{Binding NumeroVente}" 
+                                                   Style="{StaticResource VenteLubNumeroLabel}"/>
+
+                                            <!-- Produit -->
+                                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                                <Label Text="{Binding ProduitNom, TargetNullValue='N/A'}" 
+                                                       Style="{StaticResource VenteLubProduitLabel}"/>
+                                                <Label Text="{Binding CategorieNom}" 
+                                                       Style="{StaticResource VenteLubCategorieLabel}"/>
+                                            </VerticalStackLayout>
+
+                                            <!-- Quantité -->
+                                            <Label Grid.Column="2" 
+                                                   Text="{Binding QuantiteVendue}" 
+                                                   Style="{StaticResource VenteLubQuantiteLabel}"/>
+
+                                            <!-- Prix Unitaire -->
+                                            <Label Grid.Column="3" 
+                                                   Text="{Binding PrixUnitaireTTC, StringFormat='{0:N2}'}" 
+                                                   Style="{StaticResource VenteLubPrixLabel}"/>
+
+                                            <!-- Total TTC -->
+                                            <Label Grid.Column="4" 
+                                                   Text="{Binding MontantTotalTTC, StringFormat='{0:N2}'}" 
+                                                   Style="{StaticResource VenteLubTotalLabel}"/>
+
+                                            <!-- Client -->
+                                            <Label Grid.Column="5" 
+                                                   Text="{Binding ClientNom, TargetNullValue='Anonyme'}" 
+                                                   Style="{StaticResource VenteLubClientLabel}"/>
+
+                                            <!-- Paiement -->
+                                            <Label Grid.Column="6" 
+                                                   Text="{Binding MoyenPaiementNom, TargetNullValue='Espèces'}" 
+                                                   Style="{StaticResource VenteLubPaiementLabel}"/>
+
+                                            <!-- Date -->
+                                            <Label Grid.Column="7" 
+                                                   Text="{Binding DateVente, StringFormat='{0:dd/MM/yy HH:mm}'}" 
+                                                   Style="{StaticResource VenteLubDateLabel}"/>
+
+                                            <!-- Actions -->
+                                            <HorizontalStackLayout Grid.Column="8" Style="{StaticResource VenteLubActionsCell}">
+                                                <Button Text="✏️"
+                                                        Style="{StaticResource VenteLubEditButton}"
+                                                        Clicked="OnEditVenteClicked"
+                                                        CommandParameter="{Binding .}"/>
+                                                <Button Text="🗑️"
+                                                        Style="{StaticResource VenteLubDeleteButton}"
+                                                        Clicked="OnDeleteVenteClicked"
+                                                        CommandParameter="{Binding .}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        <BoxView Style="{StaticResource VenteLubRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                            
+                            <BindableLayout.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource VenteLubEmptyView}">
+                                    <Border BackgroundColor="#EEF1F5"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="#C5CAD1" Offset="6,6" Radius="12" Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="🛢️" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucune vente trouvée" Style="{StaticResource VenteLubEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter une nouvelle vente de lubrifiant ou article" 
+                                           Style="{StaticResource VenteLubEmptySubtitle}"/>
+                                    <Button Text="+ Nouvelle Vente"
+                                            Style="{StaticResource VenteLubEmptyButton}"
+                                            Clicked="OnAddVenteClicked"/>
+                                </VerticalStackLayout>
+                            </BindableLayout.EmptyView>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- JOURNÉE NAVIGATION BAR -->
+        <Border Grid.Row="1" 
+                BackgroundColor="#F5F5F5" 
+                Padding="15" 
+                IsVisible="{Binding IsJourneeActive}" 
+                StrokeThickness="0">
+            <Border.Shadow>
+                <Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                <Button Text="← Précédent" 
+                        Command="{Binding JourneePrecedentCommand}"
+                        BackgroundColor="#757575" 
+                        TextColor="White" 
+                        Padding="20,12" 
+                        CornerRadius="8"
+                        IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
+                <BoxView Grid.Column="1" Color="Transparent"/>
+                <Button Grid.Column="2" 
+                        Text="Passer cette étape" 
+                        Command="{Binding JourneePasserCommand}"
+                        BackgroundColor="#FFA726" 
+                        TextColor="White" 
+                        Padding="20,12" 
+                        CornerRadius="8"/>
+                <Button Grid.Column="3" 
+                        Text="{Binding IsLastStep, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Terminer la journée|Suivant →'}"
+                        Command="{Binding JourneeSuivantCommand}" 
+                        BackgroundColor="#4CAF50" 
+                        TextColor="White"
+                        Padding="20,12" 
+                        CornerRadius="8" 
+                        FontAttributes="Bold"/>
+            </Grid>
+        </Border>
+
+    </Grid>
+</ContentPage>

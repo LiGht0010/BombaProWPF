@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.ClientViews.ReglementCreditPopup">
+
+    <Border BackgroundColor="White"       
+           Padding="20"
+           WidthRequest="500">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label x:Name="HeaderLabel"
+                           Text="💵 Nouveau Règlement" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            BackgroundColor="Transparent"
+                            TextColor="#666"
+                            FontSize="20"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Color="#E0E0E0" HeightRequest="1"/>
+
+                <!-- Client Info Badge -->
+                <Border BackgroundColor="#E8F5E9" 
+                       Padding="10"
+                       StrokeShape="RoundRectangle 8">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="👤" FontSize="20"/>
+                        <VerticalStackLayout>
+                            <Label Text="Client" FontSize="12" TextColor="#666"/>
+                            <Label x:Name="ClientNameLabel"
+                                   Text="Nom du client" 
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#2E7D32"/>
+                        </VerticalStackLayout>
+                        <BoxView WidthRequest="1" BackgroundColor="#C8E6C9" Margin="10,0"/>
+                        <VerticalStackLayout>
+                            <Label Text="Balance actuelle" FontSize="12" TextColor="#666"/>
+                            <Label x:Name="BalanceLabel"
+                                   Text="0.00 MAD" 
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#F44336"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Reglement Form -->
+                <VerticalStackLayout Spacing="15">
+                    <!-- Date -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Date du Règlement *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <DatePicker x:Name="DateReglementPicker"
+                                    BackgroundColor="#F8F8F8"/>
+                    </VerticalStackLayout>
+
+                    <!-- Montant -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Montant Payé (MAD) *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="MontantEntry"
+                               Placeholder="0.00"
+                               Keyboard="Numeric"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"
+                               FontSize="18"/>
+                    </VerticalStackLayout>
+
+                    <!-- Mode de Paiement -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Mode de Paiement *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Picker x:Name="ModePaiementPicker"
+                                Title="Sélectionner un mode"
+                                BackgroundColor="#F8F8F8"
+                                TextColor="#333"
+                                ItemDisplayBinding="{Binding Nom}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Référence Transaction -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Référence Transaction" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="ReferenceEntry"
+                               Placeholder="Ex: CHQ-12345, VIR-001..."
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- Remarques -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Remarques" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Editor x:Name="RemarquesEditor"
+                                Placeholder="Notes ou commentaires..."
+                                BackgroundColor="#F8F8F8"
+                                TextColor="#333"
+                                PlaceholderColor="#999"
+                                HeightRequest="80"/>
+                    </VerticalStackLayout>
+
+                    <!-- Validator Info -->
+                    <Border BackgroundColor="#E3F2FD" 
+                           Padding="10"
+                           StrokeShape="RoundRectangle 8">
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="✓" FontSize="16" TextColor="#1976D2"/>
+                            <VerticalStackLayout>
+                                <Label Text="Validé par" FontSize="12" TextColor="#666"/>
+                                <Label x:Name="ValidateurLabel"
+                                       Text="Utilisateur actuel" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="#1976D2"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           TextColor="#F44336"
+                           FontSize="14"
+                           IsVisible="False"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Text="Annuler" 
+                                BackgroundColor="#9E9E9E"
+                                TextColor="White"
+                                CornerRadius="8"
+                                Clicked="OnCancelClicked"/>
+
+                        <Button x:Name="SaveButton"
+                                Grid.Column="1"
+                                Text="✓ Enregistrer" 
+                                BackgroundColor="#4CAF50"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                Clicked="OnSaveClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

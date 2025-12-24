@@ -1,0 +1,593 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.FacturationStyles">
+
+    <!-- ================================================================== -->
+    <!-- LIGHT NEUMORPHIC DESIGN SYSTEM - FACTURATION MODULE                -->
+    <!-- Uses SAME colors as ClientStyles - No new colors!                  -->
+    <!-- ================================================================== -->
+
+    <!-- Column Definitions for Facturation Tables -->
+    <x:String x:Key="FactTransactionColumns">40,1.2*,1*,1.5*,0.8*,1.2*</x:String>
+    <x:String x:Key="FactFactureColumns">1.2*,1*,1.5*,1.2*,1*,1.5*</x:String>
+
+    <!-- ================================================================== -->
+    <!-- PAGE STYLES - Same as ClientPageStyle                              -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactPageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Gestion Crédits &amp; Facturation"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientMBG}"/>
+    </Style>
+
+    <Style x:Key="FactPageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="FactPageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- HEADER STYLES - Same as CreditHeaderGrid                           -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="Auto,*,Auto"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <Style x:Key="FactHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="20,0"/>
+    </Style>
+
+    <Style x:Key="FactTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource GREY}"/>                     <!--HERE-->
+    </Style>
+
+    <Style x:Key="FactSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="FactBackButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuSecondary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactNavButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- STATS CARDS - Same as ClientStatCard                               -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactStatsGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="*,*,*"/>
+        <Setter Property="ColumnSpacing" Value="16"/>
+    </Style>
+
+    <Style x:Key="FactStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactStatStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="4"/>
+    </Style>
+
+    <Style x:Key="FactStatValueOrange" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuWarning}"/>
+    </Style>
+
+    <Style x:Key="FactStatValueGreen" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuSuccess}"/>
+    </Style>
+
+    <Style x:Key="FactStatValueBlue" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="FactStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- CLIENT SELECTION CARD - Same as CreditClientSelectorCard           -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactFilterCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuSurface}"/>
+        <Setter Property="Padding" Value="16,14"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactFilterStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="12"/>
+    </Style>
+
+    <Style x:Key="FactClientPickerGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="Auto,*"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+    </Style>
+
+    <Style x:Key="FactClientIconLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FactClientSelectorLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <Style x:Key="FactClientPicker" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- Filter Buttons - Use HorizontalStackLayout, not stretched Grid -->
+    <Style x:Key="FactFilterButtonsStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+    </Style>
+
+    <!-- Filter Button - Neumorphic pill style, NOT stretched -->
+    <Style x:Key="FactFilterButtonActive" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuPrimary}" Offset="0,2" Radius="4" Opacity="0.3"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactFilterButtonInactive" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactSelectAllButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuPrimary}" Offset="0,2" Radius="4" Opacity="0.3"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactDeselectButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextSecondary}"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- LOADING INDICATOR - Same as ClientPageLoadingIndicator             -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource ClientNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TRANSACTIONS TABLE CARD - Same as ClientTableCard                  -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactTransactionsCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactTransactionsStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <Style x:Key="FactSectionTitleStack" TargetType="VerticalStackLayout">
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="FactSectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+    </Style>
+
+    <Style x:Key="FactTransactionHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource FactTransactionColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuCardBg}"/>
+    </Style>
+
+    <Style x:Key="FactTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextSecondary}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FactTableHeaderLabelCenter" TargetType="Label" BasedOn="{StaticResource FactTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FactTableHeaderLabelEnd" TargetType="Label" BasedOn="{StaticResource FactTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="End"/>
+    </Style>
+
+    <Style x:Key="FactTransactionCollectionView" TargetType="CollectionView">
+        <Setter Property="SelectionMode" Value="None"/>
+    </Style>
+
+    <Style x:Key="FactTransactionRowBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+    </Style>
+
+    <!-- Selected Row Style - Subtle light blue, not bright orange -->
+    <Style x:Key="FactTransactionRowSelected" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuCardBg}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+    </Style>
+
+    <Style x:Key="FactTransactionRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource FactTransactionColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="60"/>
+    </Style>
+
+    <Style x:Key="FactCheckBox" TargetType="CheckBox">
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Color" Value="{StaticResource ClientNeuPrimary}"/>
+    </Style>
+
+    <!-- Number Pill Style - Same as ClientNumberCell -->
+    <Style x:Key="FactNumberCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuCardBg}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactNumberLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FactTransactionDate" TargetType="Label">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextSecondary}"/>
+    </Style>
+
+    <Style x:Key="FactTransactionItem" TargetType="Label">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextPrimary}"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+    </Style>
+
+    <Style x:Key="FactTransactionQty" TargetType="Label">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextSecondary}"/>
+    </Style>
+
+    <Style x:Key="FactTransactionAmount" TargetType="Label">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="End"/>
+        <Setter Property="HorizontalTextAlignment" Value="End"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuSuccess}"/>
+    </Style>
+
+    <!-- Row Divider - Same as ClientRowDivider -->
+    <Style x:Key="FactRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource ClientNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="28,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- EMPTY VIEW - Same as ClientEmptyView                               -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactEmptyViewStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FactEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FactEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- SELECTION SUMMARY BAR (DARK)                                       -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactSummaryBar" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuTextPrimary}"/>
+        <Setter Property="Padding" Value="28,20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactSummaryGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="*,Auto,Auto"/>
+        <Setter Property="ColumnSpacing" Value="16"/>
+    </Style>
+
+    <Style x:Key="FactSummaryStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="4"/>
+    </Style>
+
+    <Style x:Key="FactSummaryCountLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>
+
+    <Style x:Key="FactSummaryTotalLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuSuccess}"/>
+    </Style>
+
+    <Style x:Key="FactCreateBLButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactCreateFactureButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- RECENT FACTURES TABLE CARD - Same as ClientTableCard               -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactFacturesCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactFacturesStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <Style x:Key="FactFacturesHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource FactFactureColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuCardBg}"/>
+    </Style>
+
+    <Style x:Key="FactFacturesCollectionView" TargetType="CollectionView">
+        <Setter Property="SelectionMode" Value="None"/>
+    </Style>
+
+    <Style x:Key="FactFactureRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource FactFactureColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="60"/>
+    </Style>
+
+    <Style x:Key="FactFactureDate" TargetType="Label">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextSecondary}"/>
+    </Style>
+
+    <Style x:Key="FactFactureClient" TargetType="Label">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextPrimary}"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+    </Style>
+
+    <Style x:Key="FactFactureAmount" TargetType="Label">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="End"/>
+        <Setter Property="HorizontalTextAlignment" Value="End"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuSuccess}"/>
+    </Style>
+
+    <!-- Status Badge - Same as CreditStatusBadge -->
+    <Style x:Key="FactStatusBadge" TargetType="Border">
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="16"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDarkSoft}" Offset="1,1" Radius="3" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactStatusBadgeLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Action Buttons - Same as CreditRowActionsStack -->
+    <Style x:Key="FactActionsStack" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FactViewButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="50"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactPayButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="50"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuSuccess}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="FactDeleteButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ClientNeuDanger}"/> 
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuSurface}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="50"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource ClientNeuDanger}"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource ClientNeuShadowDark}" Offset="2,2" Radius="4" Opacity="0.12"/></Setter.Value></Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- FACTURES EMPTY VIEW - Same as ClientEmptyView                      -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="FactFacturesEmptyStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FactFacturesEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ClientNeuTextPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+</ResourceDictionary>

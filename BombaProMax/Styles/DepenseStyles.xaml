@@ -1,0 +1,448 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="BombaProMax.Styles.DepenseStyles">
+
+    <!-- COLOR PALETTE - Expense Theme (Red/Coral) -->
+    <Color x:Key="DepenseNeuSurface">#e8e8e8</Color>
+    <Color x:Key="DepenseNeuCardBg">#E8ECF1</Color>
+    <Color x:Key="DepenseNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="DepenseNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="DepenseNeuShadowDarkSoft">#D1D5DB</Color>
+    <Color x:Key="DepenseNeuPrimary">#E53935</Color>
+    <Color x:Key="DepenseNeuDanger">#C62828</Color>
+    <Color x:Key="DepenseNeuSecondary">#8FA3B8</Color>
+    <Color x:Key="DepenseNeuSuccess">#2E7D32</Color>
+    <Color x:Key="DepenseNeuWarning">#FF9800</Color>
+    <Color x:Key="DepenseNeuInfo">#1976D2</Color>
+    <Color x:Key="DepenseNeuPurple">#7B1FA2</Color>
+    <Color x:Key="DepenseNeuOrange">#E65100</Color>
+    <Color x:Key="DepenseNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="DepenseNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="DepenseNeuTextMuted">#8B939E</Color>
+    <Color x:Key="DepenseNeuTextLight">#A8B0BA</Color>
+    <Color x:Key="DepenseNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="DepenseMBG">#f5f5f5</Color>
+
+    <x:String x:Key="DepenseTableColumns">1.2*,1.2*,1.5*,1.2*,2*,1*</x:String>
+
+    <Style x:Key="DepensePageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Dépenses"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseMBG}"/>
+    </Style>
+
+    <Style x:Key="DepensePageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="DepensePageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <Style x:Key="DepensePageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="DepensePageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="DepensePageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="DepenseStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepenseStatIcon" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <Style x:Key="DepenseStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseFilterContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepenseFilterLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextSecondary}"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseFilterDatePicker" TargetType="DatePicker">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style x:Key="DepenseFilterPicker" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style x:Key="DepenseFilterButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuInfo}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuInfo}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepenseResetButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuSecondary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepensePageLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource DepenseNeuPrimary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="WidthRequest" Value="50"/>
+    </Style>
+
+    <Style x:Key="DepenseAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepenseTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepenseTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <Style x:Key="DepenseTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource DepenseTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="8"/>
+        <Setter Property="Padding" Value="20,16"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="DepenseTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource DepenseTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <Style x:Key="DepenseTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource DepenseTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="8"/>
+        <Setter Property="Padding" Value="20,14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="70"/>
+    </Style>
+
+    <Style x:Key="DepenseNumeroLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuInfo}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseDateLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseCategorieBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#FFF3E0"/>
+        <Setter Property="HeightRequest" Value="28"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="#FFB300"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepenseCategorieLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuOrange}"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseMontantLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseDescriptionLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="2"/>
+    </Style>
+
+    <Style x:Key="DepenseActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseEditButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuInfo}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="MinimumWidthRequest" Value="40"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuInfo}" Offset="0,2" Radius="4" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepenseDeleteButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuDanger}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="MinimumWidthRequest" Value="40"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuDanger}" Offset="0,2" Radius="4" Opacity="0.25"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepenseRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource DepenseNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="20,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <Style x:Key="DepenseEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DepenseEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="DepenseEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepensePopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="550"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepensePopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="DepensePopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="DepensePopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepensePopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="DepensePopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource DepenseNeuBorderLight}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepensePopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource DepenseNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="DepensePopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource DepenseNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="DepensePopupEditor" TargetType="Editor">
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource DepenseNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="DepensePopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource DepenseNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepensePopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DepenseNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value><Shadow Brush="{StaticResource DepenseNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DepensePopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource DepenseNeuBorderLight}"/>
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.PompeViews.PompeCreatePopup">
+
+    <Border Style="{StaticResource PompePopupContainer}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="⛽ Créer une nouvelle pompe" 
+                           Style="{StaticResource PompePopupTitle}"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            Style="{StaticResource PompePopupCloseButton}"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Style="{StaticResource PompePopupDivider}"/>
+
+                <!-- Pompe Form -->
+                <VerticalStackLayout Spacing="18">
+
+                    <!-- Basic Information Section -->
+                    <Border Style="{StaticResource PompePopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="ℹ️ Informations de Base" 
+                                   Style="{StaticResource PompePopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource PompePopupDivider}"/>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <!-- Numero -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Numéro *" 
+                                           Style="{StaticResource PompePopupFieldLabel}"/>
+                                    <Border Style="{StaticResource PompePopupInputContainer}">
+                                        <Entry x:Name="NumeroEntry"
+                                               Placeholder="Ex: P-001"
+                                               Style="{StaticResource PompePopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <!-- Statut -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Statut *" 
+                                           Style="{StaticResource PompePopupFieldLabel}"/>
+                                    <Border Style="{StaticResource PompePopupInputContainer}">
+                                        <Picker x:Name="StatutPicker"
+                                                Title="Sélectionnez un statut"
+                                                Style="{StaticResource PompePopupPicker}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Reservoir Associe -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Réservoir Associé *" 
+                                       Style="{StaticResource PompePopupFieldLabel}"/>
+                                <Border Style="{StaticResource PompePopupInputContainer}">
+                                    <Picker x:Name="ReservoirPicker"
+                                            Title="Sélectionnez un réservoir"
+                                            Style="{StaticResource PompePopupPicker}"/>
+                                </Border>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Meters Information Section -->
+                    <Border Style="{StaticResource PompePopupSectionCard}">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="📊 Compteurs" 
+                                   Style="{StaticResource PompePopupSectionTitle}"/>
+
+                            <BoxView Style="{StaticResource PompePopupDivider}"/>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <!-- Compteur Electronique -->
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Compteur Électronique (Litres)" 
+                                           Style="{StaticResource PompePopupFieldLabel}"/>
+                                    <Border Style="{StaticResource PompePopupInputContainer}">
+                                        <Entry x:Name="CompteurElectroniqueEntry"
+                                               Placeholder="Ex: 0.00"
+                                               Keyboard="Numeric"
+                                               Style="{StaticResource PompePopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <!-- Compteur Mecanique -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Compteur Mécanique (Litres)" 
+                                           Style="{StaticResource PompePopupFieldLabel}"/>
+                                    <Border Style="{StaticResource PompePopupInputContainer}">
+                                        <Entry x:Name="CompteurMecaniqueEntry"
+                                               Placeholder="Ex: 0.00"
+                                               Keyboard="Numeric"
+                                               Style="{StaticResource PompePopupEntry}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Info Label -->
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="💡" FontSize="16"/>
+                                <Label Text="Les compteurs peuvent être laissés vides et seront initialisés à 0.00 L"
+                                       FontSize="12"
+                                       TextColor="#7F8C8D"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           Style="{StaticResource PompePopupErrorLabel}"
+                           IsVisible="False"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
+                        <!-- Cancel Button -->
+                        <Button Grid.Column="0"
+                                Text="Annuler"
+                                Style="{StaticResource PompePopupCancelButton}"
+                                Clicked="OnCancelClicked"/>
+
+                        <!-- Create Button -->
+                        <Button Grid.Column="1"
+                                Text="✓ Créer la pompe"
+                                Style="{StaticResource PompePopupCreateButton}"
+                                Clicked="OnCreateClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.PeriodeViews.PeriodeCreatePopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="White"       
+           Padding="0"
+           WidthRequest="1300"
+           HeightRequest="700"
+           StrokeShape="RoundRectangle 12">
+        <Grid RowDefinitions="Auto,Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" 
+                    BackgroundColor="#1976D2" 
+                    Padding="20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label x:Name="HeaderLabel"
+                               Text="⏱️ Nouvelle Période - Relevé des Compteurs" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                        <Label Text="Saisissez les compteurs finaux pour chaque pompe" 
+                               FontSize="12"
+                               TextColor="#B3E5FC"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            FontSize="20"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+            </Border>
+
+            <!-- ========================================= -->
+            <!-- PERIOD INFO (Date Range + Employee)       -->
+            <!-- ========================================= -->
+            <Border Grid.Row="1" 
+                    BackgroundColor="#F5F5F5" 
+                    Padding="15">
+                <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="15">
+                    <!-- Date Début -->
+                    <Border Grid.Column="0"
+                           BackgroundColor="White" 
+                           Padding="10"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="#E0E0E0">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="📅 Début" 
+                                   FontSize="11"
+                                   TextColor="#666"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                                <DatePicker x:Name="DateDebutPicker"
+                                            FontSize="12"/>
+                                <TimePicker x:Name="TimeDebutPicker"
+                                            Grid.Column="1"
+                                            FontSize="12"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Date Fin -->
+                    <Border Grid.Column="1"
+                           BackgroundColor="White" 
+                           Padding="10"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="#E0E0E0">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="📅 Fin" 
+                                   FontSize="11"
+                                   TextColor="#666"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                                <DatePicker x:Name="DateFinPicker"
+                                            FontSize="12"/>
+                                <TimePicker x:Name="TimeFinPicker"
+                                            Grid.Column="1"
+                                            FontSize="12"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Employé -->
+                    <Border Grid.Column="2"
+                           BackgroundColor="White" 
+                           Padding="10"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="#E0E0E0">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="👤 Employé Responsable" 
+                                   FontSize="11"
+                                   TextColor="#666"/>
+                            <Picker x:Name="EmployePicker"
+                                    Title="Sélectionner..."
+                                    FontSize="12"
+                                    ItemDisplayBinding="{Binding Nom}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- TPE (Paiement par carte) -->
+                    <Border Grid.Column="3"
+                           BackgroundColor="White" 
+                           Padding="10"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="#E0E0E0">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="💳 TPE (Carte)" 
+                                   FontSize="11"
+                                   TextColor="#666"/>
+                            <Entry x:Name="TPEEntry"
+                                   Placeholder="0.00"
+                                   Keyboard="Numeric"
+                                   FontSize="12"
+                                   TextChanged="OnPaymentValueChanged"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Espèces (Cash) -->
+                    <Border Grid.Column="4"
+                           BackgroundColor="White" 
+                           Padding="10"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="#E0E0E0">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="💵 Espèces" 
+                                   FontSize="11"
+                                   TextColor="#666"/>
+                            <Entry x:Name="EspecesEntry"
+                                   Placeholder="0.00"
+                                   Keyboard="Numeric"
+                                   FontSize="12"
+                                   TextChanged="OnPaymentValueChanged"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- ========================================= -->
+            <!-- PUMPS LIST WITH METER INPUTS              -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" 
+                    Margin="15,10"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 8"
+                    Stroke="#E0E0E0">
+                <Grid RowDefinitions="Auto,*">
+                    <!-- Table Header -->
+                    <Grid Grid.Row="0"
+                          ColumnDefinitions="0.8*,1.2*,0.8*,1.2*,1.2*,1.2*,1.2*,0.8*"
+                          Padding="10,12"
+                          BackgroundColor="#ECEFF1">
+                        <Label Text="Pompe" FontAttributes="Bold" TextColor="#37474F" FontSize="12"/>
+                        <Label Grid.Column="1" Text="Produit" FontAttributes="Bold" TextColor="#37474F" FontSize="12"/>
+                        <Label Grid.Column="2" Text="Prix/L" FontAttributes="Bold" TextColor="#37474F" FontSize="12" HorizontalOptions="Center"/>
+                        <Label Grid.Column="3" Text="Élec. Début" FontAttributes="Bold" TextColor="#37474F" FontSize="12" HorizontalOptions="Center"/>
+                        <Label Grid.Column="4" Text="Élec. Fin" FontAttributes="Bold" TextColor="#37474F" FontSize="12" HorizontalOptions="Center"/>
+                        <Label Grid.Column="5" Text="Méca. Début" FontAttributes="Bold" TextColor="#37474F" FontSize="12" HorizontalOptions="Center"/>
+                        <Label Grid.Column="6" Text="Méca. Fin" FontAttributes="Bold" TextColor="#37474F" FontSize="12" HorizontalOptions="Center"/>
+                        <Label Grid.Column="7" Text="Qté" FontAttributes="Bold" TextColor="#37474F" FontSize="12" HorizontalOptions="Center"/>
+                    </Grid>
+
+                    <!-- Pumps List -->
+                    <CollectionView x:Name="PompesCollectionView"
+                                    Grid.Row="1"
+                                    ItemsSource="{Binding PompeReadings}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10,8"
+                                        BackgroundColor="White"
+                                        Stroke="#F0F0F0"
+                                        StrokeThickness="0,0,0,1">
+                                    <Grid ColumnDefinitions="0.8*,1.2*,0.8*,1.2*,1.2*,1.2*,1.2*,0.8*" ColumnSpacing="5">
+                                        <!-- Pompe Number -->
+                                        <Label Text="{Binding PompeNumero}"
+                                               FontAttributes="Bold"
+                                               TextColor="#1976D2"
+                                               VerticalOptions="Center"
+                                               FontSize="13"/>
+                                        
+                                        <!-- Produit -->
+                                        <Label Grid.Column="1"
+                                               Text="{Binding ProduitNom}"
+                                               TextColor="#666"
+                                               VerticalOptions="Center"
+                                               FontSize="12"/>
+                                        
+                                        <!-- Prix -->
+                                        <Label Grid.Column="2"
+                                               Text="{Binding PrixCarburant, StringFormat='{0:N2}'}"
+                                               TextColor="#E65100"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Center"
+                                               FontSize="12"/>
+                                        
+                                        <!-- Compteur Elec Debut (Read-only) -->
+                                        <Border Grid.Column="3"
+                                                BackgroundColor="#F5F5F5"
+                                                Padding="5,3"
+                                                StrokeShape="RoundRectangle 4">
+                                            <Label Text="{Binding CompteurElecDebut, StringFormat='{0:N2}'}"
+                                                   TextColor="#666"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   FontSize="11"/>
+                                        </Border>
+                                        
+                                        <!-- Compteur Elec Fin (Editable) -->
+                                        <Entry Grid.Column="4"
+                                               Text="{Binding CompteurElecFin}"
+                                               Keyboard="Numeric"
+                                               BackgroundColor="#E3F2FD"
+                                               TextColor="#333"
+                                               FontSize="12"
+                                               HorizontalTextAlignment="Center"
+                                               TextChanged="OnMeterValueChanged"
+                                               x:Name="ElekFin" PropertyChanged="OnPropChanged"/>
+                                        
+                                        <!-- Compteur Meca Debut (Read-only) -->
+                                        <Border Grid.Column="5"
+                                                BackgroundColor="#F5F5F5"
+                                                Padding="5,3"
+                                                StrokeShape="RoundRectangle 4">
+                                            <Label Text="{Binding CompteurMecaDebut, StringFormat='{0:N2}'}"
+                                                   TextColor="#666"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   FontSize="11"/>
+                                        </Border>
+                                        
+                                        <!-- Compteur Meca Fin (Editable) -->
+                                        <Entry Grid.Column="6"  x:Name="MecaFin" 
+                                               Text="{Binding CompteurMecaFin}"
+                                               Keyboard="Numeric"
+                                               BackgroundColor="#FFF3E0"
+                                               TextColor="#333"
+                                               FontSize="12"
+                                               HorizontalTextAlignment="Center"
+                                               TextChanged="OnMeterValueChanged"/>
+                                        
+                                        <!-- Quantité Calculée -->
+                                        <Label Grid.Column="7"
+                                               Text="{Binding QuantiteVendue, StringFormat='{0:N1}L'}"
+                                               TextColor="#2E7D32"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Center"
+                                               FontSize="12"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Border>
+
+            <!-- ========================================= -->
+            <!-- FOOTER: Summary + Actions                 -->
+            <!-- ========================================= -->
+            <Border Grid.Row="3" 
+                    BackgroundColor="#F5F5F5" 
+                    Padding="15">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="15">
+                    <!-- Summary -->
+                    <HorizontalStackLayout Spacing="15">
+                        <Border BackgroundColor="#E8F5E9" 
+                               Padding="12,8"
+                               StrokeShape="RoundRectangle 8">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="⛽" FontSize="16" VerticalOptions="Center"/>
+                                <VerticalStackLayout>
+                                    <Label Text="Total Vendu" FontSize="10" TextColor="#666"/>
+                                    <Label x:Name="TotalQuantiteLabel"
+                                           Text="0.00 L"
+                                           FontAttributes="Bold"
+                                           TextColor="#2E7D32"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Border>
+                        
+                        <Border BackgroundColor="#FFF3E0" 
+                               Padding="12,8"
+                               StrokeShape="RoundRectangle 8">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="💰" FontSize="16" VerticalOptions="Center"/>
+                                <VerticalStackLayout>
+                                    <Label Text="Total Recette" FontSize="10" TextColor="#666"/>
+                                    <Label x:Name="TotalRecetteLabel"
+                                           Text="0.00 MAD"
+                                           FontAttributes="Bold"
+                                           TextColor="#E65100"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Border>
+                        
+                        <Border BackgroundColor="#E3F2FD" 
+                               Padding="12,8"
+                               StrokeShape="RoundRectangle 8">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="💳" FontSize="16" VerticalOptions="Center"/>
+                                <VerticalStackLayout>
+                                    <Label Text="TPE" FontSize="10" TextColor="#666"/>
+                                    <Label x:Name="TotalTPELabel"
+                                           Text="0.00 MAD"
+                                           FontAttributes="Bold"
+                                           TextColor="#1565C0"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Border>
+                        
+                        <Border BackgroundColor="#F3E5F5" 
+                               Padding="12,8"
+                               StrokeShape="RoundRectangle 8">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="💵" FontSize="16" VerticalOptions="Center"/>
+                                <VerticalStackLayout>
+                                    <Label Text="Espèces" FontSize="10" TextColor="#666"/>
+                                    <Label x:Name="TotalEspecesLabel"
+                                           Text="0.00 MAD"
+                                           FontAttributes="Bold"
+                                           TextColor="#7B1FA2"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Border>
+                        
+                        <Border x:Name="EcartBorder"
+                               BackgroundColor="#FFEBEE" 
+                               Padding="12,8"
+                               StrokeShape="RoundRectangle 8">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="⚠️" FontSize="16" VerticalOptions="Center"/>
+                                <VerticalStackLayout>
+                                    <Label Text="Écart" FontSize="10" TextColor="#666"/>
+                                    <Label x:Name="EcartLabel"
+                                           Text="0.00 MAD"
+                                           FontAttributes="Bold"
+                                           TextColor="#C62828"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Border>
+                    </HorizontalStackLayout>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           Grid.Column="1"
+                           TextColor="#F44336"
+                           FontSize="12"
+                           IsVisible="False"
+                           VerticalOptions="Center"/>
+
+                    <!-- Cancel Button -->
+                    <Button Grid.Column="2"
+                            Text="Annuler" 
+                            BackgroundColor="#9E9E9E"
+                            TextColor="White"
+                            Padding="20,10"
+                            CornerRadius="8"
+                            Clicked="OnCancelClicked"/>
+
+                    <!-- Save Button -->
+                    <Button x:Name="SaveButton"
+                            Grid.Column="3"
+                            Text="✓ Enregistrer la Période" 
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            Padding="20,10"
+                            CornerRadius="8"
+                            FontAttributes="Bold"
+                            Clicked="OnSaveClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

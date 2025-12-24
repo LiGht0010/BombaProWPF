@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.ChauffeurViews.ChauffeurEditPopup">
+
+    <Border BackgroundColor="White"       
+           Padding="20"
+           WidthRequest="550">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="✏️ Modifier le chauffeur" 
+                           FontSize="20" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+                    <Button Grid.Column="1" 
+                            Text="✕" 
+                            BackgroundColor="Transparent"
+                            TextColor="#666"
+                            FontSize="20"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+
+                <BoxView Color="#E0E0E0" HeightRequest="1"/>
+
+                <!-- Chauffeur Form -->
+                <VerticalStackLayout Spacing="15">
+                    <!-- Nom Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Nom *" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="NomEntry"
+                               Placeholder="Entrez le nom"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- Prénom Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Prénom" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="PrenomEntry"
+                               Placeholder="Entrez le prénom"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- CIN Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="CIN" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="CINEntry"
+                               Placeholder="Carte d'identité nationale"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- Téléphone Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Téléphone" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="TelephoneEntry"
+                               Placeholder="Ex: +212 6XX XXX XXX"
+                               Keyboard="Telephone"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- Numéro Permis Field -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Numéro de Permis" 
+                               FontAttributes="Bold" 
+                               TextColor="#666"
+                               FontSize="14"/>
+                        <Entry x:Name="NumeroPermisEntry"
+                               Placeholder="Numéro de permis de conduire"
+                               BackgroundColor="#F8F8F8"
+                               TextColor="#333"
+                               PlaceholderColor="#999"/>
+                    </VerticalStackLayout>
+
+                    <!-- Fournisseur Picker -->
+                    <Border BackgroundColor="#E3F2FD" 
+                           Padding="15"
+                           StrokeShape="RoundRectangle 8">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="🚚 Fournisseur associé" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#1976D2"
+                                   FontSize="14"/>
+                            <Picker x:Name="FournisseurPicker"
+                                    Title="Sélectionner un fournisseur"
+                                    BackgroundColor="White"
+                                    TextColor="#333"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           TextColor="#F44336"
+                           FontSize="14"
+                           IsVisible="False"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Text="Annuler" 
+                                BackgroundColor="#9E9E9E"
+                                TextColor="White"
+                                CornerRadius="8"
+                                Clicked="OnCancelClicked"/>
+
+                        <Button Grid.Column="1"
+                                Text="✓ Enregistrer" 
+                                BackgroundColor="#336860"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                Clicked="OnSaveClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</toolkit:Popup>

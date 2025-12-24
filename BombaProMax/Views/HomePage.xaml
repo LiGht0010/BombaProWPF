@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Views.HomePage"
+             Style="{StaticResource HomePageStyle}">
+
+    <ScrollView Style="{StaticResource HomePageScrollView}">
+        <VerticalStackLayout Style="{StaticResource HomePageMainStack}">
+
+            <!-- ========================================= -->
+            <!-- HEADER BANNER                             -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource HomeHeaderBanner}">
+                <Border.Background>
+                    <LinearGradientBrush EndPoint="1,1">
+                        <GradientStop Color="{StaticResource HomeNeuPrimary}" Offset="0.0"/>
+                        <GradientStop Color="{StaticResource HomeNeuPrimaryDark}" Offset="0.5"/>
+                        <GradientStop Color="{StaticResource HomeNeuSecondary}" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Shadow>
+                    <Shadow Brush="{StaticResource HomeNeuPrimaryDark}" Offset="0,8" Radius="20" Opacity="0.3"/>
+                </Border.Shadow>
+                
+                <VerticalStackLayout Style="{StaticResource HomeHeaderStack}">
+                    <HorizontalStackLayout Style="{StaticResource HomeHeaderTitleStack}">
+                        <Label Text="🛡️" Style="{StaticResource HomeHeaderIcon}"/>
+                        <Label Text="Espace Administration" Style="{StaticResource HomeHeaderTitle}"/>
+                    </HorizontalStackLayout>
+                    <Label Text="Centre de contrôle et gestion de votre station-service" 
+                           Style="{StaticResource HomeHeaderSubtitle}"/>
+                    <Label x:Name="UserStatusLabel"
+                           Text="Connecté en tant qu'administrateur • Système actif" 
+                           Style="{StaticResource HomeHeaderStatus}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ========================================= -->
+            <!-- STATISTICS CARDS                          -->
+            <!-- ========================================= -->
+            <Grid Style="{StaticResource HomeStatsGrid}">
+                
+                <!-- Employés -->
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource HomeStatCardEmploye}">
+                    <VerticalStackLayout Style="{StaticResource HomeStatCardStack}">
+                        <Label x:Name="EmployesCountLabel"
+                               Text="0" 
+                               Style="{StaticResource HomeStatNumber}"/>
+                        <Label Text="EMPLOYÉS" Style="{StaticResource HomeStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Fournisseurs -->
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource HomeStatCardFournisseur}">
+                    <VerticalStackLayout Style="{StaticResource HomeStatCardStack}">
+                        <Label x:Name="FournisseursCountLabel"
+                               Text="0" 
+                               Style="{StaticResource HomeStatNumber}"/>
+                        <Label Text="FOURNISSEURS" Style="{StaticResource HomeStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Produits -->
+                <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource HomeStatCardProduit}">
+                    <VerticalStackLayout Style="{StaticResource HomeStatCardStack}">
+                        <Label x:Name="ProduitsCountLabel"
+                               Text="0" 
+                               Style="{StaticResource HomeStatNumber}"/>
+                        <Label Text="PRODUITS" Style="{StaticResource HomeStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Pompes/Réservoirs -->
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource HomeStatCardPompe}">
+                    <VerticalStackLayout Style="{StaticResource HomeStatCardStack}">
+                        <Label x:Name="PompesReservoirsLabel"
+                               Text="0/0" 
+                               Style="{StaticResource HomeStatNumber}"/>
+                        <Label Text="POMPES/RÉSERVOIRS" Style="{StaticResource HomeStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Clients -->
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource HomeStatCardClient}">
+                    <VerticalStackLayout Style="{StaticResource HomeStatCardStack}">
+                        <Label x:Name="ClientsCountLabel"
+                               Text="0" 
+                               Style="{StaticResource HomeStatNumber}"/>
+                        <Label Text="CLIENTS" Style="{StaticResource HomeStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Dépenses du mois -->
+                <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource HomeStatCardDepense}">
+                    <VerticalStackLayout Style="{StaticResource HomeStatCardStack}">
+                        <Label x:Name="DepensesCountLabel"
+                               Text="0" 
+                               Style="{StaticResource HomeStatNumber}"/>
+                        <Label Text="DÉPENSES" Style="{StaticResource HomeStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- ========================================= -->
+            <!-- ACTIONS RAPIDES                           -->
+            <!-- ========================================= -->
+            <VerticalStackLayout Style="{StaticResource HomeActionsSection}">
+                <HorizontalStackLayout Style="{StaticResource HomeActionsTitleStack}">
+                    <Label Text="⚡" Style="{StaticResource HomeActionsTitleIcon}"/>
+                    <Label Text="Actions Rapides" Style="{StaticResource HomeActionsTitle}"/>
+                </HorizontalStackLayout>
+
+                <!-- Row 1: 3 buttons -->
+                <Grid Style="{StaticResource HomeActionsGrid}">
+                    <!-- Nouvelle Période -->
+                    <Border Grid.Column="0" Style="{StaticResource HomeActionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPeriodesTapped"/>
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
+                            <Label Text="⏱️" Style="{StaticResource HomeActionIcon}"/>
+                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
+                                <Label Text="Nouvelle Période" Style="{StaticResource HomeActionTitle}"/>
+                                <Label Text="Gérer les périodes" Style="{StaticResource HomeActionSubtitle}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Nouvel Achat -->
+                    <Border Grid.Column="1" Style="{StaticResource HomeActionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAchatsTapped"/>
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
+                            <Label Text="🛒" Style="{StaticResource HomeActionIcon}"/>
+                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
+                                <Label Text="Nouvel Achat" Style="{StaticResource HomeActionTitle}"/>
+                                <Label Text="Créer un achat" Style="{StaticResource HomeActionSubtitle}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Nouveau Client -->
+                    <Border Grid.Column="2" Style="{StaticResource HomeActionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnClientsTapped"/>
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
+                            <Label Text="🤝" Style="{StaticResource HomeActionIcon}"/>
+                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
+                                <Label Text="Nouveau Client" Style="{StaticResource HomeActionTitle}"/>
+                                <Label Text="Ajouter un client" Style="{StaticResource HomeActionSubtitle}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Row 2: 3 buttons -->
+                <Grid Style="{StaticResource HomeActionsGrid}">
+                    <!-- Nouveau Produit -->
+                    <Border Grid.Column="0" Style="{StaticResource HomeActionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnProduitsTapped"/>
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
+                            <Label Text="📦" Style="{StaticResource HomeActionIcon}"/>
+                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
+                                <Label Text="Produits" Style="{StaticResource HomeActionTitle}"/>
+                                <Label Text="Gérer les produits" Style="{StaticResource HomeActionSubtitle}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Ventes Lub/Articles -->
+                    <Border Grid.Column="1" Style="{StaticResource HomeActionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnVentesLubTapped"/>
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
+                            <Label Text="🛢️" Style="{StaticResource HomeActionIcon}"/>
+                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
+                                <Label Text="Ventes Articles" Style="{StaticResource HomeActionTitle}"/>
+                                <Label Text="Lub et articles" Style="{StaticResource HomeActionSubtitle}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Dépenses -->
+                    <Border Grid.Column="2" Style="{StaticResource HomeActionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDepensesTapped"/>
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
+                            <Label Text="💸" Style="{StaticResource HomeActionIcon}"/>
+                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
+                                <Label Text="Dépenses" Style="{StaticResource HomeActionTitle}"/>
+                                <Label Text="Gérer dépenses" Style="{StaticResource HomeActionSubtitle}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Row 3: 3 buttons -->
+                <Grid Style="{StaticResource HomeActionsGrid}">
+                    <!-- Gestion Stock -->
+                    <Border Grid.Column="0" Style="{StaticResource HomeActionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnReservoirsTapped"/>
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
+                            <Label Text="🛢️" Style="{StaticResource HomeActionIcon}"/>
+                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
+                                <Label Text="Réservoirs" Style="{StaticResource HomeActionTitle}"/>
+                                <Label Text="Gestion stock" Style="{StaticResource HomeActionSubtitle}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Gestion Utilisateurs -->
+                    <Border Grid.Column="1" Style="{StaticResource HomeActionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnUsersTapped"/>
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
+                            <Label Text="👥" Style="{StaticResource HomeActionIcon}"/>
+                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
+                                <Label Text="Utilisateurs" Style="{StaticResource HomeActionTitle}"/>
+                                <Label Text="Gérer accès" Style="{StaticResource HomeActionSubtitle}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Pompes -->
+                    <Border Grid.Column="2" Style="{StaticResource HomeActionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPompesTapped"/>
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
+                            <Label Text="⛽" Style="{StaticResource HomeActionIcon}"/>
+                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
+                                <Label Text="Pompes" Style="{StaticResource HomeActionTitle}"/>
+                                <Label Text="Gérer pompes" Style="{StaticResource HomeActionSubtitle}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- ========================================= -->
+            <!-- BOTTOM CARDS                              -->
+            <!-- ========================================= -->
+            <Grid Style="{StaticResource HomeBottomCardsGrid}">
+                
+                <!-- Achats Récents -->
+                <Border Grid.Column="0" Style="{StaticResource HomeBottomCard}">
+                    <VerticalStackLayout Style="{StaticResource HomeBottomCardStack}">
+                        <HorizontalStackLayout Style="{StaticResource HomeBottomCardTitleStack}">
+                            <Label Text="🛒" Style="{StaticResource HomeBottomCardIcon}"/>
+                            <Label Text="Achats Récents" Style="{StaticResource HomeBottomCardTitle}"/>
+                        </HorizontalStackLayout>
+                        <Label x:Name="AchatsRecentsLabel"
+                               Text="Chargement..." 
+                               Style="{StaticResource HomeBottomCardContent}"/>
+                        <Border Style="{StaticResource HomeBottomCardLinkBorderAchats}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnAchatsTapped"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="Voir tous les achats" Style="{StaticResource HomeBottomCardLinkLabelAchats}"/>
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Périodes Récentes -->
+                <Border Grid.Column="1" Style="{StaticResource HomeBottomCard}">
+                    <VerticalStackLayout Style="{StaticResource HomeBottomCardStack}">
+                        <HorizontalStackLayout Style="{StaticResource HomeBottomCardTitleStack}">
+                            <Label Text="⏱️" Style="{StaticResource HomeBottomCardIcon}"/>
+                            <Label Text="Périodes Récentes" Style="{StaticResource HomeBottomCardTitle}"/>
+                        </HorizontalStackLayout>
+                        <Label x:Name="PeriodesRecentsLabel"
+                               Text="Chargement..." 
+                               Style="{StaticResource HomeBottomCardContent}"/>
+                        <Border Style="{StaticResource HomeBottomCardLinkBorderPeriodes}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnPeriodesTapped"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="Voir toutes les périodes" Style="{StaticResource HomeBottomCardLinkLabelPeriodes}"/>
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Alertes Système -->
+                <Border Grid.Column="2" Style="{StaticResource HomeBottomCard}">
+                    <VerticalStackLayout Style="{StaticResource HomeBottomCardStack}">
+                        <HorizontalStackLayout Style="{StaticResource HomeBottomCardTitleStack}">
+                            <Label Text="⚠️" Style="{StaticResource HomeBottomCardIcon}"/>
+                            <Label Text="Alertes Système" Style="{StaticResource HomeBottomCardTitle}"/>
+                        </HorizontalStackLayout>
+                        <VerticalStackLayout Style="{StaticResource HomeAlertsStack}">
+                            <HorizontalStackLayout Style="{StaticResource HomeAlertsStatusStack}">
+                                <Label Text="✅" Style="{StaticResource HomeAlertsStatusIcon}"/>
+                                <Label Text="Système OK" Style="{StaticResource HomeAlertsStatusText}"/>
+                            </HorizontalStackLayout>
+                            <Label x:Name="AlertesLabel"
+                                   Text="Aucune alerte critique" 
+                                   Style="{StaticResource HomeAlertsSubtext}"/>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
