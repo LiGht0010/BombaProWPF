@@ -13,7 +13,7 @@
             <VerticalStackLayout Style="{StaticResource ProduitPageMainStack}">
 
                 <!-- ========================================= -->
-                <!-- JOURNÉE PROGRESS BAR (visible when active) -->
+                <!-- JOURNÉE PROGRESS BAR (Its Visible when active) -->
                 <!-- ========================================= -->
                 <Border BackgroundColor="#E3F2FD"
                         Padding="15"
