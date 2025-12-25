@@ -75,24 +75,14 @@ public partial class PeriodePage : ContentPage
 
         // Select the periode to load its details
         _viewModel.SelectPeriodeCommand.Execute(periode);
-        await Task.Delay(100);
+        await Task.Delay(200); // Give time for details to load
         
-        // Build details string
+        // Get the loaded details
         var details = _viewModel.CurrentPeriodeDetails.ToList();
-        var detailsText = details.Count > 0
-            ? string.Join("\n", details.Select(d => 
-                $"• Pompe {d.PompeNumero}: {d.QuantiteVendue:N2} L ({d.PrixTotal:N2} MAD)"))
-            : "Aucun relevé enregistré";
         
-        // Show alert with detailed info
-        await DisplayAlert(
-            "Détails de la Période",
-            $"Date: {periode.DateDebut:dd/MM/yyyy HH:mm} - {periode.DateFin:dd/MM/yyyy HH:mm}\n" +
-            $"Employé: {periode.EmployeNom ?? "Non assigné"}\n" +
-            $"TPE: {periode.TPE:N2} MAD\n" +
-            $"Espèces: {periode.Especes:N2} MAD\n\n" +
-            $"Relevés ({details.Count}):\n{detailsText}",
-            "OK");
+        // Show the analytics popup
+        var popup = new PeriodeViewPopup(periode, details);
+        await this.ShowPopupAsync(popup);
     }
 
     private async void OnDeletePeriodeClicked(object sender, EventArgs e)

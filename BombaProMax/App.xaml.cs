@@ -12,7 +12,7 @@ namespace BombaProMax
             InitializeComponent();
 
             // Force light theme
-            Application.Current!.UserAppTheme = AppTheme.Light;
+            //Application.Current!.UserAppTheme = AppTheme.Light;
 
             // Keep AppShell as MainPage, pass serviceProvider for DI
             MainPage = new AppShell(serviceProvider);

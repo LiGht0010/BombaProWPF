@@ -519,4 +519,45 @@ public class PeriodeService
     }
 
     #endregion
+
+    #region Marge Analysis
+
+    /// <summary>
+    /// Gets margin analysis for a specific Periode.
+    /// Shows which StockLots were consumed at what PrixAchat and calculates margins.
+    /// </summary>
+    /// <param name="periodeId">The Periode ID to analyze</param>
+    /// <returns>Detailed margin breakdown with FIFO cost tracking, or null if not found</returns>
+    public async Task<PeriodeMargeAnalysisDto?> GetPeriodeMargeAnalysisAsync(int periodeId)
+    {
+        try
+        {
+            var url = $"{ApiConfig.BaseUrl}/StockLots/periode/{periodeId}/marge";
+            Debug.WriteLine($"[PeriodeService] GET {url}");
+            
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<PeriodeMargeAnalysisDto>(json);
+            }
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                Debug.WriteLine($"[PeriodeService] No marge data for periode {periodeId}");
+                return null;
+            }
+
+            Debug.WriteLine($"[PeriodeService] Error getting marge: {response.StatusCode}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeService] Exception getting marge for periode {periodeId}: {ex.Message}");
+            return null;
+        }
+    }
+
+    #endregion
 }

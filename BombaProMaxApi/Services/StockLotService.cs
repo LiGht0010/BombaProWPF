@@ -531,6 +531,90 @@ public class StockLotService : IStockLotService
         };
     }
 
+    /// <inheritdoc />
+    public async Task<PeriodeMargeAnalysisDto?> GetPeriodeMargeAnalysisAsync(int periodeId)
+    {
+        _logger.LogInformation("Getting marge analysis for Periode {PeriodeId}", periodeId);
+
+        // Get the periode
+        var periode = await _context.Periodes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.PeriodeID == periodeId);
+
+        if (periode == null)
+        {
+            _logger.LogWarning("Periode {PeriodeId} not found", periodeId);
+            return null;
+        }
+
+        // Get all consumptions for this periode's details
+        var consumptions = await _context.StockLotConsumptions
+            .Include(c => c.StockLot)
+                .ThenInclude(s => s.Produit)
+            .Include(c => c.StockLot)
+                .ThenInclude(s => s.Reservoir)
+            .Include(c => c.PeriodeDetail)
+                .ThenInclude(d => d.Pompe)
+            .Where(c => c.PeriodeDetail.PeriodeID == periodeId)
+            .AsNoTracking()
+            .ToListAsync();
+
+        // Build consumption details
+        var consommationDetails = consumptions.Select(c => new ConsommationDetailDto
+        {
+            ConsumptionID = c.ID,
+            StockLotID = c.StockLotID,
+            PeriodeDetailID = c.PeriodeDetailID,
+            ProduitID = c.StockLot.ProduitID,
+            ProduitNom = c.StockLot.Produit?.Description,
+            ReservoirID = c.StockLot.ReservoirID,
+            ReservoirNumero = c.StockLot.Reservoir?.Numero,
+            PompeID = c.PeriodeDetail.PompeID,
+            PompeNumero = c.PeriodeDetail.Pompe?.Numero,
+            QuantiteConsommee = c.QuantiteConsommee,
+            PrixAchat = c.PrixUnitaire,
+            PrixVente = c.PeriodeDetail.PrixCarburant,
+            DateConsommation = c.DateConsommation
+        }).ToList();
+
+        // Aggregate by product
+        var parProduit = consommationDetails
+            .GroupBy(c => new { c.ProduitID, c.ProduitNom })
+            .Select(g => new ProduitMargeDto
+            {
+                ProduitID = g.Key.ProduitID,
+                ProduitNom = g.Key.ProduitNom,
+                TotalQuantite = g.Sum(c => c.QuantiteConsommee),
+                TotalCoutAchat = g.Sum(c => c.CoutAchat),
+                TotalVente = g.Sum(c => c.Vente),
+                PrixAchatMoyen = g.Sum(c => c.QuantiteConsommee) > 0
+                    ? Math.Round(g.Sum(c => c.CoutAchat) / g.Sum(c => c.QuantiteConsommee), 2)
+                    : 0,
+                PrixVenteMoyen = g.Sum(c => c.QuantiteConsommee) > 0
+                    ? Math.Round(g.Sum(c => c.Vente) / g.Sum(c => c.QuantiteConsommee), 2)
+                    : 0
+            })
+            .ToList();
+
+        var result = new PeriodeMargeAnalysisDto
+        {
+            PeriodeID = periodeId,
+            DateDebut = periode.DateDebut,
+            DateFin = periode.DateFin,
+            Consommations = consommationDetails,
+            ParProduit = parProduit,
+            TotalQuantiteVendue = consommationDetails.Sum(c => c.QuantiteConsommee),
+            TotalCoutAchat = consommationDetails.Sum(c => c.CoutAchat),
+            TotalVente = consommationDetails.Sum(c => c.Vente)
+        };
+
+        _logger.LogInformation(
+            "Periode {PeriodeId} marge analysis: {Count} consumptions, Marge={Marge:N2} ({Percent}%)",
+            periodeId, consommationDetails.Count, result.TotalMarge, result.MargePercent);
+
+        return result;
+    }
+
     // ???????????????????????????????????????????????????????????????????????
     // PRIVATE HELPERS
     // ???????????????????????????????????????????????????????????????????????

@@ -105,4 +105,23 @@ public class StockLotsController : ControllerBase
             Unite = "L"
         });
     }
+
+    /// <summary>
+    /// Gets margin analysis for a specific Periode.
+    /// Shows which StockLots were consumed, at what PrixAchat, and calculates margins.
+    /// </summary>
+    /// <param name="periodeId">Periode ID</param>
+    /// <returns>Detailed margin breakdown with FIFO cost tracking</returns>
+    [HttpGet("periode/{periodeId}/marge")]
+    public async Task<ActionResult<PeriodeMargeAnalysisDto>> GetPeriodeMargeAnalysis(int periodeId)
+    {
+        _logger.LogInformation("Getting marge analysis for Periode {PeriodeId}", periodeId);
+
+        var analysis = await _stockLotService.GetPeriodeMargeAnalysisAsync(periodeId);
+        
+        if (analysis == null)
+            return NotFound($"Periode {periodeId} not found");
+
+        return Ok(analysis);
+    }
 }

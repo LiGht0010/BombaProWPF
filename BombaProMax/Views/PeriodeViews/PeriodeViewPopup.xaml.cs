@@ -1,0 +1,450 @@
+using BombaProMax.Models;
+using BombaProMax.Services;
+using CommunityToolkit.Maui.Views;
+
+namespace BombaProMax.Views.PeriodeViews;
+
+public partial class PeriodeViewPopup : Popup
+{
+    private readonly PeriodeAnalyticsModel _analytics;
+    private readonly int _periodeId;
+    private readonly PeriodeService _periodeService;
+
+    public PeriodeViewPopup(PeriodeDto periode, List<PeriodeDetailsDto> details)
+    {
+        InitializeComponent();
+        
+        _periodeId = periode.PeriodeID;
+        _periodeService = new PeriodeService();
+        _analytics = BuildAnalytics(periode, details);
+        
+        PopulateUI();
+        
+        // Load marge data asynchronously
+        _ = LoadMargeDataAsync();
+    }
+
+    private async Task LoadMargeDataAsync()
+    {
+        try
+        {
+            var margeData = await _periodeService.GetPeriodeMargeAnalysisAsync(_periodeId);
+            
+            if (margeData != null && margeData.Consommations.Count > 0)
+            {
+                // Convert API data to our model
+                _analytics.ConsommationsStock = margeData.Consommations
+                    .Select(c => new StockConsumptionModel
+                    {
+                        StockLotID = c.StockLotID,
+                        ProduitNom = c.ProduitNom,
+                        ReservoirNumero = c.ReservoirNumero,
+                        PrixAchat = c.PrixAchat,
+                        PrixVente = c.PrixVente,
+                        QuantiteConsommee = c.QuantiteConsommee
+                    })
+                    .ToList();
+                
+                _analytics.TotalCoutAchat = margeData.TotalCoutAchat;
+                
+                // Update UI on main thread
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    BuildMargeSection();
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading marge data: {ex.Message}");
+        }
+    }
+
+    private static PeriodeAnalyticsModel BuildAnalytics(PeriodeDto periode, List<PeriodeDetailsDto> details)
+    {
+        var analytics = new PeriodeAnalyticsModel
+        {
+            PeriodeID = periode.PeriodeID,
+            DateDebut = periode.DateDebut,
+            DateFin = periode.DateFin,
+            EmployeNom = periode.EmployeNom,
+            TPE = periode.TPE,
+            Especes = periode.Especes,
+            Recette = details.Sum(d => d.PrixTotal),
+            TotalQuantite = details.Sum(d => d.QuantiteVendue),
+            TotalEcartCompteurs = details.Sum(d => d.DifferenceQuantite)
+        };
+
+        // Group by Product
+        analytics.TotauxParProduit = details
+            .Where(d => d.ProduitID.HasValue)
+            .GroupBy(d => new { d.ProduitID, d.ProduitNom })
+            .Select(g => new ProductTotalModel
+            {
+                ProduitID = g.Key.ProduitID,
+                ProduitNom = g.Key.ProduitNom ?? "N/A",
+                Quantite = g.Sum(d => d.QuantiteVendue),
+                Montant = g.Sum(d => d.PrixTotal),
+                NombrePompes = g.Count()
+            })
+            .OrderByDescending(p => p.Montant)
+            .ToList();
+
+        // Group by Reservoir
+        analytics.TotauxParReservoir = details
+            .Where(d => d.ReservoirID.HasValue)
+            .GroupBy(d => new { d.ReservoirID, d.ReservoirNumero, d.ProduitNom })
+            .Select(g => new ReservoirTotalModel
+            {
+                ReservoirID = g.Key.ReservoirID,
+                ReservoirNumero = g.Key.ReservoirNumero ?? "N/A",
+                ProduitNom = g.Key.ProduitNom,
+                QuantiteConsommee = g.Sum(d => d.QuantiteVendue),
+                Montant = g.Sum(d => d.PrixTotal),
+                NombrePompes = g.Count()
+            })
+            .OrderBy(r => r.ReservoirNumero)
+            .ToList();
+
+        // Details by Pump
+        analytics.DetailsParPompe = details
+            .Select(d => new PompeTotalModel
+            {
+                PompeID = d.PompeID,
+                PompeNumero = d.PompeNumero ?? "N/A",
+                ReservoirNumero = d.ReservoirNumero,
+                ProduitNom = d.ProduitNom,
+                CompteurElecDebut = d.CompteurElectroniqueDebut,
+                CompteurElecFin = d.CompteurElectroniqueFinal,
+                CompteurMecaDebut = d.CompteurMecaniqueDebut,
+                CompteurMecaFin = d.CompteurMecaniqueFinal,
+                QuantiteVendue = d.QuantiteVendue,
+                PrixUnitaire = d.PrixCarburant,
+                Montant = d.PrixTotal
+            })
+            .OrderBy(p => p.PompeNumero)
+            .ToList();
+
+        analytics.ConsommationsStock = [];
+
+        return analytics;
+    }
+
+    private void PopulateUI()
+    {
+        // Header info
+        DateRangeLabel.Text = $"{_analytics.DateDebut:dd/MM/yyyy HH:mm} - {_analytics.DateFin:HH:mm}";
+        EmployeLabel.Text = $"Employe: {_analytics.EmployeNom ?? "Non assigne"}";
+        
+        var duree = _analytics.DateFin - _analytics.DateDebut;
+        DureeLabel.Text = $"Duree: {(int)duree.TotalHours}h {duree.Minutes:D2}min";
+
+        // Quantite totale
+        TotalQuantiteLabel.Text = $"{_analytics.TotalQuantite:N2} L";
+
+        // Financial Analytics
+        TPELabel.Text = $"{_analytics.TPE:N2} MAD";
+        EspecesLabel.Text = $"{_analytics.Especes:N2} MAD";
+        RecetteLabel.Text = $"{_analytics.Recette:N2} MAD";
+        
+        // Ecart styling
+        var ecart = _analytics.Ecart;
+        if (Math.Abs(ecart) < 0.01m)
+        {
+            EcartLabel.Text = "0.00 MAD";
+            EcartLabel.TextColor = Color.FromArgb("#2E7D32");
+            EcartPercentLabel.Text = "(equilibre)";
+        }
+        else if (ecart > 0)
+        {
+            EcartLabel.Text = $"+{ecart:N2} MAD";
+            EcartLabel.TextColor = Color.FromArgb("#1976D2");
+            EcartPercentLabel.Text = $"(+{_analytics.EcartPercent}%)";
+        }
+        else
+        {
+            EcartLabel.Text = $"{ecart:N2} MAD";
+            EcartLabel.TextColor = Color.FromArgb("#C62828");
+            EcartPercentLabel.Text = $"({_analytics.EcartPercent}%)";
+        }
+
+        // Build sections
+        BuildReservoirRows();
+        BuildProductRows();
+        BuildMargeSection();
+        BuildPumpTableRows();
+
+        // Footer totals
+        TotalQteFooter.Text = $"{_analytics.TotalQuantite:N2} L";
+        TotalMontantFooter.Text = $"{_analytics.Recette:N2} MAD";
+    }
+
+    private void BuildReservoirRows()
+    {
+        ReservoirsContainer.Children.Clear();
+
+        foreach (var reservoir in _analytics.TotauxParReservoir)
+        {
+            var row = new Grid
+            {
+                ColumnDefinitions = [
+                    new ColumnDefinition { Width = 60 },
+                    new ColumnDefinition { Width = GridLength.Star },
+                    new ColumnDefinition { Width = GridLength.Auto }
+                ],
+                ColumnSpacing = 10
+            };
+
+            var nameStack = new VerticalStackLayout { Spacing = 2 };
+            nameStack.Add(new Label { Text = reservoir.ReservoirNumero, FontSize = 14, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#333") });
+            nameStack.Add(new Label { Text = reservoir.ProduitNom ?? "", FontSize = 11, TextColor = Color.FromArgb("#999") });
+            
+            var qtyLabel = new Label 
+            { 
+                Text = $"-{reservoir.QuantiteConsommee:N2} L", 
+                FontSize = 13, 
+                TextColor = Color.FromArgb("#D32F2F"),
+                VerticalOptions = LayoutOptions.Center 
+            };
+            
+            var amountLabel = new Label 
+            { 
+                Text = $"{reservoir.Montant:N2} MAD", 
+                FontSize = 14, 
+                FontAttributes = FontAttributes.Bold, 
+                TextColor = Color.FromArgb("#333"),
+                HorizontalOptions = LayoutOptions.End,
+                VerticalOptions = LayoutOptions.Center 
+            };
+
+            row.Add(nameStack, 0, 0);
+            row.Add(qtyLabel, 1, 0);
+            row.Add(amountLabel, 2, 0);
+
+            ReservoirsContainer.Add(row);
+        }
+
+        if (_analytics.TotauxParReservoir.Count == 0)
+        {
+            ReservoirsContainer.Add(new Label { Text = "Aucune donnee", TextColor = Color.FromArgb("#999"), FontSize = 12 });
+        }
+    }
+
+    private void BuildProductRows()
+    {
+        ProduitsContainer.Children.Clear();
+
+        var colors = new[] { "#4CAF50", "#2196F3", "#FF9800", "#9C27B0", "#795548" };
+        var colorIndex = 0;
+
+        foreach (var produit in _analytics.TotauxParProduit)
+        {
+            var color = Color.FromArgb(colors[colorIndex % colors.Length]);
+            colorIndex++;
+
+            var row = new Grid
+            {
+                ColumnDefinitions = [
+                    new ColumnDefinition { Width = GridLength.Auto },
+                    new ColumnDefinition { Width = GridLength.Star },
+                    new ColumnDefinition { Width = GridLength.Auto }
+                ],
+                ColumnSpacing = 10
+            };
+
+            var nameStack = new HorizontalStackLayout { Spacing = 8, VerticalOptions = LayoutOptions.Center };
+            nameStack.Add(new BoxView { Color = color, WidthRequest = 4, HeightRequest = 20, CornerRadius = 2 });
+            nameStack.Add(new Label { Text = produit.ProduitNom, FontSize = 14, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#333"), VerticalOptions = LayoutOptions.Center });
+            
+            var qtyLabel = new Label 
+            { 
+                Text = $"{produit.Quantite:N2} L", 
+                FontSize = 13, 
+                TextColor = Color.FromArgb("#666"),
+                VerticalOptions = LayoutOptions.Center 
+            };
+            
+            var amountLabel = new Label 
+            { 
+                Text = $"{produit.Montant:N2} MAD", 
+                FontSize = 14, 
+                FontAttributes = FontAttributes.Bold, 
+                TextColor = color,
+                HorizontalOptions = LayoutOptions.End,
+                VerticalOptions = LayoutOptions.Center 
+            };
+
+            row.Add(nameStack, 0, 0);
+            row.Add(qtyLabel, 1, 0);
+            row.Add(amountLabel, 2, 0);
+
+            ProduitsContainer.Add(row);
+        }
+
+        if (_analytics.TotauxParProduit.Count == 0)
+        {
+            ProduitsContainer.Add(new Label { Text = "Aucune donnee", TextColor = Color.FromArgb("#999"), FontSize = 12 });
+        }
+    }
+
+    private void BuildMargeSection()
+    {
+        MargeContainer.Children.Clear();
+
+        if (_analytics.ConsommationsStock.Count > 0)
+        {
+            // Group consumptions by product for cleaner display
+            var groupedByProduit = _analytics.ConsommationsStock
+                .GroupBy(c => c.ProduitNom ?? "N/A")
+                .ToList();
+
+            foreach (var group in groupedByProduit)
+            {
+                var totalQte = group.Sum(c => c.QuantiteConsommee);
+                var totalCout = group.Sum(c => c.CoutAchat);
+                var totalVente = group.Sum(c => c.Vente);
+                var totalMarge = totalVente - totalCout;
+                var prixAchatMoyen = totalQte > 0 ? totalCout / totalQte : 0;
+
+                var row = new Grid
+                {
+                    ColumnDefinitions = [
+                        new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) }
+                    ],
+                    ColumnSpacing = 15,
+                    Padding = new Thickness(0, 6)
+                };
+
+                // Product name
+                row.Add(new Label { Text = group.Key, FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#333"), VerticalOptions = LayoutOptions.Center }, 0, 0);
+                
+                // Quantity
+                row.Add(new Label { Text = $"{totalQte:N2} L", FontSize = 12, TextColor = Color.FromArgb("#666"), VerticalOptions = LayoutOptions.Center }, 1, 0);
+                
+                // Prix Achat Moyen
+                row.Add(new Label { Text = $"@ {prixAchatMoyen:N2}", FontSize = 11, TextColor = Color.FromArgb("#999"), VerticalOptions = LayoutOptions.Center }, 2, 0);
+                
+                // Cout Achat
+                row.Add(new Label { Text = $"{totalCout:N2}", FontSize = 12, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 3, 0);
+                
+                // Vente
+                row.Add(new Label { Text = $"{totalVente:N2}", FontSize = 12, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 4, 0);
+                
+                // Marge
+                var margeColor = totalMarge >= 0 ? "#2E7D32" : "#C62828";
+                var margePercent = totalVente > 0 ? Math.Round((totalMarge / totalVente) * 100, 1) : 0;
+                row.Add(new Label { Text = $"{totalMarge:N2} ({margePercent}%)", FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb(margeColor), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 5, 0);
+
+                MargeContainer.Add(row);
+            }
+
+            // Update totals
+            TotalCoutAchatLabel.Text = $"Cout: {_analytics.TotalCoutAchat:N2} MAD";
+            TotalVenteLabel.Text = $"Vente: {_analytics.TotalVente:N2} MAD";
+            TotalMargeLabel.Text = $"{_analytics.TotalMarge:N2} MAD ({_analytics.MargePercent}%)";
+            TotalMargeLabel.TextColor = _analytics.TotalMarge >= 0 ? Color.FromArgb("#2E7D32") : Color.FromArgb("#C62828");
+        }
+        else
+        {
+            // Show loading or no data message
+            var infoLabel = new Label
+            {
+                Text = "Chargement des donnees de marge...",
+                FontSize = 11,
+                TextColor = Color.FromArgb("#999"),
+                HorizontalTextAlignment = TextAlignment.Center
+            };
+            MargeContainer.Add(infoLabel);
+
+            TotalCoutAchatLabel.Text = "Cout: -- MAD";
+            TotalVenteLabel.Text = $"Vente: {_analytics.Recette:N2} MAD";
+            TotalMargeLabel.Text = "Chargement...";
+            TotalMargeLabel.TextColor = Color.FromArgb("#999");
+        }
+    }
+
+    private void BuildPumpTableRows()
+    {
+        PompesContainer.Children.Clear();
+
+        var isAlternate = false;
+        foreach (var pompe in _analytics.DetailsParPompe)
+        {
+            var bgColor = isAlternate ? Color.FromArgb("#FAFAFA") : Colors.White;
+            isAlternate = !isAlternate;
+
+            // 9 columns with proportional widths to match header: 1.2*,1.2*,1.2*,*,*,*,*,1.2*,1.5*
+            var row = new Grid
+            {
+                ColumnDefinitions = [
+                    new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) },  // POMPE
+                    new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) },  // PRODUIT
+                    new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) },  // RESERVOIR
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // ELEC D
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // ELEC F
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // MECA D
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // MECA F
+                    new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) },  // QUANTITE
+                    new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) }   // MONTANT
+                ],
+                ColumnSpacing = 10,
+                Padding = new Thickness(20, 10),
+                BackgroundColor = bgColor
+            };
+
+            // POMPE
+            row.Add(new Label { Text = pompe.PompeNumero, FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#333"), VerticalOptions = LayoutOptions.Center }, 0, 0);
+            
+            // PRODUIT
+            row.Add(new Label { Text = pompe.ProduitNom ?? "N/A", FontSize = 11, TextColor = Color.FromArgb("#666"), VerticalOptions = LayoutOptions.Center }, 1, 0);
+            
+            // RESERVOIR
+            row.Add(new Label { Text = pompe.ReservoirNumero ?? "N/A", FontSize = 11, TextColor = Color.FromArgb("#666"), VerticalOptions = LayoutOptions.Center }, 2, 0);
+            
+            // ELEC D - Blue Bold
+            row.Add(new Label { Text = $"{pompe.CompteurElecDebut:N0}", FontSize = 11, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#1976D2"), HorizontalTextAlignment = TextAlignment.Center, VerticalOptions = LayoutOptions.Center }, 3, 0);
+            
+            // ELEC F - Blue Bold
+            row.Add(new Label { Text = $"{pompe.CompteurElecFin:N0}", FontSize = 11, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#1976D2"), HorizontalTextAlignment = TextAlignment.Center, VerticalOptions = LayoutOptions.Center }, 4, 0);
+            
+            // MECA D - Brown Bold
+            row.Add(new Label { Text = $"{pompe.CompteurMecaDebut:N0}", FontSize = 11, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#795548"), HorizontalTextAlignment = TextAlignment.Center, VerticalOptions = LayoutOptions.Center }, 5, 0);
+            
+            // MECA F - Brown Bold (red if ecart significatif)
+            var mecaFColor = pompe.HasEcartSignificatif ? "#C62828" : "#795548";
+            row.Add(new Label { Text = $"{pompe.CompteurMecaFin:N0}", FontSize = 11, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb(mecaFColor), HorizontalTextAlignment = TextAlignment.Center, VerticalOptions = LayoutOptions.Center }, 6, 0);
+            
+            // QUANTITE
+            var qteStack = new VerticalStackLayout { HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center };
+            qteStack.Add(new Label { Text = $"{pompe.QuantiteVendue:N2} L", FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#333"), HorizontalTextAlignment = TextAlignment.Center });
+            if (pompe.HasEcartSignificatif)
+            {
+                qteStack.Add(new Label { Text = $"ecart: {pompe.EcartCompteurs:N1}L", FontSize = 9, TextColor = Color.FromArgb("#C62828"), HorizontalTextAlignment = TextAlignment.Center });
+            }
+            row.Add(qteStack, 7, 0);
+            
+            // MONTANT
+            var montantStack = new VerticalStackLayout { HorizontalOptions = LayoutOptions.End, VerticalOptions = LayoutOptions.Center };
+            montantStack.Add(new Label { Text = $"{pompe.Montant:N2} MAD", FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#1976D2"), HorizontalTextAlignment = TextAlignment.End });
+            montantStack.Add(new Label { Text = $"@ {pompe.PrixUnitaire:N2}", FontSize = 9, TextColor = Color.FromArgb("#999"), HorizontalTextAlignment = TextAlignment.End });
+            row.Add(montantStack, 8, 0);
+
+            PompesContainer.Add(row);
+        }
+
+        if (_analytics.DetailsParPompe.Count == 0)
+        {
+            PompesContainer.Add(new Label { Text = "Aucun releve de pompe", TextColor = Color.FromArgb("#999"), FontSize = 12, Margin = new Thickness(20, 10) });
+        }
+    }
+
+    private void OnCloseClicked(object? sender, EventArgs e)
+    {
+        Close();
+    }
+}

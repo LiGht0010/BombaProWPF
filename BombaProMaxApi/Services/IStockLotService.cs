@@ -82,4 +82,12 @@ public interface IStockLotService
     Task<StockLotAnalysisDto?> GetStockLotAnalysisAsync(int stockLotId);
     Task<ReservoirAnalysisDto?> GetReservoirAnalysisAsync(int reservoirId);
     Task<GlobalAnalysisSummaryDto> GetGlobalAnalysisAsync(DateTime? startDate = null, DateTime? endDate = null);
+    
+    /// <summary>
+    /// Gets margin analysis for a specific Periode.
+    /// Shows which StockLots were consumed at what PrixAchat and calculates margins.
+    /// </summary>
+    /// <param name="periodeId">The Periode ID to analyze</param>
+    /// <returns>Detailed margin breakdown with FIFO cost tracking</returns>
+    Task<PeriodeMargeAnalysisDto?> GetPeriodeMargeAnalysisAsync(int periodeId);
 }
