@@ -3,20 +3,17 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     x:Class="BombaProMax.Styles.PeriodeStyles">
 
-    <!-- COLOR PALETTE - Time/Period Theme (Blue/Teal) -->
+    <!-- COLOR PALETTE -->
     <Color x:Key="PeriodeNeuSurface">#e8e8e8</Color>
     <Color x:Key="PeriodeNeuCardBg">#E8ECF1</Color>
     <Color x:Key="PeriodeNeuShadowDark">#C5CAD1</Color>
     <Color x:Key="PeriodeNeuShadowLight">#FFFFFF</Color>
     <Color x:Key="PeriodeNeuShadowDarkSoft">#D1D5DB</Color>
     <Color x:Key="PeriodeNeuPrimary">#1976D2</Color>
-    <Color x:Key="PeriodeNeuDanger">#C62828</Color>
+    <Color x:Key="PeriodeNeuDanger">#E16C6C</Color>
     <Color x:Key="PeriodeNeuSecondary">#8FA3B8</Color>
-    <Color x:Key="PeriodeNeuSuccess">#2E7D32</Color>
-    <Color x:Key="PeriodeNeuWarning">#E65100</Color>
-    <Color x:Key="PeriodeNeuInfo">#0288D1</Color>
-    <Color x:Key="PeriodeNeuPurple">#7B1FA2</Color>
-    <Color x:Key="PeriodeNeuTeal">#00796B</Color>
+    <Color x:Key="PeriodeNeuSuccess">#5EAA8D</Color>
+    <Color x:Key="PeriodeNeuWarning">#E8A84C</Color>
     <Color x:Key="PeriodeNeuTextPrimary">#2E2E2E</Color>
     <Color x:Key="PeriodeNeuTextSecondary">#5A6068</Color>
     <Color x:Key="PeriodeNeuTextMuted">#8B939E</Color>
@@ -24,10 +21,11 @@
     <Color x:Key="PeriodeNeuBorderLight">#E5E9EF</Color>
     <Color x:Key="PeriodeMBG">#f5f5f5</Color>
 
-    <x:String x:Key="PeriodeDetailTableColumns">1*,1*,1.2*,1.2*,1.2*,1.2*,1.2*,1*</x:String>
+    <x:String x:Key="PeriodeTableColumns">1.2*,1.2*,1.5*,1*,1*,2*</x:String>
 
+    <!-- PAGE BASE STYLES -->
     <Style x:Key="PeriodePageStyle" TargetType="ContentPage">
-        <Setter Property="Title" Value="Périodes"/>
+        <Setter Property="Title" Value="Periodes"/>
         <Setter Property="Shell.NavBarIsVisible" Value="True"/>
         <Setter Property="BackgroundColor" Value="{StaticResource PeriodeMBG}"/>
     </Style>
@@ -37,9 +35,10 @@
     </Style>
 
     <Style x:Key="PeriodePageMainStack" TargetType="VerticalStackLayout">
-        <Setter Property="Spacing" Value="20"/>
+        <Setter Property="Spacing" Value="24"/>
     </Style>
 
+    <!-- HEADER SECTION -->
     <Style x:Key="PeriodePageHeaderStack" TargetType="VerticalStackLayout">
         <Setter Property="Spacing" Value="6"/>
         <Setter Property="Margin" Value="0,0,0,4"/>
@@ -56,28 +55,75 @@
         <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextMuted}"/>
     </Style>
 
+    <!-- STAT CARDS -->
+    <Style x:Key="PeriodeStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDark}" Offset="6,6" Radius="12" Opacity="0.25"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="PeriodeStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="PeriodeStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- FILTER CONTAINER -->
     <Style x:Key="PeriodeFilterContainer" TargetType="Border">
         <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSurface}"/>
         <Setter Property="Padding" Value="20"/>
         <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
-        </Setter>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value>
-        </Setter>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
     </Style>
 
     <Style x:Key="PeriodeFilterLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="13"/>
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextSecondary}"/>
-        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="Margin" Value="4,0,0,6"/>
+    </Style>
+
+    <Style x:Key="PeriodeFilterInputBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuCardBg}"/>
+        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="8"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDarkSoft}" Offset="2,2" Radius="4" Opacity="0.12"/></Setter.Value></Setter>
     </Style>
 
     <Style x:Key="PeriodeFilterDatePicker" TargetType="DatePicker">
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuCardBg}"/>
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextPrimary}"/>
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextSecondary}"/>
         <Setter Property="FontSize" Value="13"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <Style x:Key="PeriodeFilterPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource PeriodeNeuTextMuted}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <Style x:Key="PeriodeFilterEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource PeriodeNeuTextLight}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
 
     <Style x:Key="PeriodeFilterButton" TargetType="Button">
@@ -87,9 +133,7 @@
         <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="Padding" Value="16,10"/>
         <Setter Property="CornerRadius" Value="10"/>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuPrimary}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value>
-        </Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuPrimary}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value></Setter>
     </Style>
 
     <Style x:Key="PeriodeResetButton" TargetType="Button">
@@ -98,11 +142,10 @@
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Padding" Value="12,10"/>
         <Setter Property="CornerRadius" Value="10"/>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value>
-        </Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value></Setter>
     </Style>
 
+    <!-- LOADING INDICATOR -->
     <Style x:Key="PeriodePageLoadingIndicator" TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{StaticResource PeriodeNeuPrimary}"/>
         <Setter Property="VerticalOptions" Value="Center"/>
@@ -111,271 +154,163 @@
         <Setter Property="WidthRequest" Value="50"/>
     </Style>
 
+    <!-- ADD BUTTON -->
     <Style x:Key="PeriodeAddButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSuccess}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuPrimary}"/>
         <Setter Property="TextColor" Value="#FFFFFF"/>
         <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="HeightRequest" Value="46"/>
         <Setter Property="Padding" Value="24,0"/>
         <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
-        </Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
     </Style>
 
-    <!-- MASTER LIST PANEL -->
-    <Style x:Key="PeriodeMasterPanel" TargetType="Border">
+    <!-- TABLE CARD -->
+    <Style x:Key="PeriodeTableCard" TargetType="Border">
         <Setter Property="StrokeThickness" Value="0"/>
         <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSurface}"/>
         <Setter Property="Padding" Value="0"/>
-        <Setter Property="WidthRequest" Value="380"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
-        </Setter>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDark}" Offset="6,6" Radius="16" Opacity="0.25"/></Setter.Value>
-        </Setter>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDark}" Offset="8,8" Radius="20" Opacity="0.28"/></Setter.Value></Setter>
     </Style>
 
-    <Style x:Key="PeriodeMasterHeader" TargetType="Grid">
-        <Setter Property="Padding" Value="20,16"/>
+    <Style x:Key="PeriodeTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- TABLE HEADER -->
+    <Style x:Key="PeriodeTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource PeriodeTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
         <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuPrimary}"/>
     </Style>
 
-    <Style x:Key="PeriodeMasterHeaderLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="14"/>
+    <Style x:Key="PeriodeTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
         <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="TextColor" Value="White"/>
-        <Setter Property="VerticalTextAlignment" Value="Center"/>
-    </Style>
-
-    <Style x:Key="PeriodeListItem" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="Padding" Value="16"/>
-        <Setter Property="Margin" Value="8,4"/>
-        <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="PeriodeListItemSelected" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="#E3F2FD"/>
-        <Setter Property="Padding" Value="16"/>
-        <Setter Property="Margin" Value="8,4"/>
-        <Setter Property="StrokeThickness" Value="2"/>
-        <Setter Property="Stroke" Value="{StaticResource PeriodeNeuPrimary}"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value>
-        </Setter>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuPrimary}" Offset="0,2" Radius="8" Opacity="0.2"/></Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="PeriodeListDateLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextPrimary}"/>
-    </Style>
-
-    <Style x:Key="PeriodeListDateEndLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextSecondary}"/>
-    </Style>
-
-    <Style x:Key="PeriodeListEmployeLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuPrimary}"/>
-    </Style>
-
-    <!-- DETAIL PANEL -->
-    <Style x:Key="PeriodeDetailPanel" TargetType="Border">
-        <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSurface}"/>
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
-        </Setter>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDark}" Offset="6,6" Radius="16" Opacity="0.25"/></Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="PeriodeDetailHeader" TargetType="Grid">
-        <Setter Property="Padding" Value="20,16"/>
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuPrimary}"/>
-    </Style>
-
-    <Style x:Key="PeriodeDetailHeaderTitle" TargetType="Label">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="TextColor" Value="White"/>
-    </Style>
-
-    <Style x:Key="PeriodeDetailHeaderSubtitle" TargetType="Label">
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="TextColor" Value="#B3E5FC"/>
-    </Style>
-
-    <Style x:Key="PeriodeDetailActionButton" TargetType="Button">
-        <Setter Property="TextColor" Value="White"/>
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="Padding" Value="12,8"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="HeightRequest" Value="36"/>
-    </Style>
-
-    <!-- SUMMARY CARDS -->
-    <Style x:Key="PeriodeSummaryCard" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuCardBg}"/>
-        <Setter Property="Padding" Value="16"/>
-        <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="12"/></Setter.Value>
-        </Setter>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.15"/></Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="PeriodeSummaryIcon" TargetType="Label">
-        <Setter Property="FontSize" Value="22"/>
-        <Setter Property="HorizontalTextAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,0,0,6"/>
-    </Style>
-
-    <Style x:Key="PeriodeSummaryValue" TargetType="Label">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="HorizontalTextAlignment" Value="Center"/>
-    </Style>
-
-    <Style x:Key="PeriodeSummaryLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="10"/>
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextMuted}"/>
-        <Setter Property="HorizontalTextAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,4,0,0"/>
-    </Style>
-
-    <!-- DETAILS TABLE -->
-    <Style x:Key="PeriodeDetailTableHeader" TargetType="Grid">
-        <Setter Property="ColumnDefinitions" Value="{StaticResource PeriodeDetailTableColumns}"/>
-        <Setter Property="ColumnSpacing" Value="8"/>
-        <Setter Property="Padding" Value="16,12"/>
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuCardBg}"/>
-    </Style>
-
-    <Style x:Key="PeriodeDetailTableHeaderLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="10"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextSecondary}"/>
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuShadowLight}"/>
         <Setter Property="TextTransform" Value="Uppercase"/>
-        <Setter Property="CharacterSpacing" Value="0.5"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
     </Style>
 
-    <Style x:Key="PeriodeDetailTableRow" TargetType="Grid">
-        <Setter Property="ColumnDefinitions" Value="{StaticResource PeriodeDetailTableColumns}"/>
-        <Setter Property="ColumnSpacing" Value="8"/>
-        <Setter Property="Padding" Value="16,14"/>
-        <Setter Property="BackgroundColor" Value="Transparent"/>
+    <Style x:Key="PeriodeTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource PeriodeTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
     </Style>
 
-    <Style x:Key="PeriodeDetailPompeLabel" TargetType="Label">
+    <!-- TABLE ROW -->
+    <Style x:Key="PeriodeTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource PeriodeTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="76"/>
+    </Style>
+
+    <!-- CELL STYLES -->
+    <Style x:Key="PeriodeDateCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextPrimary}"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuPrimary}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
     </Style>
 
-    <Style x:Key="PeriodeDetailProduitLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="12"/>
+    <Style x:Key="PeriodeTimeCell" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
     </Style>
 
-    <Style x:Key="PeriodeDetailValueLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="12"/>
+    <Style x:Key="PeriodeEmployeCell" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <Style x:Key="PeriodeTPECell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
     </Style>
 
-    <Style x:Key="PeriodeDetailQuantiteLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
+    <Style x:Key="PeriodeEspecesCell" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource PeriodeNeuSuccess}"/>
-        <Setter Property="VerticalTextAlignment" Value="Center"/>
-    </Style>
-
-    <Style x:Key="PeriodeDetailPrixLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuWarning}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
     </Style>
 
-    <Style x:Key="PeriodeDetailActionsCell" TargetType="HorizontalStackLayout">
-        <Setter Property="Spacing" Value="6"/>
+    <Style x:Key="PeriodeActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
         <Setter Property="VerticalOptions" Value="Center"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
     </Style>
 
-    <Style x:Key="PeriodeDetailEditButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuPrimary}"/>
+    <!-- ACTION BUTTONS -->
+    <Style x:Key="PeriodeDetailsButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSecondary}"/>
         <Setter Property="TextColor" Value="White"/>
-        <Setter Property="FontSize" Value="11"/>
-        <Setter Property="Padding" Value="10,6"/>
-        <Setter Property="CornerRadius" Value="6"/>
-        <Setter Property="HeightRequest" Value="30"/>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuPrimary}" Offset="0,2" Radius="4" Opacity="0.25"/></Setter.Value>
-        </Setter>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuSecondary}" Offset="0,3" Radius="6" Opacity="0.25"/></Setter.Value></Setter>
     </Style>
 
-    <Style x:Key="PeriodeDetailDeleteButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuDanger}"/>
+    <Style x:Key="PeriodeModifierButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSuccess}"/>
         <Setter Property="TextColor" Value="White"/>
-        <Setter Property="FontSize" Value="11"/>
-        <Setter Property="Padding" Value="10,6"/>
-        <Setter Property="CornerRadius" Value="6"/>
-        <Setter Property="HeightRequest" Value="30"/>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuDanger}" Offset="0,2" Radius="4" Opacity="0.25"/></Setter.Value>
-        </Setter>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuSuccess}" Offset="0,3" Radius="6" Opacity="0.3"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="PeriodeSupprimerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuDanger}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="90"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource PeriodeNeuDanger}"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDark}" Offset="2,2" Radius="4" Opacity="0.12"/></Setter.Value></Setter>
     </Style>
 
     <Style x:Key="PeriodeRowDivider" TargetType="BoxView">
         <Setter Property="HeightRequest" Value="1"/>
         <Setter Property="Color" Value="{StaticResource PeriodeNeuBorderLight}"/>
         <Setter Property="HorizontalOptions" Value="Fill"/>
-        <Setter Property="Margin" Value="16,0"/>
+        <Setter Property="Margin" Value="28,0"/>
         <Setter Property="Opacity" Value="0.7"/>
     </Style>
 
-    <!-- EMPTY STATES -->
-    <Style x:Key="PeriodeEmptyPanel" TargetType="Border">
-        <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSurface}"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="2"/></Setter.Value>
-        </Setter>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDark}" Offset="6,6" Radius="16" Opacity="0.25"/></Setter.Value>
-        </Setter>
-    </Style>
-
+    <!-- EMPTY VIEW -->
     <Style x:Key="PeriodeEmptyView" TargetType="VerticalStackLayout">
         <Setter Property="Spacing" Value="16"/>
-        <Setter Property="Padding" Value="40"/>
+        <Setter Property="Padding" Value="60,80"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
         <Setter Property="VerticalOptions" Value="Center"/>
-    </Style>
-
-    <Style x:Key="PeriodeEmptyIcon" TargetType="Label">
-        <Setter Property="FontSize" Value="48"/>
-        <Setter Property="HorizontalTextAlignment" Value="Center"/>
     </Style>
 
     <Style x:Key="PeriodeEmptyTitle" TargetType="Label">
@@ -389,21 +324,28 @@
         <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextMuted}"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="HorizontalTextAlignment" Value="Center"/>
-        <Setter Property="MaximumWidthRequest" Value="280"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="PeriodeEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
     </Style>
 
     <!-- POPUP STYLES -->
-    <Style x:Key="PeriodePopupContainer" TargetType="Border">
+    <Style x:Key="PeriodePopupBorder" TargetType="Border">
         <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSurface}"/>
         <Setter Property="Padding" Value="32"/>
-        <Setter Property="WidthRequest" Value="600"/>
+        <Setter Property="WidthRequest" Value="650"/>
         <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value>
-        </Setter>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value>
-        </Setter>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="24"/></Setter.Value></Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="#000000" Offset="0,12" Radius="40" Opacity="0.18"/></Setter.Value></Setter>
     </Style>
 
     <Style x:Key="PeriodePopupTitle" TargetType="Label">
@@ -422,16 +364,9 @@
         <Setter Property="CornerRadius" Value="18"/>
     </Style>
 
-    <Style x:Key="PeriodePopupSectionCard" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuCardBg}"/>
-        <Setter Property="Padding" Value="20"/>
-        <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="14"/></Setter.Value>
-        </Setter>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDarkSoft}" Offset="2,2" Radius="6" Opacity="0.12"/></Setter.Value>
-        </Setter>
+    <Style x:Key="PeriodePopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource PeriodeNeuBorderLight}"/>
     </Style>
 
     <Style x:Key="PeriodePopupFieldLabel" TargetType="Label">
@@ -442,16 +377,6 @@
         <Setter Property="CharacterSpacing" Value="0.5"/>
     </Style>
 
-    <Style x:Key="PeriodePopupInputContainer" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuSurface}"/>
-        <Setter Property="Padding" Value="14,12"/>
-        <Setter Property="StrokeThickness" Value="1"/>
-        <Setter Property="Stroke" Value="{StaticResource PeriodeNeuBorderLight}"/>
-        <Setter Property="StrokeShape">
-            <Setter.Value><RoundRectangle CornerRadius="10"/></Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="PeriodePopupEntry" TargetType="Entry">
         <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextPrimary}"/>
         <Setter Property="PlaceholderColor" Value="{StaticResource PeriodeNeuTextLight}"/>
@@ -459,11 +384,18 @@
         <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
 
-    <Style x:Key="PeriodePopupPicker" TargetType="Picker">
-        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuTextPrimary}"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="TitleColor" Value="{StaticResource PeriodeNeuTextMuted}"/>
+    <Style x:Key="PeriodePopupSectionBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E8F1F8"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape"><Setter.Value><RoundRectangle CornerRadius="12"/></Setter.Value></Setter>
+    </Style>
+
+    <Style x:Key="PeriodePopupSectionTitle" TargetType="Label">
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource PeriodeNeuPrimary}"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Margin" Value="0,0,0,5"/>
     </Style>
 
     <Style x:Key="PeriodePopupCancelButton" TargetType="Button">
@@ -474,9 +406,7 @@
         <Setter Property="Padding" Value="24,12"/>
         <Setter Property="CornerRadius" Value="12"/>
         <Setter Property="HeightRequest" Value="48"/>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value>
-        </Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuShadowDark}" Offset="3,3" Radius="6" Opacity="0.15"/></Setter.Value></Setter>
     </Style>
 
     <Style x:Key="PeriodePopupCreateButton" TargetType="Button">
@@ -487,14 +417,18 @@
         <Setter Property="Padding" Value="24,12"/>
         <Setter Property="CornerRadius" Value="12"/>
         <Setter Property="HeightRequest" Value="48"/>
-        <Setter Property="Shadow">
-            <Setter.Value><Shadow Brush="{StaticResource PeriodeNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value>
-        </Setter>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuSuccess}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
     </Style>
 
-    <Style x:Key="PeriodePopupDivider" TargetType="BoxView">
-        <Setter Property="HeightRequest" Value="1"/>
-        <Setter Property="Color" Value="{StaticResource PeriodeNeuBorderLight}"/>
+    <Style x:Key="PeriodePopupSaveButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource PeriodeNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow"><Setter.Value><Shadow Brush="{StaticResource PeriodeNeuPrimary}" Offset="0,4" Radius="10" Opacity="0.35"/></Setter.Value></Setter>
     </Style>
 
 </ResourceDictionary>

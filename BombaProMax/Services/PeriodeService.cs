@@ -440,6 +440,70 @@ public class PeriodeService
     }
 
     /// <summary>
+    /// Updates a periode with its details in one atomic operation.
+    /// Uses the /{id}/with-details endpoint which handles stock reversal and re-consumption.
+    /// </summary>
+    public async Task<(PeriodeDto? Periode, List<PeriodeDetailsDto> Details)> UpdatePeriodeWithDetailsAsync(
+        PeriodeDto periode,
+        List<PeriodeDetailsDto> details)
+    {
+        // Set audit fields on periode
+        periode.ModifiePar = App.CurrentUser?.UserId ?? App.user?.UserId ?? 5;
+        periode.DateModification = DateTime.UtcNow;
+
+        // Ensure dates are in UTC
+        periode.DateDebut = DateTime.SpecifyKind(periode.DateDebut, DateTimeKind.Utc);
+        periode.DateFin = DateTime.SpecifyKind(periode.DateFin, DateTimeKind.Utc);
+
+        if (periode.DateCreation.HasValue)
+        {
+            periode.DateCreation = DateTime.SpecifyKind(periode.DateCreation.Value, DateTimeKind.Utc);
+        }
+
+        // Build the combined DTO
+        var dto = new PeriodeWithDetailsDto
+        {
+            Periode = periode,
+            Details = details
+        };
+
+        var json = JsonConvert.SerializeObject(dto);
+        Debug.WriteLine($"[PeriodeService] PUT {BaseUrl}/{periode.PeriodeID}/with-details: Periode + {details.Count} details");
+
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _httpClient.PutAsync($"{BaseUrl}/{periode.PeriodeID}/with-details", content);
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        Debug.WriteLine($"[PeriodeService] Response: {response.StatusCode}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = JsonConvert.DeserializeObject<PeriodeWithDetailsDto>(responseBody);
+            if (result != null)
+            {
+                Debug.WriteLine($"[PeriodeService] Updated Periode {result.Periode.PeriodeID} with {result.Details.Count} details (stock adjusted)");
+                return (result.Periode, result.Details);
+            }
+        }
+
+        // Log error details
+        Debug.WriteLine($"[PeriodeService] Error updating periode with details: {responseBody}");
+
+        // Try to parse error response
+        try
+        {
+            var errorObj = JsonConvert.DeserializeObject<dynamic>(responseBody);
+            if (errorObj?.error != null)
+            {
+                Debug.WriteLine($"[PeriodeService] API Error: {errorObj.error} - {errorObj.message}");
+            }
+        }
+        catch { }
+
+        return (null, []);
+    }
+
+    /// <summary>
     /// Gets a periode with all its details loaded.
     /// </summary>
     public async Task<(PeriodeDto? Periode, List<PeriodeDetailsDto> Details)> GetPeriodeWithDetailsAsync(int periodeId)

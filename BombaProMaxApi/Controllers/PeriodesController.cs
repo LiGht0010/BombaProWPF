@@ -331,27 +331,203 @@ namespace BombaProMaxApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates a Periode with all its PeriodeDetails in a single atomic transaction.
+        /// This endpoint:
+        /// 1. Reverses previous stock consumptions
+        /// 2. Updates the Periode
+        /// 3. Deletes old details and creates new ones
+        /// 4. Consumes stock for new quantities (FIFO)
+        /// </summary>
+        [HttpPut("{id}/with-details")]
+        public async Task<ActionResult<PeriodeWithDetailsDto>> PutPeriodeWithDetails(int id, [FromBody] PeriodeWithDetailsDto dto)
+        {
+            if (id != dto.Periode.PeriodeID)
+                return BadRequest("ID mismatch.");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            
+            try
+            {
+                _logger.LogInformation("Updating Periode {PeriodeId} with {DetailCount} details", id, dto.Details.Count);
+
+                // 1. Get existing periode with details
+                var existingPeriode = await _context.Periodes
+                    .Include(p => p.PeriodeDetails)
+                    .FirstOrDefaultAsync(p => p.PeriodeID == id);
+
+                if (existingPeriode == null)
+                    return NotFound();
+
+                // 2. Reverse previous stock consumptions
+                foreach (var oldDetail in existingPeriode.PeriodeDetails)
+                {
+                    if (oldDetail.ReservoirID.HasValue && oldDetail.ProduitID.HasValue)
+                    {
+                        var oldQuantite = oldDetail.QuantiteVendue;
+                        if (oldQuantite > 0)
+                        {
+                            _logger.LogInformation(
+                                "Reversing {Quantite}L to Reservoir {ReservoirId} for old PeriodeDetail {DetailId}",
+                                oldQuantite, oldDetail.ReservoirID, oldDetail.PeriodeDetailID);
+
+                            // Reverse the consumption - add stock back
+                            await _stockLotService.ReverseConsumptionAsync(oldDetail.PeriodeDetailID);
+                        }
+                    }
+                }
+
+                // 3. Update the Periode entity
+                _mapper.Map(dto.Periode, existingPeriode);
+                existingPeriode.DateModification = DateTime.UtcNow;
+                existingPeriode.DateDebut = DateTime.SpecifyKind(existingPeriode.DateDebut, DateTimeKind.Utc);
+                existingPeriode.DateFin = DateTime.SpecifyKind(existingPeriode.DateFin, DateTimeKind.Utc);
+
+                if (existingPeriode.DateCreation.HasValue)
+                {
+                    existingPeriode.DateCreation = DateTime.SpecifyKind(existingPeriode.DateCreation.Value, DateTimeKind.Utc);
+                }
+
+                // 4. Delete old details
+                _context.PeriodeDetails.RemoveRange(existingPeriode.PeriodeDetails);
+                await _context.SaveChangesAsync();
+
+                // 5. Create new details
+                var newDetailEntities = new List<PeriodeDetails>();
+                foreach (var detailDto in dto.Details)
+                {
+                    var detailEntity = new PeriodeDetails
+                    {
+                        PeriodeID = id,
+                        PompeID = detailDto.PompeID,
+                        ReservoirID = detailDto.ReservoirID,
+                        ProduitID = detailDto.ProduitID,
+                        PrixCarburant = detailDto.PrixCarburant,
+                        CompteurElectroniqueDebut = detailDto.CompteurElectroniqueDebut,
+                        CompteurElectroniqueFinal = detailDto.CompteurElectroniqueFinal,
+                        CompteurMecaniqueDebut = detailDto.CompteurMecaniqueDebut,
+                        CompteurMecaniqueFinal = detailDto.CompteurMecaniqueFinal
+                    };
+                    newDetailEntities.Add(detailEntity);
+                }
+
+                _context.PeriodeDetails.AddRange(newDetailEntities);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Created {Count} new PeriodeDetails", newDetailEntities.Count);
+
+                // 6. Consume stock for new details (FIFO)
+                foreach (var detail in newDetailEntities)
+                {
+                    if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
+                    {
+                        var quantiteVendue = detail.QuantiteVendue;
+                        if (quantiteVendue > 0)
+                        {
+                            _logger.LogInformation(
+                                "Consuming {Quantite}L from Reservoir {ReservoirId} for new PeriodeDetail {DetailId}",
+                                quantiteVendue, detail.ReservoirID, detail.PeriodeDetailID);
+
+                            await _stockLotService.ConsumeAsync(
+                                detail.ProduitID.Value,
+                                detail.ReservoirID.Value,
+                                quantiteVendue,
+                                detail.PeriodeDetailID);
+                        }
+                    }
+                }
+
+                // 7. Save and commit
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                _logger.LogInformation("Successfully updated Periode {PeriodeId} with stock adjustments", id);
+
+                // Reload with navigation properties for response
+                var updatedPeriode = await _context.Periodes
+                    .Include(p => p.Employe)
+                    .FirstOrDefaultAsync(p => p.PeriodeID == id);
+
+                var updatedDetails = await _context.PeriodeDetails
+                    .Include(d => d.Pompe)
+                    .Include(d => d.Reservoir)
+                    .Include(d => d.Produit)
+                    .Where(d => d.PeriodeID == id)
+                    .ToListAsync();
+
+                var result = new PeriodeWithDetailsDto
+                {
+                    Periode = _mapper.Map<PeriodeDto>(updatedPeriode),
+                    Details = _mapper.Map<List<PeriodeDetailsDto>>(updatedDetails)
+                };
+
+                return Ok(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogWarning("Stock operation failed during update: {Message}", ex.Message);
+                return BadRequest(new { error = "Erreur de stock", message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error updating Periode with details");
+                return StatusCode(500, $"Internal server error: {ex.Message}\n{ex.InnerException?.Message}");
+            }
+        }
+
         // DELETE: api/Periodes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePeriode(int id)
         {
-            var periode = await _context.Periodes
-                .Include(p => p.PeriodeDetails)
-                .FirstOrDefaultAsync(p => p.PeriodeID == id);
-
-            if (periode == null)
-                return NotFound();
-
-            // Delete cascade - remove details first
-            if (periode.PeriodeDetails.Any())
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            
+            try
             {
-                _context.PeriodeDetails.RemoveRange(periode.PeriodeDetails);
+                var periode = await _context.Periodes
+                    .Include(p => p.PeriodeDetails)
+                    .FirstOrDefaultAsync(p => p.PeriodeID == id);
+
+                if (periode == null)
+                    return NotFound();
+
+                // Reverse stock consumptions before deleting
+                foreach (var detail in periode.PeriodeDetails)
+                {
+                    if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
+                    {
+                        var quantite = detail.QuantiteVendue;
+                        if (quantite > 0)
+                        {
+                            _logger.LogInformation(
+                                "Reversing {Quantite}L to Reservoir {ReservoirId} before deleting Periode {PeriodeId}",
+                                quantite, detail.ReservoirID, id);
+
+                            await _stockLotService.ReverseConsumptionAsync(detail.PeriodeDetailID);
+                        }
+                    }
+                }
+
+                // Delete cascade - remove details first
+                if (periode.PeriodeDetails.Any())
+                {
+                    _context.PeriodeDetails.RemoveRange(periode.PeriodeDetails);
+                }
+
+                _context.Periodes.Remove(periode);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                _logger.LogInformation("Deleted Periode {PeriodeId} with stock reversal", id);
+                return NoContent();
             }
-
-            _context.Periodes.Remove(periode);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error deleting Periode {PeriodeId}", id);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         private bool PeriodeExists(int id)

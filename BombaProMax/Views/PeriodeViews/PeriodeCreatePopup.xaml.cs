@@ -1,7 +1,6 @@
 using BombaProMax.Models;
+using BombaProMax.ViewModels;
 using CommunityToolkit.Maui.Views;
-using Newtonsoft.Json;
-using System.Collections.ObjectModel;
 
 namespace BombaProMax.Views.PeriodeViews;
 
@@ -9,22 +8,18 @@ public partial class PeriodeCreatePopup : Popup
 {
     private readonly PeriodeDto? _existingPeriode;
     private readonly bool _isEditMode;
-    private List<EmployeDto> _employes = [];
-    private List<PompeDto> _pompes = [];
-    private List<ReservoirDto> _reservoirs = [];
-    private List<ProduitDto> _produits = [];
+    private readonly PeriodeViewModel _viewModel;
 
-    public ObservableCollection<PompeReadingModel> PompeReadings { get; } = [];
-
-    public PeriodeCreatePopup(PeriodeDto? existingPeriode = null)
+    public PeriodeCreatePopup(PeriodeViewModel viewModel, PeriodeDto? existingPeriode = null)
     {
         InitializeComponent();
         CanBeDismissedByTappingOutsideOfPopup = false;
 
-        BindingContext = this;
-
+        _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
         _existingPeriode = existingPeriode;
         _isEditMode = existingPeriode != null;
+        
+        BindingContext = _viewModel;
 
         // Set default date/time values
         var now = DateTime.Now;
@@ -64,88 +59,31 @@ public partial class PeriodeCreatePopup : Popup
     {
         try
         {
-            using var httpClient = new HttpClient();
-
-            // Load all data in parallel
-            var employesTask = httpClient.GetStringAsync("https://localhost:7100/api/Employes");
-            var pompesTask = httpClient.GetStringAsync("https://localhost:7100/api/Pompes");
-            var reservoirsTask = httpClient.GetStringAsync("https://localhost:7100/api/Reservoirs");
-            var produitsTask = httpClient.GetStringAsync("https://localhost:7100/api/Produits");
-
-            await Task.WhenAll(employesTask, pompesTask, reservoirsTask, produitsTask);
-
-            _employes = JsonConvert.DeserializeObject<List<EmployeDto>>(await employesTask) ?? [];
-            _pompes = JsonConvert.DeserializeObject<List<PompeDto>>(await pompesTask) ?? [];
-            _reservoirs = JsonConvert.DeserializeObject<List<ReservoirDto>>(await reservoirsTask) ?? [];
-            _produits = JsonConvert.DeserializeObject<List<ProduitDto>>(await produitsTask) ?? [];
+            // Load reference data through ViewModel
+            await _viewModel.LoadReferenceDataAsync();
 
             // Set employee picker
-            EmployePicker.ItemsSource = _employes;
+            EmployePicker.ItemsSource = _viewModel.Employes.ToList();
             if (_isEditMode && _existingPeriode?.EmployeID != null)
             {
-                var employe = _employes.FirstOrDefault(e => e.ID == _existingPeriode.EmployeID);
+                var employe = _viewModel.Employes.FirstOrDefault(e => e.ID == _existingPeriode.EmployeID);
                 if (employe != null)
                     EmployePicker.SelectedItem = employe;
             }
 
             // Build pump readings list
-            BuildPompeReadingsList();
+            _viewModel.BuildPompeReadingsForCreate();
+            
+            // Bind collection view
+            PompesCollectionView.ItemsSource = _viewModel.PompeReadings;
+
+            UpdateSummary();
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error loading data: {ex.Message}");
             ShowError("Erreur de chargement des données");
         }
-    }
-
-    private void BuildPompeReadingsList()
-    {
-        PompeReadings.Clear();
-
-        foreach (var pompe in _pompes.Where(p => p.Statut?.ToLower() == "actif" || p.Statut?.ToLower() == "active"))
-        {
-            // Find the reservoir for this pump
-            var reservoir = _reservoirs.FirstOrDefault(r => r.ID == pompe.ReservoirAssocieID);
-            
-            // Find the product for this reservoir
-            ProduitDto? produit = null;
-            decimal prix = 0;
-            if (reservoir?.ProduitID != null)
-            {
-                produit = _produits.FirstOrDefault(p => p.ID == reservoir.ProduitID);
-                // Get price from product (use PrixTTC as selling price)
-                prix = produit?.PrixTTC ?? 0;
-            }
-
-            var reading = new PompeReadingModel
-            {
-                PompeID = pompe.ID,
-                PompeNumero = pompe.Numero,
-                ReservoirID = pompe.ReservoirAssocieID,
-                ReservoirNumero = reservoir?.Numero,
-                ProduitID = produit?.ID,
-                ProduitNom = produit?.Description ?? reservoir?.ProduitNom ?? "N/A",
-                PrixCarburant = prix,
-                CompteurElecDebut = pompe.CompteurElectroniqueActuel ?? 0,
-                CompteurMecaDebut = pompe.CompteurMecaniqueActuel ?? 0,
-                // Pre-fill final with same as start (user will update)
-                CompteurElecFin = (pompe.CompteurElectroniqueActuel ?? 0).ToString("F2"),
-                CompteurMecaFin = (pompe.CompteurMecaniqueActuel ?? 0).ToString("F2")
-            };
-
-            // Subscribe to property changes for summary updates
-            reading.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(PompeReadingModel.QuantiteVendue))
-                {
-                    UpdateSummary();
-                }
-            };
-
-            PompeReadings.Add(reading);
-        }
-
-        UpdateSummary();
     }
 
     private void OnMeterValueChanged(object? sender, TextChangedEventArgs e)
@@ -163,7 +101,7 @@ public partial class PeriodeCreatePopup : Popup
         decimal totalQuantite = 0;
         decimal totalRecette = 0;
 
-        foreach (var reading in PompeReadings)
+        foreach (var reading in _viewModel.PompeReadings)
         {
             totalQuantite += reading.QuantiteVendue;
             totalRecette += reading.PrixTotal;
@@ -242,7 +180,7 @@ public partial class PeriodeCreatePopup : Popup
         }
 
         // Add all pump readings as details
-        foreach (var reading in PompeReadings)
+        foreach (var reading in _viewModel.PompeReadings)
         {
             // Only include pumps with actual sales (quantity > 0)
             if (reading.QuantiteVendue > 0)
@@ -308,7 +246,7 @@ public partial class PeriodeCreatePopup : Popup
         }
 
         // Validate all readings
-        foreach (var reading in PompeReadings)
+        foreach (var reading in _viewModel.PompeReadings)
         {
             if (!string.IsNullOrWhiteSpace(reading.CompteurElecFin))
             {
@@ -327,7 +265,7 @@ public partial class PeriodeCreatePopup : Popup
         }
 
         // Check if at least one pump has a sale
-        if (!PompeReadings.Any(r => r.QuantiteVendue > 0))
+        if (!_viewModel.PompeReadings.Any(r => r.QuantiteVendue > 0))
         {
             ShowError("Aucune vente enregistrée");
             return false;

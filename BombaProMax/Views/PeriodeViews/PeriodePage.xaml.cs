@@ -8,7 +8,6 @@ namespace BombaProMax.Views.PeriodeViews;
 public partial class PeriodePage : ContentPage
 {
     private readonly PeriodeViewModel _viewModel;
-    private Border? _selectedBorder;
 
     public PeriodePage(PeriodeViewModel viewModel)
     {
@@ -23,32 +22,11 @@ public partial class PeriodePage : ContentPage
         await _viewModel.InitializeAsync();
     }
 
-    private void OnPeriodeItemTapped(object? sender, TappedEventArgs e)
-    {
-        // Reset previous selection
-        if (_selectedBorder != null)
-        {
-            _selectedBorder.BackgroundColor = Colors.Transparent;
-            _selectedBorder.Stroke = Colors.Transparent;
-            _selectedBorder.StrokeThickness = 0;
-        }
-
-        // Highlight new selection
-        if (sender is Border border)
-        {
-            border.BackgroundColor = Color.FromArgb("#E3F2FD");
-            border.Stroke = Color.FromArgb("#1976D2");
-            border.StrokeThickness = 2;
-            _selectedBorder = border;
-        }
-    }
-
     private async void OnAddPeriodeClicked(object sender, EventArgs e)
     {
-        var popup = new PeriodeCreatePopup();
+        var popup = new PeriodeCreatePopup(_viewModel);
         var result = await this.ShowPopupAsync(popup);
 
-        // Handle the new PeriodeWithDetailsDto result
         if (result is PeriodeWithDetailsDto periodeWithDetails)
         {
             await _viewModel.CreatePeriodeWithDetailsAsync(periodeWithDetails);
@@ -57,12 +35,25 @@ public partial class PeriodePage : ContentPage
 
     private async void OnEditPeriodeClicked(object sender, EventArgs e)
     {
-        if (_viewModel.SelectedPeriode == null) return;
+        PeriodeDto? periode = null;
 
-        // Get existing details for this periode
+        if (sender is Button button && button.CommandParameter is PeriodeDto p)
+        {
+            periode = p;
+        }
+        else
+        {
+            periode = _viewModel.SelectedPeriode;
+        }
+
+        if (periode == null) return;
+
+        // Select the periode first to load its details
+        _viewModel.SelectPeriodeCommand.Execute(periode);
+        await Task.Delay(100);
+
         var existingDetails = _viewModel.CurrentPeriodeDetails.ToList();
-
-        var popup = new PeriodeEditPopup(_viewModel.SelectedPeriode, existingDetails);
+        var popup = new PeriodeEditPopup(periode, existingDetails, _viewModel);
         var result = await this.ShowPopupAsync(popup);
 
         if (result is PeriodeWithDetailsDto periodeWithDetails)
@@ -71,9 +62,53 @@ public partial class PeriodePage : ContentPage
         }
     }
 
+    private async void OnViewPeriodeClicked(object sender, EventArgs e)
+    {
+        PeriodeDto? periode = null;
+
+        if (sender is Button button && button.CommandParameter is PeriodeDto p)
+        {
+            periode = p;
+        }
+
+        if (periode == null) return;
+
+        // Select the periode to load its details
+        _viewModel.SelectPeriodeCommand.Execute(periode);
+        await Task.Delay(100);
+        
+        // Build details string
+        var details = _viewModel.CurrentPeriodeDetails.ToList();
+        var detailsText = details.Count > 0
+            ? string.Join("\n", details.Select(d => 
+                $"• Pompe {d.PompeNumero}: {d.QuantiteVendue:N2} L ({d.PrixTotal:N2} MAD)"))
+            : "Aucun relevé enregistré";
+        
+        // Show alert with detailed info
+        await DisplayAlert(
+            "Détails de la Période",
+            $"Date: {periode.DateDebut:dd/MM/yyyy HH:mm} - {periode.DateFin:dd/MM/yyyy HH:mm}\n" +
+            $"Employé: {periode.EmployeNom ?? "Non assigné"}\n" +
+            $"TPE: {periode.TPE:N2} MAD\n" +
+            $"Espèces: {periode.Especes:N2} MAD\n\n" +
+            $"Relevés ({details.Count}):\n{detailsText}",
+            "OK");
+    }
+
     private async void OnDeletePeriodeClicked(object sender, EventArgs e)
     {
-        if (_viewModel.SelectedPeriode == null) return;
+        PeriodeDto? periode = null;
+
+        if (sender is Button button && button.CommandParameter is PeriodeDto p)
+        {
+            periode = p;
+        }
+        else
+        {
+            periode = _viewModel.SelectedPeriode;
+        }
+
+        if (periode == null) return;
 
         bool confirm = await DisplayAlert(
             "Confirmation",
@@ -83,15 +118,7 @@ public partial class PeriodePage : ContentPage
 
         if (confirm)
         {
-            await _viewModel.DeletePeriodeAsync(_viewModel.SelectedPeriode);
-            // Clear selection visual
-            if (_selectedBorder != null)
-            {
-                _selectedBorder.BackgroundColor = Colors.Transparent;
-                _selectedBorder.Stroke = Colors.Transparent;
-                _selectedBorder.StrokeThickness = 0;
-                _selectedBorder = null;
-            }
+            await _viewModel.DeletePeriodeAsync(periode);
         }
     }
 

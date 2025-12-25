@@ -2,6 +2,7 @@
 using BombaProMax.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -15,6 +16,7 @@ public partial class PeriodeViewModel : ObservableObject
     private readonly PeriodeService _periodeService;
     private readonly PompeService _pompeService;
     private readonly JourneeNavigationService _journeeService;
+    private readonly HttpClient _httpClient;
 
     #region Observable Properties
 
@@ -45,6 +47,31 @@ public partial class PeriodeViewModel : ObservableObject
 
     public ObservableCollection<PeriodeDto> Periodes { get; } = [];
     public ObservableCollection<PeriodeDetailsDto> CurrentPeriodeDetails { get; } = [];
+    
+    /// <summary>
+    /// Employes list for popup selection.
+    /// </summary>
+    public ObservableCollection<EmployeDto> Employes { get; } = [];
+    
+    /// <summary>
+    /// Pompes list for popup.
+    /// </summary>
+    public ObservableCollection<PompeDto> Pompes { get; } = [];
+    
+    /// <summary>
+    /// Reservoirs list for popup.
+    /// </summary>
+    public ObservableCollection<ReservoirDto> Reservoirs { get; } = [];
+    
+    /// <summary>
+    /// Produits list for popup.
+    /// </summary>
+    public ObservableCollection<ProduitDto> Produits { get; } = [];
+    
+    /// <summary>
+    /// Pump readings for create/edit popup.
+    /// </summary>
+    public ObservableCollection<PompeReadingModel> PompeReadings { get; } = [];
 
     #endregion
 
@@ -110,6 +137,13 @@ public partial class PeriodeViewModel : ObservableObject
         _periodeService = new PeriodeService();
         _pompeService = new PompeService();
         _journeeService = journeeService;
+        
+        // Create HTTP client for loading reference data
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+        };
+        _httpClient = new HttpClient(handler);
 
         _journeeService.PropertyChanged += (s, e) =>
         {
@@ -124,6 +158,180 @@ public partial class PeriodeViewModel : ObservableObject
 
     #endregion
 
+    #region Reference Data Loading
+
+    /// <summary>
+    /// Loads all reference data needed for create/edit popups.
+    /// </summary>
+    public async Task LoadReferenceDataAsync()
+    {
+        try
+        {
+            IsLoading = true;
+            ErrorMessage = null;
+
+            var employesTask = LoadEmployesAsync();
+            var pompesTask = LoadPompesAsync();
+            var reservoirsTask = LoadReservoirsAsync();
+            var produitsTask = LoadProduitsAsync();
+
+            await Task.WhenAll(employesTask, pompesTask, reservoirsTask, produitsTask);
+
+            Debug.WriteLine($"[PeriodeViewModel] Loaded reference data: {Employes.Count} employes, {Pompes.Count} pompes, {Reservoirs.Count} reservoirs, {Produits.Count} produits");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur de chargement: {ex.Message}";
+            Debug.WriteLine($"[PeriodeViewModel] Error loading reference data: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Loads employes list.
+    /// </summary>
+    public async Task LoadEmployesAsync()
+    {
+        try
+        {
+            var json = await _httpClient.GetStringAsync(ApiConfig.Employes);
+            var employes = JsonConvert.DeserializeObject<List<EmployeDto>>(json) ?? [];
+            
+            Employes.Clear();
+            foreach (var e in employes)
+            {
+                Employes.Add(e);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Error loading employes: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Loads pompes list.
+    /// </summary>
+    public async Task LoadPompesAsync()
+    {
+        try
+        {
+            var json = await _httpClient.GetStringAsync(ApiConfig.Pompes);
+            var pompes = JsonConvert.DeserializeObject<List<PompeDto>>(json) ?? [];
+            
+            Pompes.Clear();
+            foreach (var p in pompes)
+            {
+                Pompes.Add(p);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Error loading pompes: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Loads reservoirs list.
+    /// </summary>
+    public async Task LoadReservoirsAsync()
+    {
+        try
+        {
+            var json = await _httpClient.GetStringAsync(ApiConfig.Reservoirs);
+            var reservoirs = JsonConvert.DeserializeObject<List<ReservoirDto>>(json) ?? [];
+            
+            Reservoirs.Clear();
+            foreach (var r in reservoirs)
+            {
+                Reservoirs.Add(r);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Error loading reservoirs: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Loads produits list.
+    /// </summary>
+    public async Task LoadProduitsAsync()
+    {
+        try
+        {
+            var json = await _httpClient.GetStringAsync(ApiConfig.Produits);
+            var produits = JsonConvert.DeserializeObject<List<ProduitDto>>(json) ?? [];
+            
+            Produits.Clear();
+            foreach (var p in produits)
+            {
+                Produits.Add(p);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Error loading produits: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Builds pump readings list for edit popup with existing detail values.
+    /// </summary>
+    public void BuildPompeReadingsForEdit(List<PeriodeDetailsDto> existingDetails)
+    {
+        PompeReadings.Clear();
+
+        foreach (var pompe in Pompes.Where(p => p.Statut?.ToLower() == "actif" || p.Statut?.ToLower() == "active"))
+        {
+            var reservoir = Reservoirs.FirstOrDefault(r => r.ID == pompe.ReservoirAssocieID);
+            
+            ProduitDto? produit = null;
+            decimal prix = 0;
+            if (reservoir?.ProduitID != null)
+            {
+                produit = Produits.FirstOrDefault(p => p.ID == reservoir.ProduitID);
+                prix = produit?.PrixTTC ?? 0;
+            }
+
+            var existingDetail = existingDetails.FirstOrDefault(d => d.PompeID == pompe.ID);
+
+            var reading = new PompeReadingModel
+            {
+                PompeID = pompe.ID,
+                PompeNumero = pompe.Numero,
+                ReservoirID = pompe.ReservoirAssocieID,
+                ReservoirNumero = reservoir?.Numero,
+                ProduitID = produit?.ID,
+                ProduitNom = produit?.Description ?? reservoir?.ProduitNom ?? "N/A",
+                PrixCarburant = existingDetail?.PrixCarburant ?? prix,
+                CompteurElecDebut = existingDetail?.CompteurElectroniqueDebut ?? pompe.CompteurElectroniqueActuel ?? 0,
+                CompteurMecaDebut = existingDetail?.CompteurMecaniqueDebut ?? pompe.CompteurMecaniqueActuel ?? 0,
+                CompteurElecFin = existingDetail != null 
+                    ? existingDetail.CompteurElectroniqueFinal.ToString("F2")
+                    : (pompe.CompteurElectroniqueActuel ?? 0).ToString("F2"),
+                CompteurMecaFin = existingDetail != null 
+                    ? existingDetail.CompteurMecaniqueFinal.ToString("F2")
+                    : (pompe.CompteurMecaniqueActuel ?? 0).ToString("F2")
+            };
+
+            PompeReadings.Add(reading);
+        }
+    }
+
+    /// <summary>
+    /// Builds pump readings list for create popup (new periode).
+    /// </summary>
+    public void BuildPompeReadingsForCreate()
+    {
+        BuildPompeReadingsForEdit([]);
+    }
+
+    #endregion
+
     #region Selection Command
 
     /// <summary>
@@ -133,6 +341,16 @@ public partial class PeriodeViewModel : ObservableObject
     private void SelectPeriode(PeriodeDto? periode)
     {
         SelectedPeriode = periode;
+    }
+
+    /// <summary>
+    /// Command to delete a periode (for XAML binding).
+    /// </summary>
+    [RelayCommand]
+    private async Task DeleteAsync(PeriodeDto? periode)
+    {
+        if (periode == null) return;
+        await DeletePeriodeAsync(periode);
     }
 
     #endregion
@@ -554,6 +772,7 @@ public partial class PeriodeViewModel : ObservableObject
 
     /// <summary>
     /// Updates a periode with its details from DTO.
+    /// Uses the API endpoint that properly handles stock reversal and re-consumption.
     /// </summary>
     public async Task UpdatePeriodeWithDetailsAsync(PeriodeWithDetailsDto dto)
     {
@@ -562,33 +781,37 @@ public partial class PeriodeViewModel : ObservableObject
             IsSaving = true;
             ErrorMessage = null;
 
-            // Update the periode
-            await UpdatePeriodeAsync(dto.Periode);
+            // Use the new endpoint that handles stock properly
+            var result = await _periodeService.UpdatePeriodeWithDetailsAsync(dto.Periode, dto.Details);
 
-            // Delete existing details and recreate them
-            // (Alternatively, implement a proper update endpoint on the API)
-            var existingDetails = await _periodeService.GetDetailsByPeriodeAsync(dto.Periode.PeriodeID);
-            foreach (var detail in existingDetails)
+            if (result.Periode != null)
             {
-                await _periodeService.DeleteDetailAsync(detail.PeriodeDetailID);
-            }
+                // Update in collection
+                var index = Periodes.ToList().FindIndex(p => p.PeriodeID == dto.Periode.PeriodeID);
+                if (index >= 0)
+                {
+                    Periodes[index] = result.Periode;
+                }
 
-            // Set the periode ID on all details
-            foreach (var detail in dto.Details)
+                SelectedPeriode = result.Periode;
+
+                CurrentPeriodeDetails.Clear();
+                foreach (var detail in result.Details)
+                {
+                    CurrentPeriodeDetails.Add(detail);
+                }
+                NotifyTotalsChanged();
+
+                // Update pump meters to final readings
+                await UpdatePumpMetersAsync(result.Details);
+
+                Debug.WriteLine($"[PeriodeViewModel] Updated periode {dto.Periode.PeriodeID} with {result.Details.Count} details (stock adjusted)");
+            }
+            else
             {
-                detail.PeriodeID = dto.Periode.PeriodeID;
+                ErrorMessage = "Erreur lors de la mise à jour de la période";
+                Debug.WriteLine($"[PeriodeViewModel] Failed to update periode {dto.Periode.PeriodeID}");
             }
-
-            // Create new details
-            if (dto.Details.Count > 0)
-            {
-                await CreateDetailsBatchAsync(dto.Details);
-            }
-
-            // Reload to show updated data
-            await LoadPeriodeDetailsAsync(dto.Periode.PeriodeID);
-
-            Debug.WriteLine($"[PeriodeViewModel] Updated periode {dto.Periode.PeriodeID} with {dto.Details.Count} details");
         }
         catch (Exception ex)
         {
