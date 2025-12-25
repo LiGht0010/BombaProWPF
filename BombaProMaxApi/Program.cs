@@ -19,6 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register application services
 builder.Services.AddScoped<IStockLotService, StockLotService>();
+builder.Services.AddScoped<IPeriodeCascadeService, PeriodeCascadeService>();
 
 // Add CORS for MAUI app
 builder.Services.AddCors(options =>

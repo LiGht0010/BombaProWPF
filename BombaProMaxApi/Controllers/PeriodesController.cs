@@ -21,17 +21,20 @@ namespace BombaProMaxApi.Controllers
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly IStockLotService _stockLotService;
+        private readonly IPeriodeCascadeService _cascadeService;
         private readonly ILogger<PeriodesController> _logger;
 
         public PeriodesController(
             AppDbContext context, 
             IMapper mapper,
             IStockLotService stockLotService,
+            IPeriodeCascadeService cascadeService,
             ILogger<PeriodesController> logger)
         {
             _context = context;
             _mapper = mapper;
             _stockLotService = stockLotService;
+            _cascadeService = cascadeService;
             _logger = logger;
         }
 
@@ -234,6 +237,10 @@ namespace BombaProMaxApi.Controllers
             {
                 _logger.LogInformation("Creating Periode with {DetailCount} details", dto.Details.Count);
 
+                // Track affected entities for syncing
+                var affectedPompeIds = new HashSet<int>();
+                var affectedReservoirIds = new HashSet<int>();
+
                 // 1. Create the Periode
                 var periodeEntity = _mapper.Map<Periode>(dto.Periode);
                 periodeEntity.DateCreation = DateTime.UtcNow;
@@ -262,6 +269,12 @@ namespace BombaProMaxApi.Controllers
                         CompteurMecaniqueFinal = detailDto.CompteurMecaniqueFinal
                     };
                     detailEntities.Add(detailEntity);
+                    
+                    // Track for syncing
+                    if (detailDto.PompeID.HasValue)
+                        affectedPompeIds.Add(detailDto.PompeID.Value);
+                    if (detailDto.ReservoirID.HasValue)
+                        affectedReservoirIds.Add(detailDto.ReservoirID.Value);
                 }
 
                 _context.PeriodeDetails.AddRange(detailEntities);
@@ -290,11 +303,15 @@ namespace BombaProMaxApi.Controllers
                     }
                 }
 
-                // 4. Save all changes and commit transaction
+                // 4. SYNC: Recalculate reservoir levels and pump counters from source of truth
+                await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
+                await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
+
+                // 5. Save all changes and commit transaction
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                _logger.LogInformation("Successfully created Periode {PeriodeId} with stock consumption", periodeEntity.PeriodeID);
+                _logger.LogInformation("Successfully created Periode {PeriodeId} with stock consumption and sync", periodeEntity.PeriodeID);
 
                 // Reload with navigation properties for response
                 var createdPeriode = await _context.Periodes
@@ -318,7 +335,6 @@ namespace BombaProMaxApi.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                // Stock insuffisant - rollback and return error
                 await transaction.RollbackAsync();
                 _logger.LogWarning("Stock consumption failed: {Message}", ex.Message);
                 return BadRequest(new { error = "Stock insuffisant", message = ex.Message });
@@ -338,6 +354,8 @@ namespace BombaProMaxApi.Controllers
         /// 2. Updates the Periode
         /// 3. Deletes old details and creates new ones
         /// 4. Consumes stock for new quantities (FIFO)
+        /// 5. Cascades counter updates to subsequent periods
+        /// 6. Syncs reservoir levels and pump counters from source of truth
         /// </summary>
         [HttpPut("{id}/with-details")]
         public async Task<ActionResult<PeriodeWithDetailsDto>> PutPeriodeWithDetails(int id, [FromBody] PeriodeWithDetailsDto dto)
@@ -351,6 +369,10 @@ namespace BombaProMaxApi.Controllers
             {
                 _logger.LogInformation("Updating Periode {PeriodeId} with {DetailCount} details", id, dto.Details.Count);
 
+                // Track affected entities for syncing
+                var affectedPompeIds = new HashSet<int>();
+                var affectedReservoirIds = new HashSet<int>();
+
                 // 1. Get existing periode with details
                 var existingPeriode = await _context.Periodes
                     .Include(p => p.PeriodeDetails)
@@ -358,6 +380,15 @@ namespace BombaProMaxApi.Controllers
 
                 if (existingPeriode == null)
                     return NotFound();
+
+                // Track old details for syncing
+                foreach (var oldDetail in existingPeriode.PeriodeDetails)
+                {
+                    if (oldDetail.PompeID.HasValue)
+                        affectedPompeIds.Add(oldDetail.PompeID.Value);
+                    if (oldDetail.ReservoirID.HasValue)
+                        affectedReservoirIds.Add(oldDetail.ReservoirID.Value);
+                }
 
                 // 2. Reverse previous stock consumptions
                 foreach (var oldDetail in existingPeriode.PeriodeDetails)
@@ -371,7 +402,6 @@ namespace BombaProMaxApi.Controllers
                                 "Reversing {Quantite}L to Reservoir {ReservoirId} for old PeriodeDetail {DetailId}",
                                 oldQuantite, oldDetail.ReservoirID, oldDetail.PeriodeDetailID);
 
-                            // Reverse the consumption - add stock back
                             await _stockLotService.ReverseConsumptionAsync(oldDetail.PeriodeDetailID);
                         }
                     }
@@ -409,6 +439,12 @@ namespace BombaProMaxApi.Controllers
                         CompteurMecaniqueFinal = detailDto.CompteurMecaniqueFinal
                     };
                     newDetailEntities.Add(detailEntity);
+                    
+                    // Track for syncing
+                    if (detailDto.PompeID.HasValue)
+                        affectedPompeIds.Add(detailDto.PompeID.Value);
+                    if (detailDto.ReservoirID.HasValue)
+                        affectedReservoirIds.Add(detailDto.ReservoirID.Value);
                 }
 
                 _context.PeriodeDetails.AddRange(newDetailEntities);
@@ -437,11 +473,33 @@ namespace BombaProMaxApi.Controllers
                     }
                 }
 
-                // 7. Save and commit
+                // 7. Cascade counter updates to subsequent periods
+                var cascadeResult = await _cascadeService.CascadeCounterUpdatesAsync(id, newDetailEntities);
+                if (cascadeResult.AffectedPeriodeDetailCount > 0)
+                {
+                    _logger.LogInformation(
+                        "Cascaded counter updates to {Count} subsequent period details",
+                        cascadeResult.AffectedPeriodeDetailCount);
+                    
+                    // Add cascade-affected entities to sync list
+                    foreach (var pompeId in cascadeResult.AffectedPompeIds)
+                        affectedPompeIds.Add(pompeId);
+                    foreach (var reservoirId in cascadeResult.AffectedReservoirIds)
+                        affectedReservoirIds.Add(reservoirId);
+                }
+
+                // 8. SYNC: Recalculate reservoir levels and pump counters from source of truth
+                await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
+                await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
+
+                // 9. Save and commit
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                _logger.LogInformation("Successfully updated Periode {PeriodeId} with stock adjustments", id);
+                _logger.LogInformation(
+                    "Successfully updated Periode {PeriodeId} with stock adjustments, cascade, and sync " +
+                    "(synced {PumpCount} pumps, {ResCount} reservoirs)",
+                    id, affectedPompeIds.Count, affectedReservoirIds.Count);
 
                 // Reload with navigation properties for response
                 var updatedPeriode = await _context.Periodes
@@ -492,9 +550,19 @@ namespace BombaProMaxApi.Controllers
                 if (periode == null)
                     return NotFound();
 
+                // Track affected entities for syncing
+                var affectedPompeIds = new HashSet<int>();
+                var affectedReservoirIds = new HashSet<int>();
+
                 // Reverse stock consumptions before deleting
                 foreach (var detail in periode.PeriodeDetails)
                 {
+                    // Track for syncing
+                    if (detail.PompeID.HasValue)
+                        affectedPompeIds.Add(detail.PompeID.Value);
+                    if (detail.ReservoirID.HasValue)
+                        affectedReservoirIds.Add(detail.ReservoirID.Value);
+
                     if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
                     {
                         var quantite = detail.QuantiteVendue;
@@ -517,9 +585,19 @@ namespace BombaProMaxApi.Controllers
 
                 _context.Periodes.Remove(periode);
                 await _context.SaveChangesAsync();
+
+                // SYNC: Recalculate reservoir levels and pump counters from source of truth
+                await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
+                await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
+                await _context.SaveChangesAsync();
+
                 await transaction.CommitAsync();
 
-                _logger.LogInformation("Deleted Periode {PeriodeId} with stock reversal", id);
+                _logger.LogInformation(
+                    "Deleted Periode {PeriodeId} with stock reversal and sync " +
+                    "(synced {PumpCount} pumps, {ResCount} reservoirs)",
+                    id, affectedPompeIds.Count, affectedReservoirIds.Count);
+                    
                 return NoContent();
             }
             catch (Exception ex)

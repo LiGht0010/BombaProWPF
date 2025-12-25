@@ -296,6 +296,101 @@ public class StockLotService : IStockLotService
     }
 
     // ???????????????????????????????????????????????????????????????????????
+    // SYNC OPERATIONS (Option C - Always Recalculate from Source of Truth)
+    // ???????????????????????????????????????????????????????????????????????
+
+    /// <inheritdoc />
+    public async Task<decimal> SyncReservoirLevelAsync(int reservoirId)
+    {
+        var reservoir = await _context.Reservoirs.FindAsync(reservoirId);
+        if (reservoir == null)
+        {
+            _logger.LogWarning("Reservoir {ReservoirId} not found for sync", reservoirId);
+            return 0;
+        }
+
+        // Calculate level from StockLots (source of truth)
+        var calculatedLevel = await _context.StockLots
+            .Where(s => s.ReservoirID == reservoirId && s.Statut == "Disponible")
+            .SumAsync(s => s.QuantiteDisponible);
+
+        var oldLevel = reservoir.NiveauDeCarburant;
+        reservoir.NiveauDeCarburant = calculatedLevel;
+
+        if (Math.Abs(oldLevel - calculatedLevel) > 0.001m)
+        {
+            _logger.LogInformation(
+                "Synced Reservoir {ReservoirId} level: {OldLevel}L ? {NewLevel}L (diff: {Diff}L)",
+                reservoirId, oldLevel, calculatedLevel, calculatedLevel - oldLevel);
+        }
+
+        return calculatedLevel;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> SyncPompeCountersAsync(int pompeId)
+    {
+        var pompe = await _context.Pompes.FindAsync(pompeId);
+        if (pompe == null)
+        {
+            _logger.LogWarning("Pompe {PompeId} not found for sync", pompeId);
+            return false;
+        }
+
+        // Find the most recent PeriodeDetail for this pump (by period end date)
+        var latestDetail = await _context.PeriodeDetails
+            .Include(d => d.Periode)
+            .Where(d => d.PompeID == pompeId && d.Periode != null)
+            .OrderByDescending(d => d.Periode!.DateFin)
+            .FirstOrDefaultAsync();
+
+        if (latestDetail == null)
+        {
+            _logger.LogDebug("No period details found for Pompe {PompeId}, counters unchanged", pompeId);
+            return false;
+        }
+
+        var oldElec = pompe.CompteurElectroniqueActuel;
+        var oldMeca = pompe.CompteurMecaniqueActuel;
+
+        pompe.CompteurElectroniqueActuel = latestDetail.CompteurElectroniqueFinal;
+        pompe.CompteurMecaniqueActuel = latestDetail.CompteurMecaniqueFinal;
+
+        if (oldElec != latestDetail.CompteurElectroniqueFinal || 
+            oldMeca != latestDetail.CompteurMecaniqueFinal)
+        {
+            _logger.LogInformation(
+                "Synced Pompe {PompeId} counters from Periode {PeriodeId} ({DateFin:d}): " +
+                "Elec {OldElec} ? {NewElec}, Meca {OldMeca} ? {NewMeca}",
+                pompeId, latestDetail.PeriodeID, latestDetail.Periode?.DateFin,
+                oldElec, pompe.CompteurElectroniqueActuel,
+                oldMeca, pompe.CompteurMecaniqueActuel);
+        }
+
+        return true;
+    }
+
+    /// <inheritdoc />
+    public async Task SyncMultiplePompeCountersAsync(IEnumerable<int> pompeIds)
+    {
+        foreach (var pompeId in pompeIds.Distinct())
+        {
+            await SyncPompeCountersAsync(pompeId);
+        }
+        await _context.SaveChangesAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task SyncMultipleReservoirLevelsAsync(IEnumerable<int> reservoirIds)
+    {
+        foreach (var reservoirId in reservoirIds.Distinct())
+        {
+            await SyncReservoirLevelAsync(reservoirId);
+        }
+        await _context.SaveChangesAsync();
+    }
+
+    // ???????????????????????????????????????????????????????????????????????
     // ANALYSIS OPERATIONS (Margin/Profit Reporting)
     // ???????????????????????????????????????????????????????????????????????
 
