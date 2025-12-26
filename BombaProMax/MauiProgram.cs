@@ -17,6 +17,7 @@ using BombaProMax.Views.PeriodeViews;
 using BombaProMax.Views.User;
 using BombaProMax.Views.VenteLubEtArticles;
 using BombaProMax.Views.FactureViews;
+using BombaProMax.Views.RapportViews;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
@@ -147,6 +148,9 @@ namespace BombaProMax
             builder.Services.AddSingleton<FacturationPage>();
             builder.Services.AddSingleton<FactureEtBL>();
 
+            //RapportViews
+            builder.Services.AddSingleton<RapportPage>();
+
             //ViewModels---------------------------------------------------
             builder.Services.AddSingleton<ViewModels.LoginPageViewModel>();
             builder.Services.AddSingleton<ViewModels.DashboardViewModel>();
@@ -167,6 +171,7 @@ namespace BombaProMax
             builder.Services.AddSingleton<ViewModels.FactureViewModel>();
             builder.Services.AddSingleton<ViewModels.FactureEtBLViewModel>();
             builder.Services.AddSingleton<ViewModels.UserViewModel>();
+            builder.Services.AddSingleton<ViewModels.RapportViewModel>();
 
             //Services-----------------------------------------------------
             builder.Services.AddSingleton<Services.IDialogService, Services.DialogService>();
@@ -195,6 +200,7 @@ namespace BombaProMax
             builder.Services.AddSingleton<Services.JaugeageService>();
             builder.Services.AddSingleton<Services.JaugeageDetailService>();
             builder.Services.AddSingleton<Services.DashboardService>();
+            builder.Services.AddSingleton<Services.RapportService>();
 
             //Interfaces--------------------------------------------------------------------------------------------------------------------------------------
             builder.Services.AddSingleton<Services.ILoginRepository, Services.LoginServices>();

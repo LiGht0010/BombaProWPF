@@ -20,6 +20,7 @@
     xmlns:depense="clr-namespace:BombaProMax.Views.DepenseViews"
     xmlns:facture="clr-namespace:BombaProMax.Views.FactureViews"
     xmlns:dashboard="clr-namespace:BombaProMax.Views.DashboardViews"
+    xmlns:rapport="clr-namespace:BombaProMax.Views.RapportViews"
     FlyoutBackgroundColor="#FFFFFF"
     BackgroundColor="#F8FAFC"
     Shell.TitleColor="Black"
@@ -132,6 +133,7 @@
     <FlyoutItem Title="ADMINISTRATION GÉNÉRALE" FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent x:Name="HomeShellContent" Title="Accueil" Route="HomePage"/>
         <ShellContent x:Name="DashboardShellContent" Title="Tableau de Bord" Route="DashboardPage"/>
+        <ShellContent x:Name="RapportShellContent" Title="Rapports" Route="RapportPage"/>
         <ShellContent x:Name="UsersShellContent" Title="Utilisateurs" Route="User"/>
     </FlyoutItem>
 

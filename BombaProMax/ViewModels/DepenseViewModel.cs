@@ -8,38 +8,49 @@ using System.Diagnostics;
 namespace BombaProMax.ViewModels
 {
     /// <summary>
-    /// ViewModel for managing expenses (Depenses).
+    /// ViewModel for managing expenses (Depenses) and their categories.
     /// </summary>
     public partial class DepenseViewModel : ObservableObject
     {
         private readonly DepenseService _depenseService;
+        private readonly DepenseCategorieService _categorieService;
         private readonly JourneeNavigationService _journeeService;
 
         #region Observable Properties
 
         [ObservableProperty]
-        private bool isLoading;
+        private bool _isLoading;
 
         [ObservableProperty]
-        private bool isSaving;
+        private bool _isSaving;
 
         [ObservableProperty]
-        private string? errorMessage;
+        private string? _errorMessage;
 
         [ObservableProperty]
-        private string? searchText;
+        private string? _searchText;
 
         [ObservableProperty]
-        private DepenseDto? selectedDepense;
+        private DepenseDto? _selectedDepense;
 
         [ObservableProperty]
-        private DateTime filterStartDate = new(DateTime.Today.Year, DateTime.Today.Month, 1);
+        private DateTime _filterStartDate = new(DateTime.Today.Year, DateTime.Today.Month, 1);
 
         [ObservableProperty]
-        private DateTime filterEndDate = DateTime.Today;
+        private DateTime _filterEndDate = DateTime.Today;
 
         [ObservableProperty]
-        private string selectedCategory = "Tous";
+        private string _selectedCategory = "Tous";
+
+        // Category management properties
+        [ObservableProperty]
+        private bool _isCategoriesLoading;
+
+        [ObservableProperty]
+        private DepenseCategorieDto? _selectedCategorieItem;
+
+        [ObservableProperty]
+        private bool _showInactiveCategories;
 
         #endregion
 
@@ -47,6 +58,7 @@ namespace BombaProMax.ViewModels
 
         public ObservableCollection<DepenseDto> Depenses { get; } = [];
         public ObservableCollection<string> Categories { get; } = ["Tous"];
+        public ObservableCollection<DepenseCategorieDto> CategoriesList { get; } = [];
 
         #endregion
 
@@ -72,6 +84,21 @@ namespace BombaProMax.ViewModels
         /// </summary>
         public decimal MaxMontant => Depenses.Count > 0 ? Depenses.Max(d => d.Montant ?? 0) : 0;
 
+        /// <summary>
+        /// Total categories count.
+        /// </summary>
+        public int TotalCategories => CategoriesList.Count;
+
+        /// <summary>
+        /// Active categories count.
+        /// </summary>
+        public int ActiveCategories => CategoriesList.Count(c => c.IsActive);
+
+        /// <summary>
+        /// Inactive categories count.
+        /// </summary>
+        public int InactiveCategories => CategoriesList.Count(c => !c.IsActive);
+
         #endregion
 
         // ════════════════════════════════════════════════════════════════
@@ -89,6 +116,7 @@ namespace BombaProMax.ViewModels
         public DepenseViewModel(JourneeNavigationService journeeService)
         {
             _depenseService = new DepenseService();
+            _categorieService = new DepenseCategorieService();
             _journeeService = journeeService;
 
             _journeeService.PropertyChanged += (s, e) =>
@@ -117,7 +145,7 @@ namespace BombaProMax.ViewModels
         private async Task JourneePrecedentAsync() => await _journeeService.GoPreviousAsync();
 
         // ════════════════════════════════════════════════════════════════
-        // EXISTING METHODS
+        // INITIALIZATION
         // ════════════════════════════════════════════════════════════════
 
         #region Initialization
@@ -127,11 +155,16 @@ namespace BombaProMax.ViewModels
         {
             await Task.WhenAll(
                 LoadDepensesAsync(),
-                LoadCategoriesAsync()
+                LoadCategoriesAsync(),
+                LoadCategoriesListAsync()
             );
         }
 
         #endregion
+
+        // ════════════════════════════════════════════════════════════════
+        // DEPENSE OPERATIONS
+        // ════════════════════════════════════════════════════════════════
 
         #region Load Operations
 
@@ -151,7 +184,7 @@ namespace BombaProMax.ViewModels
                     Depenses.Add(depense);
                 }
 
-                NotifyTotalsChanged();
+                NotifyDepenseTotalsChanged();
                 Debug.WriteLine($"[DepenseViewModel] Loaded {Depenses.Count} depenses");
             }
             catch (Exception ex)
@@ -192,7 +225,7 @@ namespace BombaProMax.ViewModels
                     Depenses.Add(depense);
                 }
 
-                NotifyTotalsChanged();
+                NotifyDepenseTotalsChanged();
                 Debug.WriteLine($"[DepenseViewModel] Loaded {Depenses.Count} depenses for filter");
             }
             catch (Exception ex)
@@ -222,7 +255,7 @@ namespace BombaProMax.ViewModels
                     Depenses.Add(depense);
                 }
 
-                NotifyTotalsChanged();
+                NotifyDepenseTotalsChanged();
             }
             catch (Exception ex)
             {
@@ -235,7 +268,8 @@ namespace BombaProMax.ViewModels
             }
         }
 
-        private async Task LoadCategoriesAsync()
+        [RelayCommand]
+        public async Task LoadCategoriesAsync()
         {
             try
             {
@@ -248,7 +282,7 @@ namespace BombaProMax.ViewModels
                     Categories.Add(category);
                 }
 
-                Debug.WriteLine($"[DepenseViewModel] Loaded {Categories.Count} categories");
+                Debug.WriteLine($"[DepenseViewModel] Loaded {Categories.Count} categories for filter");
             }
             catch (Exception ex)
             {
@@ -258,7 +292,7 @@ namespace BombaProMax.ViewModels
 
         #endregion
 
-        #region CRUD Operations
+        #region Depense CRUD Operations
 
         public async Task<DepenseDto?> CreateDepenseAsync(DepenseDto depense)
         {
@@ -271,7 +305,7 @@ namespace BombaProMax.ViewModels
                 if (created != null)
                 {
                     Depenses.Insert(0, created);
-                    NotifyTotalsChanged();
+                    NotifyDepenseTotalsChanged();
 
                     // Refresh categories in case a new one was added
                     await LoadCategoriesAsync();
@@ -309,7 +343,7 @@ namespace BombaProMax.ViewModels
                     {
                         Depenses[index] = depense;
                     }
-                    NotifyTotalsChanged();
+                    NotifyDepenseTotalsChanged();
 
                     // Refresh categories in case one was changed
                     await LoadCategoriesAsync();
@@ -346,7 +380,7 @@ namespace BombaProMax.ViewModels
                     {
                         SelectedDepense = null;
                     }
-                    NotifyTotalsChanged();
+                    NotifyDepenseTotalsChanged();
                     Debug.WriteLine($"[DepenseViewModel] Deleted depense {depense.ID}");
                 }
 
@@ -366,14 +400,188 @@ namespace BombaProMax.ViewModels
 
         #endregion
 
+        // ════════════════════════════════════════════════════════════════
+        // CATEGORY OPERATIONS
+        // ════════════════════════════════════════════════════════════════
+
+        #region Category Load Operations
+
+        [RelayCommand]
+        public async Task LoadCategoriesListAsync()
+        {
+            try
+            {
+                IsCategoriesLoading = true;
+                ErrorMessage = null;
+
+                var categories = ShowInactiveCategories
+                    ? await _categorieService.GetAllIncludingInactiveAsync()
+                    : await _categorieService.GetAllAsync();
+
+                CategoriesList.Clear();
+                foreach (var categorie in categories)
+                {
+                    CategoriesList.Add(categorie);
+                }
+
+                NotifyCategoriesTotalsChanged();
+                Debug.WriteLine($"[DepenseViewModel] Loaded {CategoriesList.Count} categories");
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Erreur de chargement: {ex.Message}";
+                Debug.WriteLine($"[DepenseViewModel] Error loading categories list: {ex.Message}");
+            }
+            finally
+            {
+                IsCategoriesLoading = false;
+            }
+        }
+
+        #endregion
+
+        #region Category CRUD Operations
+
+        public async Task<DepenseCategorieDto?> CreateCategorieAsync(DepenseCategorieDto categorie)
+        {
+            try
+            {
+                IsSaving = true;
+                ErrorMessage = null;
+
+                var created = await _categorieService.CreateAsync(categorie);
+                if (created != null)
+                {
+                    CategoriesList.Insert(0, created);
+                    NotifyCategoriesTotalsChanged();
+
+                    // Refresh the filter categories as well
+                    await LoadCategoriesAsync();
+
+                    Debug.WriteLine($"[DepenseViewModel] Created category {created.ID}");
+                }
+
+                return created;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Erreur de création: {ex.Message}";
+                Debug.WriteLine($"[DepenseViewModel] Error creating category: {ex.Message}");
+                throw;
+            }
+            finally
+            {
+                IsSaving = false;
+            }
+        }
+
+        public async Task<bool> UpdateCategorieAsync(DepenseCategorieDto categorie)
+        {
+            try
+            {
+                IsSaving = true;
+                ErrorMessage = null;
+
+                var success = await _categorieService.UpdateAsync(categorie);
+                if (success)
+                {
+                    var index = CategoriesList.ToList().FindIndex(c => c.ID == categorie.ID);
+                    if (index >= 0)
+                    {
+                        CategoriesList[index] = categorie;
+                    }
+                    NotifyCategoriesTotalsChanged();
+
+                    // Refresh the filter categories as well
+                    await LoadCategoriesAsync();
+
+                    Debug.WriteLine($"[DepenseViewModel] Updated category {categorie.ID}");
+                }
+
+                return success;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Erreur de mise à jour: {ex.Message}";
+                Debug.WriteLine($"[DepenseViewModel] Error updating category: {ex.Message}");
+                throw;
+            }
+            finally
+            {
+                IsSaving = false;
+            }
+        }
+
+        public async Task<bool> DeleteCategorieAsync(DepenseCategorieDto categorie)
+        {
+            try
+            {
+                IsSaving = true;
+                ErrorMessage = null;
+
+                var success = await _categorieService.DeleteAsync(categorie.ID);
+                if (success)
+                {
+                    if (!ShowInactiveCategories)
+                    {
+                        CategoriesList.Remove(categorie);
+                    }
+                    else
+                    {
+                        var index = CategoriesList.ToList().FindIndex(c => c.ID == categorie.ID);
+                        if (index >= 0)
+                        {
+                            CategoriesList[index].IsActive = false;
+                        }
+                    }
+
+                    if (SelectedCategorieItem?.ID == categorie.ID)
+                    {
+                        SelectedCategorieItem = null;
+                    }
+                    NotifyCategoriesTotalsChanged();
+
+                    // Refresh the filter categories as well
+                    await LoadCategoriesAsync();
+
+                    Debug.WriteLine($"[DepenseViewModel] Deleted category {categorie.ID}");
+                }
+
+                return success;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Erreur de suppression: {ex.Message}";
+                Debug.WriteLine($"[DepenseViewModel] Error deleting category: {ex.Message}");
+                throw;
+            }
+            finally
+            {
+                IsSaving = false;
+            }
+        }
+
+        #endregion
+
+        // ════════════════════════════════════════════════════════════════
+        // HELPER METHODS
+        // ════════════════════════════════════════════════════════════════
+
         #region Helper Methods
 
-        private void NotifyTotalsChanged()
+        private void NotifyDepenseTotalsChanged()
         {
             OnPropertyChanged(nameof(TotalDepenses));
             OnPropertyChanged(nameof(TotalMontant));
             OnPropertyChanged(nameof(MoyenneMontant));
             OnPropertyChanged(nameof(MaxMontant));
+        }
+
+        private void NotifyCategoriesTotalsChanged()
+        {
+            OnPropertyChanged(nameof(TotalCategories));
+            OnPropertyChanged(nameof(ActiveCategories));
+            OnPropertyChanged(nameof(InactiveCategories));
         }
 
         /// <summary>
@@ -382,6 +590,11 @@ namespace BombaProMax.ViewModels
         public void ClearError()
         {
             ErrorMessage = null;
+        }
+
+        partial void OnShowInactiveCategoriesChanged(bool value)
+        {
+            _ = LoadCategoriesListAsync();
         }
 
         #endregion

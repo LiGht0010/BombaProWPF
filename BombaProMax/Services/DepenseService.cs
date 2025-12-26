@@ -16,6 +16,7 @@ namespace BombaProMax.Services
     public class DepenseService
     {
         private readonly HttpClient _httpClient;
+        private readonly DepenseCategorieService _categorieService;
         private static string BaseUrl => ApiConfig.Depenses;
 
         public DepenseService()
@@ -26,6 +27,7 @@ namespace BombaProMax.Services
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
             };
             _httpClient = new HttpClient(handler);
+            _categorieService = new DepenseCategorieService();
         }
 
         #region CRUD Operations
@@ -132,12 +134,21 @@ namespace BombaProMax.Services
         }
 
         /// <summary>
-        /// Get all unique categories.
+        /// Get all unique categories from API.
         /// </summary>
         public async Task<List<string>> GetCategoriesAsync()
         {
             try
             {
+                // First try to get from DepenseCategorie API
+                var categories = await _categorieService.GetCategoryNamesAsync();
+                
+                if (categories.Count > 0)
+                {
+                    return categories;
+                }
+
+                // Fallback to legacy endpoint
                 var response = await _httpClient.GetAsync($"{BaseUrl}/categories");
 
                 if (!response.IsSuccessStatusCode)
@@ -147,10 +158,10 @@ namespace BombaProMax.Services
                 }
 
                 var json = await response.Content.ReadAsStringAsync();
-                var categories = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
+                var legacyCategories = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
                 
                 // Merge with default categories
-                var allCategories = categories.Union(GetDefaultCategories()).Distinct().OrderBy(c => c).ToList();
+                var allCategories = legacyCategories.Union(GetDefaultCategories()).Distinct().OrderBy(c => c).ToList();
                 return allCategories;
             }
             catch (Exception ex)

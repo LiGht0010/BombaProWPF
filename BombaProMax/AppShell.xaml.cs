@@ -19,6 +19,7 @@ using BombaProMax.Views.VenteLubEtArticles;
 using BombaProMax.Services;
 using Microsoft.Maui.Controls.Shapes;
 using BombaProMax.Views.ReservoirCalibrationViews;
+using BombaProMax.Views.RapportViews;
 
 namespace BombaProMax
 {
@@ -72,6 +73,7 @@ namespace BombaProMax
             Routing.RegisterRoute(nameof(ReservoirCalibrationPage), typeof(ReservoirCalibrationPage));
             Routing.RegisterRoute(nameof(JaugeagePage), typeof(JaugeagePage));
             Routing.RegisterRoute(nameof(DashboardPage), typeof(DashboardPage));
+            Routing.RegisterRoute(nameof(RapportPage), typeof(RapportPage));
 
             // Set ShellContent pages from DI
             LoginShellContent.Content = serviceProvider.GetRequiredService<LoginPage>();
@@ -93,6 +95,7 @@ namespace BombaProMax
             ReservoirCalibrationContent.Content = serviceProvider.GetRequiredService<ReservoirCalibrationPage>();
             JaugeageShellContent.Content = serviceProvider.GetRequiredService<JaugeagePage>();
             DashboardShellContent.Content = serviceProvider.GetRequiredService<DashboardPage>();
+            RapportShellContent.Content = serviceProvider.GetRequiredService<RapportPage>();
 
             // Navigate to LoginPage on startup
             Dispatcher.Dispatch(async () =>

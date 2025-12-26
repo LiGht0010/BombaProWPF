@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<Citerne> Citernes { get; set; } = default!;
     public DbSet<CreditTransaction> CreditTransactions { get; set; } = default!;
     public DbSet<Depense> Depenses { get; set; } = default!;
+    public DbSet<DepenseCategorie> DepenseCategories { get; set; } = default!;
     public DbSet<ElementsFacture> ElementsFactures { get; set; } = default!;
     public DbSet<Employe> Employes { get; set; } = default!;
     public DbSet<EmployeBilanCredit> EmployeBilanCredits { get; set; } = default!;

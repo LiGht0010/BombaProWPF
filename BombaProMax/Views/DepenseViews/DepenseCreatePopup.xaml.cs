@@ -8,6 +8,7 @@ public partial class DepenseCreatePopup : Popup
 {
     private readonly DepenseDto? _existingDepense;
     private readonly bool _isEditMode;
+    private readonly DepenseCategorieService _categorieService;
 
     public DepenseCreatePopup(DepenseDto? existingDepense = null)
     {
@@ -15,12 +16,13 @@ public partial class DepenseCreatePopup : Popup
 
         _existingDepense = existingDepense;
         _isEditMode = existingDepense != null;
+        _categorieService = new DepenseCategorieService();
 
         // Set default date
         DatePicker.Date = DateTime.Today;
 
-        // Load categories
-        LoadCategories();
+        // Load categories asynchronously
+        _ = LoadCategoriesAsync();
 
         if (_isEditMode && existingDepense != null)
         {
@@ -33,10 +35,39 @@ public partial class DepenseCreatePopup : Popup
         MontantEntry.TextChanged += OnMontantChanged;
     }
 
-    private void LoadCategories()
+    private async Task LoadCategoriesAsync()
     {
-        var categories = DepenseService.GetDefaultCategories();
-        CategoriePicker.ItemsSource = categories;
+        try
+        {
+            var categories = await _categorieService.GetCategoryNamesAsync();
+            
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                CategoriePicker.ItemsSource = categories;
+                
+                // If editing, try to set the category after loading
+                if (_isEditMode && _existingDepense != null && !string.IsNullOrEmpty(_existingDepense.Categorie))
+                {
+                    if (categories.Contains(_existingDepense.Categorie))
+                    {
+                        CategoriePicker.SelectedItem = _existingDepense.Categorie;
+                    }
+                    else
+                    {
+                        CustomCategorieEntry.Text = _existingDepense.Categorie;
+                    }
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DepenseCreatePopup] Error loading categories: {ex.Message}");
+            // Fallback to default categories
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                CategoriePicker.ItemsSource = DepenseCategorieService.GetDefaultCategories();
+            });
+        }
     }
 
     private void PopulateForEdit(DepenseDto depense)
@@ -50,20 +81,7 @@ public partial class DepenseCreatePopup : Popup
         MontantEntry.Text = depense.Montant?.ToString("F2");
         DescriptionEditor.Text = depense.Description;
 
-        // Set category
-        if (!string.IsNullOrEmpty(depense.Categorie))
-        {
-            var categories = CategoriePicker.ItemsSource as List<string>;
-            if (categories != null && categories.Contains(depense.Categorie))
-            {
-                CategoriePicker.SelectedItem = depense.Categorie;
-            }
-            else
-            {
-                // Category not in list, put it in custom entry
-                CustomCategorieEntry.Text = depense.Categorie;
-            }
-        }
+        // Category will be set after async load completes in LoadCategoriesAsync
 
         UpdateSummary();
     }

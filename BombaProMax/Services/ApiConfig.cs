@@ -37,6 +37,7 @@ public static class ApiConfig
     public static string Jaugeages => $"{BaseUrl}/Jaugeages";
     public static string JaugeageDetails => $"{BaseUrl}/JaugeageDetails";
     public static string Depenses => $"{BaseUrl}/Depenses";
+    public static string DepenseCategories => $"{BaseUrl}/DepenseCategories";
     public static string MoyensPaiement => $"{BaseUrl}/MoyensPaiements";
     public static string BilanCredits => $"{BaseUrl}/BilanCredits";
     public static string CreditTransactions => $"{BaseUrl}/CreditTransactions";
@@ -45,5 +46,6 @@ public static class ApiConfig
     public static string Services => $"{BaseUrl}/Services";
     public static string VenteLubrifiantsEtArticles => $"{BaseUrl}/VenteLubrifiantsEtArticles";
     public static string Dashboard => $"{BaseUrl}/Dashboard";
+    public static string Rapports => $"{BaseUrl}/Rapports";
     public static string Home => $"{BaseUrl}";
  }
