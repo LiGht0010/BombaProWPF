@@ -9,12 +9,16 @@ public partial class PeriodeViewPopup : Popup
     private readonly PeriodeAnalyticsModel _analytics;
     private readonly int _periodeId;
     private readonly PeriodeService _periodeService;
+    private readonly PeriodeDto _periode;
+    private readonly List<PeriodeDetailsDto> _details;
 
     public PeriodeViewPopup(PeriodeDto periode, List<PeriodeDetailsDto> details)
     {
         InitializeComponent();
         
         _periodeId = periode.PeriodeID;
+        _periode = periode;
+        _details = details;
         _periodeService = new PeriodeService();
         _analytics = BuildAnalytics(periode, details);
         
@@ -351,19 +355,20 @@ public partial class PeriodeViewPopup : Popup
         }
         else
         {
-            // Show loading or no data message
+            // Show no data message - marge data may not be available if no stock consumption exists
             var infoLabel = new Label
             {
-                Text = "Chargement des donnees de marge...",
+                Text = "Aucune donnée de marge disponible (pas de consommation stock enregistrée)",
                 FontSize = 11,
                 TextColor = Color.FromArgb("#999"),
                 HorizontalTextAlignment = TextAlignment.Center
             };
             MargeContainer.Add(infoLabel);
 
-            TotalCoutAchatLabel.Text = "Cout: -- MAD";
+            // Still show totals based on Recette
+            TotalCoutAchatLabel.Text = "Cout: N/A";
             TotalVenteLabel.Text = $"Vente: {_analytics.Recette:N2} MAD";
-            TotalMargeLabel.Text = "Chargement...";
+            TotalMargeLabel.Text = "N/A";
             TotalMargeLabel.TextColor = Color.FromArgb("#999");
         }
     }
@@ -447,4 +452,139 @@ public partial class PeriodeViewPopup : Popup
     {
         Close();
     }
+
+    private async void OnModifierClicked(object? sender, EventArgs e)
+    {
+        // Close popup and return action for editing
+        await CloseAsync(new PeriodeViewResult 
+        { 
+            Action = "Edit", 
+            Periode = _periode, 
+            Details = _details 
+        });
+    }
+
+    private async void OnEnregistrerPdfClicked(object? sender, EventArgs e)
+    {
+        try
+        {
+            PdfButton.IsEnabled = false;
+            PdfButton.Text = "? Génération...";
+
+            // Build PDF data from analytics
+            var pdfData = BuildPdfData();
+
+            // Generate PDF
+            var pdfService = new PdfGeneratorService();
+            var filePath = await pdfService.GeneratePeriodeReportAsync(pdfData);
+
+            PdfButton.Text = "? Généré!";
+
+            // Show success and offer to open
+            var openFile = await Application.Current!.MainPage!.DisplayAlert(
+                "PDF Généré",
+                $"Le rapport a été enregistré:\n{filePath}",
+                "Ouvrir le dossier",
+                "OK");
+
+            if (openFile)
+            {
+                // Open the folder containing the PDF
+                var folderPath = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(folderPath))
+                {
+                    await Launcher.Default.OpenAsync(new OpenFileRequest
+                    {
+                        File = new ReadOnlyFile(filePath)
+                    });
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error generating PDF: {ex.Message}");
+            await Application.Current!.MainPage!.DisplayAlert(
+                "Erreur",
+                $"Impossible de générer le PDF:\n{ex.Message}",
+                "OK");
+        }
+        finally
+        {
+            PdfButton.IsEnabled = true;
+            PdfButton.Text = "?? Enregistrer PDF";
+        }
+    }
+
+    private PeriodePdfData BuildPdfData()
+    {
+        var pdfData = new PeriodePdfData
+        {
+            PeriodeID = _analytics.PeriodeID,
+            DateDebut = _analytics.DateDebut,
+            DateFin = _analytics.DateFin,
+            EmployeNom = _analytics.EmployeNom,
+            TPE = _analytics.TPE,
+            Especes = _analytics.Especes,
+            Recette = _analytics.Recette,
+            TotalQuantite = _analytics.TotalQuantite,
+            TotalCoutAchat = _analytics.TotalCoutAchat
+        };
+
+        // Convert reservoir data
+        pdfData.TotauxParReservoir = _analytics.TotauxParReservoir
+            .Select(r => new ReservoirPdfData
+            {
+                ReservoirNumero = r.ReservoirNumero,
+                ProduitNom = r.ProduitNom,
+                QuantiteConsommee = r.QuantiteConsommee,
+                Montant = r.Montant
+            }).ToList();
+
+        // Convert product data
+        pdfData.TotauxParProduit = _analytics.TotauxParProduit
+            .Select(p => new ProduitPdfData
+            {
+                ProduitNom = p.ProduitNom,
+                Quantite = p.Quantite,
+                Montant = p.Montant
+            }).ToList();
+
+        // Convert marge data (grouped by product)
+        pdfData.MargesParProduit = _analytics.ConsommationsStock
+            .GroupBy(c => c.ProduitNom ?? "N/A")
+            .Select(g => new MargePdfData
+            {
+                ProduitNom = g.Key,
+                Quantite = g.Sum(c => c.QuantiteConsommee),
+                CoutAchat = g.Sum(c => c.CoutAchat),
+                Vente = g.Sum(c => c.Vente)
+            }).ToList();
+
+        // Convert pump data
+        pdfData.DetailsParPompe = _analytics.DetailsParPompe
+            .Select(p => new PompePdfData
+            {
+                PompeNumero = p.PompeNumero,
+                ProduitNom = p.ProduitNom,
+                ReservoirNumero = p.ReservoirNumero,
+                CompteurElecDebut = p.CompteurElecDebut,
+                CompteurElecFin = p.CompteurElecFin,
+                CompteurMecaDebut = p.CompteurMecaDebut,
+                CompteurMecaFin = p.CompteurMecaFin,
+                QuantiteVendue = p.QuantiteVendue,
+                Montant = p.Montant
+            }).ToList();
+
+        return pdfData;
+    }
+}
+
+/// <summary>
+/// Result returned when popup closes with an action
+/// </summary>
+public class PeriodeViewResult
+{
+    public string Action { get; set; } = "";
+    public PeriodeDto? Periode { get; set; }
+    public List<PeriodeDetailsDto>? Details { get; set; }
 }

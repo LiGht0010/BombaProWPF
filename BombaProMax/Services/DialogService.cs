@@ -126,19 +126,8 @@ public class DialogService : IDialogService
 
     public async Task ShowAchatDetailsPopupAsync(AchatDto achat)
     {
-        var defectStatus = achat.LivraisonDefectueuse == true ? "?? Oui" : "Non";
-
-        await ShowAlertAsync("Détails de l'achat",
-            $"Numéro: {achat.Numero}\n" +
-            $"Date: {achat.Date:dd/MM/yyyy}\n" +
-            $"Fournisseur: {achat.FournisseurNom ?? "N/A"}\n" +
-            $"Produit: {achat.ProduitNom ?? "N/A"}\n" +
-            $"Chauffeur: {achat.ChauffeurNom ?? "N/A"}\n" +
-            $"Camion: {achat.CamionImmatriculation ?? "N/A"}\n" +
-            $"Quantité: {achat.Quantite} L\n" +
-            $"Prix Unitaire: {achat.PrixAchatUnitaire:N2} DH\n" +
-            $"Coût Total: {achat.Cout:N2} DH\n" +
-            $"Livraison défectueuse: {defectStatus}");
+        var popup = new AchatDetailsPopup(achat);
+        await CurrentPage.ShowPopupAsync(popup);
     }
 
     public async Task<ChauffeurDto?> ShowChauffeurCreatePopupAsync()

@@ -1,6 +1,7 @@
 using BombaProMax.Models;
 using BombaProMax.ViewModels;
 using BombaProMax.Views.ClientViews;
+using CommunityToolkit.Maui.Views;
 
 namespace BombaProMax.Views.FactureViews;
 
@@ -124,7 +125,17 @@ public partial class FactureEtBL : ContentPage
     {
         if (sender is Button button && button.CommandParameter is FactureDto facture)
         {
-            await _viewModel.ViewFactureDetailsCommand.ExecuteAsync(facture);
+            try
+            {
+                // Show the FactureDetails popup
+                var popup = new FactureDetails(facture);
+                await this.ShowPopupAsync(popup);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing facture details: {ex.Message}");
+                await DisplayAlert("Erreur", $"Impossible d'afficher les détails: {ex.Message}", "OK");
+            }
         }
     }
 
@@ -144,7 +155,17 @@ public partial class FactureEtBL : ContentPage
     {
         if (sender is Button button && button.CommandParameter is BonLivraisonDto bl)
         {
-            await _viewModel.ViewBLDetailsCommand.ExecuteAsync(bl);
+            try
+            {
+                // Show the BLDetails popup
+                var popup = new BLDetails(bl);
+                await this.ShowPopupAsync(popup);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing BL details: {ex.Message}");
+                await DisplayAlert("Erreur", $"Impossible d'afficher les détails: {ex.Message}", "OK");
+            }
         }
     }
 

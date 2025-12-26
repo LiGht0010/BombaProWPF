@@ -299,6 +299,7 @@ public partial class PeriodeViewModel : ObservableObject
 
             var existingDetail = existingDetails.FirstOrDefault(d => d.PompeID == pompe.ID);
 
+            // When editing, prioritize existing detail values over current pump counters
             var reading = new PompeReadingModel
             {
                 PompeID = pompe.ID,
@@ -308,18 +309,22 @@ public partial class PeriodeViewModel : ObservableObject
                 ProduitID = produit?.ID,
                 ProduitNom = produit?.Description ?? reservoir?.ProduitNom ?? "N/A",
                 PrixCarburant = existingDetail?.PrixCarburant ?? prix,
+                // For DEBUT: use existing detail value, fall back to current pump counter
                 CompteurElecDebut = existingDetail?.CompteurElectroniqueDebut ?? pompe.CompteurElectroniqueActuel ?? 0,
                 CompteurMecaDebut = existingDetail?.CompteurMecaniqueDebut ?? pompe.CompteurMecaniqueActuel ?? 0,
-                CompteurElecFin = existingDetail != null 
-                    ? existingDetail.CompteurElectroniqueFinal.ToString("F2")
-                    : (pompe.CompteurElectroniqueActuel ?? 0).ToString("F2"),
-                CompteurMecaFin = existingDetail != null 
-                    ? existingDetail.CompteurMecaniqueFinal.ToString("F2")
-                    : (pompe.CompteurMecaniqueActuel ?? 0).ToString("F2")
+                // For FIN: use existing detail value (which should be > debut if there was a sale)
+                CompteurElecFin = existingDetail?.CompteurElectroniqueFinal.ToString("F2") 
+                    ?? (pompe.CompteurElectroniqueActuel ?? 0).ToString("F2"),
+                CompteurMecaFin = existingDetail?.CompteurMecaniqueFinal.ToString("F2") 
+                    ?? (pompe.CompteurMecaniqueActuel ?? 0).ToString("F2")
             };
 
             PompeReadings.Add(reading);
         }
+
+        // Log for debugging
+        var detailsWithSales = PompeReadings.Count(r => r.QuantiteVendue > 0);
+        Debug.WriteLine($"[PeriodeViewModel] Built {PompeReadings.Count} pump readings, {detailsWithSales} have sales, from {existingDetails.Count} existing details");
     }
 
     /// <summary>

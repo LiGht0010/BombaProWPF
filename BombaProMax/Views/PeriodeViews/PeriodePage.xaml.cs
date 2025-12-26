@@ -73,16 +73,33 @@ public partial class PeriodePage : ContentPage
 
         if (periode == null) return;
 
-        // Select the periode to load its details
-        _viewModel.SelectPeriodeCommand.Execute(periode);
-        await Task.Delay(200); // Give time for details to load
-        
-        // Get the loaded details
-        var details = _viewModel.CurrentPeriodeDetails.ToList();
-        
-        // Show the analytics popup
-        var popup = new PeriodeViewPopup(periode, details);
-        await this.ShowPopupAsync(popup);
+        try
+        {
+            // Load the periode details directly from service instead of relying on ViewModel
+            var periodeService = new PeriodeService();
+            var details = await periodeService.GetDetailsByPeriodeAsync(periode.PeriodeID);
+            
+            // Show the analytics popup with loaded details
+            var popup = new PeriodeViewPopup(periode, details);
+            var result = await this.ShowPopupAsync(popup);
+            
+            // Handle result if edit was requested
+            if (result is PeriodeViewResult viewResult && viewResult.Action == "Edit")
+            {
+                // Open edit popup
+                var editPopup = new PeriodeEditPopup(viewResult.Periode!, viewResult.Details!, _viewModel);
+                var editResult = await this.ShowPopupAsync(editPopup);
+
+                if (editResult is PeriodeWithDetailsDto periodeWithDetails)
+                {
+                    await _viewModel.UpdatePeriodeWithDetailsAsync(periodeWithDetails);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Erreur", $"Impossible de charger les détails: {ex.Message}", "OK");
+        }
     }
 
     private async void OnDeletePeriodeClicked(object sender, EventArgs e)

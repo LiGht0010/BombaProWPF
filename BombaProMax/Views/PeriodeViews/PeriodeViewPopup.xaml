@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -13,8 +13,8 @@
             
             <!-- HEADER -->
             <Border Grid.Row="0" BackgroundColor="#1976D2" Padding="25,18" StrokeThickness="0">
-                <Grid ColumnDefinitions="*,Auto">
-                    <VerticalStackLayout Spacing="4">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
                         <Label x:Name="HeaderLabel" Text="Details de la Periode" FontSize="22" FontAttributes="Bold" TextColor="White"/>
                         <HorizontalStackLayout Spacing="25">
                             <Label x:Name="DateRangeLabel" Text="01/01/2025 10:00 - 10:00" FontSize="13" TextColor="#B3E5FC"/>
@@ -22,7 +22,35 @@
                             <Label x:Name="DureeLabel" Text="Duree: 8h 00min" FontSize="13" TextColor="#B3E5FC"/>
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
-                    <Button Grid.Column="1" Text="X" BackgroundColor="#1565C0" TextColor="White" FontSize="16" WidthRequest="36" HeightRequest="36" CornerRadius="18" Clicked="OnCloseClicked"/>
+                    
+                    <!-- Modifier Button -->
+                    <Button Grid.Column="1" 
+                            x:Name="ModifierButton"
+                            Text="Modifier" 
+                            BackgroundColor="#FF9800" 
+                            TextColor="White" 
+                            FontSize="13" 
+                            FontAttributes="Bold"
+                            Padding="16,10"
+                            CornerRadius="8" 
+                            Margin="0,0,12,0"
+                            Clicked="OnModifierClicked"/>
+                    
+                    <!-- PDF Button -->
+                    <Button Grid.Column="2" 
+                            x:Name="PdfButton"
+                            Text="📄 Enregistrer PDF" 
+                            BackgroundColor="#2E7D32" 
+                            TextColor="White" 
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            Padding="16,10"
+                            CornerRadius="8" 
+                            Margin="0,0,12,0"
+                            Clicked="OnEnregistrerPdfClicked"/>
+                    
+                    <!-- Close Button -->
+                    <Button Grid.Column="3" Text="✕" BackgroundColor="#1565C0" TextColor="White" FontSize="16" WidthRequest="36" HeightRequest="36" CornerRadius="18" Clicked="OnCloseClicked"/>
                 </Grid>
             </Border>
             

@@ -179,15 +179,18 @@ public partial class PeriodeEditPopup : Popup
         // Add all pump readings as details
         foreach (var reading in _viewModel.PompeReadings)
         {
-            // Only include pumps with actual sales (quantity > 0)
-            if (reading.QuantiteVendue > 0)
+            decimal.TryParse(reading.CompteurElecFin, out decimal elecFin);
+            decimal.TryParse(reading.CompteurMecaFin, out decimal mecaFin);
+            
+            // Calculate quantity
+            var quantiteVendue = elecFin - reading.CompteurElecDebut;
+            
+            // Check if this pump had an existing detail
+            var existingDetail = _existingDetails.FirstOrDefault(d => d.PompeID == reading.PompeID);
+            
+            // Include pump if: has sales (quantity > 0) OR had an existing detail (preserve data)
+            if (quantiteVendue > 0 || existingDetail != null)
             {
-                decimal.TryParse(reading.CompteurElecFin, out decimal elecFin);
-                decimal.TryParse(reading.CompteurMecaFin, out decimal mecaFin);
-
-                // Find existing detail to preserve its ID
-                var existingDetail = _existingDetails.FirstOrDefault(d => d.PompeID == reading.PompeID);
-
                 result.Details.Add(new PeriodeDetailsDto
                 {
                     PeriodeDetailID = existingDetail?.PeriodeDetailID ?? 0,
@@ -205,12 +208,14 @@ public partial class PeriodeEditPopup : Popup
                     CompteurMecaniqueFinal = mecaFin,
                     QuantiteElectronique = elecFin - reading.CompteurElecDebut,
                     QuantiteMecanique = mecaFin - reading.CompteurMecaDebut,
-                    QuantiteVendue = reading.QuantiteVendue,
-                    PrixTotal = reading.PrixTotal
+                    QuantiteVendue = Math.Max(0, quantiteVendue), // Ensure non-negative
+                    PrixTotal = Math.Max(0, quantiteVendue) * reading.PrixCarburant
                 });
             }
         }
 
+        System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Saving periode {_periode.PeriodeID} with {result.Details.Count} details (had {_existingDetails.Count} existing)");
+        
         Close(result);
     }
 
