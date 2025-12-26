@@ -10,7 +10,7 @@ using QContainer = QuestPDF.Infrastructure.IContainer;
 namespace BombaProMax.Services;
 
 /// <summary>
-/// Service for generating PDF reports for Periode, Facture, and BonLivraison data.
+/// Service for generating PDF reports for Periode, Facture, BonLivraison, Achat, and Rapport data.
 /// Uses QuestPDF for clean, code-based PDF generation.
 /// </summary>
 public class PdfGeneratorService
@@ -1366,4 +1366,6 @@ public class PdfGeneratorService
     }
 
     #endregion
+
 }
+

@@ -10,6 +10,7 @@ namespace BombaProMax.ViewModels;
 public partial class RapportViewModel : ObservableObject
 {
     private readonly RapportService _rapportService;
+    private readonly RapportPdfService _rapportPdfService;
 
     #region Observable Properties - Loading State
 
@@ -144,6 +145,7 @@ public partial class RapportViewModel : ObservableObject
     public RapportViewModel(RapportService rapportService)
     {
         _rapportService = rapportService;
+        _rapportPdfService = new RapportPdfService();
 
         // Build year list with null option for "all years"
         var years = new List<int?> { null }; // null = "-- Tous --"
@@ -270,16 +272,160 @@ public partial class RapportViewModel : ObservableObject
     [RelayCommand]
     public async Task PrintRapportAsync()
     {
-        // Placeholder for PDF generation
-        await Application.Current!.MainPage!.DisplayAlert(
-            "Information",
-            "La generation de PDF sera implementee prochainement.",
-            "OK");
+        try
+        {
+            IsLoading = true;
+            ErrorMessage = null;
+
+            // Build PDF data from current ViewModel state
+            var pdfData = BuildRapportPdfData();
+
+            // Generate PDF using dedicated RapportPdfService
+            var filePath = await _rapportPdfService.GenerateRapportReportAsync(pdfData);
+
+            Debug.WriteLine($"[RapportViewModel] PDF generated: {filePath}");
+
+            // Open the PDF file
+            await Launcher.Default.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(filePath)
+            });
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur lors de la generation du PDF: {ex.Message}";
+            Debug.WriteLine($"[RapportViewModel] PDF generation error: {ex.Message}");
+
+            await Application.Current!.MainPage!.DisplayAlert(
+                "Erreur",
+                $"Impossible de generer le PDF: {ex.Message}",
+                "OK");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     #endregion
 
     #region Private Methods
+
+    /// <summary>
+    /// Builds the RapportPdfData from current ViewModel collections and properties.
+    /// </summary>
+    private RapportPdfData BuildRapportPdfData()
+    {
+        return new RapportPdfData
+        {
+            PeriodeLabel = PeriodeLabel,
+            GeneratedAt = DateTime.Now,
+
+            // Ventes Section
+            Ventes = new RapportVentesPdfData
+            {
+                TotalVentes = TotalVentes,
+                TotalVentesCarburant = TotalVentesCarburant,
+                TotalQuantiteCarburant = TotalQuantiteCarburant,
+                TotalVentesLubArticles = TotalVentesLubArticles,
+                TotalQuantiteLubArticles = TotalQuantiteLubArticles,
+                VentesCarburantParProduit = VentesCarburantParProduit
+                    .Select(v => new RapportVenteCarburantProduitPdfData
+                    {
+                        ProduitNom = v.ProduitNom,
+                        TotalQuantite = v.TotalQuantite,
+                        TotalMontant = v.TotalMontant,
+                        NombrePeriodes = v.NombrePeriodes
+                    }).ToList(),
+                VentesLubArticlesParProduit = VentesLubArticlesParProduit
+                    .Select(v => new RapportVenteLubArticleProduitPdfData
+                    {
+                        ProduitNom = v.ProduitNom,
+                        CategorieNom = v.CategorieNom,
+                        TotalQuantite = v.TotalQuantite,
+                        TotalMontant = v.TotalMontant,
+                        NombreVentes = v.NombreVentes
+                    }).ToList()
+            },
+
+            // Depenses Section
+            Depenses = new RapportDepensesPdfData
+            {
+                TotalDepenses = TotalDepenses,
+                NombreDepenses = NombreDepenses,
+                DepensesParCategorie = DepensesParCategorie
+                    .Select(d => new RapportDepenseCategoriePdfData
+                    {
+                        CategorieNom = d.CategorieNom,
+                        TotalMontant = d.TotalMontant,
+                        NombreDepenses = d.NombreDepenses
+                    }).ToList(),
+                DepensesDetails = DepensesDetails
+                    .Select(d => new RapportDepenseDetailPdfData
+                    {
+                        Numero = d.Numero,
+                        DateDisplay = d.DateDisplay,
+                        Categorie = d.Categorie,
+                        Montant = d.Montant,
+                        Description = d.Description
+                    }).ToList()
+            },
+
+            // Stock Section
+            Stock = new RapportStockPdfData
+            {
+                TotalStockCarburantLitres = TotalStockCarburantLitres,
+                TotalStockProduits = TotalStockProduits,
+                TotalAchatsPeriode = TotalAchatsPeriode,
+                StockCarburant = StockCarburant
+                    .Select(s => new RapportStockReservoirPdfData
+                    {
+                        ReservoirNumero = s.ReservoirNumero,
+                        ProduitNom = s.ProduitNom,
+                        Capacite = s.Capacite,
+                        NiveauActuel = s.NiveauActuel,
+                        PourcentageRemplissage = s.PourcentageRemplissage
+                    }).ToList(),
+                StockProduits = StockProduits
+                    .Select(s => new RapportStockProduitPdfData
+                    {
+                        ProduitNom = s.ProduitNom,
+                        CategorieNom = s.CategorieNom,
+                        StockActuel = s.StockActuel,
+                        StockMinimum = s.StockMinimum,
+                        IsLowStock = s.IsLowStock
+                    }).ToList(),
+                AchatsParProduit = AchatsParProduit
+                    .Select(a => new RapportAchatProduitPdfData
+                    {
+                        ProduitNom = a.ProduitNom,
+                        TotalQuantite = a.TotalQuantite,
+                        TotalMontant = a.TotalMontant,
+                        NombreAchats = a.NombreAchats
+                    }).ToList(),
+                JaugeageAnalyse = new RapportJaugeageAnalysePdfData
+                {
+                    HasData = HasJaugeageData,
+                    Message = JaugeageAnalyseMessage,
+                    PeriodeAnalyse = JaugeagePeriodeAnalyse,
+                    JaugeagePrecedentInfo = JaugeagePrecedentInfo,
+                    JaugeageActuelInfo = JaugeageActuelInfo,
+                    Comparaisons = JaugeageComparaisons
+                        .Select(j => new RapportJaugeageComparisonPdfData
+                        {
+                            ReservoirNumero = j.ReservoirNumero,
+                            ProduitNom = j.ProduitNom,
+                            VolumePrecedent = j.VolumePrecedent,
+                            VolumeActuel = j.VolumeActuel,
+                            StockConsomme = j.StockConsomme,
+                            QuantiteVendue = j.QuantiteVendue,
+                            Ecart = j.Ecart,
+                            Statut = j.Statut
+                        }).ToList()
+                }
+            }
+        };
+    }
 
     private void PopulateVentes(RapportVentesDto ventes)
     {
