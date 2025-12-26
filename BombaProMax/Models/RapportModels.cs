@@ -161,3 +161,78 @@ public class RapportCompletDto
     public RapportStockDto Stock { get; set; } = new();
     public string PeriodeLabel { get; set; } = string.Empty;
 }
+
+/// <summary>
+/// Jaugeage analysis response comparing last 2 jaugeages vs sales.
+/// </summary>
+public class RapportJaugeageAnalyseDto
+{
+    public bool HasData { get; set; }
+    public string? Message { get; set; }
+    public RapportJaugeageInfoDto? JaugeageActuel { get; set; }
+    public RapportJaugeageInfoDto? JaugeagePrecedent { get; set; }
+    public string? PeriodeAnalyse { get; set; }
+    public List<RapportJaugeageReservoirComparisonDto> Comparaisons { get; set; } = [];
+}
+
+/// <summary>
+/// Jaugeage summary info.
+/// </summary>
+public class RapportJaugeageInfoDto
+{
+    public int Id { get; set; }
+    public string? NumeroJaugeage { get; set; }
+    public DateTime DateJaugeage { get; set; }
+    public string? TemoinNom { get; set; }
+
+    public string DateDisplay => DateJaugeage.ToString("dd/MM/yyyy HH:mm");
+}
+
+/// <summary>
+/// Per-reservoir comparison between jaugeage stock consumption and actual sales.
+/// </summary>
+public class RapportJaugeageReservoirComparisonDto
+{
+    public int ReservoirId { get; set; }
+    public string ReservoirNumero { get; set; } = string.Empty;
+    public string? ProduitNom { get; set; }
+    
+    /// <summary>Volume from previous jaugeage (n-1)</summary>
+    public decimal VolumePrecedent { get; set; }
+    
+    /// <summary>Volume from current jaugeage (n)</summary>
+    public decimal VolumeActuel { get; set; }
+    
+    /// <summary>Stock consumed according to jaugeage = VolumePrecedent - VolumeActuel</summary>
+    public decimal StockConsomme { get; set; }
+    
+    /// <summary>Quantity sold from PeriodeDetails between the 2 jaugeages</summary>
+    public decimal QuantiteVendue { get; set; }
+    
+    /// <summary>Difference = StockConsomme - QuantiteVendue</summary>
+    public decimal Ecart { get; set; }
+    
+    /// <summary>Ecart as percentage of QuantiteVendue</summary>
+    public decimal EcartPourcentage { get; set; }
+    
+    /// <summary>Status: "Normal", "Remise au cuve", "Manquant"</summary>
+    public string Statut { get; set; } = "Normal";
+
+    /// <summary>Color code for UI based on status</summary>
+    public string StatutColor => Statut switch
+    {
+        "Normal" => "#2E7D32",      // Green
+        "Remise au cuve" => "#FF9800", // Orange
+        "Manquant" => "#C62828",    // Red
+        _ => "#666666"
+    };
+
+    /// <summary>Background color for UI based on status</summary>
+    public string StatutBackgroundColor => Statut switch
+    {
+        "Normal" => "#E8F5E9",      // Light green
+        "Remise au cuve" => "#FFF3E0", // Light orange
+        "Manquant" => "#FFEBEE",    // Light red
+        _ => "#F5F5F5"
+    };
+}

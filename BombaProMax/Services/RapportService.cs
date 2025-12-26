@@ -170,4 +170,34 @@ public class RapportService
 
         return parts.Count > 0 ? "?" + string.Join("&", parts) : "";
     }
+
+    /// <summary>
+    /// Get Jaugeage analysis comparing jaugeages around the selected date vs actual sales.
+    /// </summary>
+    public async Task<RapportJaugeageAnalyseDto> GetRapportJaugeageAnalyseAsync(DateOnly? date = null, string? month = null)
+    {
+        try
+        {
+            var queryParams = BuildQueryParams(date, month);
+            var url = $"{BaseUrl}/jaugeage-analyse{queryParams}";
+
+            Debug.WriteLine($"[RapportService] Fetching jaugeage-analyse: {url}");
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Debug.WriteLine($"[RapportService] Jaugeage-analyse request failed: {response.StatusCode}");
+                return new RapportJaugeageAnalyseDto { HasData = false, Message = "Erreur de chargement" };
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<RapportJaugeageAnalyseDto>(json);
+            return result ?? new RapportJaugeageAnalyseDto { HasData = false };
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[RapportService] Error fetching jaugeage-analyse: {ex.Message}");
+            return new RapportJaugeageAnalyseDto { HasData = false, Message = ex.Message };
+        }
+    }
 }

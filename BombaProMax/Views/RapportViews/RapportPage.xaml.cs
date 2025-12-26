@@ -17,23 +17,32 @@ public partial class RapportPage : ContentPage
     {
         base.OnAppearing();
         
-        // Set the picker to current month (index = month - 1)
-        MoisPicker.SelectedIndex = _viewModel.SelectedMois - 1;
+        // Set the pickers to their initial values
+        // MoisPicker uses SelectedMoisIndex binding directly
+        // AnneePicker uses SelectedAnnee binding directly
         
         await _viewModel.LoadRapportsAsync();
     }
 
     private void OnMoisPickerSelectedIndexChanged(object sender, EventArgs e)
     {
+        // When user changes month picker, switch to month mode
         if (MoisPicker.SelectedIndex >= 0)
         {
-            _viewModel.SelectedMois = MoisPicker.SelectedIndex + 1;
+            _viewModel.OnMonthYearChanged();
         }
+    }
+
+    private void OnAnneePickerSelectedIndexChanged(object sender, EventArgs e)
+    {
+        // When user changes year picker, switch to month mode
+        _viewModel.OnMonthYearChanged();
     }
 
     private void OnDateSpecifiqueSelected(object sender, DateChangedEventArgs e)
     {
-        _viewModel.DateSpecifique = e.NewDate;
+        // When user selects a specific date, switch to date mode
+        _viewModel.OnDateSpecifiqueSelected(e.NewDate);
     }
 
     private void OnVentesTabClicked(object sender, EventArgs e)

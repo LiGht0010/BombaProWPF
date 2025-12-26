@@ -30,10 +30,16 @@ public partial class RapportViewModel : ObservableObject
     private DateTime? _dateSpecifique;
 
     [ObservableProperty]
-    private int _selectedMois;
+    private int _selectedMoisIndex = -1; // -1 = no selection (index in picker)
 
     [ObservableProperty]
-    private int _selectedAnnee;
+    private int? _selectedAnnee; // nullable to allow "no selection"
+
+    /// <summary>
+    /// Tracks if we're using date-specific filter mode (true) or month filter mode (false/null)
+    /// </summary>
+    [ObservableProperty]
+    private bool _isDateSpecifiqueMode;
 
     #endregion
 
@@ -79,6 +85,31 @@ public partial class RapportViewModel : ObservableObject
 
     #endregion
 
+    #region Observable Properties - Jaugeage Analyse Data
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasNoJaugeageData))]
+    private bool _hasJaugeageData;
+
+    [ObservableProperty]
+    private string? _jaugeageAnalyseMessage;
+
+    [ObservableProperty]
+    private string? _jaugeagePeriodeAnalyse;
+
+    [ObservableProperty]
+    private string? _jaugeageActuelInfo;
+
+    [ObservableProperty]
+    private string? _jaugeagePrecedentInfo;
+
+    /// <summary>
+    /// Inverted HasJaugeageData for binding to "no data" message visibility.
+    /// </summary>
+    public bool HasNoJaugeageData => !HasJaugeageData;
+
+    #endregion
+
     #region Collections
 
     public ObservableCollection<RapportVenteCarburantProduitDto> VentesCarburantParProduit { get; } = [];
@@ -88,9 +119,18 @@ public partial class RapportViewModel : ObservableObject
     public ObservableCollection<RapportStockReservoirDto> StockCarburant { get; } = [];
     public ObservableCollection<RapportStockProduitDto> StockProduits { get; } = [];
     public ObservableCollection<RapportAchatProduitDto> AchatsParProduit { get; } = [];
+    public ObservableCollection<RapportJaugeageReservoirComparisonDto> JaugeageComparaisons { get; } = [];
 
     public List<int> MoisList { get; } = Enumerable.Range(1, 12).ToList();
-    public List<int> AnneeList { get; } = Enumerable.Range(2020, DateTime.Now.Year - 2020 + 2).ToList();
+    public List<int?> AnneeList { get; }
+    
+    public List<string> MoisNomsAvecVide { get; } =
+    [
+        "-- Tous --",
+        "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"
+    ];
+    
     public List<string> MoisNoms { get; } =
     [
         "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
@@ -105,10 +145,16 @@ public partial class RapportViewModel : ObservableObject
     {
         _rapportService = rapportService;
 
-        // Default to current month
+        // Build year list with null option for "all years"
+        var years = new List<int?> { null }; // null = "-- Tous --"
+        years.AddRange(Enumerable.Range(2020, DateTime.Now.Year - 2020 + 2).Cast<int?>());
+        AnneeList = years;
+
+        // Default to current month (index 0 = "-- Tous --", so month index = month number)
         var now = DateTime.Now;
-        SelectedMois = now.Month;
+        SelectedMoisIndex = now.Month; // Index 1-12 maps to Jan-Dec
         SelectedAnnee = now.Year;
+        IsDateSpecifiqueMode = false;
     }
 
     #endregion
@@ -123,27 +169,36 @@ public partial class RapportViewModel : ObservableObject
             IsLoading = true;
             ErrorMessage = null;
 
-            // Determine filter to use
+            // Determine filter to use based on mode
             DateOnly? date = null;
             string? month = null;
 
-            if (DateSpecifique.HasValue)
+            if (IsDateSpecifiqueMode && DateSpecifique.HasValue)
             {
+                // Date-specific mode
                 date = DateOnly.FromDateTime(DateSpecifique.Value);
                 PeriodeLabel = date.Value.ToString("dd/MM/yyyy");
             }
-            else if (SelectedMois > 0 && SelectedAnnee > 0)
+            else if (!IsDateSpecifiqueMode && SelectedMoisIndex > 0 && SelectedAnnee.HasValue)
             {
-                month = $"{SelectedAnnee}-{SelectedMois:D2}";
-                PeriodeLabel = $"{MoisNoms[SelectedMois - 1]} {SelectedAnnee}";
+                // Month mode (index 0 = "-- Tous --", so valid month is 1-12)
+                month = $"{SelectedAnnee.Value}-{SelectedMoisIndex:D2}";
+                PeriodeLabel = $"{MoisNoms[SelectedMoisIndex - 1]} {SelectedAnnee.Value}";
             }
             else
             {
+                // No filter
                 PeriodeLabel = "Toutes les periodes";
             }
 
-            // Load all reports
-            var rapport = await _rapportService.GetRapportCompletAsync(date, month);
+            // Load all reports including jaugeage analysis (all with same filter)
+            var rapportTask = _rapportService.GetRapportCompletAsync(date, month);
+            var jaugeageTask = _rapportService.GetRapportJaugeageAnalyseAsync(date, month);
+
+            await Task.WhenAll(rapportTask, jaugeageTask);
+
+            var rapport = await rapportTask;
+            var jaugeageAnalyse = await jaugeageTask;
 
             // Populate Ventes
             PopulateVentes(rapport.Ventes);
@@ -153,6 +208,9 @@ public partial class RapportViewModel : ObservableObject
 
             // Populate Stock
             PopulateStock(rapport.Stock);
+
+            // Populate Jaugeage Analyse
+            PopulateJaugeageAnalyse(jaugeageAnalyse);
 
             Debug.WriteLine($"[RapportViewModel] Loaded rapport for: {PeriodeLabel}");
         }
@@ -176,11 +234,37 @@ public partial class RapportViewModel : ObservableObject
     [RelayCommand]
     public async Task ClearFilterAsync()
     {
+        // Reset to current month mode
         DateSpecifique = null;
+        IsDateSpecifiqueMode = false;
         var now = DateTime.Now;
-        SelectedMois = now.Month;
+        SelectedMoisIndex = now.Month; // Index 1-12
         SelectedAnnee = now.Year;
         await LoadRapportsAsync();
+    }
+
+    /// <summary>
+    /// Called when user selects a specific date - switches to date mode
+    /// </summary>
+    public void OnDateSpecifiqueSelected(DateTime selectedDate)
+    {
+        DateSpecifique = selectedDate;
+        IsDateSpecifiqueMode = true;
+        // Clear month selection visual feedback
+        SelectedMoisIndex = 0; // "-- Tous --"
+        SelectedAnnee = null;
+    }
+
+    /// <summary>
+    /// Called when user changes month/year picker - switches to month mode
+    /// </summary>
+    public void OnMonthYearChanged()
+    {
+        if (SelectedMoisIndex > 0 || SelectedAnnee.HasValue)
+        {
+            IsDateSpecifiqueMode = false;
+            DateSpecifique = null;
+        }
     }
 
     [RelayCommand]
@@ -259,6 +343,39 @@ public partial class RapportViewModel : ObservableObject
         {
             AchatsParProduit.Add(item);
         }
+    }
+
+    private void PopulateJaugeageAnalyse(RapportJaugeageAnalyseDto analyse)
+    {
+        HasJaugeageData = analyse.HasData;
+        JaugeageAnalyseMessage = analyse.Message;
+        JaugeagePeriodeAnalyse = analyse.PeriodeAnalyse;
+
+        if (analyse.JaugeageActuel != null)
+        {
+            JaugeageActuelInfo = $"{analyse.JaugeageActuel.NumeroJaugeage ?? "N/A"} - {analyse.JaugeageActuel.DateDisplay}";
+        }
+        else
+        {
+            JaugeageActuelInfo = null;
+        }
+
+        if (analyse.JaugeagePrecedent != null)
+        {
+            JaugeagePrecedentInfo = $"{analyse.JaugeagePrecedent.NumeroJaugeage ?? "N/A"} - {analyse.JaugeagePrecedent.DateDisplay}";
+        }
+        else
+        {
+            JaugeagePrecedentInfo = null;
+        }
+
+        JaugeageComparaisons.Clear();
+        foreach (var item in analyse.Comparaisons)
+        {
+            JaugeageComparaisons.Add(item);
+        }
+
+        Debug.WriteLine($"[RapportViewModel] Jaugeage analysis loaded: HasData={HasJaugeageData}, Comparisons={JaugeageComparaisons.Count}");
     }
 
     #endregion

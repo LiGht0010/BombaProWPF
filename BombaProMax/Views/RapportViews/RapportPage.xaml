@@ -56,20 +56,27 @@
                     <VerticalStackLayout Grid.Column="0">
                         <Label Text="Mois:" FontSize="12" TextColor="#666"/>
                         <Picker x:Name="MoisPicker"
-                                ItemsSource="{Binding MoisNoms}"
+                                ItemsSource="{Binding MoisNomsAvecVide}"
+                                SelectedIndex="{Binding SelectedMoisIndex}"
                                 BackgroundColor="#F8F9FA"
                                 SelectedIndexChanged="OnMoisPickerSelectedIndexChanged"/>
                     </VerticalStackLayout>
                     <!-- Annee -->
                     <VerticalStackLayout Grid.Column="1">
                         <Label Text="Annee:" FontSize="12" TextColor="#666"/>
-                        <Picker ItemsSource="{Binding AnneeList}"
+                        <Picker x:Name="AnneePicker"
+                                ItemsSource="{Binding AnneeList}"
                                 SelectedItem="{Binding SelectedAnnee}"
-                                BackgroundColor="#F8F9FA"/>
+                                BackgroundColor="#F8F9FA"
+                                SelectedIndexChanged="OnAnneePickerSelectedIndexChanged">
+                            <Picker.ItemDisplayBinding>
+                                <Binding StringFormat="{}{0}" FallbackValue="-- Tous --"/>
+                            </Picker.ItemDisplayBinding>
+                        </Picker>
                     </VerticalStackLayout>
                     <!-- Date Specifique -->
                     <VerticalStackLayout Grid.Column="2">
-                        <Label Text="Date Specifique:" FontSize="12" TextColor="#666"/>
+                        <Label Text="Ou Date Specifique:" FontSize="12" TextColor="#666"/>
                         <DatePicker x:Name="DateSpecifiquePicker"
                                     BackgroundColor="#F8F9FA"
                                     DateSelected="OnDateSpecifiqueSelected"/>
@@ -366,6 +373,121 @@
                                 </VerticalStackLayout>
                             </Border>
                         </Grid>
+
+                        <!-- ═══════════════════════════════════════════════════════════════ -->
+                        <!-- JAUGEAGE vs VENTES ANALYSIS -->
+                        <!-- ═══════════════════════════════════════════════════════════════ -->
+                        <Border BackgroundColor="#ECEFF1" Padding="16" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="12">
+                                <!-- Header -->
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="Analyse Jaugeage vs Ventes" FontSize="16" FontAttributes="Bold" TextColor="#37474F"/>
+                                        <Label Text="{Binding JaugeagePeriodeAnalyse, StringFormat='Periode: {0}'}" 
+                                               FontSize="11" TextColor="#78909C"
+                                               IsVisible="{Binding HasJaugeageData}"/>
+                                    </VerticalStackLayout>
+                                    <Border Grid.Column="1" BackgroundColor="#546E7A" Padding="8,4" StrokeThickness="0"
+                                            IsVisible="{Binding HasJaugeageData}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="4"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="Detection Remise au Cuve" FontSize="10" TextColor="White"/>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Jaugeage Info (if has data) -->
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="15" IsVisible="{Binding HasJaugeageData}">
+                                    <Border Grid.Column="0" BackgroundColor="White" Padding="12" StrokeThickness="1" Stroke="#CFD8DC">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="6"/>
+                                        </Border.StrokeShape>
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="Jaugeage Precedent (n-1)" FontSize="10" TextColor="#78909C"/>
+                                            <Label Text="{Binding JaugeagePrecedentInfo}" FontSize="12" FontAttributes="Bold" TextColor="#455A64"/>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                    <Border Grid.Column="1" BackgroundColor="White" Padding="12" StrokeThickness="1" Stroke="#CFD8DC">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="6"/>
+                                        </Border.StrokeShape>
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="Jaugeage Actuel (n)" FontSize="10" TextColor="#78909C"/>
+                                            <Label Text="{Binding JaugeageActuelInfo}" FontSize="12" FontAttributes="Bold" TextColor="#455A64"/>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </Grid>
+
+                                <!-- No Data Message - Show when HasJaugeageData is false -->
+                                <Label x:Name="NoJaugeageDataLabel"
+                                       Text="{Binding JaugeageAnalyseMessage}" 
+                                       TextColor="#78909C" 
+                                       FontSize="13" 
+                                       HorizontalTextAlignment="Center"
+                                       Padding="20"
+                                       IsVisible="{Binding HasNoJaugeageData}"/>
+
+                                <!-- Comparison Table (if has data) -->
+                                <VerticalStackLayout Spacing="0" IsVisible="{Binding HasJaugeageData}">
+                                    <!-- Table Header -->
+                                    <Grid ColumnDefinitions="1.2*,1.2*,*,*,*,*,*,1.2*" ColumnSpacing="8" Padding="12,10" BackgroundColor="#546E7A">
+                                        <Label Grid.Column="0" Text="RESERVOIR" FontSize="9" FontAttributes="Bold" TextColor="White"/>
+                                        <Label Grid.Column="1" Text="PRODUIT" FontSize="9" FontAttributes="Bold" TextColor="White"/>
+                                        <Label Grid.Column="2" Text="VOL. (n-1)" FontSize="9" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="End"/>
+                                        <Label Grid.Column="3" Text="VOL. (n)" FontSize="9" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="End"/>
+                                        <Label Grid.Column="4" Text="CONSOMME" FontSize="9" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="End"/>
+                                        <Label Grid.Column="5" Text="VENDU" FontSize="9" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="End"/>
+                                        <Label Grid.Column="6" Text="ECART" FontSize="9" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="End"/>
+                                        <Label Grid.Column="7" Text="STATUT" FontSize="9" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                                    </Grid>
+
+                                    <!-- Table Body -->
+                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding JaugeageComparaisons}">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="models:RapportJaugeageReservoirComparisonDto">
+                                                <Grid ColumnDefinitions="1.2*,1.2*,*,*,*,*,*,1.2*" ColumnSpacing="8" Padding="12,10" BackgroundColor="White">
+                                                    <Label Grid.Column="0" Text="{Binding ReservoirNumero}" FontSize="12" TextColor="#1976D2" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                                                    <Label Grid.Column="1" Text="{Binding ProduitNom}" FontSize="11" TextColor="#455A64" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"/>
+                                                    <Label Grid.Column="2" Text="{Binding VolumePrecedent, StringFormat='{0:N0}'}" FontSize="11" TextColor="#666" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                                                    <Label Grid.Column="3" Text="{Binding VolumeActuel, StringFormat='{0:N0}'}" FontSize="11" TextColor="#666" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                                                    <Label Grid.Column="4" Text="{Binding StockConsomme, StringFormat='{0:N0} L'}" FontSize="11" FontAttributes="Bold" TextColor="#37474F" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                                                    <Label Grid.Column="5" Text="{Binding QuantiteVendue, StringFormat='{0:N0} L'}" FontSize="11" TextColor="#1976D2" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                                                    <Label Grid.Column="6" Text="{Binding Ecart, StringFormat='{0:N0} L'}" FontSize="11" FontAttributes="Bold" TextColor="{Binding StatutColor}" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                                                    <Border Grid.Column="7" BackgroundColor="{Binding StatutBackgroundColor}" Padding="8,4" StrokeThickness="0" HorizontalOptions="Center" VerticalOptions="Center">
+                                                        <Border.StrokeShape>
+                                                            <RoundRectangle CornerRadius="4"/>
+                                                        </Border.StrokeShape>
+                                                        <Label Text="{Binding Statut}" FontSize="9" FontAttributes="Bold" TextColor="{Binding StatutColor}" HorizontalTextAlignment="Center"/>
+                                                    </Border>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                        <BindableLayout.EmptyView>
+                                            <Label Text="Aucune donnee de comparaison" TextColor="#78909C" Padding="20" HorizontalTextAlignment="Center"/>
+                                        </BindableLayout.EmptyView>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+
+                                <!-- Legend -->
+                                <HorizontalStackLayout Spacing="20" HorizontalOptions="Center" IsVisible="{Binding HasJaugeageData}">
+                                    <HorizontalStackLayout Spacing="5">
+                                        <BoxView WidthRequest="12" HeightRequest="12" Color="#2E7D32" CornerRadius="2"/>
+                                        <Label Text="Normal" FontSize="10" TextColor="#666"/>
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Spacing="5">
+                                        <BoxView WidthRequest="12" HeightRequest="12" Color="#FF9800" CornerRadius="2"/>
+                                        <Label Text="Remise au cuve" FontSize="10" TextColor="#666"/>
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Spacing="5">
+                                        <BoxView WidthRequest="12" HeightRequest="12" Color="#C62828" CornerRadius="2"/>
+                                        <Label Text="Manquant" FontSize="10" TextColor="#666"/>
+                                    </HorizontalStackLayout>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
 
                         <!-- Stock Carburant (Reservoirs) -->
                         <VerticalStackLayout Spacing="8">
