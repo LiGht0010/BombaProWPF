@@ -9,6 +9,7 @@ public partial class PeriodeEditPopup : Popup
     private readonly PeriodeDto _periode;
     private readonly List<PeriodeDetailsDto> _existingDetails;
     private readonly PeriodeViewModel _viewModel;
+    private bool _isLoading = true;
 
     public PeriodeEditPopup(PeriodeDto periode, List<PeriodeDetailsDto> existingDetails, PeriodeViewModel viewModel)
     {
@@ -18,6 +19,10 @@ public partial class PeriodeEditPopup : Popup
         _periode = periode ?? throw new ArgumentNullException(nameof(periode));
         _existingDetails = existingDetails ?? [];
         _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+        
+        // Clear stale data from shared ViewModel immediately
+        _viewModel.PompeReadings.Clear();
+        _viewModel.ClearCreditTransactions();
         
         BindingContext = _viewModel;
 
@@ -31,6 +36,12 @@ public partial class PeriodeEditPopup : Popup
         TPEEntry.Text = _periode.TPE.ToString("F2");
         EspecesEntry.Text = _periode.Especes.ToString("F2");
 
+        // Disable save button until data is loaded
+        SaveButton.IsEnabled = false;
+        SaveButton.Text = "? Chargement...";
+
+        System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Opening edit for Periode {_periode.PeriodeID} with {_existingDetails.Count} existing details");
+
         // Load all data
         _ = LoadAllDataAsync();
     }
@@ -39,6 +50,10 @@ public partial class PeriodeEditPopup : Popup
     {
         try
         {
+            _isLoading = true;
+            
+            System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Loading data for Periode {_periode.PeriodeID}");
+
             // Load reference data through ViewModel
             await _viewModel.LoadReferenceDataAsync();
 
@@ -54,7 +69,9 @@ public partial class PeriodeEditPopup : Popup
             // Build pump readings list with existing values
             _viewModel.BuildPompeReadingsForEdit(_existingDetails);
             
-            // Bind collection view
+            System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Built {_viewModel.PompeReadings.Count} pump readings from {_existingDetails.Count} existing details");
+            
+            // Bind collection view AFTER data is loaded
             PompesCollectionView.ItemsSource = _viewModel.PompeReadings;
 
             // Load credit transactions: already linked + unassigned within date range
@@ -63,31 +80,47 @@ public partial class PeriodeEditPopup : Popup
                 _periode.DateDebut, 
                 _periode.DateFin);
             
-            // Bind credit transactions collection
+            System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Loaded {_viewModel.PeriodeCreditTransactions.Count} credit transactions");
+            
+            // Bind credit transactions collection AFTER data is loaded
             CreditTransactionsCollectionView.ItemsSource = _viewModel.PeriodeCreditTransactions;
 
             UpdateCreditSummary();
             UpdateSummary();
+            
+            // Enable save button now that data is loaded
+            _isLoading = false;
+            SaveButton.IsEnabled = true;
+            SaveButton.Text = "? Enregistrer les Modifications";
+            
+            System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Data loading complete");
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error loading data: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Error loading data: {ex.Message}");
+            _isLoading = false;
+            SaveButton.IsEnabled = true;
+            SaveButton.Text = "? Enregistrer les Modifications";
             ShowError("Erreur de chargement des données");
         }
     }
 
     private void OnMeterValueChanged(object? sender, TextChangedEventArgs e)
     {
-        UpdateSummary();
+        if (!_isLoading)
+            UpdateSummary();
     }
     
     private void OnPaymentValueChanged(object? sender, TextChangedEventArgs e)
     {
-        UpdateSummary();
+        if (!_isLoading)
+            UpdateSummary();
     }
 
     private void OnPropChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
+        if (_isLoading) return;
+        
         // Simultaneously write what's on the CompteurElecFin to CompteurMecaFin      
         if (sender is Entry entry && entry.BindingContext is PompeReadingModel reading 
             && e.PropertyName == nameof(Entry.Text))
@@ -102,6 +135,8 @@ public partial class PeriodeEditPopup : Popup
 
     private void OnCreditTransactionTapped(object? sender, TappedEventArgs e)
     {
+        if (_isLoading) return;
+        
         if (e.Parameter is CreditTransactionDto ct)
         {
             _viewModel.ToggleCreditTransactionSelection(ct);
@@ -111,17 +146,22 @@ public partial class PeriodeEditPopup : Popup
 
     private void OnCreditCheckBoxChanged(object? sender, CheckedChangedEventArgs e)
     {
-        UpdateCreditSummary();
+        if (!_isLoading)
+            UpdateCreditSummary();
     }
 
     private void OnSelectAllCreditsClicked(object? sender, EventArgs e)
     {
+        if (_isLoading) return;
+        
         _viewModel.SelectAllCreditTransactions();
         UpdateCreditSummary();
     }
 
     private void OnDeselectAllCreditsClicked(object? sender, EventArgs e)
     {
+        if (_isLoading) return;
+        
         _viewModel.DeselectAllCreditTransactions();
         UpdateCreditSummary();
     }
@@ -195,6 +235,13 @@ public partial class PeriodeEditPopup : Popup
 
     private void OnSaveClicked(object? sender, EventArgs e)
     {
+        // Prevent saving while still loading
+        if (_isLoading)
+        {
+            ShowError("Veuillez attendre le chargement des données");
+            return;
+        }
+        
         if (!ValidateForm())
             return;
         
@@ -269,7 +316,7 @@ public partial class PeriodeEditPopup : Popup
             }
         }
 
-        System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Saving periode {_periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs");
+        System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Saving periode {_periode.PeriodeID} with {result.Details.Count} details (from {_existingDetails.Count} existing) and {result.CreditTransactionIds.Count} CTs");
         
         Close(result);
     }

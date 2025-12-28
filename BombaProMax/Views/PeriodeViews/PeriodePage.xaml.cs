@@ -8,11 +8,13 @@ namespace BombaProMax.Views.PeriodeViews;
 public partial class PeriodePage : ContentPage
 {
     private readonly PeriodeViewModel _viewModel;
+    private readonly PeriodeService _periodeService;
 
     public PeriodePage(PeriodeViewModel viewModel)
     {
         InitializeComponent();
         _viewModel = viewModel;
+        _periodeService = new PeriodeService();
         BindingContext = _viewModel;
     }
 
@@ -48,17 +50,25 @@ public partial class PeriodePage : ContentPage
 
         if (periode == null) return;
 
-        // Select the periode first to load its details
-        _viewModel.SelectPeriodeCommand.Execute(periode);
-        await Task.Delay(100);
-
-        var existingDetails = _viewModel.CurrentPeriodeDetails.ToList();
-        var popup = new PeriodeEditPopup(periode, existingDetails, _viewModel);
-        var result = await this.ShowPopupAsync(popup);
-
-        if (result is PeriodeWithDetailsDto periodeWithDetails)
+        try
         {
-            await _viewModel.UpdatePeriodeWithDetailsAsync(periodeWithDetails);
+            // Load the periode details directly from service to ensure we have correct data
+            System.Diagnostics.Debug.WriteLine($"[PeriodePage] Loading details for edit: Periode {periode.PeriodeID}");
+            var existingDetails = await _periodeService.GetDetailsByPeriodeAsync(periode.PeriodeID);
+            System.Diagnostics.Debug.WriteLine($"[PeriodePage] Loaded {existingDetails.Count} details for edit");
+
+            var popup = new PeriodeEditPopup(periode, existingDetails, _viewModel);
+            var result = await this.ShowPopupAsync(popup);
+
+            if (result is PeriodeWithDetailsDto periodeWithDetails)
+            {
+                await _viewModel.UpdatePeriodeWithDetailsAsync(periodeWithDetails);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[PeriodePage] Error loading details for edit: {ex.Message}");
+            await DisplayAlert("Erreur", $"Impossible de charger les détails: {ex.Message}", "OK");
         }
     }
 
@@ -76,8 +86,9 @@ public partial class PeriodePage : ContentPage
         try
         {
             // Load the periode details directly from service instead of relying on ViewModel
-            var periodeService = new PeriodeService();
-            var details = await periodeService.GetDetailsByPeriodeAsync(periode.PeriodeID);
+            System.Diagnostics.Debug.WriteLine($"[PeriodePage] Loading details for view: Periode {periode.PeriodeID}");
+            var details = await _periodeService.GetDetailsByPeriodeAsync(periode.PeriodeID);
+            System.Diagnostics.Debug.WriteLine($"[PeriodePage] Loaded {details.Count} details for view");
             
             // Show the analytics popup with loaded details
             var popup = new PeriodeViewPopup(periode, details);
@@ -86,7 +97,9 @@ public partial class PeriodePage : ContentPage
             // Handle result if edit was requested
             if (result is PeriodeViewResult viewResult && viewResult.Action == "Edit")
             {
-                // Open edit popup
+                System.Diagnostics.Debug.WriteLine($"[PeriodePage] Edit requested from view popup with {viewResult.Details?.Count ?? 0} details");
+                
+                // Open edit popup with the details from view result
                 var editPopup = new PeriodeEditPopup(viewResult.Periode!, viewResult.Details!, _viewModel);
                 var editResult = await this.ShowPopupAsync(editPopup);
 
@@ -98,6 +111,7 @@ public partial class PeriodePage : ContentPage
         }
         catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"[PeriodePage] Error: {ex.Message}");
             await DisplayAlert("Erreur", $"Impossible de charger les détails: {ex.Message}", "OK");
         }
     }
