@@ -57,6 +57,12 @@ public partial class PeriodeEditPopup : Popup
             // Bind collection view
             PompesCollectionView.ItemsSource = _viewModel.PompeReadings;
 
+            // Load credit transactions linked to this periode
+            await _viewModel.LoadCreditTransactionsByPeriodeAsync(_periode.PeriodeID);
+            
+            // Bind credit transactions collection
+            CreditTransactionsCollectionView.ItemsSource = _viewModel.PeriodeCreditTransactions;
+
             UpdateSummary();
         }
         catch (Exception ex)
@@ -90,6 +96,44 @@ public partial class PeriodeEditPopup : Popup
         }
     }
 
+    private void OnCreditTransactionTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Parameter is CreditTransactionDto ct)
+        {
+            _viewModel.ToggleCreditTransactionSelection(ct);
+            UpdateCreditSummary();
+        }
+    }
+
+    private void OnCreditCheckBoxChanged(object? sender, CheckedChangedEventArgs e)
+    {
+        UpdateCreditSummary();
+    }
+
+    private void OnSelectAllCreditsClicked(object? sender, EventArgs e)
+    {
+        _viewModel.SelectAllCreditTransactions();
+        UpdateCreditSummary();
+    }
+
+    private void OnDeselectAllCreditsClicked(object? sender, EventArgs e)
+    {
+        _viewModel.DeselectAllCreditTransactions();
+        UpdateCreditSummary();
+    }
+
+    private void UpdateCreditSummary()
+    {
+        var totalCredite = _viewModel.TotalCredite;
+        var selectedCount = _viewModel.SelectedCreditTransactionsCount;
+        
+        TotalCrediteLabel.Text = $"{totalCredite:N2} MAD";
+        TotalCrediteSummaryLabel.Text = $"{totalCredite:N2}";
+        CreditCountLabel.Text = $"{selectedCount} sélectionné(s)";
+        
+        UpdateSummary();
+    }
+
     private void UpdateSummary()
     {
         decimal totalQuantite = 0;
@@ -101,36 +145,42 @@ public partial class PeriodeEditPopup : Popup
             totalRecette += reading.PrixTotal;
         }
 
-        TotalQuantiteLabel.Text = $"{totalQuantite:N2} L";
-        TotalRecetteLabel.Text = $"{totalRecette:N2} MAD";
+        TotalRecetteLabel.Text = $"{totalRecette:N2}";
         
         // Parse TPE and Especes values
         decimal.TryParse(TPEEntry.Text, out decimal tpe);
         decimal.TryParse(EspecesEntry.Text, out decimal especes);
         
-        TotalTPELabel.Text = $"{tpe:N2} MAD";
-        TotalEspecesLabel.Text = $"{especes:N2} MAD";
+        TotalTPELabel.Text = $"{tpe:N2}";
+        TotalEspecesLabel.Text = $"{especes:N2}";
         
-        // Calculate and display ecart
-        decimal totalPaiements = tpe + especes;
-        decimal ecart = totalRecette - totalPaiements;
-        EcartLabel.Text = $"{ecart:N2} MAD";
+        // Get total credited from selected transactions
+        decimal totalCredite = _viewModel.TotalCredite;
+        TotalCrediteSummaryLabel.Text = $"{totalCredite:N2}";
         
-        // Color-code the ecart
-        if (Math.Abs(ecart) < 0.01m)
+        // Calculate Espèces Attendues = Recette - TPE - Crédité
+        decimal especesAttendues = totalRecette - tpe - totalCredite;
+        EspecesAttenduesLabel.Text = $"{especesAttendues:N2}";
+        
+        // Calculate Manque = Espèces Attendues - Espèces Déclarées
+        decimal manque = especesAttendues - especes;
+        ManqueLabel.Text = $"{manque:N2}";
+        
+        // Color-code the manque
+        if (Math.Abs(manque) < 0.01m)
         {
-            EcartBorder.BackgroundColor = Color.FromArgb("#E8F5E9"); // Green - balanced
-            EcartLabel.TextColor = Color.FromArgb("#2E7D32");
+            ManqueBorder.BackgroundColor = Color.FromArgb("#E8F5E9"); // Green - balanced
+            ManqueLabel.TextColor = Color.FromArgb("#2E7D32");
         }
-        else if (ecart > 0)
+        else if (manque > 0)
         {
-            EcartBorder.BackgroundColor = Color.FromArgb("#FFEBEE"); // Red - missing money
-            EcartLabel.TextColor = Color.FromArgb("#C62828");
+            ManqueBorder.BackgroundColor = Color.FromArgb("#FFEBEE"); // Red - missing money
+            ManqueLabel.TextColor = Color.FromArgb("#C62828");
         }
         else
         {
-            EcartBorder.BackgroundColor = Color.FromArgb("#FFF3E0"); // Orange - excess payment
-            EcartLabel.TextColor = Color.FromArgb("#E65100");
+            ManqueBorder.BackgroundColor = Color.FromArgb("#E3F2FD"); // Blue - excess payment
+            ManqueLabel.TextColor = Color.FromArgb("#1565C0");
         }
     }
 
@@ -148,7 +198,7 @@ public partial class PeriodeEditPopup : Popup
         decimal.TryParse(TPEEntry.Text, out decimal tpe);
         decimal.TryParse(EspecesEntry.Text, out decimal especes);
 
-        // Create the result object containing periode + all details
+        // Create the result object containing periode + all details + credit transaction IDs
         var result = new PeriodeWithDetailsDto
         {
             Periode = new PeriodeDto
@@ -166,7 +216,8 @@ public partial class PeriodeEditPopup : Popup
                 AjoutePar = _periode.AjoutePar,
                 DateCreation = _periode.DateCreation
             },
-            Details = []
+            Details = [],
+            CreditTransactionIds = _viewModel.GetSelectedCreditTransactionIds()
         };
 
         // Set employee
@@ -208,13 +259,13 @@ public partial class PeriodeEditPopup : Popup
                     CompteurMecaniqueFinal = mecaFin,
                     QuantiteElectronique = elecFin - reading.CompteurElecDebut,
                     QuantiteMecanique = mecaFin - reading.CompteurMecaDebut,
-                    QuantiteVendue = Math.Max(0, quantiteVendue), // Ensure non-negative
+                    QuantiteVendue = Math.Max(0, quantiteVendue),
                     PrixTotal = Math.Max(0, quantiteVendue) * reading.PrixCarburant
                 });
             }
         }
 
-        System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Saving periode {_periode.PeriodeID} with {result.Details.Count} details (had {_existingDetails.Count} existing)");
+        System.Diagnostics.Debug.WriteLine($"[PeriodeEditPopup] Saving periode {_periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs");
         
         Close(result);
     }

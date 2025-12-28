@@ -9,8 +9,10 @@ public partial class PeriodeViewPopup : Popup
     private readonly PeriodeAnalyticsModel _analytics;
     private readonly int _periodeId;
     private readonly PeriodeService _periodeService;
+    private readonly CreditTransactionService _creditTransactionService;
     private readonly PeriodeDto _periode;
     private readonly List<PeriodeDetailsDto> _details;
+    private List<CreditTransactionDto> _creditTransactions = [];
 
     public PeriodeViewPopup(PeriodeDto periode, List<PeriodeDetailsDto> details)
     {
@@ -20,12 +22,39 @@ public partial class PeriodeViewPopup : Popup
         _periode = periode;
         _details = details;
         _periodeService = new PeriodeService();
+        _creditTransactionService = new CreditTransactionService();
         _analytics = BuildAnalytics(periode, details);
         
         PopulateUI();
         
-        // Load marge data asynchronously
-        _ = LoadMargeDataAsync();
+        // Load marge and credit data asynchronously
+        _ = LoadAdditionalDataAsync();
+    }
+
+    private async Task LoadAdditionalDataAsync()
+    {
+        await Task.WhenAll(
+            LoadMargeDataAsync(),
+            LoadCreditTransactionsAsync()
+        );
+    }
+
+    private async Task LoadCreditTransactionsAsync()
+    {
+        try
+        {
+            _creditTransactions = await _creditTransactionService.GetByPeriodeIdAsync(_periodeId);
+            
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                BuildCreditTransactionsSection();
+                UpdateFinancialMetrics();
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading credit transactions: {ex.Message}");
+        }
     }
 
     private async Task LoadMargeDataAsync()
@@ -36,7 +65,6 @@ public partial class PeriodeViewPopup : Popup
             
             if (margeData != null && margeData.Consommations.Count > 0)
             {
-                // Convert API data to our model
                 _analytics.ConsommationsStock = margeData.Consommations
                     .Select(c => new StockConsumptionModel
                     {
@@ -51,7 +79,6 @@ public partial class PeriodeViewPopup : Popup
                 
                 _analytics.TotalCoutAchat = margeData.TotalCoutAchat;
                 
-                // Update UI on main thread
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     BuildMargeSection();
@@ -61,6 +88,126 @@ public partial class PeriodeViewPopup : Popup
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error loading marge data: {ex.Message}");
+        }
+    }
+
+    private void BuildCreditTransactionsSection()
+    {
+        CreditTransactionsContainer.Children.Clear();
+        
+        var totalCredite = _creditTransactions.Sum(ct => ct.MontantTotal);
+        CreditCountBadge.Text = $"({_creditTransactions.Count})";
+        CreditTotalLabel.Text = $"{totalCredite:N2} MAD";
+        TotalCrediteLabel.Text = $"{totalCredite:N2} MAD";
+
+        if (_creditTransactions.Count == 0)
+        {
+            var emptyLabel = new Label
+            {
+                Text = "Aucun crédit carburant lié à cette période",
+                FontSize = 12,
+                TextColor = Color.FromArgb("#999"),
+                HorizontalTextAlignment = TextAlignment.Center,
+                Padding = new Thickness(15, 20)
+            };
+            CreditTransactionsContainer.Add(emptyLabel);
+            return;
+        }
+
+        var isAlternate = false;
+        foreach (var ct in _creditTransactions)
+        {
+            var bgColor = isAlternate ? Color.FromArgb("#FAFAFA") : Colors.White;
+            isAlternate = !isAlternate;
+
+            var row = new Grid
+            {
+                ColumnDefinitions = [
+                    new ColumnDefinition { Width = GridLength.Star },
+                    new ColumnDefinition { Width = GridLength.Auto },
+                    new ColumnDefinition { Width = GridLength.Auto }
+                ],
+                ColumnSpacing = 10,
+                Padding = new Thickness(15, 8),
+                BackgroundColor = bgColor
+            };
+
+            var nameStack = new VerticalStackLayout { Spacing = 2 };
+            nameStack.Add(new Label
+            {
+                Text = ct.ClientNom ?? "N/A",
+                FontSize = 12,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Color.FromArgb("#333"),
+                LineBreakMode = LineBreakMode.TailTruncation
+            });
+            nameStack.Add(new Label
+            {
+                Text = $"{ct.ProduitNom} • {ct.DateCredit:dd/MM HH:mm}",
+                FontSize = 10,
+                TextColor = Color.FromArgb("#999"),
+                LineBreakMode = LineBreakMode.TailTruncation
+            });
+
+            var qtyLabel = new Label
+            {
+                Text = $"{ct.Quantite}L",
+                FontSize = 11,
+                TextColor = Color.FromArgb("#666"),
+                VerticalOptions = LayoutOptions.Center
+            };
+
+            var amountLabel = new Label
+            {
+                Text = $"{ct.MontantTotal:N2}",
+                FontSize = 12,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Color.FromArgb("#E65100"),
+                VerticalOptions = LayoutOptions.Center
+            };
+
+            row.Add(nameStack, 0, 0);
+            row.Add(qtyLabel, 1, 0);
+            row.Add(amountLabel, 2, 0);
+
+            CreditTransactionsContainer.Add(row);
+        }
+    }
+
+    private void UpdateFinancialMetrics()
+    {
+        var totalCredite = _creditTransactions.Sum(ct => ct.MontantTotal);
+        var recette = _analytics.Recette;
+        var tpe = _analytics.TPE;
+        var especes = _analytics.Especes;
+        
+        // Espèces Attendues = Recette - TPE - Crédité
+        var especesAttendues = recette - tpe - totalCredite;
+        EspecesAttenduesLabel.Text = $"{especesAttendues:N2} MAD";
+        
+        // Manque = Espèces Attendues - Espèces Déclarées
+        var manque = especesAttendues - especes;
+        
+        // Update ecart display with new formula
+        if (Math.Abs(manque) < 0.01m)
+        {
+            EcartLabel.Text = "0.00 MAD";
+            EcartLabel.TextColor = Color.FromArgb("#2E7D32");
+            EcartPercentLabel.Text = "(équilibré)";
+        }
+        else if (manque > 0)
+        {
+            EcartLabel.Text = $"{manque:N2} MAD";
+            EcartLabel.TextColor = Color.FromArgb("#C62828");
+            var percent = recette > 0 ? Math.Round((manque / recette) * 100, 1) : 0;
+            EcartPercentLabel.Text = $"({percent}%)";
+        }
+        else
+        {
+            EcartLabel.Text = $"{manque:N2} MAD";
+            EcartLabel.TextColor = Color.FromArgb("#1976D2");
+            var percent = recette > 0 ? Math.Round((Math.Abs(manque) / recette) * 100, 1) : 0;
+            EcartPercentLabel.Text = $"(excédent {percent}%)";
         }
     }
 
@@ -79,7 +226,6 @@ public partial class PeriodeViewPopup : Popup
             TotalEcartCompteurs = details.Sum(d => d.DifferenceQuantite)
         };
 
-        // Group by Product
         analytics.TotauxParProduit = details
             .Where(d => d.ProduitID.HasValue)
             .GroupBy(d => new { d.ProduitID, d.ProduitNom })
@@ -94,7 +240,6 @@ public partial class PeriodeViewPopup : Popup
             .OrderByDescending(p => p.Montant)
             .ToList();
 
-        // Group by Reservoir
         analytics.TotauxParReservoir = details
             .Where(d => d.ReservoirID.HasValue)
             .GroupBy(d => new { d.ReservoirID, d.ReservoirNumero, d.ProduitNom })
@@ -110,7 +255,6 @@ public partial class PeriodeViewPopup : Popup
             .OrderBy(r => r.ReservoirNumero)
             .ToList();
 
-        // Details by Pump
         analytics.DetailsParPompe = details
             .Select(d => new PompeTotalModel
             {
@@ -136,49 +280,47 @@ public partial class PeriodeViewPopup : Popup
 
     private void PopulateUI()
     {
-        // Header info
         DateRangeLabel.Text = $"{_analytics.DateDebut:dd/MM/yyyy HH:mm} - {_analytics.DateFin:HH:mm}";
         EmployeLabel.Text = $"Employe: {_analytics.EmployeNom ?? "Non assigne"}";
         
         var duree = _analytics.DateFin - _analytics.DateDebut;
         DureeLabel.Text = $"Duree: {(int)duree.TotalHours}h {duree.Minutes:D2}min";
 
-        // Quantite totale
         TotalQuantiteLabel.Text = $"{_analytics.TotalQuantite:N2} L";
 
-        // Financial Analytics
         TPELabel.Text = $"{_analytics.TPE:N2} MAD";
         EspecesLabel.Text = $"{_analytics.Especes:N2} MAD";
         RecetteLabel.Text = $"{_analytics.Recette:N2} MAD";
         
-        // Ecart styling
-        var ecart = _analytics.Ecart;
-        if (Math.Abs(ecart) < 0.01m)
+        // Initial ecart (will be updated when credits load)
+        TotalCrediteLabel.Text = "0.00 MAD";
+        EspecesAttenduesLabel.Text = $"{_analytics.Recette - _analytics.TPE:N2} MAD";
+        
+        var initialManque = (_analytics.Recette - _analytics.TPE) - _analytics.Especes;
+        if (Math.Abs(initialManque) < 0.01m)
         {
             EcartLabel.Text = "0.00 MAD";
             EcartLabel.TextColor = Color.FromArgb("#2E7D32");
-            EcartPercentLabel.Text = "(equilibre)";
+            EcartPercentLabel.Text = "(équilibré)";
         }
-        else if (ecart > 0)
+        else if (initialManque > 0)
         {
-            EcartLabel.Text = $"+{ecart:N2} MAD";
-            EcartLabel.TextColor = Color.FromArgb("#1976D2");
-            EcartPercentLabel.Text = $"(+{_analytics.EcartPercent}%)";
+            EcartLabel.Text = $"{initialManque:N2} MAD";
+            EcartLabel.TextColor = Color.FromArgb("#C62828");
+            EcartPercentLabel.Text = "";
         }
         else
         {
-            EcartLabel.Text = $"{ecart:N2} MAD";
-            EcartLabel.TextColor = Color.FromArgb("#C62828");
-            EcartPercentLabel.Text = $"({_analytics.EcartPercent}%)";
+            EcartLabel.Text = $"{initialManque:N2} MAD";
+            EcartLabel.TextColor = Color.FromArgb("#1976D2");
+            EcartPercentLabel.Text = "(excédent)";
         }
 
-        // Build sections
         BuildReservoirRows();
         BuildProductRows();
         BuildMargeSection();
         BuildPumpTableRows();
 
-        // Footer totals
         TotalQteFooter.Text = $"{_analytics.TotalQuantite:N2} L";
         TotalMontantFooter.Text = $"{_analytics.Recette:N2} MAD";
     }
@@ -297,7 +439,6 @@ public partial class PeriodeViewPopup : Popup
 
         if (_analytics.ConsommationsStock.Count > 0)
         {
-            // Group consumptions by product for cleaner display
             var groupedByProduit = _analytics.ConsommationsStock
                 .GroupBy(c => c.ProduitNom ?? "N/A")
                 .ToList();
@@ -455,7 +596,6 @@ public partial class PeriodeViewPopup : Popup
 
     private async void OnModifierClicked(object? sender, EventArgs e)
     {
-        // Close popup and return action for editing
         await CloseAsync(new PeriodeViewResult 
         { 
             Action = "Edit", 
@@ -471,16 +611,12 @@ public partial class PeriodeViewPopup : Popup
             PdfButton.IsEnabled = false;
             PdfButton.Text = "? Génération...";
 
-            // Build PDF data from analytics
             var pdfData = BuildPdfData();
-
-            // Generate PDF
             var pdfService = new PdfGeneratorService();
             var filePath = await pdfService.GeneratePeriodeReportAsync(pdfData);
 
             PdfButton.Text = "? Généré!";
 
-            // Show success and offer to open
             var openFile = await Application.Current!.MainPage!.DisplayAlert(
                 "PDF Généré",
                 $"Le rapport a été enregistré:\n{filePath}",
@@ -489,7 +625,6 @@ public partial class PeriodeViewPopup : Popup
 
             if (openFile)
             {
-                // Open the folder containing the PDF
                 var folderPath = Path.GetDirectoryName(filePath);
                 if (!string.IsNullOrEmpty(folderPath))
                 {
@@ -530,7 +665,6 @@ public partial class PeriodeViewPopup : Popup
             TotalCoutAchat = _analytics.TotalCoutAchat
         };
 
-        // Convert reservoir data
         pdfData.TotauxParReservoir = _analytics.TotauxParReservoir
             .Select(r => new ReservoirPdfData
             {
@@ -540,7 +674,6 @@ public partial class PeriodeViewPopup : Popup
                 Montant = r.Montant
             }).ToList();
 
-        // Convert product data
         pdfData.TotauxParProduit = _analytics.TotauxParProduit
             .Select(p => new ProduitPdfData
             {
@@ -549,7 +682,6 @@ public partial class PeriodeViewPopup : Popup
                 Montant = p.Montant
             }).ToList();
 
-        // Convert marge data (grouped by product)
         pdfData.MargesParProduit = _analytics.ConsommationsStock
             .GroupBy(c => c.ProduitNom ?? "N/A")
             .Select(g => new MargePdfData
@@ -560,7 +692,6 @@ public partial class PeriodeViewPopup : Popup
                 Vente = g.Sum(c => c.Vente)
             }).ToList();
 
-        // Convert pump data
         pdfData.DetailsParPompe = _analytics.DetailsParPompe
             .Select(p => new PompePdfData
             {
@@ -579,9 +710,6 @@ public partial class PeriodeViewPopup : Popup
     }
 }
 
-/// <summary>
-/// Result returned when popup closes with an action
-/// </summary>
 public class PeriodeViewResult
 {
     public string Action { get; set; } = "";
