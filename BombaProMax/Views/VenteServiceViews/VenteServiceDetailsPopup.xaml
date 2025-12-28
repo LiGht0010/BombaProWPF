@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.VenteServiceViews.VenteServiceDetailsPopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="White" Padding="0" WidthRequest="650" HeightRequest="680" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="16"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- HEADER -->
+            <Border Grid.Row="0" BackgroundColor="#00796B" Padding="25,18" StrokeThickness="0">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Details de la Vente" FontSize="22" FontAttributes="Bold" TextColor="White"/>
+                        <HorizontalStackLayout Spacing="20">
+                            <Label x:Name="NumeroLabel" Text="VS-2025-001" FontSize="13" TextColor="#B2DFDB"/>
+                            <Label x:Name="DateLabel" Text="01/01/2025" FontSize="13" TextColor="#B2DFDB"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="X" BackgroundColor="#00695C" TextColor="White" FontSize="16" WidthRequest="36" HeightRequest="36" CornerRadius="18" Clicked="OnCloseClicked"/>
+                </Grid>
+            </Border>
+            
+            <!-- CONTENT -->
+            <ScrollView Grid.Row="1" Padding="25,20">
+                <VerticalStackLayout Spacing="16">
+                    
+                    <!-- Service Info Card -->
+                    <Border BackgroundColor="#F8F8F8" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="SERVICE" FontSize="12" FontAttributes="Bold" TextColor="#00796B"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1" Margin="0,4"/>
+                            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="15" RowSpacing="8">
+                                <Label Grid.Row="0" Grid.Column="0" Text="Service:" FontSize="13" TextColor="#666"/>
+                                <Label Grid.Row="0" Grid.Column="1" x:Name="ServiceDescriptionLabel" Text="-" FontSize="13" FontAttributes="Bold" TextColor="#333"/>
+                                <Label Grid.Row="1" Grid.Column="0" Text="Categorie:" FontSize="13" TextColor="#666"/>
+                                <Label Grid.Row="1" Grid.Column="1" x:Name="ServiceCategorieLabel" Text="-" FontSize="13" TextColor="#333"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Financial Summary Card -->
+                    <Border BackgroundColor="#E8F5E9" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="RESUME FINANCIER" FontSize="12" FontAttributes="Bold" TextColor="#2E7D32"/>
+                            <BoxView Color="#C8E6C9" HeightRequest="1" Margin="0,4"/>
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                    <Label Text="Quantite" FontSize="11" TextColor="#666"/>
+                                    <Label x:Name="QuantiteLabel" Text="0" FontSize="20" FontAttributes="Bold" TextColor="#7B1FA2"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                    <Label Text="Prix Unitaire" FontSize="11" TextColor="#666"/>
+                                    <Label x:Name="PrixUnitaireLabel" Text="0.00 DH" FontSize="20" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" Spacing="4">
+                                    <Label Text="Montant Total" FontSize="11" TextColor="#666"/>
+                                    <Label x:Name="MontantTotalLabel" Text="0.00 DH" FontSize="20" FontAttributes="Bold" TextColor="#2E7D32"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Payment and Client Info -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                        <!-- Payment Card -->
+                        <Border Grid.Column="0" BackgroundColor="#FFF3E0" Padding="16" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="PAIEMENT" FontSize="11" FontAttributes="Bold" TextColor="#E65100"/>
+                                <BoxView Color="#FFE0B2" HeightRequest="1" Margin="0,2"/>
+                                <Label Text="Moyen:" FontSize="12" TextColor="#666"/>
+                                <Label x:Name="MoyenPaiementLabel" Text="-" FontSize="14" FontAttributes="Bold" TextColor="#333"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        
+                        <!-- Client Card -->
+                        <Border Grid.Column="1" BackgroundColor="#E3F2FD" Padding="16" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="CLIENT" FontSize="11" FontAttributes="Bold" TextColor="#1976D2"/>
+                                <BoxView Color="#BBDEFB" HeightRequest="1" Margin="0,2"/>
+                                <Label Text="Nom:" FontSize="12" TextColor="#666"/>
+                                <Label x:Name="ClientNomLabel" Text="Comptant" FontSize="14" FontAttributes="Bold" TextColor="#333"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                    
+                    <!-- Status Card -->
+                    <Border BackgroundColor="#F3E5F5" Padding="16" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="15">
+                            <VerticalStackLayout>
+                                <Label Text="STATUT" FontSize="11" FontAttributes="Bold" TextColor="#7B1FA2"/>
+                                <Label x:Name="StatutLabel" Text="Confirmee" FontSize="14" FontAttributes="Bold" TextColor="#333"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout>
+                                <Label Text="EMPLOYE" FontSize="11" FontAttributes="Bold" TextColor="#7B1FA2"/>
+                                <Label x:Name="EmployeLabel" Text="-" FontSize="14" TextColor="#333"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+                    
+                    <!-- Notes Card -->
+                    <Border x:Name="NotesCard" BackgroundColor="#F8F8F8" Padding="16" StrokeThickness="0" IsVisible="False">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="NOTES" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1" Margin="0,2"/>
+                            <Label x:Name="NotesLabel" Text="" FontSize="13" TextColor="#333" LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Audit Info Card -->
+                    <Border BackgroundColor="#ECEFF1" Padding="16" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="INFORMATIONS DE SUIVI" FontSize="11" FontAttributes="Bold" TextColor="#546E7A"/>
+                            <BoxView Color="#CFD8DC" HeightRequest="1" Margin="0,4"/>
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="20" RowSpacing="10">
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                    <Label Text="Cree le" FontSize="10" TextColor="#78909C"/>
+                                    <Label x:Name="DateCreationLabel" Text="-" FontSize="12" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                    <Label Text="Cree par" FontSize="10" TextColor="#78909C"/>
+                                    <Label x:Name="CreeParLabel" Text="-" FontSize="12" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                                    <Label Text="Modifie le" FontSize="10" TextColor="#78909C"/>
+                                    <Label x:Name="DateModificationLabel" Text="-" FontSize="12" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2">
+                                    <Label Text="Modifie par" FontSize="10" TextColor="#78909C"/>
+                                    <Label x:Name="ModifieParLabel" Text="-" FontSize="12" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                </VerticalStackLayout>
+            </ScrollView>
+            
+            <!-- FOOTER -->
+            <Border Grid.Row="2" BackgroundColor="#F5F5F5" Padding="20,15" StrokeThickness="0">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <BoxView Grid.Column="0" Color="Transparent"/>
+                    <Button Grid.Column="1" x:Name="EditButton" Text="Modifier" BackgroundColor="#1976D2" TextColor="White" Padding="24,12" CornerRadius="8" FontAttributes="Bold" Clicked="OnEditClicked"/>
+                    <Button Grid.Column="2" Text="Fermer" BackgroundColor="#78909C" TextColor="White" Padding="24,12" CornerRadius="8" Clicked="OnCloseClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

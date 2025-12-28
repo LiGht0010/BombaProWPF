@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BombaProMax.Styles.ServiceStyles">
+
+    <!-- ================================================================== -->
+    <!-- LIGHT NEUMORPHIC DESIGN SYSTEM - SERVICE MODULE                    -->
+    <!-- ================================================================== -->
+    <!-- Services: Lavage, Vidange, Graissage, etc.                         -->
+    <!-- A soft, elegant design with subtle shadows creating depth          -->
+    <!-- ================================================================== -->
+
+    <!-- ================================================================== -->
+    <!-- COLOR PALETTE - Light Neumorphic Theme                             -->
+    <!-- ================================================================== -->
+    
+    <!-- Surface Colors -->
+    <Color x:Key="ServiceNeuSurface">#e8e8e8</Color>
+    <Color x:Key="ServiceNeuSurfaceAlt">#ebf1f3</Color>
+    <Color x:Key="ServiceNeuCardBg">#E8ECF1</Color>
+    
+    <!-- Shadow Colors for Neumorphic Effect -->
+    <Color x:Key="ServiceNeuShadowDark">#C5CAD1</Color>
+    <Color x:Key="ServiceNeuShadowLight">#FFFFFF</Color>
+    <Color x:Key="ServiceNeuShadowDarkSoft">#D1D5DB</Color>
+    
+    <!-- Accent Colors - Service themed (teal/cyan) -->
+    <Color x:Key="ServiceNeuPrimary">#0097A7</Color>
+    <Color x:Key="ServiceNeuPrimaryLight">#26C6DA</Color>
+    <Color x:Key="ServiceNeuPrimaryDark">#00838F</Color>
+    <Color x:Key="ServiceNeuDanger">#E16C6C</Color>
+    <Color x:Key="ServiceNeuDangerLight">#F08080</Color>
+    <Color x:Key="ServiceNeuSecondary">#78909C</Color>
+    <Color x:Key="ServiceNeuSuccess">#5EAA8D</Color>
+    <Color x:Key="ServiceNeuWarning">#E8A84C</Color>
+    
+    <!-- Text Colors -->
+    <Color x:Key="ServiceNeuTextPrimary">#2E2E2E</Color>
+    <Color x:Key="ServiceNeuTextSecondary">#5A6068</Color>
+    <Color x:Key="ServiceNeuTextMuted">#8B939E</Color>
+    <Color x:Key="ServiceNeuTextLight">#A8B0BA</Color>
+    
+    <!-- Border Colors -->
+    <Color x:Key="ServiceNeuBorder">#D8DDE5</Color>
+    <Color x:Key="ServiceNeuBorderLight">#E5E9EF</Color>
+    <Color x:Key="ServiceMBG">#f5f5f5</Color>
+
+    <!-- SHARED COLUMN DEFINITIONS -->
+    <x:String x:Key="ServiceTableColumns">1.2*,2.5*,1.5*,1.2*,2*</x:String>
+
+    <!-- ================================================================== -->
+    <!-- PAGE BASE STYLES                                                   -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServicePageStyle" TargetType="ContentPage">
+        <Setter Property="Title" Value="Services"/>
+        <Setter Property="Shell.NavBarIsVisible" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceMBG}"/>
+    </Style>
+
+    <Style x:Key="ServicePageScrollView" TargetType="ScrollView">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="ServicePageMainStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="24"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- HEADER SECTION                                                     -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServicePageHeaderStack" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="ServicePageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="ServicePageSubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextMuted}"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- STAT CARDS - Neumorphic Raised Style                               -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceStatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuSurface}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDark}"
+                        Offset="6,6"
+                        Radius="12"
+                        Opacity="0.25"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceStatNumber" TargetType="Label">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="ServiceStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextMuted}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.3"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- CATEGORY FILTER CHIPS                                              -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceCategoryChipContainer" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <Style x:Key="ServiceCategoryChip" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuCardBg}"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="20"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDarkSoft}"
+                        Offset="2,2"
+                        Radius="4"
+                        Opacity="0.15"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceCategoryChipSelected" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuPrimary}"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="20"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuPrimary}"
+                        Offset="0,3"
+                        Radius="8"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceCategoryChipLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextSecondary}"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ServiceCategoryChipLabelSelected" TargetType="Label">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- SEARCH CONTAINER - Neumorphic Inset Style                          -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceSearchContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuSurface}"/>
+        <Setter Property="Padding" Value="16,14"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDarkSoft}"
+                        Offset="2,2"
+                        Radius="6"
+                        Opacity="0.15"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceSearchEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource ServiceNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- ADD BUTTON - Neumorphic Raised Button                              -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceAddButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuPrimary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="46"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuPrimary}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceAddCategoryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuSecondary}"/>
+        <Setter Property="TextColor" Value="#FFFFFF"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="Padding" Value="16,0"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuSecondary}"
+                        Offset="0,3"
+                        Radius="8"
+                        Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TABLE CARD - Main Neumorphic Container                             -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceTableCard" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuSurface}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDark}"
+                        Offset="8,8"
+                        Radius="20"
+                        Opacity="0.28"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceTableContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="0"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TABLE HEADER                                                       -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceTableHeaderGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource ServiceTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuPrimary}"/>
+    </Style>
+
+    <Style x:Key="ServiceTableHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuShadowLight}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.8"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ServiceTableHeaderLabelLeft" TargetType="Label" BasedOn="{StaticResource ServiceTableHeaderLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- COLLECTION VIEW                                                    -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceTableCollectionView" TargetType="CollectionView">
+        <Setter Property="SelectionMode" Value="None"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- TABLE ROW                                                          -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceTableRowGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="{StaticResource ServiceTableColumns}"/>
+        <Setter Property="ColumnSpacing" Value="12"/>
+        <Setter Property="Padding" Value="28,18"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="76"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- CELL STYLES                                                        -->
+    <!-- ================================================================== -->
+
+    <!-- Service Number Cell - Neumorphic Pill Style -->
+    <Style x:Key="ServiceNumberCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuCardBg}"/>
+        <Setter Property="HeightRequest" Value="32"/>
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDarkSoft}"
+                        Offset="1,1"
+                        Radius="3"
+                        Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceNumberLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Description/Category Cell -->
+    <Style x:Key="ServiceDescriptionCell" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="4"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ServiceDescriptionLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="2"/>
+    </Style>
+
+    <Style x:Key="ServiceCategoryLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+        <Setter Property="MaxLines" Value="1"/>
+    </Style>
+
+    <!-- Price Cell - Neumorphic Badge -->
+    <Style x:Key="ServicePriceCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E8F5ED"/>
+        <Setter Property="Padding" Value="12,6"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDarkSoft}"
+                        Offset="1,1"
+                        Radius="2"
+                        Opacity="0.1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServicePriceLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuSuccess}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Category Badge Cell -->
+    <Style x:Key="ServiceCategoryBadgeCell" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E0F7FA"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDarkSoft}"
+                        Offset="1,1"
+                        Radius="2"
+                        Opacity="0.1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceCategoryBadgeLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuPrimary}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Actions Cell -->
+    <Style x:Key="ServiceActionsCell" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- ACTION BUTTONS                                                     -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceModifierButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuPrimary}"
+                        Offset="0,3"
+                        Radius="6"
+                        Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceSupprimerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuSurface}"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuDanger}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumWidthRequest" Value="80"/>
+        <Setter Property="BorderWidth" Value="1.5"/>
+        <Setter Property="BorderColor" Value="{StaticResource ServiceNeuDanger}"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDark}"
+                        Offset="2,2"
+                        Radius="4"
+                        Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Row Divider -->
+    <Style x:Key="ServiceRowDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource ServiceNeuBorderLight}"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Margin" Value="28,0"/>
+        <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- EMPTY VIEW                                                         -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServiceEmptyView" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16"/>
+        <Setter Property="Padding" Value="60,80"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ServiceEmptyIcon" TargetType="Label">
+        <Setter Property="FontSize" Value="64"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextLight}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ServiceEmptyTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextPrimary}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ServiceEmptySubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="320"/>
+    </Style>
+
+    <Style x:Key="ServiceEmptyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="28,14"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuPrimary}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ================================================================== -->
+    <!-- POPUP STYLES                                                       -->
+    <!-- ================================================================== -->
+
+    <Style x:Key="ServicePopupContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuSurface}"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="WidthRequest" Value="550"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="24"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#000000"
+                        Offset="0,12"
+                        Radius="40"
+                        Opacity="0.18"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServicePopupTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="ServicePopupCloseButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextMuted}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="CornerRadius" Value="18"/>
+    </Style>
+
+    <Style x:Key="ServicePopupSectionCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuCardBg}"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="14"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDarkSoft}"
+                        Offset="2,2"
+                        Radius="6"
+                        Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServicePopupFieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextMuted}"/>
+        <Setter Property="TextTransform" Value="Uppercase"/>
+        <Setter Property="CharacterSpacing" Value="0.5"/>
+    </Style>
+
+    <Style x:Key="ServicePopupInputContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuSurface}"/>
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource ServiceNeuBorderLight}"/>
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServicePopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource ServiceNeuTextLight}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="ServicePopupPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextPrimary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TitleColor" Value="{StaticResource ServiceNeuTextMuted}"/>
+    </Style>
+
+    <Style x:Key="ServicePopupCancelButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuCardBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource ServiceNeuTextSecondary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuShadowDark}"
+                        Offset="3,3"
+                        Radius="6"
+                        Opacity="0.15"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServicePopupCreateButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ServiceNeuSuccess}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="24,12"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ServiceNeuSuccess}"
+                        Offset="0,4"
+                        Radius="10"
+                        Opacity="0.35"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServicePopupDivider" TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="Color" Value="{StaticResource ServiceNeuBorderLight}"/>
+    </Style>
+
+</ResourceDictionary>

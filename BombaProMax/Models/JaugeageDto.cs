@@ -14,6 +14,10 @@ public class JaugeageDto
 
     // Display field for related entity
     public string? TemoinNom { get; set; }
+
+    // Computed fields for list display
+    public int DetailsCount { get; set; }
+    public decimal TotalVolume { get; set; }
 }
 
 /// <summary>
@@ -36,4 +40,8 @@ public class JaugeageWithDetailsDto
 
     // Details for each reservoir measured
     public List<JaugeageDetailDto> Details { get; set; } = new();
+
+    // Computed properties
+    public int DetailsCount => Details?.Count ?? 0;
+    public decimal TotalVolume => Details?.Sum(d => d.VolumeCalcule) ?? 0;
 }

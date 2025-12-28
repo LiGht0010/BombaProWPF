@@ -12,7 +12,7 @@
         <Grid RowDefinitions="Auto,*">
             
             <!-- HEADER -->
-            <Border Grid.Row="0" BackgroundColor="#1976D2" Padding="25,18" StrokeThickness="0">
+            <Border Grid.Row="0" BackgroundColor="#2e93b9" Padding="25,18" StrokeThickness="0">
                 <Grid ColumnDefinitions="*,Auto,Auto,Auto">
                     <VerticalStackLayout Grid.Column="0" Spacing="4">
                         <Label x:Name="HeaderLabel" Text="Details de la Periode" FontSize="22" FontAttributes="Bold" TextColor="White"/>
@@ -27,7 +27,7 @@
                     <Button Grid.Column="1" 
                             x:Name="ModifierButton"
                             Text="Modifier" 
-                            BackgroundColor="#FF9800" 
+                            BackgroundColor="#0a4955" 
                             TextColor="White" 
                             FontSize="13" 
                             FontAttributes="Bold"
@@ -40,7 +40,7 @@
                     <Button Grid.Column="2" 
                             x:Name="PdfButton"
                             Text="📄 Enregistrer PDF" 
-                            BackgroundColor="#2E7D32" 
+                            BackgroundColor="#0b3e5f" 
                             TextColor="White" 
                             FontSize="13"
                             FontAttributes="Bold"

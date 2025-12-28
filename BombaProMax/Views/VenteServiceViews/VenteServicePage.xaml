@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             x:Class="BombaProMax.Views.VenteServiceViews.VenteServicePage"
+             x:DataType="viewmodels:VenteServiceViewModel"
+             Title="Ventes Services"
+             BackgroundColor="#f5f5f5">
+
+    <Grid RowDefinitions="*">
+        <ScrollView Grid.Row="0" Padding="28">
+            <VerticalStackLayout Spacing="24">
+
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Ventes de Services" FontSize="28" FontAttributes="Bold" TextColor="#2E2E2E"/>
+                        <Label Text="Gerez les ventes de services" FontSize="14" TextColor="#8B939E"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="Rafraichir" BackgroundColor="#78909C" TextColor="White" 
+                            FontSize="14" Padding="12,10" CornerRadius="10" 
+                            Command="{Binding InitializeCommand}" VerticalOptions="Center"/>
+                </Grid>
+
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16" 
+                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Border Grid.Column="0" BackgroundColor="#e8e8e8" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="2"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding TotalVentes}" FontSize="24" FontAttributes="Bold" 
+                                   TextColor="#00796B" HorizontalTextAlignment="Center"/>
+                            <Label Text="VENTES" FontSize="11" TextColor="#8B939E" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" BackgroundColor="#e8e8e8" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="2"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding TotalQuantite}" FontSize="24" FontAttributes="Bold" 
+                                   TextColor="#7B1FA2" HorizontalTextAlignment="Center"/>
+                            <Label Text="SERVICES" FontSize="11" TextColor="#8B939E" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="2" BackgroundColor="#e8e8e8" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="2"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding TotalMontant, StringFormat='{0:N2}'}" FontSize="24" 
+                                   FontAttributes="Bold" TextColor="#2E7D32" HorizontalTextAlignment="Center"/>
+                            <Label Text="DH TOTAL" FontSize="11" TextColor="#8B939E" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="3" BackgroundColor="#e8e8e8" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="2"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding MoyenneMontant, StringFormat='{0:N2}'}" FontSize="24" 
+                                   FontAttributes="Bold" TextColor="#1976D2" HorizontalTextAlignment="Center"/>
+                            <Label Text="DH MOY." FontSize="11" TextColor="#8B939E" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" 
+                                   HeightRequest="50" WidthRequest="50" Color="#00796B"/>
+
+                <Border BackgroundColor="#e8e8e8" StrokeThickness="0" 
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="2"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="0">
+                        <Border BackgroundColor="#e8e8e8" Padding="20" StrokeThickness="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,Auto,Auto" ColumnSpacing="12">
+                                <Label Text="Du:" FontSize="13" TextColor="#5A6068" VerticalTextAlignment="Center"/>
+                                <DatePicker Grid.Column="1" Date="{Binding FilterStartDate}" FontSize="13"/>
+                                <Label Grid.Column="2" Text="Au:" FontSize="13" TextColor="#5A6068" VerticalTextAlignment="Center"/>
+                                <DatePicker Grid.Column="3" Date="{Binding FilterEndDate}" FontSize="13"/>
+                                <Button Grid.Column="4" Text="Filtrer" Command="{Binding LoadVentesByDateRangeCommand}" 
+                                        BackgroundColor="#1976D2" TextColor="White" FontSize="13" Padding="16,10" CornerRadius="10"/>
+                                <Button Grid.Column="5" Text="Reset" Command="{Binding LoadVentesCommand}" 
+                                        BackgroundColor="#78909C" TextColor="White" FontSize="14" Padding="12,10" CornerRadius="10"/>
+                                <Button Grid.Column="6" Text="+ Nouvelle Vente" BackgroundColor="#2E7D32" TextColor="White" 
+                                        FontAttributes="Bold" FontSize="14" HeightRequest="46" Padding="24,0" CornerRadius="12" 
+                                        Clicked="OnAddVenteClicked"/>
+                            </Grid>
+                        </Border>
+
+                        <Grid ColumnDefinitions="1.1*,1.6*,0.6*,0.9*,1*,1.1*,0.9*,1.3*" ColumnSpacing="8" Padding="20,16" BackgroundColor="#00796B">
+                            <Label Grid.Column="0" Text="N VENTE" FontSize="10" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="1" Text="SERVICE" FontSize="10" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="2" Text="QTE" FontSize="10" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="3" Text="PRIX UNIT." FontSize="10" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="4" Text="TOTAL" FontSize="10" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="5" Text="CLIENT" FontSize="10" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="6" Text="DATE" FontSize="10" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="7" Text="ACTIONS" FontSize="10" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                        </Grid>
+
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ventes}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:VenteServiceDto">
+                                    <VerticalStackLayout BackgroundColor="Transparent">
+                                        <Grid ColumnDefinitions="1.1*,1.6*,0.6*,0.9*,1*,1.1*,0.9*,1.3*" ColumnSpacing="8" Padding="20,14" MinimumHeightRequest="70">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnRowTapped" CommandParameter="{Binding .}"/>
+                                            </Grid.GestureRecognizers>
+                                            <Label Grid.Column="0" Text="{Binding NumeroVente}" TextColor="#1976D2" FontSize="12" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                                <Label Text="{Binding ServiceDescription}" TextColor="#2E2E2E" FontSize="12" FontAttributes="Bold" LineBreakMode="TailTruncation"/>
+                                                <Label Text="{Binding ServiceCategorieNom, TargetNullValue='Non categorise'}" TextColor="#8B939E" FontSize="10"/>
+                                            </VerticalStackLayout>
+                                            <Label Grid.Column="2" Text="{Binding Quantite}" TextColor="#7B1FA2" FontSize="13" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="3" Text="{Binding PrixUnitaire, StringFormat='{0:N2}'}" TextColor="#5A6068" FontSize="12" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="4" Text="{Binding MontantTotal, StringFormat='{0:N2} DH'}" TextColor="#00796B" FontSize="13" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="5" Text="{Binding ClientNom, TargetNullValue='Comptant'}" TextColor="#5A6068" FontSize="11" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"/>
+                                            <Label Grid.Column="6" Text="{Binding DateDisplay}" TextColor="#8B939E" FontSize="11" VerticalTextAlignment="Center"/>
+                                            <HorizontalStackLayout Grid.Column="7" Spacing="4" VerticalOptions="Center" HorizontalOptions="Center">
+                                                <Button Text="Modifier" BackgroundColor="#1976D2" TextColor="White" FontSize="10" Padding="8,6" CornerRadius="6" HeightRequest="30" Clicked="OnEditVenteClicked" CommandParameter="{Binding .}"/>
+                                                <Button Text="Suppr." BackgroundColor="#E16C6C" TextColor="White" FontSize="10" Padding="8,6" CornerRadius="6" HeightRequest="30" Clicked="OnDeleteVenteClicked" CommandParameter="{Binding .}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        <BoxView HeightRequest="1" Color="#E5E9EF" HorizontalOptions="Fill" Margin="20,0" Opacity="0.7"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                            <BindableLayout.EmptyView>
+                                <VerticalStackLayout Spacing="16" Padding="60,80" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Label Text="Aucune vente de service trouvee" FontSize="18" TextColor="#2E2E2E" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                                    <Label Text="Commencez par ajouter une nouvelle vente de service" FontSize="14" TextColor="#8B939E" HorizontalTextAlignment="Center"/>
+                                    <Button Text="+ Nouvelle Vente" BackgroundColor="#2E7D32" TextColor="White" FontAttributes="Bold" FontSize="14" Padding="28,14" CornerRadius="12" Margin="0,12,0,0" Clicked="OnAddVenteClicked"/>
+                                </VerticalStackLayout>
+                            </BindableLayout.EmptyView>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

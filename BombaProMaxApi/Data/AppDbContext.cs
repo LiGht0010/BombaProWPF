@@ -38,7 +38,9 @@ public class AppDbContext : DbContext
     public DbSet<Reservoir> Reservoirs { get; set; } = default!;
     public DbSet<ReservoirCalibration> ReservoirCalibrations { get; set; } = default!;
     public DbSet<Service> Services { get; set; } = default!;
+    public DbSet<ServiceCategorie> ServiceCategories { get; set; } = default!;
     public DbSet<VenteLubrifiantsEtArticles> VenteLubrifiantsEtArticles { get; set; } = default!;
+    public DbSet<VenteService> VenteServices { get; set; } = default!;
 
     // Bon de Livraison entities
     public DbSet<BonLivraison> BonsLivraison { get; set; } = default!;

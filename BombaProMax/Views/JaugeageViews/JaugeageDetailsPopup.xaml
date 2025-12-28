@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.JaugeageViews.JaugeageDetailsPopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="White" Padding="0" WidthRequest="700" HeightRequest="650" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="16"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- HEADER -->
+            <Border Grid.Row="0" BackgroundColor="#00796B" Padding="25,18" StrokeThickness="0">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Details du Jaugeage" FontSize="22" FontAttributes="Bold" TextColor="White"/>
+                        <HorizontalStackLayout Spacing="20">
+                            <Label x:Name="NumeroLabel" Text="JAU-2025-001" FontSize="13" TextColor="#B2DFDB"/>
+                            <Label x:Name="DateLabel" Text="01/01/2025" FontSize="13" TextColor="#B2DFDB"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" 
+                            Text="X" 
+                            BackgroundColor="#00695C" 
+                            TextColor="White" 
+                            FontSize="16" 
+                            WidthRequest="36" 
+                            HeightRequest="36" 
+                            CornerRadius="18" 
+                            Clicked="OnCloseClicked"/>
+                </Grid>
+            </Border>
+            
+            <!-- CONTENT -->
+            <ScrollView Grid.Row="1" Padding="25,20">
+                <VerticalStackLayout Spacing="16">
+                    
+                    <!-- Summary Card -->
+                    <Border BackgroundColor="#E8F5E9" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="RESUME" FontSize="12" FontAttributes="Bold" TextColor="#2E7D32"/>
+                            <BoxView Color="#C8E6C9" HeightRequest="1" Margin="0,4"/>
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                    <Label Text="Reservoirs Mesures" FontSize="11" TextColor="#666"/>
+                                    <Label x:Name="ReservoirsCountLabel" Text="0" FontSize="24" FontAttributes="Bold" TextColor="#1976D2"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                    <Label Text="Volume Total" FontSize="11" TextColor="#666"/>
+                                    <Label x:Name="TotalVolumeLabel" Text="0 L" FontSize="24" FontAttributes="Bold" TextColor="#2E7D32"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" Spacing="4">
+                                    <Label Text="Temoin" FontSize="11" TextColor="#666"/>
+                                    <Label x:Name="TemoinLabel" Text="-" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Details Table Header -->
+                    <Border BackgroundColor="#00796B" Padding="12,10" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8,8,0,0"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="1.2*,1.2*,1*,1*,0.8*" ColumnSpacing="8">
+                            <Label Grid.Column="0" Text="RESERVOIR" FontSize="11" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="1" Text="PRODUIT" FontSize="11" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="2" Text="HAUTEUR" FontSize="11" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="3" Text="VOLUME" FontSize="11" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="4" Text="TEMP." FontSize="11" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Details Rows -->
+                    <Border BackgroundColor="#FAFAFA" Padding="0" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="0,0,8,8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout x:Name="DetailsContainer" Spacing="0">
+                            <!-- Populated dynamically -->
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Observations Card -->
+                    <Border x:Name="ObservationsCard" BackgroundColor="#FFF3E0" Padding="16" StrokeThickness="0" IsVisible="False">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="OBSERVATIONS" FontSize="11" FontAttributes="Bold" TextColor="#E65100"/>
+                            <BoxView Color="#FFE0B2" HeightRequest="1" Margin="0,2"/>
+                            <Label x:Name="ObservationsLabel" Text="" FontSize="13" TextColor="#333" LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Audit Info Card -->
+                    <Border BackgroundColor="#ECEFF1" Padding="16" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="INFORMATIONS DE SUIVI" FontSize="11" FontAttributes="Bold" TextColor="#546E7A"/>
+                            <BoxView Color="#CFD8DC" HeightRequest="1" Margin="0,4"/>
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="20" RowSpacing="10">
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                    <Label Text="Cree le" FontSize="10" TextColor="#78909C"/>
+                                    <Label x:Name="DateCreationLabel" Text="-" FontSize="12" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                    <Label Text="Cree par" FontSize="10" TextColor="#78909C"/>
+                                    <Label x:Name="CreeParLabel" Text="-" FontSize="12" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                                    <Label Text="Modifie le" FontSize="10" TextColor="#78909C"/>
+                                    <Label x:Name="DateModificationLabel" Text="-" FontSize="12" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2">
+                                    <Label Text="Modifie par" FontSize="10" TextColor="#78909C"/>
+                                    <Label x:Name="ModifieParLabel" Text="-" FontSize="12" FontAttributes="Bold" TextColor="#333"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                </VerticalStackLayout>
+            </ScrollView>
+            
+            <!-- FOOTER -->
+            <Border Grid.Row="2" BackgroundColor="#F5F5F5" Padding="20,15" StrokeThickness="0">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <BoxView Grid.Column="0" Color="Transparent"/>
+                    <Button Grid.Column="1" 
+                            x:Name="EditButton" 
+                            Text="Modifier" 
+                            BackgroundColor="#1976D2" 
+                            TextColor="White" 
+                            Padding="24,12" 
+                            CornerRadius="8" 
+                            FontAttributes="Bold" 
+                            Clicked="OnEditClicked"/>
+                    <Button Grid.Column="2" 
+                            Text="Fermer" 
+                            BackgroundColor="#78909C" 
+                            TextColor="White" 
+                            Padding="24,12" 
+                            CornerRadius="8" 
+                            Clicked="OnCloseClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

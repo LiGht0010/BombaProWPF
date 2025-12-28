@@ -44,7 +44,9 @@ public static class ApiConfig
     public static string ReglementCredits => $"{BaseUrl}/ReglementCredits";
     public static string Periodes => $"{BaseUrl}/Periodes";
     public static string Services => $"{BaseUrl}/Services";
+    public static string ServiceCategories => $"{BaseUrl}/ServiceCategories";
     public static string VenteLubrifiantsEtArticles => $"{BaseUrl}/VenteLubrifiantsEtArticles";
+    public static string VenteServices => $"{BaseUrl}/VenteServices";
     public static string Dashboard => $"{BaseUrl}/Dashboard";
     public static string Rapports => $"{BaseUrl}/Rapports";
     public static string Home => $"{BaseUrl}";

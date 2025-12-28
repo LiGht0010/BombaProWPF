@@ -27,7 +27,7 @@
         <Setter Property="Padding" Value="40,35"/>
         <Setter Property="Shadow">
             <Setter.Value>
-                <Shadow Brush="#336860"
+                <Shadow Brush="#2e93b9"
                         Offset="10,10"
                         Radius="50"
                         Opacity="1"/>

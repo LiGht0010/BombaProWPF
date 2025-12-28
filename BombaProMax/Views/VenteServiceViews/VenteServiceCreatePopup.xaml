@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.VenteServiceViews.VenteServiceCreatePopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="White" Padding="0" WidthRequest="600" HeightRequest="650">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        <Grid RowDefinitions="Auto,*,Auto">
+            <Border Grid.Row="0" BackgroundColor="#00796B" Padding="20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label x:Name="HeaderLabel" Text="Nouvelle Vente de Service" FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                        <Label Text="Enregistrer une nouvelle vente de service" FontSize="12" TextColor="#B2DFDB"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="X" BackgroundColor="Transparent" TextColor="White" FontSize="20" Clicked="OnCancelClicked"/>
+                </Grid>
+            </Border>
+
+            <ScrollView Grid.Row="1" Padding="20">
+                <VerticalStackLayout Spacing="15">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                        <Border BackgroundColor="#F8F8F8" Padding="12" Stroke="#E0E0E0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Date *" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                                <DatePicker x:Name="DatePicker" FontSize="14"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" BackgroundColor="#F8F8F8" Padding="12" Stroke="#E0E0E0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="N Vente (auto)" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                                <Entry x:Name="NumeroEntry" Placeholder="Genere automatiquement" IsReadOnly="True" BackgroundColor="#EEEEEE" FontSize="14"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <Border BackgroundColor="#E0F2F1" Padding="12" Stroke="#00796B">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Service *" FontSize="12" FontAttributes="Bold" TextColor="#00695C"/>
+                            <Picker x:Name="ServicePicker" Title="Selectionner un service..." FontSize="14" SelectedIndexChanged="OnServiceSelected"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                        <Border BackgroundColor="#F3E5F5" Padding="12" Stroke="#7B1FA2">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Quantite *" FontSize="12" FontAttributes="Bold" TextColor="#7B1FA2"/>
+                                <Entry x:Name="QuantiteEntry" Placeholder="1" Keyboard="Numeric" Text="1" FontSize="16" FontAttributes="Bold" TextColor="#7B1FA2" HorizontalTextAlignment="Center" TextChanged="OnQuantityOrPriceChanged"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" BackgroundColor="#E8F5E9" Padding="12" Stroke="#4CAF50">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Prix Unitaire (DH) *" FontSize="12" FontAttributes="Bold" TextColor="#2E7D32"/>
+                                <Entry x:Name="PrixEntry" Placeholder="0.00" Keyboard="Numeric" FontSize="16" FontAttributes="Bold" TextColor="#2E7D32" HorizontalTextAlignment="Center" TextChanged="OnQuantityOrPriceChanged"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Moyen de Paiement -->
+                    <Border BackgroundColor="#FFF3E0" Padding="12" Stroke="#FF9800">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Moyen de Paiement" FontSize="12" FontAttributes="Bold" TextColor="#E65100"/>
+                            <Picker x:Name="MoyenPaiementPicker" Title="Selectionner un moyen de paiement..." FontSize="14"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="#F8F8F8" Padding="12" Stroke="#E0E0E0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Notes (optionnel)" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                            <Editor x:Name="NotesEditor" Placeholder="Remarques ou details..." HeightRequest="60" FontSize="14"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="#E8F5E9" Padding="15" Stroke="#4CAF50" x:Name="SummaryCard">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                            <VerticalStackLayout HorizontalOptions="Center">
+                                <Label Text="Montant Total" FontSize="11" TextColor="#666"/>
+                                <Label x:Name="TotalLabel" Text="0.00 DH" FontAttributes="Bold" TextColor="#2E7D32" FontSize="20"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <Border Grid.Row="2" BackgroundColor="#F5F5F5" Padding="15">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="15">
+                    <Label x:Name="ErrorLabel" TextColor="#F44336" FontSize="12" IsVisible="False" VerticalOptions="Center"/>
+                    <Button Grid.Column="1" Text="Annuler" BackgroundColor="#9E9E9E" TextColor="White" Padding="20,10" CornerRadius="8" Clicked="OnCancelClicked"/>
+                    <Button x:Name="SaveButton" Grid.Column="2" Text="Enregistrer" BackgroundColor="#4CAF50" TextColor="White" Padding="20,10" CornerRadius="8" FontAttributes="Bold" Clicked="OnSaveClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

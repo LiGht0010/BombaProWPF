@@ -9,7 +9,10 @@ namespace BombaProMaxApi.Mappig
         public ServiceProfile()
         {
             CreateMap<Service, ServiceDto>()
-                .ReverseMap();
+                .ForMember(dest => dest.ServiceCategorieNom, 
+                    opt => opt.MapFrom(src => src.ServiceCategorie != null ? src.ServiceCategorie.Nom : null))
+                .ReverseMap()
+                .ForMember(dest => dest.ServiceCategorie, opt => opt.Ignore());
         }
     }
 }

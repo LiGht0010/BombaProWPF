@@ -18,6 +18,8 @@ using BombaProMax.Views.User;
 using BombaProMax.Views.VenteLubEtArticles;
 using BombaProMax.Views.FactureViews;
 using BombaProMax.Views.RapportViews;
+using BombaProMax.Views.ServiceViews;
+using BombaProMax.Views.VenteServiceViews;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
@@ -151,6 +153,15 @@ namespace BombaProMax
             //RapportViews
             builder.Services.AddSingleton<RapportPage>();
 
+            //ServiceViews
+            builder.Services.AddSingleton<ServicePage>();
+            builder.Services.AddTransient<ServiceCreatePopup>();
+            builder.Services.AddTransient<ServiceCategorieCreatePopup>();
+
+            //VenteServiceViews
+            builder.Services.AddSingleton<VenteServicePage>();
+            builder.Services.AddTransient<VenteServiceCreatePopup>();
+
             //ViewModels---------------------------------------------------
             builder.Services.AddSingleton<ViewModels.LoginPageViewModel>();
             builder.Services.AddSingleton<ViewModels.DashboardViewModel>();
@@ -172,6 +183,8 @@ namespace BombaProMax
             builder.Services.AddSingleton<ViewModels.FactureEtBLViewModel>();
             builder.Services.AddSingleton<ViewModels.UserViewModel>();
             builder.Services.AddSingleton<ViewModels.RapportViewModel>();
+            builder.Services.AddSingleton<ViewModels.ServiceViewModel>();
+            builder.Services.AddSingleton<ViewModels.VenteServiceViewModel>();
 
             //Services-----------------------------------------------------
             builder.Services.AddSingleton<Services.IDialogService, Services.DialogService>();
@@ -201,6 +214,9 @@ namespace BombaProMax
             builder.Services.AddSingleton<Services.JaugeageDetailService>();
             builder.Services.AddSingleton<Services.DashboardService>();
             builder.Services.AddSingleton<Services.RapportService>();
+            builder.Services.AddSingleton<Services.ServiceService>();
+            builder.Services.AddSingleton<Services.ServiceCategorieService>();
+            builder.Services.AddSingleton<Services.VenteServiceService>();
 
             //Interfaces--------------------------------------------------------------------------------------------------------------------------------------
             builder.Services.AddSingleton<Services.ILoginRepository, Services.LoginServices>();

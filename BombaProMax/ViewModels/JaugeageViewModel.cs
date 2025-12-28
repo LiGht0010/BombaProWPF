@@ -105,6 +105,27 @@ public partial class JaugeageViewModel : ObservableObject
 
     #endregion
 
+    #region Filter Properties
+
+    private DateTime _filterStartDate = DateTime.Today.AddMonths(-1);
+    public DateTime FilterStartDate
+    {
+        get => _filterStartDate;
+        set => SetProperty(ref _filterStartDate, value);
+    }
+
+    private DateTime _filterEndDate = DateTime.Today;
+    public DateTime FilterEndDate
+    {
+        get => _filterEndDate;
+        set => SetProperty(ref _filterEndDate, value);
+    }
+
+    // Maximum date for DatePickers (today)
+    public DateTime FilterMaxDate => DateTime.Today;
+
+    #endregion
+
     #region Collections
 
     public ObservableCollection<ReservoirMeasurementItem> ReservoirMeasurements { get; } = [];
@@ -120,6 +141,10 @@ public partial class JaugeageViewModel : ObservableObject
     public decimal TotalVolume => ReservoirMeasurements.Sum(r => r.VolumeCalcule);
     public bool CanSave => MeasuredCount > 0 && SelectedTemoin != null && !IsSaving;
     public bool AllMeasured => MeasuredCount == TotalReservoirs && TotalReservoirs > 0;
+    
+    // Stats for the list view
+    public int TotalJaugeages => JaugeageHistory.Count;
+    public decimal TotalVolumeJaugeages => JaugeageHistory.Sum(j => j.TotalVolume);
 
     #endregion
 
@@ -141,6 +166,7 @@ public partial class JaugeageViewModel : ObservableObject
     public IAsyncRelayCommand LoadEmployesCommand { get; }
     public IAsyncRelayCommand SaveJaugeageCommand { get; }
     public IAsyncRelayCommand LoadHistoryCommand { get; }
+    public IAsyncRelayCommand LoadJaugeagesByDateRangeCommand { get; }
     public IAsyncRelayCommand NewJaugeageCommand { get; }
     public IAsyncRelayCommand JourneeSuivantCommand { get; }
     public IAsyncRelayCommand JourneePasserCommand { get; }
@@ -164,6 +190,7 @@ public partial class JaugeageViewModel : ObservableObject
         LoadEmployesCommand = new AsyncRelayCommand(LoadEmployesAsync);
         SaveJaugeageCommand = new AsyncRelayCommand(SaveJaugeageAsync);
         LoadHistoryCommand = new AsyncRelayCommand(LoadHistoryAsync);
+        LoadJaugeagesByDateRangeCommand = new AsyncRelayCommand(LoadJaugeagesByDateRangeAsync);
         NewJaugeageCommand = new AsyncRelayCommand(NewJaugeageAsync);
         JourneeSuivantCommand = new AsyncRelayCommand(JourneeSuivantAsync);
         JourneePasserCommand = new AsyncRelayCommand(JourneePasserAsync);
@@ -370,7 +397,7 @@ public partial class JaugeageViewModel : ObservableObject
             if (result != null)
             {
                 CurrentJaugeage = result;
-                SuccessMessage = $"Jaugeage {result.NumeroJaugeage} enregistre avec succes!";
+                SuccessMessage = $"Jaugeage {result.NumeroJaugeage} enregistre avec succès!";
                 Debug.WriteLine($"[JaugeageVM] Saved jaugeage {result.NumeroJaugeage} with {result.Details.Count} details");
                 
                 // Reload history
@@ -378,7 +405,7 @@ public partial class JaugeageViewModel : ObservableObject
             }
             else
             {
-                ErrorMessage = "Echec de l'enregistrement - verifiez les logs";
+                ErrorMessage = "Échec de l'enregistrement - vérifiez les logs";
                 Debug.WriteLine("[JaugeageVM] SaveJaugeageAsync returned null");
             }
         }
@@ -398,13 +425,17 @@ public partial class JaugeageViewModel : ObservableObject
 
     #region History Operations
 
+    /// <summary>
+    /// Loads ALL jaugeages from the database (no date filter)
+    /// </summary>
     public async Task LoadHistoryAsync()
     {
         try
         {
-            // Query for today's jaugeages (UTC date)
-            var todayUtc = DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Utc);
-            var history = await _jaugeageService.GetJaugeagesByDateAsync(todayUtc);
+            IsLoading = true;
+            
+            // Load ALL jaugeages
+            var history = await _jaugeageService.GetAllJaugeagesAsync();
             
             JaugeageHistory.Clear();
             foreach (var jaugeage in history.OrderByDescending(j => j.DateCreation))
@@ -412,11 +443,69 @@ public partial class JaugeageViewModel : ObservableObject
                 JaugeageHistory.Add(jaugeage);
             }
 
-            Debug.WriteLine($"[JaugeageVM] Loaded {JaugeageHistory.Count} jaugeages for today");
+            NotifyJaugeageStatsChanged();
+            Debug.WriteLine($"[JaugeageVM] Loaded {JaugeageHistory.Count} jaugeages (all)");
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"[JaugeageVM] Error loading history: {ex.Message}");
+            ErrorMessage = $"Erreur de chargement: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Loads jaugeages filtered by date range
+    /// </summary>
+    public async Task LoadJaugeagesByDateRangeAsync()
+    {
+        try
+        {
+            IsLoading = true;
+            
+            // Load all jaugeages from API
+            var allJaugeages = await _jaugeageService.GetAllJaugeagesAsync();
+            
+            // Convert filter dates to UTC for comparison
+            // DateJaugeage from API is stored in UTC
+            var startDateUtc = DateTime.SpecifyKind(FilterStartDate.Date, DateTimeKind.Utc);
+            var endDateUtc = DateTime.SpecifyKind(FilterEndDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc); // End of day
+            
+            Debug.WriteLine($"[JaugeageVM] Filtering: {startDateUtc:O} to {endDateUtc:O}");
+            
+            var filtered = allJaugeages
+                .Where(j => 
+                {
+                    // Ensure we compare dates properly regardless of Kind
+                    var jaugeageDateUtc = j.DateJaugeage.Kind == DateTimeKind.Utc 
+                        ? j.DateJaugeage 
+                        : DateTime.SpecifyKind(j.DateJaugeage, DateTimeKind.Utc);
+                    
+                    return jaugeageDateUtc >= startDateUtc && jaugeageDateUtc <= endDateUtc;
+                })
+                .OrderByDescending(j => j.DateCreation)
+                .ToList();
+            
+            JaugeageHistory.Clear();
+            foreach (var jaugeage in filtered)
+            {
+                JaugeageHistory.Add(jaugeage);
+            }
+
+            NotifyJaugeageStatsChanged();
+            Debug.WriteLine($"[JaugeageVM] Loaded {JaugeageHistory.Count} jaugeages (filtered: {FilterStartDate:d} - {FilterEndDate:d})");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[JaugeageVM] Error loading filtered jaugeages: {ex.Message}");
+            ErrorMessage = $"Erreur de chargement: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 
@@ -452,6 +541,12 @@ public partial class JaugeageViewModel : ObservableObject
         OnPropertyChanged(nameof(TotalVolume));
         OnPropertyChanged(nameof(CanSave));
         OnPropertyChanged(nameof(AllMeasured));
+    }
+
+    public void NotifyJaugeageStatsChanged()
+    {
+        OnPropertyChanged(nameof(TotalJaugeages));
+        OnPropertyChanged(nameof(TotalVolumeJaugeages));
     }
 
     public void ClearMessages()

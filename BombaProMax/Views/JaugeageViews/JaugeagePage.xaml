@@ -5,8 +5,7 @@
              xmlns:models="clr-namespace:BombaProMax.Models"
              x:Class="BombaProMax.Views.JaugeageViews.JaugeagePage"
              x:DataType="viewmodels:JaugeageViewModel"
-             Style="{StaticResource CalibPageStyle}"
-             Title="Jaugeage des Reservoirs">
+             Style="{StaticResource CalibPageStyle}">
 
     <Grid RowDefinitions="*,Auto">
         
@@ -14,237 +13,289 @@
             <VerticalStackLayout Style="{StaticResource CalibPageMainStack}">
 
                 <!-- JOURNEE PROGRESS BAR -->
-                <Border BackgroundColor="#E3F2FD" 
+                <Border BackgroundColor="#E0F2F1" 
                         Padding="15" 
                         Margin="0,0,0,10"
                         IsVisible="{Binding IsJourneeActive}" 
                         StrokeShape="RoundRectangle 10" 
-                        Stroke="#1976D2">
+                        Stroke="#00796B">
                     <Grid ColumnDefinitions="Auto,*,Auto">
-                        <Label Text="[M]" FontSize="24" VerticalOptions="Center"/>
+                        <Label Text="[M]" FontSize="24" VerticalOptions="Center" TextColor="#00796B"/>
                         <VerticalStackLayout Grid.Column="1" Margin="10,0">
                             <Label Text="{Binding JourneeStepInfo}" 
                                    FontAttributes="Bold" 
-                                   TextColor="#1976D2" 
+                                   TextColor="#00796B" 
                                    FontSize="14"/>
                             <Label Text="Mesurez les niveaux de carburant" 
-                                   TextColor="#666" 
+                                   TextColor="#5A6068" 
                                    FontSize="11"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
 
                 <!-- HEADER -->
-                <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,8">
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
                     <VerticalStackLayout Style="{StaticResource CalibPageHeaderStack}">
                         <Label Text="Jaugeage des Reservoirs" 
                                Style="{StaticResource CalibPageTitleLabel}"/>
-                        <Label Text="Mesurez la hauteur de carburant pour calculer le volume" 
+                        <Label Text="Gerez les jaugeages et les calibrations des reservoirs" 
                                Style="{StaticResource CalibPageSubtitleLabel}"/>
                     </VerticalStackLayout>
                     
                     <Button Grid.Column="1"
-                            Text="Nouveau"
-                            Style="{StaticResource CalibRefreshButton}"
-                            Command="{Binding NewJaugeageCommand}"
-                            Margin="0,0,10,0"
-                            VerticalOptions="Center"/>
-                    
-                    <Button Grid.Column="2"
-                            Text="Enregistrer"
-                            Style="{StaticResource CalibImportButton}"
-                            Command="{Binding SaveJaugeageCommand}"
-                            IsEnabled="{Binding CanSave}"
+                            Text="Rafraichir"
+                            Style="{StaticResource CalibResetButton}"
+                            Command="{Binding InitializeCommand}"
                             VerticalOptions="Center"/>
                 </Grid>
-
-                <!-- JAUGEAGE FORM CARD -->
-                <Border Style="{StaticResource CalibSelectorCard}" Margin="0,0,0,16">
-                    <VerticalStackLayout Spacing="16">
-                        <Label Text="Informations du Jaugeage" 
-                               FontSize="14" 
-                               FontAttributes="Bold" 
-                               TextColor="#2E2E2E"/>
-                        
-                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16" RowDefinitions="Auto,Auto" RowSpacing="16">
-                            
-                            <!-- Date du Jaugeage -->
-                            <VerticalStackLayout Spacing="4">
-                                <Label Text="DATE DU JAUGEAGE" FontSize="10" FontAttributes="Bold" TextColor="#8B939E"/>
-                                <Border BackgroundColor="#F5F5F5" Padding="12,8" StrokeShape="RoundRectangle 8" Stroke="#E5E9EF">
-                                    <DatePicker Date="{Binding DateJaugeage}" Format="dd/MM/yyyy" FontSize="14" TextColor="#2E2E2E"/>
-                                </Border>
-                            </VerticalStackLayout>
-
-                            <!-- Numero du Jaugeage -->
-                            <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                <Label Text="NUMERO (auto si vide)" FontSize="10" FontAttributes="Bold" TextColor="#8B939E"/>
-                                <Border BackgroundColor="#F5F5F5" Padding="12,8" StrokeShape="RoundRectangle 8" Stroke="#E5E9EF">
-                                    <Entry Text="{Binding NumeroJaugeage}" Placeholder="JAU-YYYYMMDD-XXX" FontSize="14" TextColor="#2E2E2E" BackgroundColor="Transparent"/>
-                                </Border>
-                            </VerticalStackLayout>
-
-                            <!-- Temoin (Employe) Picker -->
-                            <VerticalStackLayout Grid.Column="2" Spacing="4">
-                                <Label Text="TEMOIN (employe)" FontSize="10" FontAttributes="Bold" TextColor="#8B939E"/>
-                                <Border BackgroundColor="#F5F5F5" Padding="4,0" StrokeShape="RoundRectangle 8" Stroke="#E5E9EF">
-                                    <Picker ItemsSource="{Binding Employes}"
-                                            SelectedItem="{Binding SelectedTemoin}"
-                                            ItemDisplayBinding="{Binding Nom}"
-                                            Title="Selectionnez..."
-                                            FontSize="14"
-                                            TextColor="#2E2E2E"
-                                            TitleColor="#8B939E"/>
-                                </Border>
-                            </VerticalStackLayout>
-
-                            <!-- Observations -->
-                            <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="3" Spacing="4">
-                                <Label Text="OBSERVATIONS" FontSize="10" FontAttributes="Bold" TextColor="#8B939E"/>
-                                <Border BackgroundColor="#F5F5F5" Padding="12,8" StrokeShape="RoundRectangle 8" Stroke="#E5E9EF">
-                                    <Entry Text="{Binding Observations}" Placeholder="Notes..." FontSize="13" TextColor="#5A6068" BackgroundColor="Transparent"/>
-                                </Border>
-                            </VerticalStackLayout>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
 
                 <!-- STATS CARDS -->
-                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16" IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                <Grid ColumnDefinitions="*,*,*,*" 
+                      ColumnSpacing="16"
+                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    
                     <Border Grid.Column="0" Style="{StaticResource CalibStatCard}">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="[R]" Style="{StaticResource CalibStatIcon}"/>
-                            <Label Text="{Binding TotalReservoirs}" Style="{StaticResource CalibStatNumber}" TextColor="#1976D2"/>
-                            <Label Text="Reservoirs" Style="{StaticResource CalibStatLabel}"/>
+                            <Label Text="{Binding TotalJaugeages}" 
+                                   Style="{StaticResource CalibStatNumber}"
+                                   TextColor="#00796B"/>
+                            <Label Text="Jaugeages" 
+                                   Style="{StaticResource CalibStatLabel}"/>
                         </VerticalStackLayout>
                     </Border>
+
                     <Border Grid.Column="1" Style="{StaticResource CalibStatCard}">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="[OK]" Style="{StaticResource CalibStatIcon}"/>
-                            <Label Text="{Binding MeasuredCount}" Style="{StaticResource CalibStatNumber}" TextColor="#2E7D32"/>
-                            <Label Text="Mesures" Style="{StaticResource CalibStatLabel}"/>
+                            <Label Text="{Binding TotalReservoirs}" 
+                                   Style="{StaticResource CalibStatNumber}"
+                                   TextColor="#2E7D32"/>
+                            <Label Text="Reservoirs" 
+                                   Style="{StaticResource CalibStatLabel}"/>
                         </VerticalStackLayout>
                     </Border>
+
                     <Border Grid.Column="2" Style="{StaticResource CalibStatCard}">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="[V]" Style="{StaticResource CalibStatIcon}"/>
-                            <Label Text="{Binding TotalVolume, StringFormat='{0:N0}'}" Style="{StaticResource CalibStatNumber}" TextColor="#00796B"/>
-                            <Label Text="Litres Total" Style="{StaticResource CalibStatLabel}"/>
+                            <Label Text="{Binding TotalVolumeJaugeages, StringFormat='{0:N0}'}" 
+                                   Style="{StaticResource CalibStatNumber}"
+                                   TextColor="#1976D2"/>
+                            <Label Text="Litres Total" 
+                                   Style="{StaticResource CalibStatLabel}"/>
                         </VerticalStackLayout>
                     </Border>
+
                     <Border Grid.Column="3" Style="{StaticResource CalibStatCard}">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="[D]" Style="{StaticResource CalibStatIcon}"/>
-                            <Label Text="{Binding DateJaugeage, StringFormat='{0:dd/MM}'}" Style="{StaticResource CalibStatNumber}" TextColor="#7B1FA2"/>
-                            <Label Text="Date" Style="{StaticResource CalibStatLabel}"/>
+                            <Label Text="{Binding MeasuredCount}" 
+                                   Style="{StaticResource CalibStatNumber}"
+                                   TextColor="#7B1FA2"/>
+                            <Label Text="Mesures" 
+                                   Style="{StaticResource CalibStatLabel}"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
 
-                <!-- Success Message -->
-                <Border BackgroundColor="#E8F5E9" Padding="16" StrokeShape="RoundRectangle 10" Stroke="#81C784"
-                        IsVisible="{Binding SuccessMessage, Converter={StaticResource IsNotNullOrEmptyConverter}}">
-                    <HorizontalStackLayout Spacing="10">
-                        <Label Text="OK" FontSize="16" TextColor="#2E7D32" FontAttributes="Bold"/>
-                        <Label Text="{Binding SuccessMessage}" TextColor="#2E7D32" FontSize="13" VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                </Border>
-
-                <!-- Error Message -->
-                <Border BackgroundColor="#FFEBEE" Padding="16" StrokeShape="RoundRectangle 10" Stroke="#E57373"
-                        IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullOrEmptyConverter}}">
-                    <HorizontalStackLayout Spacing="10">
-                        <Label Text="!" FontSize="16" TextColor="#C62828" FontAttributes="Bold"/>
-                        <Label Text="{Binding ErrorMessage}" TextColor="#C62828" FontSize="13" VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                </Border>
-
                 <!-- Loading -->
-                <ActivityIndicator Style="{StaticResource CalibLoadingIndicator}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"/>
+                <ActivityIndicator Style="{StaticResource CalibLoadingIndicator}"
+                                   IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"/>
 
-                <!-- MEASUREMENT CARDS -->
-                <VerticalStackLayout Spacing="16" BindableLayout.ItemsSource="{Binding ReservoirMeasurements}"
-                                     IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="viewmodels:ReservoirMeasurementItem">
-                            <Border Style="{StaticResource CalibSelectorCard}">
-                                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
-                                    <!-- ROW 1: Reservoir Info -->
-                                    <Grid ColumnDefinitions="Auto,*,Auto">
-                                        <Border WidthRequest="8" HeightRequest="50" BackgroundColor="{Binding StatusColor}" StrokeThickness="0" StrokeShape="RoundRectangle 4"/>
-                                        <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" Spacing="2">
-                                            <HorizontalStackLayout Spacing="8">
-                                                <Label Text="{Binding ReservoirNumero}" FontSize="16" FontAttributes="Bold" TextColor="#2E2E2E"/>
-                                                <Border BackgroundColor="#E3F2FD" Padding="6,2" StrokeThickness="0" StrokeShape="RoundRectangle 4" IsVisible="{Binding HasCalibration}">
-                                                    <Label Text="Calibre" FontSize="10" TextColor="#1976D2"/>
-                                                </Border>
-                                            </HorizontalStackLayout>
-                                            <Label Text="{Binding ProduitNom}" FontSize="12" TextColor="#5A6068"/>
-                                            <Label FontSize="11" TextColor="#8B939E">
-                                                <Label.Text>
-                                                    <MultiBinding StringFormat="Capacite: {0:N0} L | Max: {1:N1} cm">
-                                                        <Binding Path="Capacite"/>
-                                                        <Binding Path="HauteurMax"/>
-                                                    </MultiBinding>
-                                                </Label.Text>
-                                            </Label>
-                                        </VerticalStackLayout>
-                                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="End" Spacing="2">
-                                            <Label Text="{Binding VolumeCalcule, StringFormat='{0:N0} L'}" FontSize="22" FontAttributes="Bold" TextColor="#00796B" HorizontalTextAlignment="End"/>
-                                            <Label Text="{Binding CalculationStatus}" FontSize="10" TextColor="#8B939E" HorizontalTextAlignment="End"/>
-                                            <ActivityIndicator IsRunning="{Binding IsCalculating}" IsVisible="{Binding IsCalculating}" HeightRequest="16" WidthRequest="16" Color="#00796B" HorizontalOptions="End"/>
-                                        </VerticalStackLayout>
-                                    </Grid>
-                                    <!-- ROW 2: Input Fields -->
-                                    <Grid Grid.Row="1" ColumnDefinitions="2*,*,2*" ColumnSpacing="12">
-                                        <VerticalStackLayout Spacing="4">
-                                            <Label Text="HAUTEUR (cm)" FontSize="10" FontAttributes="Bold" TextColor="#8B939E"/>
-                                            <Border BackgroundColor="#F5F5F5" Padding="12,8" StrokeShape="RoundRectangle 8" Stroke="#E5E9EF">
-                                                <Entry Text="{Binding HauteurMesuree}" Placeholder="Ex: 201" Keyboard="Numeric" FontSize="16" FontAttributes="Bold" TextColor="#2E2E2E" BackgroundColor="Transparent"/>
-                                            </Border>
-                                        </VerticalStackLayout>
-                                        <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                            <Label Text="TEMP (C)" FontSize="10" FontAttributes="Bold" TextColor="#8B939E"/>
-                                            <Border BackgroundColor="#F5F5F5" Padding="12,8" StrokeShape="RoundRectangle 8" Stroke="#E5E9EF">
-                                                <Entry Text="{Binding Temperature}" Placeholder="--" Keyboard="Numeric" FontSize="14" TextColor="#5A6068" BackgroundColor="Transparent"/>
-                                            </Border>
-                                        </VerticalStackLayout>
-                                        <VerticalStackLayout Grid.Column="2" Spacing="4">
-                                            <Label Text="NOTES" FontSize="10" FontAttributes="Bold" TextColor="#8B939E"/>
-                                            <Border BackgroundColor="#F5F5F5" Padding="12,8" StrokeShape="RoundRectangle 8" Stroke="#E5E9EF">
-                                                <Entry Text="{Binding Notes}" Placeholder="..." FontSize="12" TextColor="#5A6068" BackgroundColor="Transparent"/>
-                                            </Border>
-                                        </VerticalStackLayout>
-                                    </Grid>
+                <!-- TABS CARD -->
+                <Border Style="{StaticResource CalibTableCard}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <VerticalStackLayout Style="{StaticResource CalibTableContainer}">
+                        
+                        <!-- Tab Headers -->
+                        <Grid ColumnDefinitions="*,*" 
+                              BackgroundColor="{StaticResource CalibNeuPrimary}"
+                              Padding="0">
+                            <Button x:Name="JaugeagesTabButton"
+                                    Grid.Column="0"
+                                    Text="Jaugeages"
+                                    BackgroundColor="#00796B"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    FontSize="14"
+                                    CornerRadius="0"
+                                    Padding="20,14"
+                                    Clicked="OnJaugeagesTabClicked"/>
+                            <Button x:Name="CalibrationTabButton"
+                                    Grid.Column="1"
+                                    Text="Calibration"
+                                    BackgroundColor="#00695C"
+                                    TextColor="#B2DFDB"
+                                    FontSize="14"
+                                    CornerRadius="0"
+                                    Padding="20,14"
+                                    Clicked="OnCalibrationTabClicked"/>
+                        </Grid>
+
+                        <!-- TAB 1: JAUGEAGES -->
+                        <VerticalStackLayout x:Name="JaugeagesTab" 
+                                             Spacing="0"
+                                             Padding="0">
+                            
+                            <!-- Filters & Add Button Row -->
+                            <Border BackgroundColor="{StaticResource CalibNeuCardBg}" 
+                                    Padding="20"
+                                    StrokeThickness="0">
+                                <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,Auto,Auto" ColumnSpacing="12">
+                                    <Label Text="Du:" Style="{StaticResource CalibFilterLabel}"/>
+                                    <DatePicker Grid.Column="1"
+                                                Date="{Binding FilterStartDate}"
+                                                MaximumDate="{Binding FilterMaxDate}"
+                                                Style="{StaticResource CalibFilterDatePicker}"/>
+                                    <Label Grid.Column="2" Text="Au:" Style="{StaticResource CalibFilterLabel}"/>
+                                    <DatePicker Grid.Column="3"
+                                                Date="{Binding FilterEndDate}"
+                                                MaximumDate="{Binding FilterMaxDate}"
+                                                Style="{StaticResource CalibFilterDatePicker}"/>
+                                    <Button Grid.Column="4"
+                                            Text="Filtrer"
+                                            Command="{Binding LoadJaugeagesByDateRangeCommand}"
+                                            Style="{StaticResource CalibFilterButton}"/>
+                                    <Button Grid.Column="5"
+                                            Text="Reset"
+                                            Command="{Binding LoadHistoryCommand}"
+                                            Style="{StaticResource CalibResetButton}"/>
+                                    <Button Grid.Column="6"
+                                            Text="+ Nouveau Jaugeage"
+                                            Style="{StaticResource CalibAddButton}"
+                                            Clicked="OnAddJaugeageClicked"/>
                                 </Grid>
                             </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
 
-                <!-- TODAY'S HISTORY -->
-                <Border Style="{StaticResource CalibTableCard}" Margin="0,20,0,0"
-                        IsVisible="{Binding JaugeageHistory.Count, Converter={StaticResource IntToVisibilityConverter}}">
-                    <VerticalStackLayout>
-                        <Grid BackgroundColor="#00796B" Padding="16,12">
-                            <Label Text="JAUGEAGES DU JOUR" FontSize="12" FontAttributes="Bold" TextColor="White"/>
-                        </Grid>
-                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding JaugeageHistory}" Padding="12">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:JaugeageDto">
-                                    <Border BackgroundColor="#F5F5F5" Padding="12" Margin="0,4" StrokeShape="RoundRectangle 8" StrokeThickness="0">
-                                        <Grid ColumnDefinitions="Auto,*,Auto">
-                                            <Label Text="[J]" FontSize="18" VerticalOptions="Center"/>
-                                            <VerticalStackLayout Grid.Column="1" Margin="10,0" Spacing="2">
-                                                <Label Text="{Binding NumeroJaugeage}" FontAttributes="Bold" TextColor="#2E2E2E"/>
-                                                <Label Text="{Binding DateCreation, StringFormat='{0:HH:mm}'}" FontSize="11" TextColor="#8B939E"/>
-                                            </VerticalStackLayout>
-                                            <Label Grid.Column="2" Text="{Binding TemoinNom}" FontSize="11" TextColor="#5A6068" VerticalOptions="Center"/>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                            <!-- Jaugeages Table Header -->
+                            <Grid Style="{StaticResource CalibTableHeaderGrid}">
+                                <Label Grid.Column="0" Text="N Jaugeage" Style="{StaticResource CalibTableHeaderLabelLeft}"/>
+                                <Label Grid.Column="1" Text="Date" Style="{StaticResource CalibTableHeaderLabelLeft}"/>
+                                <Label Grid.Column="2" Text="Reservoirs" Style="{StaticResource CalibTableHeaderLabel}"/>
+                                <Label Grid.Column="3" Text="Volume Total" Style="{StaticResource CalibTableHeaderLabel}"/>
+                                <Label Grid.Column="4" Text="Temoin" Style="{StaticResource CalibTableHeaderLabelLeft}"/>
+                                <Label Grid.Column="5" Text="Heure" Style="{StaticResource CalibTableHeaderLabel}"/>
+                                <Label Grid.Column="6" Text="Actions" Style="{StaticResource CalibTableHeaderLabel}"/>
+                            </Grid>
+
+                            <!-- Jaugeages Rows -->
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding JaugeageHistory}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:JaugeageDto">
+                                        <VerticalStackLayout BackgroundColor="Transparent">
+                                            <Grid Style="{StaticResource CalibTableRowGrid}">
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="OnRowTapped" CommandParameter="{Binding .}"/>
+                                                </Grid.GestureRecognizers>
+                                                
+                                                <!-- N Jaugeage -->
+                                                <Border Grid.Column="0" Style="{StaticResource CalibNumeroCell}">
+                                                    <Label Text="{Binding NumeroJaugeage}" 
+                                                           Style="{StaticResource CalibNumeroLabel}"/>
+                                                </Border>
+
+                                                <!-- Date -->
+                                                <Label Grid.Column="1" 
+                                                       Text="{Binding DateJaugeage, StringFormat='{0:dd/MM/yyyy}'}" 
+                                                       Style="{StaticResource CalibDateLabel}"/>
+
+                                                <!-- Reservoirs Count -->
+                                                <Border Grid.Column="2" Style="{StaticResource CalibReservoirCountBadge}">
+                                                    <Label Text="{Binding DetailsCount, StringFormat='{0} res.'}" 
+                                                           Style="{StaticResource CalibReservoirCountLabel}"/>
+                                                </Border>
+
+                                                <!-- Volume Total -->
+                                                <Border Grid.Column="3" Style="{StaticResource CalibVolumeBadge}">
+                                                    <Label Text="{Binding TotalVolume, StringFormat='{0:N0} L'}" 
+                                                           Style="{StaticResource CalibVolumeBadgeLabel}"/>
+                                                </Border>
+
+                                                <!-- Temoin -->
+                                                <Label Grid.Column="4" 
+                                                       Text="{Binding TemoinNom, TargetNullValue='-'}" 
+                                                       Style="{StaticResource CalibTemoinLabel}"/>
+
+                                                <!-- Heure -->
+                                                <Label Grid.Column="5" 
+                                                       Text="{Binding DateCreation, StringFormat='{0:HH:mm}'}" 
+                                                       TextColor="{StaticResource CalibNeuTextMuted}"
+                                                       FontSize="11"
+                                                       HorizontalTextAlignment="Center"
+                                                       VerticalTextAlignment="Center"/>
+
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="6" Style="{StaticResource CalibActionsCell}">
+                                                    <Button Text="Details"
+                                                            Style="{StaticResource CalibDetailsButton}"
+                                                            Clicked="OnDetailsJaugeageClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Modifier"
+                                                            Style="{StaticResource CalibModifierButton}"
+                                                            Clicked="OnEditJaugeageClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Supprimer"
+                                                            Style="{StaticResource CalibSupprimerButton}"
+                                                            Clicked="OnDeleteJaugeageClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource CalibRowDivider}"/>
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                                
+                                <BindableLayout.EmptyView>
+                                    <VerticalStackLayout Style="{StaticResource CalibEmptyView}">
+                                        <Border BackgroundColor="#EEF1F5"
+                                                WidthRequest="100"
+                                                HeightRequest="100"
+                                                StrokeThickness="0"
+                                                Margin="0,0,0,16">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="50"/>
+                                            </Border.StrokeShape>
+                                            <Border.Shadow>
+                                                <Shadow Brush="#C5CAD1" Offset="6,6" Radius="12" Opacity="0.25"/>
+                                            </Border.Shadow>
+                                            <Label Text="J" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#00796B"/>
+                                        </Border>
+                                        <Label Text="Aucun jaugeage trouve" Style="{StaticResource CalibEmptyTitle}"/>
+                                        <Label Text="Commencez par ajouter un nouveau jaugeage de reservoirs" 
+                                               Style="{StaticResource CalibEmptySubtitle}"/>
+                                        <Button Text="+ Nouveau Jaugeage"
+                                                Style="{StaticResource CalibEmptyButton}"
+                                                Clicked="OnAddJaugeageClicked"/>
+                                    </VerticalStackLayout>
+                                </BindableLayout.EmptyView>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
+
+                        <!-- TAB 2: CALIBRATION -->
+                        <VerticalStackLayout x:Name="CalibrationTab" 
+                                             Spacing="0"
+                                             Padding="0"
+                                             IsVisible="False">
+                            
+                            <!-- Placeholder content for Calibration tab -->
+                            <VerticalStackLayout Style="{StaticResource CalibEmptyView}">
+                                <Border BackgroundColor="#EEF1F5"
+                                        WidthRequest="100"
+                                        HeightRequest="100"
+                                        StrokeThickness="0"
+                                        Margin="0,0,0,16">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="50"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="#C5CAD1" Offset="6,6" Radius="12" Opacity="0.25"/>
+                                    </Border.Shadow>
+                                    <Label Text="C" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#00796B"/>
+                                </Border>
+                                <Label Text="Calibration des Reservoirs" Style="{StaticResource CalibEmptyTitle}"/>
+                                <Label Text="Cette fonctionnalite sera implementee prochainement" 
+                                       Style="{StaticResource CalibEmptySubtitle}"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+
                     </VerticalStackLayout>
                 </Border>
 
@@ -252,13 +303,38 @@
         </ScrollView>
 
         <!-- JOURNEE NAVIGATION BAR -->
-        <Border Grid.Row="1" BackgroundColor="#F5F5F5" Padding="15" IsVisible="{Binding IsJourneeActive}" StrokeThickness="0">
+        <Border Grid.Row="1" 
+                BackgroundColor="#F5F5F5" 
+                Padding="15" 
+                IsVisible="{Binding IsJourneeActive}" 
+                StrokeThickness="0">
+            <Border.Shadow>
+                <Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/>
+            </Border.Shadow>
             <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
-                <Button Text="Precedent" Command="{Binding JourneePrecedentCommand}" BackgroundColor="#757575" TextColor="White" Padding="20,12" CornerRadius="8"
+                <Button Text="Precedent" 
+                        Command="{Binding JourneePrecedentCommand}"
+                        BackgroundColor="#757575" 
+                        TextColor="White" 
+                        Padding="20,12" 
+                        CornerRadius="8"
                         IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
                 <BoxView Grid.Column="1" Color="Transparent"/>
-                <Button Grid.Column="2" Text="Passer" Command="{Binding JourneePasserCommand}" BackgroundColor="#FFA726" TextColor="White" Padding="20,12" CornerRadius="8"/>
-                <Button Grid.Column="3" Text="Suivant" Command="{Binding JourneeSuivantCommand}" BackgroundColor="#4CAF50" TextColor="White" Padding="20,12" CornerRadius="8" FontAttributes="Bold"/>
+                <Button Grid.Column="2" 
+                        Text="Passer" 
+                        Command="{Binding JourneePasserCommand}"
+                        BackgroundColor="#FFA726" 
+                        TextColor="White" 
+                        Padding="20,12" 
+                        CornerRadius="8"/>
+                <Button Grid.Column="3" 
+                        Text="Suivant"
+                        Command="{Binding JourneeSuivantCommand}" 
+                        BackgroundColor="#4CAF50" 
+                        TextColor="White"
+                        Padding="20,12" 
+                        CornerRadius="8" 
+                        FontAttributes="Bold"/>
             </Grid>
         </Border>
 

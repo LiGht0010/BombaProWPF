@@ -19,6 +19,13 @@ public partial class Service
     [Column(TypeName = "decimal(10, 2)")]
     public decimal? Prix { get; set; }
 
+    // Category relationship
+    [Display(Name = "Catégorie")]
+    public int? ServiceCategorieID { get; set; }
+
+    [ForeignKey("ServiceCategorieID")]
+    public virtual ServiceCategorie? ServiceCategorie { get; set; }
+
     // Navigation property for CreditTransactions
     [InverseProperty("Service")]
     public virtual ICollection<CreditTransaction> CreditTransactions { get; set; } = new List<CreditTransaction>();

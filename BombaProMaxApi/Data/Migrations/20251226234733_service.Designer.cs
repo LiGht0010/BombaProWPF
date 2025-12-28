@@ -3,6 +3,7 @@ using System;
 using BombaProMaxApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BombaProMaxApi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251226234733_service")]
+    partial class service
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1794,7 +1797,7 @@ namespace BombaProMaxApi.Data.Migrations
                             ShowDepenses = true,
                             ShowTableauDeBord = true,
                             ShowVente = true,
-                            UpdatedAt = new DateTime(2025, 12, 27, 16, 1, 54, 647, DateTimeKind.Utc).AddTicks(5890),
+                            UpdatedAt = new DateTime(2025, 12, 26, 23, 47, 31, 851, DateTimeKind.Utc).AddTicks(6005),
                             createdBy = 0,
                             updatedBy = 0
                         },
@@ -1827,7 +1830,7 @@ namespace BombaProMaxApi.Data.Migrations
                             ShowDepenses = true,
                             ShowTableauDeBord = true,
                             ShowVente = true,
-                            UpdatedAt = new DateTime(2025, 12, 27, 16, 1, 54, 647, DateTimeKind.Utc).AddTicks(5904),
+                            UpdatedAt = new DateTime(2025, 12, 26, 23, 47, 31, 851, DateTimeKind.Utc).AddTicks(6018),
                             createdBy = 0,
                             updatedBy = 0
                         });
@@ -1899,72 +1902,6 @@ namespace BombaProMaxApi.Data.Migrations
                     b.HasIndex("ProduitID");
 
                     b.ToTable("VenteLubrifiantsEtArticles");
-                });
-
-            modelBuilder.Entity("BombaProMaxApi.Models.VenteService", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
-
-                    b.Property<int?>("ClientID")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("CreePar")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("DateCreation")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DateModification")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DateVente")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("EmployeID")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ModifiePar")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("MoyenPaiementID")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("NumeroVente")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<decimal>("PrixUnitaire")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<int>("Quantite")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ServiceID")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Statut")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ClientID");
-
-                    b.HasIndex("EmployeID");
-
-                    b.HasIndex("MoyenPaiementID");
-
-                    b.HasIndex("ServiceID");
-
-                    b.ToTable("VenteServices");
                 });
 
             modelBuilder.Entity("BombaProMaxApi.Models.Achat", b =>
@@ -2442,35 +2379,6 @@ namespace BombaProMaxApi.Data.Migrations
                     b.Navigation("MoyenPaiement");
 
                     b.Navigation("Produit");
-                });
-
-            modelBuilder.Entity("BombaProMaxApi.Models.VenteService", b =>
-                {
-                    b.HasOne("BombaProMaxApi.Models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientID");
-
-                    b.HasOne("BombaProMaxApi.Models.Employe", "Employe")
-                        .WithMany()
-                        .HasForeignKey("EmployeID");
-
-                    b.HasOne("BombaProMaxApi.Models.MoyensPaiement", "MoyenPaiement")
-                        .WithMany()
-                        .HasForeignKey("MoyenPaiementID");
-
-                    b.HasOne("BombaProMaxApi.Models.Service", "Service")
-                        .WithMany()
-                        .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Employe");
-
-                    b.Navigation("MoyenPaiement");
-
-                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("BombaProMaxApi.Models.Achat", b =>

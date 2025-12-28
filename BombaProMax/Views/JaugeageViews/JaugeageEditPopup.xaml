@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.JaugeageViews.JaugeageEditPopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="White"       
+            Padding="0"
+            WidthRequest="550"
+            HeightRequest="400"
+            StrokeShape="RoundRectangle 12">
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- HEADER -->
+            <Border Grid.Row="0" 
+                    BackgroundColor="#00796B" 
+                    Padding="20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label x:Name="HeaderLabel"
+                               Text="Modifier le Jaugeage" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                        <Label Text="Modifier un jaugeage existant" 
+                               FontSize="12"
+                               TextColor="#B2DFDB"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" 
+                            Text="X" 
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            FontSize="20"
+                            Clicked="OnCancelClicked"/>
+                </Grid>
+            </Border>
+
+            <!-- CONTENT PLACEHOLDER -->
+            <VerticalStackLayout Grid.Row="1" 
+                                 Padding="20" 
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="16">
+                <Label Text="E" 
+                       FontSize="48" 
+                       TextColor="#1976D2"
+                       HorizontalOptions="Center"/>
+                <Label Text="Formulaire de modification de jaugeage" 
+                       FontSize="16"
+                       TextColor="#5A6068"
+                       HorizontalOptions="Center"/>
+                <Label Text="A implementer prochainement" 
+                       FontSize="14"
+                       TextColor="#8B939E"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <!-- FOOTER -->
+            <Border Grid.Row="2" 
+                    BackgroundColor="#F5F5F5" 
+                    Padding="15">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="15">
+                    <BoxView Grid.Column="0" Color="Transparent"/>
+                    <Button Grid.Column="1"
+                            Text="Annuler" 
+                            BackgroundColor="#9E9E9E"
+                            TextColor="White"
+                            Padding="20,10"
+                            CornerRadius="8"
+                            Clicked="OnCancelClicked"/>
+                    <Button Grid.Column="2"
+                            Text="Mettre a jour" 
+                            BackgroundColor="#1976D2"
+                            TextColor="White"
+                            Padding="20,10"
+                            CornerRadius="8"
+                            FontAttributes="Bold"
+                            Clicked="OnSaveClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

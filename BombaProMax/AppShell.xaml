@@ -21,6 +21,8 @@
     xmlns:facture="clr-namespace:BombaProMax.Views.FactureViews"
     xmlns:dashboard="clr-namespace:BombaProMax.Views.DashboardViews"
     xmlns:rapport="clr-namespace:BombaProMax.Views.RapportViews"
+    xmlns:service="clr-namespace:BombaProMax.Views.ServiceViews"
+    xmlns:venteService="clr-namespace:BombaProMax.Views.VenteServiceViews"
     FlyoutBackgroundColor="#FFFFFF"
     BackgroundColor="#F8FAFC"
     Shell.TitleColor="Black"
@@ -145,6 +147,7 @@
         <ShellContent x:Name="AchatShellContent" Title="Achats" Route="AchatPage"/>
         <ShellContent x:Name="PeriodeShellContent" Title="Périodes de Vente" Route="PeriodePage"/>
         <ShellContent x:Name="VenteLubShellContent" Title="Ventes Lub/Articles" Route="VenteLubrifiantsEtArticlesPage"/>
+        <ShellContent x:Name="VenteServiceShellContent" Title="Ventes Services" Route="VenteServicePage"/>
         <ShellContent x:Name="DepenseShellContent" Title="Dépenses" Route="DepensePage"/>
     </FlyoutItem>
 
@@ -158,6 +161,7 @@
         <ShellContent x:Name="CiterneShellContent" Title="Citernes" Route="CiternePage"/>
         <ShellContent x:Name="ReservoirCalibrationContent" Title="Calibration Réservoirs" Route="ReservoirCalibrationPage"/>
         <ShellContent x:Name="JaugeageShellContent" Title="Jaugeage" Route="JaugeagePage"/>
+        <ShellContent x:Name="ServiceShellContent" Title="Services" Route="ServicePage"/>
     </FlyoutItem>
 
     <!-- ════════════════════════════════════════════════════════════ -->

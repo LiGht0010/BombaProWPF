@@ -27,12 +27,11 @@ public class JaugeagesController : ControllerBase
         var jaugeages = await _context.Jaugeages
             .Include(j => j.Temoin)
             .Include(j => j.JaugeageDetails)
-                .ThenInclude(d => d.Reservoir)
             .OrderByDescending(j => j.DateJaugeage)
             .AsNoTracking()
             .ToListAsync();
 
-        return Ok(_mapper.Map<List<JaugeageDto>>(jaugeages));
+        return Ok(jaugeages.Select(MapToJaugeageDto).ToList());
     }
 
     // GET: api/Jaugeages/5
@@ -42,14 +41,13 @@ public class JaugeagesController : ControllerBase
         var jaugeage = await _context.Jaugeages
             .Include(j => j.Temoin)
             .Include(j => j.JaugeageDetails)
-                .ThenInclude(d => d.Reservoir)
             .AsNoTracking()
             .FirstOrDefaultAsync(j => j.ID == id);
 
         if (jaugeage == null)
             return NotFound();
 
-        return Ok(_mapper.Map<JaugeageDto>(jaugeage));
+        return Ok(MapToJaugeageDto(jaugeage));
     }
 
     // GET: api/Jaugeages/5/with-details
@@ -96,12 +94,13 @@ public class JaugeagesController : ControllerBase
         
         var jaugeages = await _context.Jaugeages
             .Include(j => j.Temoin)
+            .Include(j => j.JaugeageDetails)
             .Where(j => j.DateJaugeage.Date == utcDate.Date)
             .OrderByDescending(j => j.DateJaugeage)
             .AsNoTracking()
             .ToListAsync();
 
-        return Ok(_mapper.Map<List<JaugeageDto>>(jaugeages));
+        return Ok(jaugeages.Select(MapToJaugeageDto).ToList());
     }
 
     // GET: api/Jaugeages/by-temoin/5
@@ -110,12 +109,13 @@ public class JaugeagesController : ControllerBase
     {
         var jaugeages = await _context.Jaugeages
             .Include(j => j.Temoin)
+            .Include(j => j.JaugeageDetails)
             .Where(j => j.TemoinID == temoinId)
             .OrderByDescending(j => j.DateJaugeage)
             .AsNoTracking()
             .ToListAsync();
 
-        return Ok(_mapper.Map<List<JaugeageDto>>(jaugeages));
+        return Ok(jaugeages.Select(MapToJaugeageDto).ToList());
     }
 
     // GET: api/Jaugeages/latest
@@ -173,7 +173,7 @@ public class JaugeagesController : ControllerBase
         await _context.Entry(entity).Reference(j => j.Temoin).LoadAsync();
 
         return CreatedAtAction(nameof(GetJaugeage), new { id = entity.ID }, 
-            _mapper.Map<JaugeageDto>(entity));
+            MapToJaugeageDto(entity));
     }
 
     // POST: api/Jaugeages/with-details
@@ -318,6 +318,29 @@ public class JaugeagesController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    /// <summary>
+    /// Maps a Jaugeage entity to JaugeageDto with computed fields
+    /// </summary>
+    private static JaugeageDto MapToJaugeageDto(Jaugeage jaugeage)
+    {
+        return new JaugeageDto
+        {
+            ID = jaugeage.ID,
+            DateJaugeage = jaugeage.DateJaugeage,
+            TemoinID = jaugeage.TemoinID,
+            NumeroJaugeage = jaugeage.NumeroJaugeage,
+            Observations = jaugeage.Observations,
+            TemoinNom = jaugeage.Temoin?.Nom,
+            AjoutePar = jaugeage.AjoutePar,
+            DateCreation = jaugeage.DateCreation,
+            ModifiePar = jaugeage.ModifiePar,
+            DateModification = jaugeage.DateModification,
+            // Computed fields
+            DetailsCount = jaugeage.JaugeageDetails?.Count ?? 0,
+            TotalVolume = jaugeage.JaugeageDetails?.Sum(d => d.VolumeCalcule) ?? 0
+        };
     }
 
     /// <summary>
