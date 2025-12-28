@@ -166,6 +166,13 @@ public class AppDbContext : DbContext
             }   //SuperAdmin 2
         );
 
+        // Seed Categories (ID 1=CARBURANT, 2=LUBRIFIANT, 3=ARTICLE)
+        modelBuilder.Entity<Categorie>().HasData(
+            new Categorie { ID = 1, Nom = "CARBURANT" },
+            new Categorie { ID = 2, Nom = "LUBRIFIANT" },
+            new Categorie { ID = 3, Nom = "ARTICLE" }
+        );
+
         // Configure Client entity
         modelBuilder.Entity<Client>(entity =>
         {
@@ -249,6 +256,12 @@ public class AppDbContext : DbContext
             entity.HasOne(e => e.BonLivraison)
                 .WithMany(b => b.CreditTransactions)
                 .HasForeignKey(e => e.BonLivraisonID)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Configure CreditTransaction to Periode relationship
+            entity.HasOne(e => e.Periode)
+                .WithMany(p => p.CreditTransactions)
+                .HasForeignKey(e => e.PeriodeID)
                 .OnDelete(DeleteBehavior.SetNull);
         });
 

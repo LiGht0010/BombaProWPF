@@ -18,6 +18,9 @@ public class JaugeageDto
     // Computed fields for list display
     public int DetailsCount { get; set; }
     public decimal TotalVolume { get; set; }
+    
+    // Comma-separated list of reservoir numbers included in this jaugeage
+    public string? CiternesInclues { get; set; }
 }
 
 /// <summary>
@@ -44,4 +47,9 @@ public class JaugeageWithDetailsDto
     // Computed properties
     public int DetailsCount => Details?.Count ?? 0;
     public decimal TotalVolume => Details?.Sum(d => d.VolumeCalcule) ?? 0;
+    
+    // Computed: Comma-separated list of reservoir numbers
+    public string CiternesInclues => Details?.Count > 0 
+        ? string.Join(", ", Details.Where(d => !string.IsNullOrEmpty(d.ReservoirNumero)).Select(d => d.ReservoirNumero))
+        : "-";
 }

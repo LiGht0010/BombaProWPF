@@ -21,6 +21,7 @@ namespace BombaProMaxApi.Mappig
                 .ForMember(d => d.BonLivraisonNumero,
                     opt => opt.MapFrom(s => s.BonLivraison != null ? s.BonLivraison.NumeroBL : null))
                 .ForMember(d => d.IsSelected, opt => opt.Ignore()); // UI-only field
+                // PeriodeID is auto-mapped by convention
 
             // DTO to Entity mapping - ignore display-only and UI fields
             CreateMap<CreditTransactionDto, CreditTransaction>()
@@ -28,7 +29,8 @@ namespace BombaProMaxApi.Mappig
                 .ForMember(d => d.Produit, opt => opt.Ignore())
                 .ForMember(d => d.Service, opt => opt.Ignore())
                 .ForMember(d => d.FactureAssociee, opt => opt.Ignore())
-                .ForMember(d => d.BonLivraison, opt => opt.Ignore());
+                .ForMember(d => d.BonLivraison, opt => opt.Ignore())
+                .ForMember(d => d.Periode, opt => opt.Ignore()); // Ignore navigation property
         }
     }
 }

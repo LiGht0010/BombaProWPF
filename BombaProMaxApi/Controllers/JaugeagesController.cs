@@ -27,6 +27,7 @@ public class JaugeagesController : ControllerBase
         var jaugeages = await _context.Jaugeages
             .Include(j => j.Temoin)
             .Include(j => j.JaugeageDetails)
+                .ThenInclude(d => d.Reservoir)
             .OrderByDescending(j => j.DateJaugeage)
             .AsNoTracking()
             .ToListAsync();
@@ -41,6 +42,7 @@ public class JaugeagesController : ControllerBase
         var jaugeage = await _context.Jaugeages
             .Include(j => j.Temoin)
             .Include(j => j.JaugeageDetails)
+                .ThenInclude(d => d.Reservoir)
             .AsNoTracking()
             .FirstOrDefaultAsync(j => j.ID == id);
 
@@ -95,6 +97,7 @@ public class JaugeagesController : ControllerBase
         var jaugeages = await _context.Jaugeages
             .Include(j => j.Temoin)
             .Include(j => j.JaugeageDetails)
+                .ThenInclude(d => d.Reservoir)
             .Where(j => j.DateJaugeage.Date == utcDate.Date)
             .OrderByDescending(j => j.DateJaugeage)
             .AsNoTracking()
@@ -110,6 +113,7 @@ public class JaugeagesController : ControllerBase
         var jaugeages = await _context.Jaugeages
             .Include(j => j.Temoin)
             .Include(j => j.JaugeageDetails)
+                .ThenInclude(d => d.Reservoir)
             .Where(j => j.TemoinID == temoinId)
             .OrderByDescending(j => j.DateJaugeage)
             .AsNoTracking()
@@ -325,6 +329,8 @@ public class JaugeagesController : ControllerBase
     /// </summary>
     private static JaugeageDto MapToJaugeageDto(Jaugeage jaugeage)
     {
+        var details = jaugeage.JaugeageDetails ?? [];
+        
         return new JaugeageDto
         {
             ID = jaugeage.ID,
@@ -338,8 +344,11 @@ public class JaugeagesController : ControllerBase
             ModifiePar = jaugeage.ModifiePar,
             DateModification = jaugeage.DateModification,
             // Computed fields
-            DetailsCount = jaugeage.JaugeageDetails?.Count ?? 0,
-            TotalVolume = jaugeage.JaugeageDetails?.Sum(d => d.VolumeCalcule) ?? 0
+            DetailsCount = details.Count,
+            TotalVolume = details.Sum(d => d.VolumeCalcule),
+            CiternesInclues = details.Count > 0
+                ? string.Join(", ", details.Where(d => d.Reservoir != null).Select(d => d.Reservoir!.Numero))
+                : "-"
         };
     }
 

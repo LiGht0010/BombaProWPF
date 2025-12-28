@@ -168,12 +168,11 @@
                             <!-- Jaugeages Table Header -->
                             <Grid Style="{StaticResource CalibTableHeaderGrid}">
                                 <Label Grid.Column="0" Text="N Jaugeage" Style="{StaticResource CalibTableHeaderLabelLeft}"/>
-                                <Label Grid.Column="1" Text="Date" Style="{StaticResource CalibTableHeaderLabelLeft}"/>
-                                <Label Grid.Column="2" Text="Reservoirs" Style="{StaticResource CalibTableHeaderLabel}"/>
+                                <Label Grid.Column="1" Text="Date" Style="{StaticResource CalibTableHeaderLabel}"/>
+                                <Label Grid.Column="2" Text="Citernes Inclues" Style="{StaticResource CalibTableHeaderLabelLeft}"/>
                                 <Label Grid.Column="3" Text="Volume Total" Style="{StaticResource CalibTableHeaderLabel}"/>
                                 <Label Grid.Column="4" Text="Temoin" Style="{StaticResource CalibTableHeaderLabelLeft}"/>
-                                <Label Grid.Column="5" Text="Heure" Style="{StaticResource CalibTableHeaderLabel}"/>
-                                <Label Grid.Column="6" Text="Actions" Style="{StaticResource CalibTableHeaderLabel}"/>
+                                <Label Grid.Column="5" Text="Actions" Style="{StaticResource CalibTableHeaderLabel}"/>
                             </Grid>
 
                             <!-- Jaugeages Rows -->
@@ -195,13 +194,16 @@
                                                 <!-- Date -->
                                                 <Label Grid.Column="1" 
                                                        Text="{Binding DateJaugeage, StringFormat='{0:dd/MM/yyyy}'}" 
-                                                       Style="{StaticResource CalibDateLabel}"/>
+                                                       Style="{StaticResource CalibDateLabel}"
+                                                       HorizontalTextAlignment="Center"/>
 
-                                                <!-- Reservoirs Count -->
-                                                <Border Grid.Column="2" Style="{StaticResource CalibReservoirCountBadge}">
-                                                    <Label Text="{Binding DetailsCount, StringFormat='{0} res.'}" 
-                                                           Style="{StaticResource CalibReservoirCountLabel}"/>
-                                                </Border>
+                                                <!-- Citernes Inclues -->
+                                                <Label Grid.Column="2" 
+                                                       Text="{Binding CiternesInclues, TargetNullValue='-'}" 
+                                                       TextColor="{StaticResource CalibNeuInfo}"
+                                                       FontSize="11"
+                                                       VerticalTextAlignment="Center"
+                                                       LineBreakMode="TailTruncation"/>
 
                                                 <!-- Volume Total -->
                                                 <Border Grid.Column="3" Style="{StaticResource CalibVolumeBadge}">
@@ -214,16 +216,8 @@
                                                        Text="{Binding TemoinNom, TargetNullValue='-'}" 
                                                        Style="{StaticResource CalibTemoinLabel}"/>
 
-                                                <!-- Heure -->
-                                                <Label Grid.Column="5" 
-                                                       Text="{Binding DateCreation, StringFormat='{0:HH:mm}'}" 
-                                                       TextColor="{StaticResource CalibNeuTextMuted}"
-                                                       FontSize="11"
-                                                       HorizontalTextAlignment="Center"
-                                                       VerticalTextAlignment="Center"/>
-
                                                 <!-- Actions -->
-                                                <HorizontalStackLayout Grid.Column="6" Style="{StaticResource CalibActionsCell}">
+                                                <HorizontalStackLayout Grid.Column="5" Style="{StaticResource CalibActionsCell}">
                                                     <Button Text="Details"
                                                             Style="{StaticResource CalibDetailsButton}"
                                                             Clicked="OnDetailsJaugeageClicked"

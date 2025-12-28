@@ -28,7 +28,7 @@
 
     <!-- TABLE COLUMN DEFINITIONS -->
     <x:String x:Key="CalibTableColumns">0.8*,1.2*,1*</x:String>
-    <x:String x:Key="JaugeageTableColumns">1*,1.2*,0.8*,1*,1*,0.8*,1.2*</x:String>
+    <x:String x:Key="JaugeageTableColumns">0.9*,0.8*,1.5*,0.8*,0.9*,1.1*</x:String>
 
     <!-- PAGE STYLES -->
     <Style x:Key="CalibPageStyle" TargetType="ContentPage">

@@ -15,6 +15,7 @@ public partial class PeriodeViewModel : ObservableObject
 {
     private readonly PeriodeService _periodeService;
     private readonly PompeService _pompeService;
+    private readonly CreditTransactionService _creditTransactionService;
     private readonly JourneeNavigationService _journeeService;
     private readonly HttpClient _httpClient;
 
@@ -73,6 +74,11 @@ public partial class PeriodeViewModel : ObservableObject
     /// </summary>
     public ObservableCollection<PompeReadingModel> PompeReadings { get; } = [];
 
+    /// <summary>
+    /// Credit transactions (carburant) for the periode popup.
+    /// </summary>
+    public ObservableCollection<CreditTransactionDto> PeriodeCreditTransactions { get; } = [];
+
     #endregion
 
     #region Computed Properties
@@ -118,6 +124,16 @@ public partial class PeriodeViewModel : ObservableObject
     /// </summary>
     public decimal EcartPaiement => TotalPrixTotal - TotalPaiements;
 
+    /// <summary>
+    /// Total credit amount from selected credit transactions in popup.
+    /// </summary>
+    public decimal TotalCredite => PeriodeCreditTransactions.Where(ct => ct.IsSelected).Sum(ct => ct.MontantTotal);
+
+    /// <summary>
+    /// Number of selected credit transactions.
+    /// </summary>
+    public int SelectedCreditTransactionsCount => PeriodeCreditTransactions.Count(ct => ct.IsSelected);
+
     #endregion
 
     // ════════════════════════════════════════════════════════════════
@@ -136,6 +152,7 @@ public partial class PeriodeViewModel : ObservableObject
     {
         _periodeService = new PeriodeService();
         _pompeService = new PompeService();
+        _creditTransactionService = new CreditTransactionService();
         _journeeService = journeeService;
         
         // Create HTTP client for loading reference data
@@ -333,6 +350,127 @@ public partial class PeriodeViewModel : ObservableObject
     public void BuildPompeReadingsForCreate()
     {
         BuildPompeReadingsForEdit([]);
+    }
+
+    #endregion
+
+    #region Credit Transaction Loading
+
+    /// <summary>
+    /// Loads carburant credit transactions within a date range (for create mode).
+    /// These are CTs that are not yet assigned to any periode.
+    /// </summary>
+    public async Task LoadCreditTransactionsByDateRangeAsync(DateTime start, DateTime end)
+    {
+        try
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Loading carburant CTs from {start} to {end}");
+            
+            var transactions = await _creditTransactionService.GetCarburantByDateRangeAsync(start, end);
+            
+            PeriodeCreditTransactions.Clear();
+            foreach (var ct in transactions)
+            {
+                ct.IsSelected = true; // Default to selected in create mode
+                PeriodeCreditTransactions.Add(ct);
+            }
+
+            NotifyCreditTotalsChanged();
+            Debug.WriteLine($"[PeriodeViewModel] Loaded {PeriodeCreditTransactions.Count} carburant CTs for date range");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Error loading CTs by date range: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Loads credit transactions linked to a specific periode (for edit mode).
+    /// </summary>
+    public async Task LoadCreditTransactionsByPeriodeAsync(int periodeId)
+    {
+        try
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Loading CTs for periode {periodeId}");
+            
+            var transactions = await _creditTransactionService.GetByPeriodeIdAsync(periodeId);
+            
+            PeriodeCreditTransactions.Clear();
+            foreach (var ct in transactions)
+            {
+                ct.IsSelected = true; // Already linked = selected
+                PeriodeCreditTransactions.Add(ct);
+            }
+
+            NotifyCreditTotalsChanged();
+            Debug.WriteLine($"[PeriodeViewModel] Loaded {PeriodeCreditTransactions.Count} CTs for periode {periodeId}");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Error loading CTs by periode: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Clears credit transactions collection.
+    /// </summary>
+    public void ClearCreditTransactions()
+    {
+        PeriodeCreditTransactions.Clear();
+        NotifyCreditTotalsChanged();
+    }
+
+    /// <summary>
+    /// Toggles selection of a credit transaction.
+    /// </summary>
+    public void ToggleCreditTransactionSelection(CreditTransactionDto ct)
+    {
+        ct.IsSelected = !ct.IsSelected;
+        NotifyCreditTotalsChanged();
+    }
+
+    /// <summary>
+    /// Selects all credit transactions.
+    /// </summary>
+    public void SelectAllCreditTransactions()
+    {
+        foreach (var ct in PeriodeCreditTransactions)
+        {
+            ct.IsSelected = true;
+        }
+        NotifyCreditTotalsChanged();
+    }
+
+    /// <summary>
+    /// Deselects all credit transactions.
+    /// </summary>
+    public void DeselectAllCreditTransactions()
+    {
+        foreach (var ct in PeriodeCreditTransactions)
+        {
+            ct.IsSelected = false;
+        }
+        NotifyCreditTotalsChanged();
+    }
+
+    /// <summary>
+    /// Gets the list of selected credit transaction IDs.
+    /// </summary>
+    public List<int> GetSelectedCreditTransactionIds()
+    {
+        return PeriodeCreditTransactions
+            .Where(ct => ct.IsSelected)
+            .Select(ct => ct.CreditID)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Notifies that credit-related computed properties have changed.
+    /// </summary>
+    private void NotifyCreditTotalsChanged()
+    {
+        OnPropertyChanged(nameof(TotalCredite));
+        OnPropertyChanged(nameof(SelectedCreditTransactionsCount));
     }
 
     #endregion

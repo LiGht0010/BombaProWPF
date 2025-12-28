@@ -20,6 +20,9 @@ public partial class CreditTransactionDto : ObservableObject
     public int? BonLivraisonID { get; set; }
     public bool EstEnBL { get; set; }
     
+    // Periode link field (for carburant credits during a shift)
+    public int? PeriodeID { get; set; }
+    
     public int? AjoutePar { get; set; }
     public DateTime? DateCreation { get; set; }
     public int? ModifiePar { get; set; }

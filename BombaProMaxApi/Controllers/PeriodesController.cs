@@ -226,6 +226,7 @@ namespace BombaProMaxApi.Controllers
         /// 2. Creates all PeriodeDetails
         /// 3. Consumes stock from StockLots using FIFO
         /// 4. Updates Reservoir levels
+        /// 5. Links CreditTransactions to the new Periode
         /// All operations are wrapped in a transaction.
         /// </remarks>
         [HttpPost("with-details")]
@@ -235,7 +236,8 @@ namespace BombaProMaxApi.Controllers
             
             try
             {
-                _logger.LogInformation("Creating Periode with {DetailCount} details", dto.Details.Count);
+                _logger.LogInformation("Creating Periode with {DetailCount} details and {CTCount} credit transactions", 
+                    dto.Details.Count, dto.CreditTransactionIds.Count);
 
                 // Track affected entities for syncing
                 var affectedPompeIds = new HashSet<int>();
@@ -282,7 +284,24 @@ namespace BombaProMaxApi.Controllers
 
                 _logger.LogInformation("Created {Count} PeriodeDetails", detailEntities.Count);
 
-                // 3. Consume stock from StockLots (FIFO) for each detail
+                // 3. Link CreditTransactions to this Periode
+                if (dto.CreditTransactionIds.Count > 0)
+                {
+                    var creditTransactions = await _context.CreditTransactions
+                        .Where(ct => dto.CreditTransactionIds.Contains(ct.CreditID))
+                        .ToListAsync();
+
+                    foreach (var ct in creditTransactions)
+                    {
+                        ct.PeriodeID = periodeEntity.PeriodeID;
+                        ct.DateModification = DateTime.UtcNow;
+                    }
+
+                    _logger.LogInformation("Linked {Count} CreditTransactions to Periode {PeriodeId}", 
+                        creditTransactions.Count, periodeEntity.PeriodeID);
+                }
+
+                // 4. Consume stock from StockLots (FIFO) for each detail
                 foreach (var detail in detailEntities)
                 {
                     if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
@@ -303,11 +322,11 @@ namespace BombaProMaxApi.Controllers
                     }
                 }
 
-                // 4. SYNC: Recalculate reservoir levels and pump counters from source of truth
+                // 5. SYNC: Recalculate reservoir levels and pump counters from source of truth
                 await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
                 await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
 
-                // 5. Save all changes and commit transaction
+                // 6. Save all changes and commit transaction
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
@@ -325,10 +344,17 @@ namespace BombaProMaxApi.Controllers
                     .Where(d => d.PeriodeID == periodeEntity.PeriodeID)
                     .ToListAsync();
 
+                // Get linked CT IDs for response
+                var linkedCTIds = await _context.CreditTransactions
+                    .Where(ct => ct.PeriodeID == periodeEntity.PeriodeID)
+                    .Select(ct => ct.CreditID)
+                    .ToListAsync();
+
                 var result = new PeriodeWithDetailsDto
                 {
                     Periode = _mapper.Map<PeriodeDto>(createdPeriode),
-                    Details = _mapper.Map<List<PeriodeDetailsDto>>(createdDetails)
+                    Details = _mapper.Map<List<PeriodeDetailsDto>>(createdDetails),
+                    CreditTransactionIds = linkedCTIds
                 };
 
                 return CreatedAtAction(nameof(GetPeriode), new { id = periodeEntity.PeriodeID }, result);
@@ -355,7 +381,8 @@ namespace BombaProMaxApi.Controllers
         /// 3. Deletes old details and creates new ones
         /// 4. Consumes stock for new quantities (FIFO)
         /// 5. Cascades counter updates to subsequent periods
-        /// 6. Syncs reservoir levels and pump counters from source of truth
+        /// 6. Updates CreditTransaction links (unlink old, link new)
+        /// 7. Syncs reservoir levels and pump counters from source of truth
         /// </summary>
         [HttpPut("{id}/with-details")]
         public async Task<ActionResult<PeriodeWithDetailsDto>> PutPeriodeWithDetails(int id, [FromBody] PeriodeWithDetailsDto dto)
@@ -367,7 +394,8 @@ namespace BombaProMaxApi.Controllers
             
             try
             {
-                _logger.LogInformation("Updating Periode {PeriodeId} with {DetailCount} details", id, dto.Details.Count);
+                _logger.LogInformation("Updating Periode {PeriodeId} with {DetailCount} details and {CTCount} credit transactions", 
+                    id, dto.Details.Count, dto.CreditTransactionIds.Count);
 
                 // Track affected entities for syncing
                 var affectedPompeIds = new HashSet<int>();
@@ -452,7 +480,41 @@ namespace BombaProMaxApi.Controllers
 
                 _logger.LogInformation("Created {Count} new PeriodeDetails", newDetailEntities.Count);
 
-                // 6. Consume stock for new details (FIFO)
+                // 6. Update CreditTransaction links
+                // First, unlink all CTs currently linked to this periode
+                var existingLinkedCTs = await _context.CreditTransactions
+                    .Where(ct => ct.PeriodeID == id)
+                    .ToListAsync();
+
+                foreach (var ct in existingLinkedCTs)
+                {
+                    // Only unlink if not in the new list
+                    if (!dto.CreditTransactionIds.Contains(ct.CreditID))
+                    {
+                        ct.PeriodeID = null;
+                        ct.DateModification = DateTime.UtcNow;
+                    }
+                }
+
+                // Then, link the new CTs
+                if (dto.CreditTransactionIds.Count > 0)
+                {
+                    var newCTsToLink = await _context.CreditTransactions
+                        .Where(ct => dto.CreditTransactionIds.Contains(ct.CreditID) && ct.PeriodeID != id)
+                        .ToListAsync();
+
+                    foreach (var ct in newCTsToLink)
+                    {
+                        ct.PeriodeID = id;
+                        ct.DateModification = DateTime.UtcNow;
+                    }
+
+                    _logger.LogInformation("Updated CreditTransaction links: {Unlinked} unlinked, {Linked} newly linked",
+                        existingLinkedCTs.Count(ct => !dto.CreditTransactionIds.Contains(ct.CreditID)),
+                        newCTsToLink.Count);
+                }
+
+                // 7. Consume stock for new details (FIFO)
                 foreach (var detail in newDetailEntities)
                 {
                     if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
@@ -473,7 +535,7 @@ namespace BombaProMaxApi.Controllers
                     }
                 }
 
-                // 7. Cascade counter updates to subsequent periods
+                // 8. Cascade counter updates to subsequent periods
                 var cascadeResult = await _cascadeService.CascadeCounterUpdatesAsync(id, newDetailEntities);
                 if (cascadeResult.AffectedPeriodeDetailCount > 0)
                 {
@@ -488,11 +550,11 @@ namespace BombaProMaxApi.Controllers
                         affectedReservoirIds.Add(reservoirId);
                 }
 
-                // 8. SYNC: Recalculate reservoir levels and pump counters from source of truth
+                // 9. SYNC: Recalculate reservoir levels and pump counters from source of truth
                 await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
                 await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
 
-                // 9. Save and commit
+                // 10. Save and commit
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
@@ -513,10 +575,17 @@ namespace BombaProMaxApi.Controllers
                     .Where(d => d.PeriodeID == id)
                     .ToListAsync();
 
+                // Get linked CT IDs for response
+                var linkedCTIds = await _context.CreditTransactions
+                    .Where(ct => ct.PeriodeID == id)
+                    .Select(ct => ct.CreditID)
+                    .ToListAsync();
+
                 var result = new PeriodeWithDetailsDto
                 {
                     Periode = _mapper.Map<PeriodeDto>(updatedPeriode),
-                    Details = _mapper.Map<List<PeriodeDetailsDto>>(updatedDetails)
+                    Details = _mapper.Map<List<PeriodeDetailsDto>>(updatedDetails),
+                    CreditTransactionIds = linkedCTIds
                 };
 
                 return Ok(result);
@@ -575,6 +644,23 @@ namespace BombaProMaxApi.Controllers
                             await _stockLotService.ReverseConsumptionAsync(detail.PeriodeDetailID);
                         }
                     }
+                }
+
+                // Unlink all CreditTransactions from this periode (set PeriodeID to null)
+                var linkedCTs = await _context.CreditTransactions
+                    .Where(ct => ct.PeriodeID == id)
+                    .ToListAsync();
+
+                foreach (var ct in linkedCTs)
+                {
+                    ct.PeriodeID = null;
+                    ct.DateModification = DateTime.UtcNow;
+                }
+
+                if (linkedCTs.Count > 0)
+                {
+                    _logger.LogInformation("Unlinked {Count} CreditTransactions from Periode {PeriodeId}", 
+                        linkedCTs.Count, id);
                 }
 
                 // Delete cascade - remove details first

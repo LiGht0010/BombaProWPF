@@ -77,12 +77,45 @@ public partial class PeriodeCreatePopup : Popup
             // Bind collection view
             PompesCollectionView.ItemsSource = _viewModel.PompeReadings;
 
+            // Load credit transactions
+            if (_isEditMode && _existingPeriode != null)
+            {
+                // Edit mode: load CTs linked to this periode
+                await _viewModel.LoadCreditTransactionsByPeriodeAsync(_existingPeriode.PeriodeID);
+            }
+            else
+            {
+                // Create mode: load CTs by date range
+                await LoadCreditTransactionsForDateRange();
+            }
+
+            // Bind credit transactions collection
+            CreditTransactionsCollectionView.ItemsSource = _viewModel.PeriodeCreditTransactions;
+
             UpdateSummary();
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error loading data: {ex.Message}");
             ShowError("Erreur de chargement des données");
+        }
+    }
+
+    private async Task LoadCreditTransactionsForDateRange()
+    {
+        var start = DateDebutPicker.Date.Add(TimeDebutPicker.Time);
+        var end = DateFinPicker.Date.Add(TimeFinPicker.Time);
+        
+        await _viewModel.LoadCreditTransactionsByDateRangeAsync(start, end);
+        UpdateCreditSummary();
+    }
+
+    private void OnDateRangeChanged(object? sender, DateChangedEventArgs e)
+    {
+        // Only reload CTs in create mode when date changes
+        if (!_isEditMode)
+        {
+            _ = LoadCreditTransactionsForDateRange();
         }
     }
 
@@ -93,6 +126,44 @@ public partial class PeriodeCreatePopup : Popup
     
     private void OnPaymentValueChanged(object? sender, TextChangedEventArgs e)
     {
+        UpdateSummary();
+    }
+
+    private void OnCreditTransactionTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Parameter is CreditTransactionDto ct)
+        {
+            _viewModel.ToggleCreditTransactionSelection(ct);
+            UpdateCreditSummary();
+        }
+    }
+
+    private void OnCreditCheckBoxChanged(object? sender, CheckedChangedEventArgs e)
+    {
+        UpdateCreditSummary();
+    }
+
+    private void OnSelectAllCreditsClicked(object? sender, EventArgs e)
+    {
+        _viewModel.SelectAllCreditTransactions();
+        UpdateCreditSummary();
+    }
+
+    private void OnDeselectAllCreditsClicked(object? sender, EventArgs e)
+    {
+        _viewModel.DeselectAllCreditTransactions();
+        UpdateCreditSummary();
+    }
+
+    private void UpdateCreditSummary()
+    {
+        var totalCredite = _viewModel.TotalCredite;
+        var selectedCount = _viewModel.SelectedCreditTransactionsCount;
+        
+        TotalCrediteLabel.Text = $"{totalCredite:N2} MAD";
+        TotalCrediteSummaryLabel.Text = $"{totalCredite:N2}";
+        CreditCountLabel.Text = $"{selectedCount} sélectionné(s)";
+        
         UpdateSummary();
     }
 
@@ -107,36 +178,42 @@ public partial class PeriodeCreatePopup : Popup
             totalRecette += reading.PrixTotal;
         }
 
-        TotalQuantiteLabel.Text = $"{totalQuantite:N2} L";
-        TotalRecetteLabel.Text = $"{totalRecette:N2} MAD";
+        TotalRecetteLabel.Text = $"{totalRecette:N2}";
         
         // Parse TPE and Especes values
         decimal.TryParse(TPEEntry.Text, out decimal tpe);
         decimal.TryParse(EspecesEntry.Text, out decimal especes);
         
-        TotalTPELabel.Text = $"{tpe:N2} MAD";
-        TotalEspecesLabel.Text = $"{especes:N2} MAD";
+        TotalTPELabel.Text = $"{tpe:N2}";
+        TotalEspecesLabel.Text = $"{especes:N2}";
         
-        // Calculate and display ecart
-        decimal totalPaiements = tpe + especes;
-        decimal ecart = totalRecette - totalPaiements;
-        EcartLabel.Text = $"{ecart:N2} MAD";
+        // Get total credited from selected transactions
+        decimal totalCredite = _viewModel.TotalCredite;
+        TotalCrediteSummaryLabel.Text = $"{totalCredite:N2}";
         
-        // Color-code the ecart
-        if (Math.Abs(ecart) < 0.01m)
+        // Calculate Espèces Attendues = Recette - TPE - Crédité
+        decimal especesAttendues = totalRecette - tpe - totalCredite;
+        EspecesAttenduesLabel.Text = $"{especesAttendues:N2}";
+        
+        // Calculate Manque = Espèces Attendues - Espèces Déclarées
+        decimal manque = especesAttendues - especes;
+        ManqueLabel.Text = $"{manque:N2}";
+        
+        // Color-code the manque
+        if (Math.Abs(manque) < 0.01m)
         {
-            EcartBorder.BackgroundColor = Color.FromArgb("#E8F5E9"); // Green - balanced
-            EcartLabel.TextColor = Color.FromArgb("#2E7D32");
+            ManqueBorder.BackgroundColor = Color.FromArgb("#E8F5E9"); // Green - balanced
+            ManqueLabel.TextColor = Color.FromArgb("#2E7D32");
         }
-        else if (ecart > 0)
+        else if (manque > 0)
         {
-            EcartBorder.BackgroundColor = Color.FromArgb("#FFEBEE"); // Red - missing money
-            EcartLabel.TextColor = Color.FromArgb("#C62828");
+            ManqueBorder.BackgroundColor = Color.FromArgb("#FFEBEE"); // Red - missing money
+            ManqueLabel.TextColor = Color.FromArgb("#C62828");
         }
         else
         {
-            EcartBorder.BackgroundColor = Color.FromArgb("#FFF3E0"); // Orange - excess payment
-            EcartLabel.TextColor = Color.FromArgb("#E65100");
+            ManqueBorder.BackgroundColor = Color.FromArgb("#E3F2FD"); // Blue - excess payment
+            ManqueLabel.TextColor = Color.FromArgb("#1565C0");
         }
     }
 
@@ -154,7 +231,7 @@ public partial class PeriodeCreatePopup : Popup
         decimal.TryParse(TPEEntry.Text, out decimal tpe);
         decimal.TryParse(EspecesEntry.Text, out decimal especes);
 
-        // Create the result object containing periode + all details
+        // Create the result object containing periode + all details + credit transaction IDs
         var result = new PeriodeWithDetailsDto
         {
             Periode = new PeriodeDto
@@ -169,7 +246,8 @@ public partial class PeriodeCreatePopup : Popup
                 TPE = tpe,
                 Especes = especes
             },
-            Details = []
+            Details = [],
+            CreditTransactionIds = _viewModel.GetSelectedCreditTransactionIds()
         };
 
         // Set employee

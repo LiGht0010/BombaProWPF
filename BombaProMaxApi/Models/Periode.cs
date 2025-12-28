@@ -58,6 +58,12 @@ namespace BombaProMaxApi.Models
         [InverseProperty("Periode")]
         public virtual ICollection<PeriodeDetails> PeriodeDetails { get; set; } = new List<PeriodeDetails>();
 
+        /// <summary>
+        /// Credit transactions associated with this période (carburant credits during the shift)
+        /// </summary>
+        [InverseProperty("Periode")]
+        public virtual ICollection<CreditTransaction> CreditTransactions { get; set; } = new List<CreditTransaction>();
+
         // Validation
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

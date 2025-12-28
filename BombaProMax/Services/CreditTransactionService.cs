@@ -246,6 +246,90 @@ public class CreditTransactionService
     }
 
     // ════════════════════════════════════════════════════════════════
+    // GET CARBURANT CTs BY DATE RANGE (for Periode popup - unassigned CTs)
+    // ════════════════════════════════════════════════════════════════
+    public async Task<List<CreditTransactionDto>> GetCarburantByDateRangeAsync(DateTime start, DateTime end)
+    {
+        try
+        {
+            var startStr = start.ToString("o"); // ISO 8601 format
+            var endStr = end.ToString("o");
+            var response = await _httpClient.GetAsync($"{BaseUrl}/carburant/date-range?start={Uri.EscapeDataString(startStr)}&end={Uri.EscapeDataString(endStr)}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<CreditTransactionDto>>(json) ?? [];
+            }
+            return [];
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching carburant CTs by date range: {ex.Message}");
+            return [];
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // GET CTs BY PERIODE ID (for editing existing Periode)
+    // ════════════════════════════════════════════════════════════════
+    public async Task<List<CreditTransactionDto>> GetByPeriodeIdAsync(int periodeId)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"{BaseUrl}/periode/{periodeId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<CreditTransactionDto>>(json) ?? [];
+            }
+            return [];
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching CTs for periode {periodeId}: {ex.Message}");
+            return [];
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // BATCH LINK CTs TO PERIODE
+    // ════════════════════════════════════════════════════════════════
+    public async Task<bool> BatchLinkToPeriodeAsync(int periodeId, List<int> creditIds)
+    {
+        try
+        {
+            var json = JsonConvert.SerializeObject(creditIds);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"{BaseUrl}/batch/link-periode/{periodeId}", content);
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error batch linking CTs to periode {periodeId}: {ex.Message}");
+            return false;
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // BATCH UNLINK CTs FROM PERIODE
+    // ════════════════════════════════════════════════════════════════
+    public async Task<bool> BatchUnlinkFromPeriodeAsync(List<int> creditIds)
+    {
+        try
+        {
+            var json = JsonConvert.SerializeObject(creditIds);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"{BaseUrl}/batch/unlink-periode", content);
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error batch unlinking CTs from periode: {ex.Message}");
+            return false;
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
     // CREATE
     // ════════════════════════════════════════════════════════════════
     public async Task<CreditTransactionDto?> CreateAsync(CreditTransactionDto dto)

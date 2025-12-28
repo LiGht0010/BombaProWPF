@@ -186,6 +186,94 @@ public class CreditTransactionsController : ControllerBase
         return Ok(total);
     }
 
+    // ════════════════════════════════════════════════════════════════
+    // CARBURANT CREDIT TRANSACTIONS FOR PERIODE
+    // ════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Get carburant credit transactions within a date range that are not yet assigned to a période.
+    /// Used when creating a new période to show available credits.
+    /// </summary>
+    /// <param name="start">Start date/time (inclusive)</param>
+    /// <param name="end">End date/time (inclusive)</param>
+    [HttpGet("carburant/date-range")]
+    public async Task<ActionResult<List<CreditTransactionDto>>> GetCarburantByDateRange(
+        [FromQuery] DateTime start,
+        [FromQuery] DateTime end)
+    {
+        var startUtc = DateTime.SpecifyKind(start, DateTimeKind.Utc);
+        var endUtc = DateTime.SpecifyKind(end, DateTimeKind.Utc);
+
+        var transactions = await _context.CreditTransactions
+            .Include(t => t.Client)
+            .Include(t => t.Produit)
+                .ThenInclude(p => p!.Categorie)
+            .Where(t => t.DateCredit >= startUtc && t.DateCredit <= endUtc)
+            .Where(t => t.PeriodeID == null) // Not yet assigned to a période
+            .Where(t => t.ProduitID != null && t.Produit!.CategorieID == 1) // Carburant category (ID=1)
+            .AsNoTracking()
+            .OrderByDescending(t => t.DateCredit)
+            .ToListAsync();
+
+        var dtos = _mapper.Map<List<CreditTransactionDto>>(transactions);
+        return Ok(dtos);
+    }
+
+    /// <summary>
+    /// Get carburant credit transactions assigned to a specific période.
+    /// Used when editing an existing période.
+    /// </summary>
+    /// <param name="periodeId">The période ID</param>
+    [HttpGet("periode/{periodeId}")]
+    public async Task<ActionResult<List<CreditTransactionDto>>> GetByPeriode(int periodeId)
+    {
+        var transactions = await _context.CreditTransactions
+            .Include(t => t.Client)
+            .Include(t => t.Produit)
+            .Where(t => t.PeriodeID == periodeId)
+            .AsNoTracking()
+            .OrderByDescending(t => t.DateCredit)
+            .ToListAsync();
+
+        var dtos = _mapper.Map<List<CreditTransactionDto>>(transactions);
+        return Ok(dtos);
+    }
+
+    /// <summary>
+    /// Batch update PeriodeID for multiple credit transactions.
+    /// Used when creating/updating a période to link CTs.
+    /// </summary>
+    /// <param name="periodeId">The période ID (or null to unlink)</param>
+    /// <param name="creditIds">List of credit transaction IDs</param>
+    [HttpPut("batch/link-periode/{periodeId:int?}")]
+    public async Task<IActionResult> BatchLinkToPeriode(int? periodeId, [FromBody] List<int> creditIds)
+    {
+        if (creditIds == null || creditIds.Count == 0)
+            return BadRequest("No credit transaction IDs provided");
+
+        var transactions = await _context.CreditTransactions
+            .Where(t => creditIds.Contains(t.CreditID))
+            .ToListAsync();
+
+        foreach (var transaction in transactions)
+        {
+            transaction.PeriodeID = periodeId;
+            transaction.DateModification = DateTime.UtcNow;
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok(new { Updated = transactions.Count, PeriodeID = periodeId });
+    }
+
+    /// <summary>
+    /// Unlink credit transactions from a période (set PeriodeID to null).
+    /// </summary>
+    [HttpPut("batch/unlink-periode")]
+    public async Task<IActionResult> BatchUnlinkFromPeriode([FromBody] List<int> creditIds)
+    {
+        return await BatchLinkToPeriode(null, creditIds);
+    }
+
     // PUT: api/CreditTransactions/5
     [HttpPut("{id}")]
     public async Task<IActionResult> PutCreditTransaction(int id, [FromBody] CreditTransactionDto dto)

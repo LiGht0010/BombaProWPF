@@ -48,13 +48,17 @@ public partial class CreditTransaction
     [Display(Name = "Facture Associée")]
     public int? FactureID { get; set; }
 
-    // NEW: Link to BonLivraison (if converted to BL)
+    // Link to BonLivraison (if converted to BL)
     [Display(Name = "Bon de Livraison")]
     public int? BonLivraisonID { get; set; }
 
-    // NEW: Track if converted to BL
+    // Track if converted to BL
     [Display(Name = "En Bon de Livraison")]
     public bool EstEnBL { get; set; } = false;
+
+    // Link to Periode (for carburant credit transactions during a shift)
+    [Display(Name = "Période")]
+    public int? PeriodeID { get; set; }
 
     // Navigation properties
     [ForeignKey("ClientID")]
@@ -73,9 +77,13 @@ public partial class CreditTransaction
     [InverseProperty("CreditTransactions")]
     public virtual Facture? FactureAssociee { get; set; }
 
-    // NEW: Navigation to BonLivraison
+    // Navigation to BonLivraison
     [ForeignKey("BonLivraisonID")]
     public virtual BonLivraison? BonLivraison { get; set; }
+
+    // Navigation to Periode
+    [ForeignKey("PeriodeID")]
+    public virtual Periode? Periode { get; set; }
 
     [Display(Name = "Ajouté Par")]
     public int? AjoutePar { get; set; }
