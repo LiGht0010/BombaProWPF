@@ -385,7 +385,7 @@ public partial class PeriodeViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Loads credit transactions linked to a specific periode (for edit mode).
+    /// Loads credit transactions linked to a specific periode (for view mode).
     /// </summary>
     public async Task LoadCreditTransactionsByPeriodeAsync(int periodeId)
     {
@@ -408,6 +408,50 @@ public partial class PeriodeViewModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine($"[PeriodeViewModel] Error loading CTs by periode: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Loads credit transactions for edit mode:
+    /// - CTs already linked to this période (selected)
+    /// - CTs not assigned to any période within the date range (unselected, available to add)
+    /// </summary>
+    public async Task LoadCreditTransactionsForEditAsync(int periodeId, DateTime start, DateTime end)
+    {
+        try
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Loading CTs for edit: periode {periodeId}, range {start} to {end}");
+            
+            PeriodeCreditTransactions.Clear();
+
+            // Load CTs already linked to this période (these should be selected)
+            var linkedTransactions = await _creditTransactionService.GetByPeriodeIdAsync(periodeId);
+            foreach (var ct in linkedTransactions)
+            {
+                ct.IsSelected = true; // Already linked = selected
+                PeriodeCreditTransactions.Add(ct);
+            }
+            Debug.WriteLine($"[PeriodeViewModel] Loaded {linkedTransactions.Count} linked CTs");
+
+            // Load unassigned CTs within date range (available to add)
+            var unassignedTransactions = await _creditTransactionService.GetCarburantByDateRangeAsync(start, end);
+            foreach (var ct in unassignedTransactions)
+            {
+                // Don't add duplicates (shouldn't happen, but be safe)
+                if (!PeriodeCreditTransactions.Any(existing => existing.CreditID == ct.CreditID))
+                {
+                    ct.IsSelected = false; // Not yet linked = unselected
+                    PeriodeCreditTransactions.Add(ct);
+                }
+            }
+            Debug.WriteLine($"[PeriodeViewModel] Added {unassignedTransactions.Count} unassigned CTs from date range");
+
+            NotifyCreditTotalsChanged();
+            Debug.WriteLine($"[PeriodeViewModel] Total CTs for edit: {PeriodeCreditTransactions.Count}");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeViewModel] Error loading CTs for edit: {ex.Message}");
         }
     }
 
@@ -864,14 +908,15 @@ public partial class PeriodeViewModel : ObservableObject
     /// </summary>
     public async Task<(PeriodeDto? Periode, List<PeriodeDetailsDto> Details)> CreatePeriodeWithDetailsAsync(
         PeriodeDto periode, 
-        List<PeriodeDetailsDto> details)
+        List<PeriodeDetailsDto> details,
+        List<int>? creditTransactionIds = null)
     {
         try
         {
             IsSaving = true;
             ErrorMessage = null;
 
-            var result = await _periodeService.CreatePeriodeWithDetailsAsync(periode, details);
+            var result = await _periodeService.CreatePeriodeWithDetailsAsync(periode, details, creditTransactionIds);
             
             if (result.Periode != null)
             {
@@ -888,7 +933,7 @@ public partial class PeriodeViewModel : ObservableObject
                 // Update pump meters to final readings
                 await UpdatePumpMetersAsync(result.Details);
 
-                Debug.WriteLine($"[PeriodeViewModel] Created periode {result.Periode.PeriodeID} with {result.Details.Count} details");
+                Debug.WriteLine($"[PeriodeViewModel] Created periode {result.Periode.PeriodeID} with {result.Details.Count} details and {creditTransactionIds?.Count ?? 0} CTs");
             }
 
             return result;
@@ -910,7 +955,7 @@ public partial class PeriodeViewModel : ObservableObject
     /// </summary>
     public async Task CreatePeriodeWithDetailsAsync(PeriodeWithDetailsDto dto)
     {
-        await CreatePeriodeWithDetailsAsync(dto.Periode, dto.Details);
+        await CreatePeriodeWithDetailsAsync(dto.Periode, dto.Details, dto.CreditTransactionIds);
     }
 
     /// <summary>
@@ -925,7 +970,7 @@ public partial class PeriodeViewModel : ObservableObject
             ErrorMessage = null;
 
             // Use the new endpoint that handles stock properly
-            var result = await _periodeService.UpdatePeriodeWithDetailsAsync(dto.Periode, dto.Details);
+            var result = await _periodeService.UpdatePeriodeWithDetailsAsync(dto.Periode, dto.Details, dto.CreditTransactionIds);
 
             if (result.Periode != null)
             {
@@ -948,7 +993,7 @@ public partial class PeriodeViewModel : ObservableObject
                 // Update pump meters to final readings
                 await UpdatePumpMetersAsync(result.Details);
 
-                Debug.WriteLine($"[PeriodeViewModel] Updated periode {dto.Periode.PeriodeID} with {result.Details.Count} details (stock adjusted)");
+                Debug.WriteLine($"[PeriodeViewModel] Updated periode {dto.Periode.PeriodeID} with {result.Details.Count} details and {dto.CreditTransactionIds.Count} CTs (stock adjusted)");
             }
             else
             {

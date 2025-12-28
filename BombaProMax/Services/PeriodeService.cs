@@ -386,7 +386,8 @@ public class PeriodeService
     /// </summary>
     public async Task<(PeriodeDto? Periode, List<PeriodeDetailsDto> Details)> CreatePeriodeWithDetailsAsync(
         PeriodeDto periode, 
-        List<PeriodeDetailsDto> details)
+        List<PeriodeDetailsDto> details,
+        List<int>? creditTransactionIds = null)
     {
         // Set audit fields on periode
         periode.AjoutePar = App.CurrentUser?.UserId ?? App.user?.UserId ?? 5;
@@ -400,11 +401,12 @@ public class PeriodeService
         var dto = new PeriodeWithDetailsDto
         {
             Periode = periode,
-            Details = details
+            Details = details,
+            CreditTransactionIds = creditTransactionIds ?? []
         };
 
         var json = JsonConvert.SerializeObject(dto);
-        Debug.WriteLine($"[PeriodeService] POST {BaseUrl}/with-details: Periode + {details.Count} details");
+        Debug.WriteLine($"[PeriodeService] POST {BaseUrl}/with-details: Periode + {details.Count} details + {dto.CreditTransactionIds.Count} CTs");
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         var response = await _httpClient.PostAsync($"{BaseUrl}/with-details", content);
@@ -417,7 +419,7 @@ public class PeriodeService
             var result = JsonConvert.DeserializeObject<PeriodeWithDetailsDto>(responseBody);
             if (result != null)
             {
-                Debug.WriteLine($"[PeriodeService] Created Periode {result.Periode.PeriodeID} with {result.Details.Count} details (stock consumed)");
+                Debug.WriteLine($"[PeriodeService] Created Periode {result.Periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs (stock consumed)");
                 return (result.Periode, result.Details);
             }
         }
@@ -445,7 +447,8 @@ public class PeriodeService
     /// </summary>
     public async Task<(PeriodeDto? Periode, List<PeriodeDetailsDto> Details)> UpdatePeriodeWithDetailsAsync(
         PeriodeDto periode,
-        List<PeriodeDetailsDto> details)
+        List<PeriodeDetailsDto> details,
+        List<int>? creditTransactionIds = null)
     {
         // Set audit fields on periode
         periode.ModifiePar = App.CurrentUser?.UserId ?? App.user?.UserId ?? 5;
@@ -464,11 +467,12 @@ public class PeriodeService
         var dto = new PeriodeWithDetailsDto
         {
             Periode = periode,
-            Details = details
+            Details = details,
+            CreditTransactionIds = creditTransactionIds ?? []
         };
 
         var json = JsonConvert.SerializeObject(dto);
-        Debug.WriteLine($"[PeriodeService] PUT {BaseUrl}/{periode.PeriodeID}/with-details: Periode + {details.Count} details");
+        Debug.WriteLine($"[PeriodeService] PUT {BaseUrl}/{periode.PeriodeID}/with-details: Periode + {details.Count} details + {dto.CreditTransactionIds.Count} CTs");
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         var response = await _httpClient.PutAsync($"{BaseUrl}/{periode.PeriodeID}/with-details", content);
@@ -481,7 +485,7 @@ public class PeriodeService
             var result = JsonConvert.DeserializeObject<PeriodeWithDetailsDto>(responseBody);
             if (result != null)
             {
-                Debug.WriteLine($"[PeriodeService] Updated Periode {result.Periode.PeriodeID} with {result.Details.Count} details (stock adjusted)");
+                Debug.WriteLine($"[PeriodeService] Updated Periode {result.Periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs (stock adjusted)");
                 return (result.Periode, result.Details);
             }
         }

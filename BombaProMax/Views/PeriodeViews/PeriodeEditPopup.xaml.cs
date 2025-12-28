@@ -57,12 +57,16 @@ public partial class PeriodeEditPopup : Popup
             // Bind collection view
             PompesCollectionView.ItemsSource = _viewModel.PompeReadings;
 
-            // Load credit transactions linked to this periode
-            await _viewModel.LoadCreditTransactionsByPeriodeAsync(_periode.PeriodeID);
+            // Load credit transactions: already linked + unassigned within date range
+            await _viewModel.LoadCreditTransactionsForEditAsync(
+                _periode.PeriodeID, 
+                _periode.DateDebut, 
+                _periode.DateFin);
             
             // Bind credit transactions collection
             CreditTransactionsCollectionView.ItemsSource = _viewModel.PeriodeCreditTransactions;
 
+            UpdateCreditSummary();
             UpdateSummary();
         }
         catch (Exception ex)
