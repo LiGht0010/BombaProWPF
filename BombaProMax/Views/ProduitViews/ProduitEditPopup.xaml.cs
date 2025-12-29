@@ -10,6 +10,7 @@ public partial class ProduitEditPopup : Popup
     private readonly CategorieService _categorieService;
     private List<CategorieDto> _categories = new();
     private readonly ProduitDto _produit;
+    private bool _isLoading = true;
 
     public ProduitEditPopup(ProduitService produitService, CategorieService categorieService, ProduitDto produit)
     {
@@ -20,17 +21,20 @@ public partial class ProduitEditPopup : Popup
         _categorieService = categorieService;
         _produit = produit;
 
-        LoadCategories();
+        // Load product data immediately (synchronous)
         LoadProduitData();
+        
+        // Load categories after component is ready
+        Dispatcher.DispatchAsync(LoadCategoriesAsync);
     }
 
-    private async void LoadCategories()
+    private async Task LoadCategoriesAsync()
     {
         try
         {
-            CategoriePicker.Items.Clear();
-            
             _categories = await _categorieService.GetAllCategoriesAsync();
+            
+            CategoriePicker.Items.Clear();
             
             if (_categories.Count > 0)
             {
@@ -55,22 +59,27 @@ public partial class ProduitEditPopup : Popup
             }
             else
             {
-                CategoriePicker.Items.Add("Carburant");
-                CategoriePicker.Items.Add("Lubrifiant");
-                CategoriePicker.Items.Add("Articles");
-                CategoriePicker.Items.Add("Accessoires");
+                AddFallbackCategories();
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading categories: {ex.Message}");
-            
-            CategoriePicker.Items.Clear();
-            CategoriePicker.Items.Add("Carburant");
-            CategoriePicker.Items.Add("Lubrifiant");
-            CategoriePicker.Items.Add("Articles");
-            CategoriePicker.Items.Add("Accessoires");
+            AddFallbackCategories();
         }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void AddFallbackCategories()
+    {
+        CategoriePicker.Items.Clear();
+        CategoriePicker.Items.Add("Carburant");
+        CategoriePicker.Items.Add("Lubrifiant");
+        CategoriePicker.Items.Add("Articles");
+        CategoriePicker.Items.Add("Accessoires");
     }
 
     private void LoadProduitData()
@@ -86,7 +95,6 @@ public partial class ProduitEditPopup : Popup
             StockMinimumEntry.Text = _produit.StockMinimum?.ToString() ?? "0";
             DelaiLivraisonEntry.Text = _produit.DelaiDeLivraison?.ToString() ?? "";
             
-            // Calculate and display current prices
             CalculatePrices();
         }
     }
@@ -99,11 +107,9 @@ public partial class ProduitEditPopup : Popup
             decimal prixHT = string.IsNullOrWhiteSpace(PrixHTEntry.Text) ? 0 : decimal.Parse(PrixHTEntry.Text);
             decimal tva = string.IsNullOrWhiteSpace(TVAEntry.Text) ? 20 : decimal.Parse(TVAEntry.Text);
 
-            // Calculate PrixTTC from PrixHT and TVA
             decimal prixTTC = prixHT * (1 + tva / 100);
             PrixTTCLabel.Text = $"{prixTTC:F2} DH";
 
-            // Calculate margins
             decimal marge = prixHT - prixAchat;
             MargeBeneficiaireLabel.Text = $"{marge:F2} DH";
 
@@ -112,13 +118,12 @@ public partial class ProduitEditPopup : Popup
                 decimal margePourcentage = (marge / prixAchat) * 100;
                 MargePourcentageLabel.Text = $"{margePourcentage:F2}%";
                 
-                // Color code the margin
                 if (margePourcentage < 10)
-                    MargePourcentageLabel.TextColor = Color.FromArgb("#F44336"); // Red
+                    MargePourcentageLabel.TextColor = Color.FromArgb("#F44336");
                 else if (margePourcentage < 20)
-                    MargePourcentageLabel.TextColor = Color.FromArgb("#FF9800"); // Orange
+                    MargePourcentageLabel.TextColor = Color.FromArgb("#FF9800");
                 else
-                    MargePourcentageLabel.TextColor = Color.FromArgb("#4CAF50"); // Green
+                    MargePourcentageLabel.TextColor = Color.FromArgb("#4CAF50");
             }
             else
             {
@@ -144,6 +149,13 @@ public partial class ProduitEditPopup : Popup
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
+        if (_isLoading)
+        {
+            ErrorLabel.Text = "Veuillez patienter, chargement en cours...";
+            ErrorLabel.IsVisible = true;
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(NumeroProduitEntry.Text))
         {
             ErrorLabel.Text = "Le numéro de produit est requis";
@@ -158,9 +170,25 @@ public partial class ProduitEditPopup : Popup
             return;
         }
 
+        if (CategoriePicker.SelectedIndex < 0 || _categories.Count == 0)
+        {
+            ErrorLabel.Text = "Veuillez sélectionner une catégorie";
+            ErrorLabel.IsVisible = true;
+            return;
+        }
+
         try
         {
-            // Update the product DTO
+            var selectedCategoryName = CategoriePicker.SelectedItem?.ToString();
+            var selectedCategory = _categories.FirstOrDefault(c => c.Nom == selectedCategoryName);
+            
+            if (selectedCategory == null)
+            {
+                ErrorLabel.Text = "Catégorie invalide";
+                ErrorLabel.IsVisible = true;
+                return;
+            }
+
             _produit.NumeroProduit = NumeroProduitEntry.Text.Trim();
             _produit.Description = DescriptionEntry.Text.Trim();
             _produit.PrixAchat = string.IsNullOrWhiteSpace(PrixAchatEntry.Text) ? null : decimal.Parse(PrixAchatEntry.Text);
@@ -169,18 +197,8 @@ public partial class ProduitEditPopup : Popup
             _produit.Stock = string.IsNullOrWhiteSpace(StockEntry.Text) ? 0 : int.Parse(StockEntry.Text);
             _produit.StockMinimum = string.IsNullOrWhiteSpace(StockMinimumEntry.Text) ? 0 : int.Parse(StockMinimumEntry.Text);
             _produit.DelaiDeLivraison = string.IsNullOrWhiteSpace(DelaiLivraisonEntry.Text) ? null : int.Parse(DelaiLivraisonEntry.Text);
-
-            // Set CategorieID based on selected category
-            if (CategoriePicker.SelectedIndex >= 0 && _categories.Count > 0)
-            {
-                var selectedCategoryName = CategoriePicker.SelectedItem?.ToString();
-                var selectedCategory = _categories.FirstOrDefault(c => c.Nom == selectedCategoryName);
-                if (selectedCategory != null)
-                {
-                    _produit.CategorieID = selectedCategory.ID;
-                    _produit.CategorieNom = selectedCategory.Nom;
-                }
-            }
+            _produit.CategorieID = selectedCategory.ID;
+            _produit.CategorieNom = selectedCategory.Nom;
 
             var result = await _produitService.UpdateProduitAsync(_produit);
 

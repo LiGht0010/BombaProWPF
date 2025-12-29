@@ -8,7 +8,8 @@ public partial class ChauffeurCreatePopup : Popup
 {
     private readonly ChauffeurService _chauffeurService;
     private readonly FournisseurService _fournisseurService;
-    private List<FournisseurDto> _fournisseurs = new();
+    private List<FournisseurDto> _fournisseurs = [];
+    private List<FournisseurDto?> _fournisseursWithNone = [];
 
     public ChauffeurCreatePopup(ChauffeurService chauffeurService, FournisseurService fournisseurService)
     {
@@ -27,11 +28,11 @@ public partial class ChauffeurCreatePopup : Popup
         {
             _fournisseurs = await _fournisseurService.GetAllFournisseursAsync();
 
-            // Add a "None" option at the beginning
-            var displayList = new List<string> { "Aucun" };
-            displayList.AddRange(_fournisseurs.Select(f => $"{f.Nom} {f.Prenom} - {f.Societe ?? ""}".Trim()));
+            // Create a list with a "None" placeholder (null with display text handled via converter or we use a wrapper)
+            // For simplicity, we'll add a fake "Aucun" FournisseurDto at the start
+            _fournisseursWithNone = [new FournisseurDto { ID = 0, Societe = "Aucun" }, .. _fournisseurs];
 
-            FournisseurPicker.ItemsSource = displayList;
+            FournisseurPicker.ItemsSource = _fournisseursWithNone;
             FournisseurPicker.SelectedIndex = 0;
         }
         catch (Exception ex)
@@ -64,10 +65,9 @@ public partial class ChauffeurCreatePopup : Popup
                 NumeroPermis = string.IsNullOrWhiteSpace(NumeroPermisEntry.Text) ? null : NumeroPermisEntry.Text.Trim()
             };
 
-            // Set fournisseur if selected (index > 0 means a fournisseur was selected)
-            if (FournisseurPicker.SelectedIndex > 0)
+            // Set fournisseur if selected (ID > 0 means a real fournisseur was selected)
+            if (FournisseurPicker.SelectedItem is FournisseurDto selectedFournisseur && selectedFournisseur.ID > 0)
             {
-                var selectedFournisseur = _fournisseurs[FournisseurPicker.SelectedIndex - 1];
                 newChauffeur.FournisseurID = selectedFournisseur.ID;
                 newChauffeur.FournisseurNom = selectedFournisseur.Nom;
             }

@@ -7,157 +7,153 @@
                x:DataType="models:UserDto"
                Color="Transparent">
 
-    <Border Style="{StaticResource UserPopupContainer}" WidthRequest="580">
-        <ScrollView>
-            <VerticalStackLayout Spacing="20">
-                
-                <!-- Header -->
-                <Grid ColumnDefinitions="*,Auto">
-                    <Label Text="📋 Détails de l'utilisateur" 
-                           Style="{StaticResource UserPopupTitle}"/>
-                    <Button Grid.Column="1" 
-                            Text="✕" 
-                            Style="{StaticResource UserPopupCloseButton}"
-                            Clicked="OnCloseClicked"/>
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="600" HeightRequest="650" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" BackgroundColor="#7B1FA2" Padding="20,18" StrokeThickness="0">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
+                    <Border Grid.Column="0" BackgroundColor="#6A1B9A" WidthRequest="55" HeightRequest="55" StrokeShape="RoundRectangle 28" StrokeThickness="0">
+                        <Label Text="👤" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                        <Label Text="{Binding Name, TargetNullValue='Utilisateur'}" FontSize="18" FontAttributes="Bold" TextColor="White"/>
+                        <Label Text="{Binding Email, TargetNullValue='email@example.com'}" FontSize="12" TextColor="#E1BEE7"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="2" Text="✕" BackgroundColor="#6A1B9A" TextColor="White" FontSize="16" WidthRequest="36" HeightRequest="36" CornerRadius="18" Clicked="OnCloseClicked"/>
                 </Grid>
+            </Border>
 
-                <BoxView Style="{StaticResource UserPopupDivider}"/>
-
-                <!-- User Profile Card -->
-                <Border BackgroundColor="#EDE7F6" 
-                        Padding="20"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 16">
-                    <Border.Shadow>
-                        <Shadow Brush="#9B6DD8" Offset="0,4" Radius="12" Opacity="0.18"/>
-                    </Border.Shadow>
-                    <Grid ColumnDefinitions="Auto,*,Auto">
-                        <Border BackgroundColor="#9B6DD8"
-                                WidthRequest="64"
-                                HeightRequest="64"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 32">
-                            <Label Text="👤" 
-                                   FontSize="28"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
-                        </Border>
-                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4" Margin="16,0">
-                            <Label Text="{Binding Name}" 
-                                   FontAttributes="Bold"
-                                   TextColor="#5E35B1"
-                                   FontSize="18"/>
-                            <Label Text="{Binding Email}" 
-                                   TextColor="#7E57C2"
-                                   FontSize="13"/>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                            <Border BackgroundColor="{Binding RoleColor}"
-                                    Padding="12,6"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 12"
-                                    HorizontalOptions="End">
-                                <Label Text="{Binding RoleText}" 
-                                       TextColor="White" 
-                                       FontSize="11"
-                                       FontAttributes="Bold"/>
-                            </Border>
-                            <Border BackgroundColor="{Binding StatusColor}"
-                                    Padding="12,6"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 12"
-                                    HorizontalOptions="End">
-                                <Label Text="{Binding StatusText}" 
-                                       TextColor="White" 
-                                       FontSize="11"
-                                       FontAttributes="Bold"/>
-                            </Border>
-                        </VerticalStackLayout>
-                    </Grid>
-                </Border>
-
-                <!-- Account Information Section -->
-                <Border Style="{StaticResource UserPopupSectionCard}">
-                    <VerticalStackLayout Spacing="16">
-                        <Label Text="ℹ️ Informations du compte" Style="{StaticResource UserPopupSectionTitle}"/>
-                        
-                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="16" ColumnSpacing="20">
-                            <!-- Name -->
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="6">
-                                <Label Text="Nom complet" Style="{StaticResource UserPopupFieldLabel}"/>
-                                <Label Text="{Binding Name}" Style="{StaticResource UserDetailsValueLabel}"/>
-                            </VerticalStackLayout>
-
-                            <!-- Email -->
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="6">
-                                <Label Text="Adresse email" Style="{StaticResource UserPopupFieldLabel}"/>
-                                <Label Text="{Binding Email}" Style="{StaticResource UserDetailsValueLabel}"/>
-                            </VerticalStackLayout>
-
-                            <!-- Role -->
-                            <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="6">
-                                <Label Text="Rôle assigné" Style="{StaticResource UserPopupFieldLabel}"/>
-                                <Label Text="{Binding RoleText}" Style="{StaticResource UserDetailsValueLabel}" FontAttributes="Bold" TextColor="#9B6DD8"/>
-                            </VerticalStackLayout>
-
-                            <!-- Created Date -->
-                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="6">
-                                <Label Text="Date de création" Style="{StaticResource UserPopupFieldLabel}"/>
-                                <Label Text="{Binding CreatedAt, StringFormat='{0:dd/MM/yyyy à HH:mm}'}" Style="{StaticResource UserDetailsValueLabel}"/>
-                            </VerticalStackLayout>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Permissions Section -->
-                <Border Style="{StaticResource UserPopupSectionCard}">
-                    <VerticalStackLayout Spacing="16">
-                        <Label Text="🔐 Permissions accordées" Style="{StaticResource UserPopupSectionTitle}"/>
-                        
-                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Permissions}" Spacing="10">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="x:String">
-                                    <Border BackgroundColor="#F0F4F8" 
-                                            Padding="14,10" 
-                                            StrokeThickness="0"
-                                            StrokeShape="RoundRectangle 8">
-                                        <Grid ColumnDefinitions="Auto,*">
-                                            <Label Text="✓" 
-                                                   TextColor="#5EAA8D" 
-                                                   FontSize="14"
-                                                   FontAttributes="Bold"
-                                                   VerticalOptions="Center"
-                                                   Margin="0,0,10,0"/>
-                                            <Label Grid.Column="1" 
-                                                   Text="{Binding .}" 
-                                                   TextColor="#5A6068"
-                                                   FontSize="13"
-                                                   VerticalOptions="Center"/>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                            
-                            <BindableLayout.EmptyView>
-                                <Border BackgroundColor="#FFF3E0" 
-                                        Padding="14,10" 
-                                        StrokeThickness="0"
-                                        StrokeShape="RoundRectangle 8">
-                                    <Label Text="Aucune permission spéciale assignée" 
-                                           TextColor="#E65100"
-                                           FontSize="13"
-                                           HorizontalTextAlignment="Center"/>
+            <!-- ========================================= -->
+            <!-- CONTENT                                   -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20,15">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Status Cards Row -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                        <!-- Role Card -->
+                        <Border Grid.Column="0" BackgroundColor="White" Padding="15" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="👑" FontSize="28" HorizontalOptions="Center"/>
+                                <Border BackgroundColor="{Binding RoleColor}" Padding="12,6" StrokeThickness="0" StrokeShape="RoundRectangle 12" HorizontalOptions="Center">
+                                    <Label Text="{Binding RoleText}" TextColor="White" FontSize="12" FontAttributes="Bold"/>
                                 </Border>
-                            </BindableLayout.EmptyView>
-                        </VerticalStackLayout>
-                    </VerticalStackLayout>
-                </Border>
+                                <Label Text="RÔLE" FontSize="10" TextColor="#666" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
 
-                <!-- Close Button -->
-                <Button Text="Fermer" 
-                        Style="{StaticResource UserDetailsCloseButton}"
-                        Clicked="OnCloseClicked"/>
-            </VerticalStackLayout>
-        </ScrollView>
+                        <!-- Status Card -->
+                        <Border Grid.Column="1" BackgroundColor="White" Padding="15" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="🔒" FontSize="28" HorizontalOptions="Center"/>
+                                <Border BackgroundColor="{Binding StatusColor}" Padding="12,6" StrokeThickness="0" StrokeShape="RoundRectangle 12" HorizontalOptions="Center">
+                                    <Label Text="{Binding StatusText}" TextColor="White" FontSize="12" FontAttributes="Bold"/>
+                                </Border>
+                                <Label Text="STATUT" FontSize="10" TextColor="#666" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Account Information Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="ℹ️ INFORMATIONS DU COMPTE" FontSize="11" FontAttributes="Bold" TextColor="#7B1FA2"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="12" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="4">
+                                    <Label Text="Nom complet" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label Text="{Binding Name}" FontSize="14" TextColor="#333" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="4">
+                                    <Label Text="Adresse email" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label Text="{Binding Email}" FontSize="14" TextColor="#333"/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="4">
+                                    <Label Text="Date de création" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label Text="{Binding CreatedAt, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontSize="13" TextColor="#333"/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="4">
+                                    <Label Text="Dernière modification" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label Text="{Binding UpdatedAt, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontSize="13" TextColor="#333"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Permissions Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="🔐 PERMISSIONS ACCORDÉES" FontSize="11" FontAttributes="Bold" TextColor="#7B1FA2"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Permissions}" Spacing="8">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border BackgroundColor="#F3E5F5" Padding="12,8" StrokeThickness="0" StrokeShape="RoundRectangle 6">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Label Text="✓" TextColor="#7B1FA2" FontSize="14" FontAttributes="Bold" VerticalOptions="Center"/>
+                                                <Label Grid.Column="1" Text="{Binding .}" TextColor="#5A6068" FontSize="12" VerticalOptions="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                                
+                                <BindableLayout.EmptyView>
+                                    <Border BackgroundColor="#FFF3E0" Padding="12,8" StrokeThickness="0" StrokeShape="RoundRectangle 6">
+                                        <Label Text="Aucune permission spéciale assignée" TextColor="#E65100" FontSize="12" HorizontalTextAlignment="Center"/>
+                                    </Border>
+                                </BindableLayout.EmptyView>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" BackgroundColor="White" Padding="20,15" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-2" Radius="6" Opacity="0.06"/>
+                </Border.Shadow>
+                <Button Text="Fermer" BackgroundColor="#7B1FA2" TextColor="White" Padding="40,12" CornerRadius="8" FontAttributes="Bold" HorizontalOptions="Center" Clicked="OnCloseClicked"/>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>

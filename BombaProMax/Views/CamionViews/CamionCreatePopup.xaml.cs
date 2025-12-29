@@ -28,20 +28,9 @@ public partial class CamionCreatePopup : Popup
     {
         try
         {
-            // Load active fournisseurs
+            // Load active fournisseurs - use ItemsSource for proper binding
             _fournisseurs = await _fournisseurService.GetActiveFournisseursAsync();
-            if (_fournisseurs.Count > 0)
-            {
-                foreach (var fournisseur in _fournisseurs)
-                {
-                    var displayName = $"{fournisseur.Prenom} {fournisseur.Nom}".Trim();
-                    if (string.IsNullOrWhiteSpace(displayName))
-                    {
-                        displayName = fournisseur.Societe ?? $"ID: {fournisseur.ID}";
-                    }
-                    FournisseurPicker.Items.Add(displayName);
-                }
-            }
+            FournisseurPicker.ItemsSource = _fournisseurs;
 
             // Load all citernes (user can select any)
             _citernes = await _citerneService.GetAllCiternesAsync();
@@ -77,7 +66,7 @@ public partial class CamionCreatePopup : Popup
             return;
         }
 
-        if (FournisseurPicker.SelectedIndex < 0)
+        if (FournisseurPicker.SelectedItem is not FournisseurDto selectedFournisseur)
         {
             ErrorLabel.Text = "Veuillez sélectionner un fournisseur";
             ErrorLabel.IsVisible = true;
@@ -99,7 +88,7 @@ public partial class CamionCreatePopup : Popup
             {
                 Matricule = MatriculeEntry.Text.Trim(),
                 Marque = string.IsNullOrWhiteSpace(MarqueEntry.Text) ? null : MarqueEntry.Text.Trim(),
-                FournisseurID = _fournisseurs[FournisseurPicker.SelectedIndex].ID,
+                FournisseurID = selectedFournisseur.ID,
                 CiterneID = GetSelectedCiterneId()
             };
 

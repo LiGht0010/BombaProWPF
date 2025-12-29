@@ -9,6 +9,7 @@ public partial class ProduitCreatePopup : Popup
     private readonly ProduitService _produitService;
     private readonly CategorieService _categorieService;
     private List<CategorieDto> _categories = new();
+    private bool _isLoading = true;
 
     public ProduitCreatePopup(CategorieService categorieService, ProduitService produitService)
     {
@@ -17,16 +18,25 @@ public partial class ProduitCreatePopup : Popup
         _produitService = produitService;
         _categorieService = categorieService;
 
-        LoadCategories();
+        // Auto-generate numero for new product
+        NumeroEntry.Text = GenerateProductNumero();
+        
+        // Load categories after component is ready
+        Dispatcher.DispatchAsync(LoadCategoriesAsync);
     }
 
-    private async void LoadCategories()
+    private static string GenerateProductNumero()
+    {
+        return $"PRD{DateTime.Now:yyyyMMddHHmmss}";
+    }
+
+    private async Task LoadCategoriesAsync()
     {
         try
         {
-            CategoriePicker.Items.Clear();
-            
             _categories = await _categorieService.GetAllCategoriesAsync();
+            
+            CategoriePicker.Items.Clear();
             
             if (_categories.Count > 0)
             {
@@ -42,23 +52,27 @@ public partial class ProduitCreatePopup : Popup
             }
             else
             {
-                // Fallback defaults
-                CategoriePicker.Items.Add("Carburant");
-                CategoriePicker.Items.Add("Lubrifiant");
-                CategoriePicker.Items.Add("Articles");
-                CategoriePicker.Items.Add("Accessoires");
+                AddFallbackCategories();
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading categories: {ex.Message}");
-            
-            CategoriePicker.Items.Clear();
-            CategoriePicker.Items.Add("Carburant");
-            CategoriePicker.Items.Add("Lubrifiant");
-            CategoriePicker.Items.Add("Articles");
-            CategoriePicker.Items.Add("Accessoires");
+            AddFallbackCategories();
         }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void AddFallbackCategories()
+    {
+        CategoriePicker.Items.Clear();
+        CategoriePicker.Items.Add("Carburant");
+        CategoriePicker.Items.Add("Lubrifiant");
+        CategoriePicker.Items.Add("Articles");
+        CategoriePicker.Items.Add("Accessoires");
     }
 
     private void CalculatePrices()
@@ -111,7 +125,14 @@ public partial class ProduitCreatePopup : Popup
 
     private async void OnCreateClicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(NumeroProduitEntry.Text))
+        if (_isLoading)
+        {
+            ErrorLabel.Text = "Veuillez patienter, chargement en cours...";
+            ErrorLabel.IsVisible = true;
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(NumeroEntry.Text))
         {
             ErrorLabel.Text = "Le numéro de produit est requis";
             ErrorLabel.IsVisible = true;
@@ -125,37 +146,44 @@ public partial class ProduitCreatePopup : Popup
             return;
         }
 
+        if (CategoriePicker.SelectedIndex < 0 || _categories.Count == 0)
+        {
+            ErrorLabel.Text = "Veuillez sélectionner une catégorie";
+            ErrorLabel.IsVisible = true;
+            return;
+        }
+
         try
         {
+            var selectedCategoryName = CategoriePicker.SelectedItem?.ToString();
+            var selectedCategory = _categories.FirstOrDefault(c => c.Nom == selectedCategoryName);
+            
+            if (selectedCategory == null)
+            {
+                ErrorLabel.Text = "Catégorie invalide";
+                ErrorLabel.IsVisible = true;
+                return;
+            }
+
             var produit = new ProduitDto
             {
-                NumeroProduit = NumeroProduitEntry.Text.Trim(),
+                NumeroProduit = NumeroEntry.Text.Trim(),
                 Description = DescriptionEntry.Text.Trim(),
                 PrixAchat = string.IsNullOrWhiteSpace(PrixAchatEntry.Text) ? null : decimal.Parse(PrixAchatEntry.Text),
                 PrixHT = string.IsNullOrWhiteSpace(PrixHTEntry.Text) ? null : decimal.Parse(PrixHTEntry.Text),
                 TVA = string.IsNullOrWhiteSpace(TVAEntry.Text) ? 20 : decimal.Parse(TVAEntry.Text),
                 Stock = string.IsNullOrWhiteSpace(StockEntry.Text) ? 0 : int.Parse(StockEntry.Text),
                 StockMinimum = string.IsNullOrWhiteSpace(StockMinimumEntry.Text) ? 0 : int.Parse(StockMinimumEntry.Text),
-                DelaiDeLivraison = string.IsNullOrWhiteSpace(DelaiLivraisonEntry.Text) ? null : int.Parse(DelaiLivraisonEntry.Text)
+                DelaiDeLivraison = string.IsNullOrWhiteSpace(DelaiLivraisonEntry.Text) ? null : int.Parse(DelaiLivraisonEntry.Text),
+                CategorieID = selectedCategory.ID,
+                CategorieNom = selectedCategory.Nom
             };
-
-            // Set CategorieID based on selected category
-            if (CategoriePicker.SelectedIndex >= 0 && _categories.Count > 0)
-            {
-                var selectedCategoryName = CategoriePicker.SelectedItem?.ToString();
-                var selectedCategory = _categories.FirstOrDefault(c => c.Nom == selectedCategoryName);
-                if (selectedCategory != null)
-                {
-                    produit.CategorieID = selectedCategory.ID;
-                    produit.CategorieNom = selectedCategory.Nom;
-                }
-            }
 
             var result = await _produitService.CreateProduitAsync(produit);
 
             if (result != null)
             {
-                await CloseAsync(result); // Return the created DTO
+                await CloseAsync(result);
             }
             else
             {

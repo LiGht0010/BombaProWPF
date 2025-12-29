@@ -30,27 +30,18 @@ public partial class CamionEditPopup : Popup
     {
         try
         {
-            // Load fournisseurs
+            // Load fournisseurs - use ItemsSource for proper binding
             _fournisseurs = await _fournisseurService.GetActiveFournisseursAsync();
-            if (_fournisseurs.Count > 0)
+            FournisseurPicker.ItemsSource = _fournisseurs;
+            
+            // Set selected fournisseur
+            if (_camion.FournisseurID.HasValue)
             {
-                int selectedFournisseurIndex = -1;
-                for (int i = 0; i < _fournisseurs.Count; i++)
+                var selectedFournisseur = _fournisseurs.FirstOrDefault(f => f.ID == _camion.FournisseurID.Value);
+                if (selectedFournisseur != null)
                 {
-                    var fournisseur = _fournisseurs[i];
-                    var displayName = $"{fournisseur.Prenom} {fournisseur.Nom}".Trim();
-                    if (string.IsNullOrWhiteSpace(displayName))
-                    {
-                        displayName = fournisseur.Societe ?? $"ID: {fournisseur.ID}";
-                    }
-                    FournisseurPicker.Items.Add(displayName);
-
-                    if (fournisseur.ID == _camion.FournisseurID)
-                    {
-                        selectedFournisseurIndex = i;
-                    }
+                    FournisseurPicker.SelectedItem = selectedFournisseur;
                 }
-                FournisseurPicker.SelectedIndex = selectedFournisseurIndex;
             }
 
             // Load all citernes
@@ -101,7 +92,7 @@ public partial class CamionEditPopup : Popup
             return;
         }
 
-        if (FournisseurPicker.SelectedIndex < 0)
+        if (FournisseurPicker.SelectedItem is not FournisseurDto selectedFournisseur)
         {
             ErrorLabel.Text = "Veuillez sélectionner un fournisseur";
             ErrorLabel.IsVisible = true;
@@ -122,7 +113,7 @@ public partial class CamionEditPopup : Popup
             // Update camion properties
             _camion.Matricule = MatriculeEntry.Text.Trim();
             _camion.Marque = string.IsNullOrWhiteSpace(MarqueEntry.Text) ? null : MarqueEntry.Text.Trim();
-            _camion.FournisseurID = _fournisseurs[FournisseurPicker.SelectedIndex].ID;
+            _camion.FournisseurID = selectedFournisseur.ID;
             _camion.CiterneID = GetSelectedCiterneId();
 
             var success = await _camionService.UpdateCamionAsync(_camion);

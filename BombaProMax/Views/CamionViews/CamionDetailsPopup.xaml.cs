@@ -1,11 +1,13 @@
 using CommunityToolkit.Maui.Views;
 using BombaProMax.Models;
+using BombaProMax.Services;
 
 namespace BombaProMax.Views.CamionViews;
 
 public partial class CamionDetailsPopup : Popup
 {
     private readonly CamionDto _camion;
+    private readonly AchatService _achatService;
 
     public CamionDetailsPopup(CamionDto camion)
     {
@@ -13,11 +15,12 @@ public partial class CamionDetailsPopup : Popup
         CanBeDismissedByTappingOutsideOfPopup = false;
 
         _camion = camion;
+        _achatService = new AchatService();
 
-        LoadCamionDetails();
+        LoadCamionDetailsAsync();
     }
 
-    private void LoadCamionDetails()
+    private async void LoadCamionDetailsAsync()
     {
         if (_camion != null)
         {
@@ -48,8 +51,16 @@ public partial class CamionDetailsPopup : Popup
             DateCreationLabel.Text = _camion.DateCreation?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
             DateModificationLabel.Text = _camion.DateModification?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
 
-            // Related records count - DTOs don't have navigation properties
-            AchatsCountLabel.Text = "—";
+            // Load related records count
+            try
+            {
+                var achats = await _achatService.GetByCamionIdAsync(_camion.ID);
+                AchatsCountLabel.Text = achats.Count.ToString();
+            }
+            catch
+            {
+                AchatsCountLabel.Text = "—";
+            }
         }
     }
 

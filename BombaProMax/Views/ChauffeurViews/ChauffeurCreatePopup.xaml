@@ -2,137 +2,189 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="BombaProMax.Views.ChauffeurViews.ChauffeurCreatePopup">
+               x:Class="BombaProMax.Views.ChauffeurViews.ChauffeurCreatePopup"
+               Color="Transparent">
 
-    <Border Style="{StaticResource ChauffeurPopupContainer}">
-        <ScrollView>
-            <VerticalStackLayout Spacing="20">
-                <!-- Header -->
+    <Border BackgroundColor="White"       
+            Padding="0"
+            WidthRequest="550"
+            HeightRequest="620"
+            StrokeShape="RoundRectangle 12">
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" 
+                    BackgroundColor="#00796B" 
+                    Padding="20">
                 <Grid ColumnDefinitions="*,Auto">
-                    <Label Text="➕ Créer un nouveau chauffeur" 
-                           Style="{StaticResource ChauffeurPopupTitle}"/>
+                    <VerticalStackLayout>
+                        <Label Text="🚗 Nouveau Chauffeur" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                        <Label Text="Enregistrer un nouveau chauffeur" 
+                               FontSize="12"
+                               TextColor="#B2DFDB"/>
+                    </VerticalStackLayout>
                     <Button Grid.Column="1" 
                             Text="✕" 
-                            Style="{StaticResource ChauffeurPopupCloseButton}"
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            FontSize="20"
                             Clicked="OnCancelClicked"/>
                 </Grid>
+            </Border>
 
-                <BoxView Style="{StaticResource ChauffeurPopupDivider}"/>
-
-                <!-- Chauffeur Form -->
-                <VerticalStackLayout Spacing="18">
-
-                    <!-- Personal Information Section -->
-                    <Border Style="{StaticResource ChauffeurPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="ℹ️ Informations Personnelles" 
-                                   Style="{StaticResource ChauffeurPopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource ChauffeurPopupDivider}"/>
-
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-                                <!-- Nom -->
-                                <VerticalStackLayout Grid.Column="0" Spacing="8">
-                                    <Label Text="Nom *" 
-                                           Style="{StaticResource ChauffeurPopupFieldLabel}"/>
-                                    <Border Style="{StaticResource ChauffeurPopupInputContainer}">
-                                        <Entry x:Name="NomEntry"
-                                               Placeholder="Ex: Alami"
-                                               Style="{StaticResource ChauffeurPopupEntry}"/>
-                                    </Border>
-                                </VerticalStackLayout>
-
-                                <!-- Prénom -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                    <Label Text="Prénom" 
-                                           Style="{StaticResource ChauffeurPopupFieldLabel}"/>
-                                    <Border Style="{StaticResource ChauffeurPopupInputContainer}">
-                                        <Entry x:Name="PrenomEntry"
-                                               Placeholder="Ex: Mohammed"
-                                               Style="{StaticResource ChauffeurPopupEntry}"/>
-                                    </Border>
-                                </VerticalStackLayout>
-                            </Grid>
-
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-                                <!-- CIN -->
-                                <VerticalStackLayout Grid.Column="0" Spacing="8">
-                                    <Label Text="CIN" 
-                                           Style="{StaticResource ChauffeurPopupFieldLabel}"/>
-                                    <Border Style="{StaticResource ChauffeurPopupInputContainer}">
-                                        <Entry x:Name="CINEntry"
-                                               Placeholder="Ex: AB123456"
-                                               Style="{StaticResource ChauffeurPopupEntry}"/>
-                                    </Border>
-                                </VerticalStackLayout>
-
-                                <!-- Téléphone -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                    <Label Text="Téléphone" 
-                                           Style="{StaticResource ChauffeurPopupFieldLabel}"/>
-                                    <Border Style="{StaticResource ChauffeurPopupInputContainer}">
-                                        <Entry x:Name="TelephoneEntry"
-                                               Placeholder="Ex: 0612345678"
-                                               Keyboard="Telephone"
-                                               Style="{StaticResource ChauffeurPopupEntry}"/>
-                                    </Border>
-                                </VerticalStackLayout>
-                            </Grid>
-
-                            <!-- Numéro Permis -->
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="Numéro de Permis" 
-                                       Style="{StaticResource ChauffeurPopupFieldLabel}"/>
-                                <Border Style="{StaticResource ChauffeurPopupInputContainer}">
-                                    <Entry x:Name="NumeroPermisEntry"
-                                           Placeholder="Numéro de permis de conduire"
-                                           Style="{StaticResource ChauffeurPopupEntry}"/>
-                                </Border>
+            <!-- ========================================= -->
+            <!-- FORM CONTENT                              -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Nom & Prénom -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                        <Border BackgroundColor="#E0F2F1" 
+                                Padding="12"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="#00796B">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="👤 Nom *" 
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#00695C"/>
+                                <Entry x:Name="NomEntry"
+                                       Placeholder="Ex: Alami"
+                                       FontSize="14"
+                                       TextColor="#00695C"/>
                             </VerticalStackLayout>
+                        </Border>
+                        
+                        <Border Grid.Column="1"
+                                BackgroundColor="#F8F8F8" 
+                                Padding="12"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="#E0E0E0">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="👤 Prénom" 
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#666"/>
+                                <Entry x:Name="PrenomEntry"
+                                       Placeholder="Ex: Mohammed"
+                                       FontSize="14"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- CIN & Téléphone -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                        <Border BackgroundColor="#F8F8F8" 
+                                Padding="12"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="#E0E0E0">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="🪪 CIN" 
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#666"/>
+                                <Entry x:Name="CINEntry"
+                                       Placeholder="Ex: AB123456"
+                                       FontSize="14"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        
+                        <Border Grid.Column="1"
+                                BackgroundColor="#E3F2FD" 
+                                Padding="12"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="#1565C0">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="📞 Téléphone" 
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#0D47A1"/>
+                                <Entry x:Name="TelephoneEntry"
+                                       Placeholder="Ex: 0612345678"
+                                       Keyboard="Telephone"
+                                       FontSize="14"
+                                       TextColor="#0D47A1"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Numéro Permis -->
+                    <Border BackgroundColor="#F3E5F5" 
+                            Padding="12"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="#7B1FA2">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="🚗 Numéro de Permis" 
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="#7B1FA2"/>
+                            <Entry x:Name="NumeroPermisEntry"
+                                   Placeholder="Numéro de permis de conduire"
+                                   FontSize="14"
+                                   TextColor="#7B1FA2"/>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Fournisseur Section -->
-                    <Border Style="{StaticResource ChauffeurPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="🚚 Fournisseur associé" 
-                                   Style="{StaticResource ChauffeurPopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource ChauffeurPopupDivider}"/>
-
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="Fournisseur" 
-                                       Style="{StaticResource ChauffeurPopupFieldLabel}"/>
-                                <Border Style="{StaticResource ChauffeurPopupInputContainer}">
-                                    <Picker x:Name="FournisseurPicker"
-                                            Title="Sélectionner un fournisseur"
-                                            Style="{StaticResource ChauffeurPopupPicker}"/>
-                                </Border>
-                            </VerticalStackLayout>
+                    <!-- Fournisseur -->
+                    <Border BackgroundColor="#FFF3E0" 
+                            Padding="12"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="#FFB300">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="🏢 Fournisseur associé" 
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="#E65100"/>
+                            <Picker x:Name="FournisseurPicker"
+                                    Title="Sélectionner un fournisseur..."
+                                    ItemDisplayBinding="{Binding Societe}"
+                                    FontSize="14"/>
                         </VerticalStackLayout>
                     </Border>
 
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER: Error + Actions                   -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" 
+                    BackgroundColor="#F5F5F5" 
+                    Padding="15">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="15">
                     <!-- Error Message -->
                     <Label x:Name="ErrorLabel"
-                           Style="{StaticResource ChauffeurPopupErrorLabel}"
-                           IsVisible="False"/>
+                           TextColor="#F44336"
+                           FontSize="12"
+                           IsVisible="False"
+                           VerticalOptions="Center"/>
 
-                    <!-- Action Buttons -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
-                        <!-- Cancel Button -->
-                        <Button Grid.Column="0"
-                                Text="Annuler"
-                                Style="{StaticResource ChauffeurPopupCancelButton}"
-                                Clicked="OnCancelClicked"/>
+                    <!-- Cancel Button -->
+                    <Button Grid.Column="1"
+                            Text="Annuler" 
+                            BackgroundColor="#9E9E9E"
+                            TextColor="White"
+                            Padding="20,10"
+                            CornerRadius="8"
+                            Clicked="OnCancelClicked"/>
 
-                        <!-- Create Button -->
-                        <Button Grid.Column="1"
-                                Text="✓ Créer le chauffeur"
-                                Style="{StaticResource ChauffeurPopupCreateButton}"
-                                Clicked="OnCreateClicked"/>
-                    </Grid>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
+                    <!-- Create Button -->
+                    <Button Grid.Column="2"
+                            Text="✓ Créer" 
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            Padding="20,10"
+                            CornerRadius="8"
+                            FontAttributes="Bold"
+                            Clicked="OnCreateClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>

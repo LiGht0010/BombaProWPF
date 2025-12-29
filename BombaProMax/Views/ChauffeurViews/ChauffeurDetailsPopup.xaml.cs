@@ -1,4 +1,5 @@
 using BombaProMax.Models;
+using BombaProMax.Services;
 using CommunityToolkit.Maui.Views;
 
 namespace BombaProMax.Views.ChauffeurViews;
@@ -6,25 +7,36 @@ namespace BombaProMax.Views.ChauffeurViews;
 public partial class ChauffeurDetailsPopup : Popup
 {
     private readonly ChauffeurDto _chauffeur;
+    private readonly AchatService _achatService;
 
     public ChauffeurDetailsPopup(ChauffeurDto chauffeur)
     {
         InitializeComponent();
         CanBeDismissedByTappingOutsideOfPopup = true;
         _chauffeur = chauffeur;
+        _achatService = new AchatService();
 
         // Populate the details
-        PopulateDetails();
+        PopulateDetailsAsync();
     }
 
-    private void PopulateDetails()
+    private async void PopulateDetailsAsync()
     {
         // Header
         ChauffeurNameLabel.Text = $"{_chauffeur.Nom} {_chauffeur.Prenom}".Trim();
         ChauffeurCINLabel.Text = _chauffeur.CIN ?? "N/A";
 
-        // Statistics - ChauffeurDto doesn't have Achats collection, show placeholder
-        TotalAchatsLabel.Text = "—";
+        // Statistics - Load Achats count via service
+        try
+        {
+            var achats = await _achatService.GetByChauffeurIdAsync(_chauffeur.ID);
+            TotalAchatsLabel.Text = achats.Count.ToString();
+        }
+        catch
+        {
+            TotalAchatsLabel.Text = "—";
+        }
+
         FournisseurLabel.Text = _chauffeur.FournisseurNom ?? "Non assigné";
 
         // Details

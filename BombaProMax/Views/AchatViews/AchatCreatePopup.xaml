@@ -2,179 +2,169 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="BombaProMax.Views.AchatViews.AchatCreatePopup">
+               x:Class="BombaProMax.Views.AchatViews.AchatCreatePopup"
+               Color="Transparent">
 
-    <Border Style="{StaticResource AchatPopupBorder}">
-        <ScrollView>
-            <VerticalStackLayout Spacing="15">
-                <!-- Header -->
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="650" HeightRequest="720" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" BackgroundColor="#E8A84C" Padding="20,18" StrokeThickness="0">
                 <Grid ColumnDefinitions="*,Auto">
-                    <Label Text="🛒 Nouvel Achat" 
-                           Style="{StaticResource AchatPopupTitle}"/>
-                    <Button Grid.Column="1" 
-                            Text="✕" 
-                            Style="{StaticResource AchatPopupCloseButton}"
-                            Clicked="OnCancelClicked"/>
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="🛒 Nouvel Achat" FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                        <Label Text="Enregistrer un nouvel achat de produit" FontSize="12" TextColor="#FFF3E0"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="✕" BackgroundColor="#D4943C" TextColor="White" FontSize="16" WidthRequest="36" HeightRequest="36" CornerRadius="18" Clicked="OnCancelClicked"/>
                 </Grid>
+            </Border>
 
-                <BoxView Style="{StaticResource AchatPopupDivider}"/>
-
-                <!-- Achat Form -->
+            <!-- ========================================= -->
+            <!-- CONTENT                                   -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20,15">
                 <VerticalStackLayout Spacing="15">
                     
-                    <!-- Numero Achat Field -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Numéro d'Achat *" 
-                               Style="{StaticResource AchatPopupFieldLabel}"/>
-                        <Entry x:Name="NumeroEntry"
-                               Placeholder="Ex: ACH-2024-001"
-                               Style="{StaticResource AchatPopupEntry}"
-                               IsReadOnly="True"/>
-                    </VerticalStackLayout>
-
-                    <!-- Date Field -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Date d'Achat *" 
-                               Style="{StaticResource AchatPopupFieldLabel}"/>
-                        <DatePicker x:Name="AchatDatePicker"
-                                    Format="dd/MM/yyyy"
-                                    BackgroundColor="#F8F8F8"
-                                    TextColor="#333"/>
-                    </VerticalStackLayout>
-
-                    <!-- Fournisseur Picker (using FournisseurDto.Societe) -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Fournisseur *" 
-                               Style="{StaticResource AchatPopupFieldLabel}"/>
-                        <Picker x:Name="FournisseurPicker"
-                                Title="Sélectionner un fournisseur"
-                                ItemDisplayBinding="{Binding Societe}"
-                                BackgroundColor="#F8F8F8"
-                                TextColor="#333"
-                                TitleColor="#999"
-                                SelectedIndexChanged="OnFournisseurChanged"/>
-                    </VerticalStackLayout>
-
-                    <!-- Produit Picker (using ProduitDto.Description) -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Produit *" 
-                               Style="{StaticResource AchatPopupFieldLabel}"/>
-                        <Picker x:Name="ProduitPicker"
-                                Title="Sélectionner un produit"
-                                ItemDisplayBinding="{Binding Description}"
-                                BackgroundColor="#F8F8F8"
-                                TextColor="#333"
-                                TitleColor="#999"
-                                SelectedIndexChanged="OnProduitChanged"/>
-                    </VerticalStackLayout>
-
-                    <!-- Quantity and Unit Price Row -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-                        <!-- Quantité Field -->
-                        <VerticalStackLayout Grid.Column="0" Spacing="5">
-                            <Label Text="Quantité (L) *" 
-                                   Style="{StaticResource AchatPopupFieldLabel}"/>
-                            <Entry x:Name="QuantiteEntry"
-                                   Placeholder="Ex: 5000"
-                                   Keyboard="Numeric"
-                                   Style="{StaticResource AchatPopupEntry}"
-                                   TextChanged="OnQuantityOrPriceChanged"/>
+                    <!-- Date & Numéro Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="INFORMATIONS GÉNÉRALES" FontSize="11" FontAttributes="Bold" TextColor="#E8A84C"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="📅 Date *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <DatePicker x:Name="AchatDatePicker" Format="dd/MM/yyyy" FontSize="14"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="🔢 N° Achat (auto)" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="NumeroEntry" Placeholder="Généré automatiquement" IsReadOnly="True" BackgroundColor="#EEEEEE" FontSize="13"/>
+                                </VerticalStackLayout>
+                            </Grid>
                         </VerticalStackLayout>
-
-                        <!-- Prix Unitaire Field -->
-                        <VerticalStackLayout Grid.Column="1" Spacing="5">
-                            <Label Text="Prix Unitaire (DH) *" 
-                                   Style="{StaticResource AchatPopupFieldLabel}"/>
-                            <Entry x:Name="PrixUnitaireEntry"
-                                   Placeholder="Sélectionner un produit"
-                                   Keyboard="Numeric"
-                                   Style="{StaticResource AchatPopupEntry}"
-                                   IsReadOnly="True"
-                                   TextChanged="OnQuantityOrPriceChanged"/>
-                        </VerticalStackLayout>
-                    </Grid>
-
-                    <!-- Coût Total (Calculated) -->
-                    <Border Style="{StaticResource AchatPopupTotalBorder}">
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="💰 Coût Total" 
-                                   Style="{StaticResource AchatPopupTotalLabel}"/>
-                            <Label x:Name="CoutTotalLabel"
-                                   Text="0.00 DH"
-                                   Grid.Column="1"
-                                   Style="{StaticResource AchatPopupTotalValue}"/>
-                        </Grid>
                     </Border>
 
-                    <!-- Transport Section -->
-                    <Border Style="{StaticResource AchatPopupSectionBorder}">
-                        <VerticalStackLayout Spacing="10">
-                            <Label Text="🚚 Informations de Transport" 
-                                   Style="{StaticResource AchatPopupSectionTitle}"/>
-
-                            <!-- Chauffeur Picker (using ChauffeurDto.Nom) -->
+                    <!-- Fournisseur & Produit Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="FOURNISSEUR &amp; PRODUIT" FontSize="11" FontAttributes="Bold" TextColor="#E8A84C"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
                             <VerticalStackLayout Spacing="5">
-                                <Label Text="Chauffeur" 
-                                       Style="{StaticResource AchatPopupFieldLabelSmall}"/>
-                                <Picker x:Name="ChauffeurPicker"
-                                        Title="Sélectionner un chauffeur"
-                                        ItemDisplayBinding="{Binding Nom}"
-                                        BackgroundColor="White"
-                                        TextColor="#333"
-                                        TitleColor="#999"/>
+                                <Label Text="🏢 Fournisseur *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Picker x:Name="FournisseurPicker" Title="Sélectionner un fournisseur..." ItemDisplayBinding="{Binding Societe}" FontSize="14" SelectedIndexChanged="OnFournisseurChanged"/>
                             </VerticalStackLayout>
-
-                            <!-- Camion Picker (using CamionDto.Matricule) -->
                             <VerticalStackLayout Spacing="5">
-                                <Label Text="Camion" 
-                                       Style="{StaticResource AchatPopupFieldLabelSmall}"/>
-                                <Picker x:Name="CamionPicker"
-                                        Title="Sélectionner un camion"
-                                        ItemDisplayBinding="{Binding Matricule}"
-                                        BackgroundColor="White"
-                                        TextColor="#333"
-                                        TitleColor="#999"/>
+                                <Label Text="📦 Produit *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Picker x:Name="ProduitPicker" Title="Sélectionner un produit..." ItemDisplayBinding="{Binding Description}" FontSize="14" SelectedIndexChanged="OnProduitChanged"/>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Livraison Défectueuse -->
-                    <Border Style="{StaticResource AchatPopupWarningBorder}">
+                    <!-- Quantité & Prix Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="QUANTITÉ &amp; PRIX" FontSize="11" FontAttributes="Bold" TextColor="#E8A84C"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="⛽ Quantité (L) *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="QuantiteEntry" Placeholder="Ex: 5000" Keyboard="Numeric" FontSize="14" TextChanged="OnQuantityOrPriceChanged"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="💲 Prix Unitaire (DH) *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="PrixUnitaireEntry" Placeholder="Auto depuis produit" Keyboard="Numeric" IsReadOnly="True" BackgroundColor="#EEEEEE" FontSize="14" TextChanged="OnQuantityOrPriceChanged"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                            <!-- Total -->
+                            <Border BackgroundColor="#FFF3E0" Padding="12" StrokeThickness="0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="💰 Coût Total" FontSize="13" FontAttributes="Bold" TextColor="#E65100" VerticalTextAlignment="Center"/>
+                                    <Label x:Name="CoutTotalLabel" Grid.Column="1" Text="0.00 DH" FontSize="20" FontAttributes="Bold" TextColor="#E8A84C"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Transport Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="🚚 TRANSPORT (Optionnel)" FontSize="11" FontAttributes="Bold" TextColor="#E8A84C"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="Chauffeur" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Picker x:Name="ChauffeurPicker" Title="Sélectionner..." ItemDisplayBinding="{Binding Nom}" FontSize="13"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Camion" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Picker x:Name="CamionPicker" Title="Sélectionner..." ItemDisplayBinding="{Binding Matricule}" FontSize="13"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Livraison Défectueuse Card -->
+                    <Border BackgroundColor="#FFEBEE" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="⚠️ Livraison Défectueuse" 
-                                       Style="{StaticResource AchatPopupWarningTitle}"/>
-                                <Label Text="Cocher si la livraison présente des problèmes" 
-                                       Style="{StaticResource AchatPopupWarningSubtitle}"/>
+                                <Label Text="⚠️ Livraison Défectueuse" FontSize="13" FontAttributes="Bold" TextColor="#C62828"/>
+                                <Label Text="Cocher si la livraison présente des problèmes" FontSize="11" TextColor="#666"/>
                             </VerticalStackLayout>
-                            <Switch x:Name="LivraisonDefectueuseSwitch"
-                                    Grid.Column="1"
-                                    IsToggled="False"
-                                    OnColor="#F44336"/>
+                            <Switch x:Name="LivraisonDefectueuseSwitch" Grid.Column="1" IsToggled="False" OnColor="#F44336"/>
                         </Grid>
                     </Border>
 
-                    <!-- Error Message -->
-                    <Label x:Name="ErrorLabel"
-                           TextColor="#F44336"
-                           FontSize="14"
-                           IsVisible="False"
-                           HorizontalTextAlignment="Center"/>
-
-                    <!-- Action Buttons -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
-                        <Button Grid.Column="0"
-                                Text="Annuler" 
-                                Style="{StaticResource AchatPopupCancelButton}"
-                                Clicked="OnCancelClicked"/>
-
-                        <Button Grid.Column="1"
-                                Text="✓ Créer l'achat" 
-                                Style="{StaticResource AchatPopupCreateButton}"
-                                Clicked="OnCreateClicked"/>
-                    </Grid>
                 </VerticalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" BackgroundColor="White" Padding="20,15" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-2" Radius="6" Opacity="0.06"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <Label x:Name="ErrorLabel" TextColor="#F44336" FontSize="12" IsVisible="False" VerticalOptions="Center"/>
+                    <Button Grid.Column="1" Text="Annuler" BackgroundColor="#9E9E9E" TextColor="White" Padding="25,12" CornerRadius="8" Clicked="OnCancelClicked"/>
+                    <Button Grid.Column="2" Text="✓ Créer l'achat" BackgroundColor="#4CAF50" TextColor="White" Padding="25,12" CornerRadius="8" FontAttributes="Bold" Clicked="OnCreateClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>

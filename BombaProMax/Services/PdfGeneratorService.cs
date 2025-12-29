@@ -94,24 +94,28 @@ public class PdfGeneratorService
                 });
             });
 
-            // Info row
+            // Info row with Date Debut, Date Fin, Duree, Employe
             column.Item().Background(LightGray).Padding(10).Row(row =>
             {
                 row.RelativeItem().Text(text =>
                 {
-                    text.Span("Date: ").SemiBold();
-                    text.Span($"{data.DateDebut:dd/MM/yyyy HH:mm} - {data.DateFin:HH:mm}");
+                    text.Span("Debut: ").SemiBold();
+                    text.Span($"{data.DateDebut:dd/MM/yyyy HH:mm}");
+                });
+                row.RelativeItem().Text(text =>
+                {
+                    text.Span("Fin: ").SemiBold();
+                    text.Span($"{data.DateFin:dd/MM/yyyy HH:mm}");
+                });
+                row.RelativeItem().Text(text =>
+                {
+                    text.Span("Duree: ").SemiBold();
+                    text.Span(data.DureeFormatted);
                 });
                 row.RelativeItem().Text(text =>
                 {
                     text.Span("Employe: ").SemiBold();
                     text.Span(data.EmployeNom ?? "Non assigne");
-                });
-                row.RelativeItem().Text(text =>
-                {
-                    text.Span("Duree: ").SemiBold();
-                    var duree = data.DateFin - data.DateDebut;
-                    text.Span($"{(int)duree.TotalHours}h {duree.Minutes:D2}min");
                 });
             });
 
@@ -136,6 +140,13 @@ public class PdfGeneratorService
             });
             column.Item().Height(15);
 
+            // Credit Transactions Section (if any)
+            if (data.CreditTransactions.Count > 0)
+            {
+                column.Item().Element(c => ComposeCreditTransactionsSection(c, data));
+                column.Item().Height(15);
+            }
+
             // Marge Analysis
             column.Item().Element(c => ComposeMargeSection(c, data));
             column.Item().Height(15);
@@ -156,45 +167,70 @@ public class PdfGeneratorService
             column.Item().Text("RESUME FINANCIER").FontSize(12).Bold().FontColor(DarkBlue);
             column.Item().Height(10);
 
+            // First row: Quantite, Recette, TPE, Credite
             column.Item().Row(row =>
             {
                 // Quantite Totale
                 row.RelativeItem().Column(col =>
                 {
                     col.Item().Text("Quantite Totale").FontSize(9).FontColor(Gray);
-                    col.Item().Text($"{data.TotalQuantite:N2} L").FontSize(22).Bold().FontColor("#333");
-                });
-
-                // TPE
-                row.RelativeItem().Column(col =>
-                {
-                    col.Item().Text("TPE").FontSize(9).FontColor(Gray);
-                    col.Item().Text($"{data.TPE:N2} MAD").FontSize(16).Bold().FontColor(PrimaryBlue);
-                });
-
-                // Especes
-                row.RelativeItem().Column(col =>
-                {
-                    col.Item().Text("Especes").FontSize(9).FontColor(Gray);
-                    col.Item().Text($"{data.Especes:N2} MAD").FontSize(16).Bold().FontColor(Green);
+                    col.Item().Text($"{data.TotalQuantite:N2} L").FontSize(18).Bold().FontColor("#333");
                 });
 
                 // Recette
                 row.RelativeItem().Column(col =>
                 {
                     col.Item().Text("Recette").FontSize(9).FontColor(Gray);
-                    col.Item().Text($"{data.Recette:N2} MAD").FontSize(16).Bold().FontColor(Orange);
+                    col.Item().Text($"{data.Recette:N2} MAD").FontSize(14).Bold().FontColor(Orange);
                 });
 
-                // Ecart
+                // TPE
                 row.RelativeItem().Column(col =>
                 {
-                    var ecart = (data.TPE + data.Especes) - data.Recette;
-                    var ecartColor = ecart >= 0 ? Green : Red;
-                    var ecartSign = ecart >= 0 ? "+" : "";
-                    col.Item().Text("Ecart").FontSize(9).FontColor(Gray);
-                    col.Item().Text($"{ecartSign}{ecart:N2} MAD").FontSize(16).Bold().FontColor(ecartColor);
+                    col.Item().Text("TPE").FontSize(9).FontColor(Gray);
+                    col.Item().Text($"{data.TPE:N2} MAD").FontSize(14).Bold().FontColor(PrimaryBlue);
                 });
+
+                // Credite
+                row.RelativeItem().Column(col =>
+                {
+                    col.Item().Text("Credite").FontSize(9).FontColor(Gray);
+                    col.Item().Text($"{data.TotalCredite:N2} MAD").FontSize(14).Bold().FontColor(Orange);
+                });
+            });
+
+            column.Item().Height(10);
+
+            // Second row: Especes Attendues, Especes Declarees, Manque
+            column.Item().Row(row =>
+            {
+                // Especes Attendues
+                row.RelativeItem().Column(col =>
+                {
+                    col.Item().Text("Especes Attendues").FontSize(9).FontColor(Gray);
+                    col.Item().Text($"{data.EspecesAttendues:N2} MAD").FontSize(14).Bold().FontColor(Green);
+                });
+
+                // Especes Declarees
+                row.RelativeItem().Column(col =>
+                {
+                    col.Item().Text("Especes Declarees").FontSize(9).FontColor(Gray);
+                    col.Item().Text($"{data.Especes:N2} MAD").FontSize(14).Bold().FontColor("#7B1FA2");
+                });
+
+                // Manque
+                row.RelativeItem().Column(col =>
+                {
+                    var manque = data.Manque;
+                    var manqueColor = Math.Abs(manque) < 0.01m ? Green : manque > 0 ? Red : PrimaryBlue;
+                    var manqueSign = manque > 0 ? "" : manque < 0 ? "+" : "";
+                    var manqueLabel = Math.Abs(manque) < 0.01m ? "Equilibre" : manque > 0 ? "Manque" : "Excedent";
+                    col.Item().Text(manqueLabel).FontSize(9).FontColor(Gray);
+                    col.Item().Text($"{manqueSign}{Math.Abs(manque):N2} MAD").FontSize(14).Bold().FontColor(manqueColor);
+                });
+
+                // Empty spacer
+                row.RelativeItem();
             });
         });
     }
@@ -263,49 +299,205 @@ public class PdfGeneratorService
         });
     }
 
-    private void ComposeMargeSection(QContainer container, PeriodePdfData data)
+    private void ComposeCreditTransactionsSection(QContainer container, PeriodePdfData data)
     {
         container.Border(1).BorderColor("#E0E0E0").Background(White).Padding(12).Column(column =>
         {
-            column.Item().Text("ANALYSE DES MARGES (FIFO)").FontSize(11).Bold().FontColor(DarkBlue);
+            // Header with count and total
+            column.Item().Row(row =>
+            {
+                row.RelativeItem().Text($"CREDITS CARBURANT ({data.CreditTransactions.Count})").FontSize(11).Bold().FontColor(Orange);
+                row.ConstantItem(150).Text($"Total: {data.TotalCredite:N2} MAD")
+                    .FontSize(11).Bold().FontColor(Orange).AlignRight();
+            });
             column.Item().Height(8);
 
-            // Header row
+            // Table header
             column.Item().Background(LightGray).Padding(6).Row(row =>
             {
-                row.RelativeItem(2).Text("Produit").FontSize(9).Bold();
-                row.RelativeItem().Text("Quantite").FontSize(9).Bold().AlignCenter();
-                row.RelativeItem().Text("Cout Achat").FontSize(9).Bold().AlignRight();
-                row.RelativeItem().Text("Vente").FontSize(9).Bold().AlignRight();
-                row.RelativeItem().Text("Marge").FontSize(9).Bold().AlignRight();
+                row.RelativeItem(2).Text("Client").FontSize(9).Bold().FontColor(Gray);
+                row.RelativeItem(1.5f).Text("Produit").FontSize(9).Bold().FontColor(Gray);
+                row.RelativeItem().Text("Date").FontSize(9).Bold().FontColor(Gray).AlignCenter();
+                row.RelativeItem().Text("Qte").FontSize(9).Bold().FontColor(Gray).AlignCenter();
+                row.RelativeItem().Text("Montant").FontSize(9).Bold().FontColor(Gray).AlignRight();
             });
 
-            foreach (var marge in data.MargesParProduit)
+            // Credit transaction rows
+            var isAlternate = false;
+            foreach (var ct in data.CreditTransactions)
             {
-                var margeColor = marge.Marge >= 0 ? Green : Red;
-                column.Item().Padding(6).Row(row =>
+                var bgColor = isAlternate ? "#FAFAFA" : White;
+                isAlternate = !isAlternate;
+
+                column.Item().Background(bgColor).Padding(6).Row(row =>
                 {
-                    row.RelativeItem(2).Text(marge.ProduitNom ?? "N/A").FontSize(9);
-                    row.RelativeItem().Text($"{marge.Quantite:N2} L").FontSize(9).AlignCenter();
-                    row.RelativeItem().Text($"{marge.CoutAchat:N2}").FontSize(9).AlignRight();
-                    row.RelativeItem().Text($"{marge.Vente:N2}").FontSize(9).AlignRight();
-                    row.RelativeItem().Text($"{marge.Marge:N2} ({marge.MargePercent}%)")
-                        .FontSize(9).Bold().FontColor(margeColor).AlignRight();
+                    row.RelativeItem(2).Text(ct.ClientNom ?? "N/A").FontSize(9).Bold();
+                    row.RelativeItem(1.5f).Text(ct.ProduitNom ?? "N/A").FontSize(9);
+                    row.RelativeItem().Text(ct.DateCredit.ToString("dd/MM HH:mm")).FontSize(8).FontColor(Gray).AlignCenter();
+                    row.RelativeItem().Text($"{ct.Quantite:N0} L").FontSize(9).AlignCenter();
+                    row.RelativeItem().Text($"{ct.MontantTotal:N2}").FontSize(9).Bold().FontColor(Orange).AlignRight();
                 });
             }
 
             // Total row
-            column.Item().Background("#E3F2FD").Padding(6).Row(row =>
+            column.Item().Background("#FFF3E0").Padding(6).Row(row =>
             {
-                row.RelativeItem(2).Text("TOTAL").FontSize(10).Bold().FontColor(PrimaryBlue);
-                row.RelativeItem().Text($"{data.TotalQuantite:N2} L").FontSize(10).Bold().AlignCenter();
-                row.RelativeItem().Text($"{data.TotalCoutAchat:N2}").FontSize(10).Bold().AlignRight();
-                row.RelativeItem().Text($"{data.Recette:N2}").FontSize(10).Bold().AlignRight();
-                var totalMarge = data.Recette - data.TotalCoutAchat;
-                var margeColor = totalMarge >= 0 ? Green : Red;
-                row.RelativeItem().Text($"{totalMarge:N2} MAD")
-                    .FontSize(10).Bold().FontColor(margeColor).AlignRight();
+                row.RelativeItem(2).Text("TOTAL CREDITE").FontSize(10).Bold().FontColor(Orange);
+                row.RelativeItem(1.5f);
+                row.RelativeItem();
+                row.RelativeItem().Text($"{data.CreditTransactions.Sum(c => c.Quantite):N0} L").FontSize(10).Bold().AlignCenter();
+                row.RelativeItem().Text($"{data.TotalCredite:N2} MAD").FontSize(10).Bold().FontColor(Orange).AlignRight();
             });
+        });
+    }
+
+    private void ComposeMargeSection(QContainer container, PeriodePdfData data)
+    {
+        container.Border(1).BorderColor("#E0E0E0").Background(White).Padding(12).Column(column =>
+        {
+            column.Item().Text("ANALYSE DES MARGES (Stock FIFO)").FontSize(11).Bold().FontColor(DarkBlue);
+            column.Item().Height(8);
+
+            // Check if we have individual stock lot data
+            if (data.ConsommationsStock.Count > 0)
+            {
+                // Group by product
+                var groupedByProduit = data.ConsommationsStock
+                    .GroupBy(c => c.ProduitNom ?? "N/A")
+                    .OrderBy(g => g.Key)
+                    .ToList();
+
+                foreach (var group in groupedByProduit)
+                {
+                    // Product header
+                    var productMarge = group.Sum(c => c.Marge);
+                    var productMargeColor = productMarge >= 0 ? Green : Red;
+                    
+                    column.Item().Background("#E3F2FD").Padding(6).Row(row =>
+                    {
+                        row.RelativeItem().Text($"?? {group.Key}").FontSize(10).Bold().FontColor(PrimaryBlue);
+                        row.ConstantItem(120).Text($"Marge: {productMarge:N2} MAD")
+                            .FontSize(10).Bold().FontColor(productMargeColor).AlignRight();
+                    });
+
+                    // Column headers
+                    column.Item().Background(LightGray).Padding(4).Row(row =>
+                    {
+                        row.ConstantItem(40).Text("Lot").FontSize(8).Bold().FontColor(Gray);
+                        row.RelativeItem().Text("Reservoir").FontSize(8).Bold().FontColor(Gray);
+                        row.RelativeItem().Text("Qte (L)").FontSize(8).Bold().FontColor(Gray).AlignRight();
+                        row.RelativeItem().Text("P.Achat").FontSize(8).Bold().FontColor(Gray).AlignRight();
+                        row.RelativeItem().Text("Cout").FontSize(8).Bold().FontColor(Gray).AlignRight();
+                        row.RelativeItem().Text("P.Vente").FontSize(8).Bold().FontColor(Gray).AlignRight();
+                        row.RelativeItem().Text("Vente").FontSize(8).Bold().FontColor(Gray).AlignRight();
+                        row.RelativeItem().Text("Marge").FontSize(8).Bold().FontColor(Gray).AlignRight();
+                    });
+
+                    // Individual stock lot rows
+                    var isAlternate = false;
+                    foreach (var consumption in group.OrderBy(c => c.StockLotID))
+                    {
+                        var bgColor = isAlternate ? "#FAFAFA" : White;
+                        isAlternate = !isAlternate;
+                        var margeColor = consumption.Marge >= 0 ? Green : Red;
+
+                        column.Item().Background(bgColor).Padding(4).Row(row =>
+                        {
+                            row.ConstantItem(40).Text($"#{consumption.StockLotID}").FontSize(8).FontColor(Gray);
+                            row.RelativeItem().Text(consumption.ReservoirNumero ?? "N/A").FontSize(8);
+                            row.RelativeItem().Text($"{consumption.QuantiteConsommee:N2}").FontSize(8).Bold().AlignRight();
+                            row.RelativeItem().Text($"{consumption.PrixAchat:N2}").FontSize(8).FontColor(Orange).AlignRight();
+                            row.RelativeItem().Text($"{consumption.CoutAchat:N2}").FontSize(8).AlignRight();
+                            row.RelativeItem().Text($"{consumption.PrixVente:N2}").FontSize(8).FontColor(PrimaryBlue).AlignRight();
+                            row.RelativeItem().Text($"{consumption.Vente:N2}").FontSize(8).AlignRight();
+                            row.RelativeItem().Text($"{consumption.Marge:N2} ({consumption.MargePercent}%)")
+                                .FontSize(8).Bold().FontColor(margeColor).AlignRight();
+                        });
+                    }
+
+                    // Product subtotal
+                    var totalQte = group.Sum(c => c.QuantiteConsommee);
+                    var totalCout = group.Sum(c => c.CoutAchat);
+                    var totalVente = group.Sum(c => c.Vente);
+                    var prixAchatMoyen = totalQte > 0 ? totalCout / totalQte : 0;
+                    var subtotalMargePercent = totalVente > 0 ? Math.Round((productMarge / totalVente) * 100, 1) : 0;
+
+                    column.Item().Background("#E8F5E9").Padding(4).Row(row =>
+                    {
+                        row.ConstantItem(40).Text("Total").FontSize(8).Bold().FontColor(Green);
+                        row.RelativeItem().Text($"{group.Count()} lots").FontSize(8).FontColor(Gray);
+                        row.RelativeItem().Text($"{totalQte:N2}").FontSize(8).Bold().AlignRight();
+                        row.RelativeItem().Text($"~{prixAchatMoyen:N2}").FontSize(8).FontColor(Gray).AlignRight();
+                        row.RelativeItem().Text($"{totalCout:N2}").FontSize(8).Bold().AlignRight();
+                        row.RelativeItem();
+                        row.RelativeItem().Text($"{totalVente:N2}").FontSize(8).Bold().AlignRight();
+                        row.RelativeItem().Text($"{productMarge:N2} ({subtotalMargePercent}%)")
+                            .FontSize(8).Bold().FontColor(productMargeColor).AlignRight();
+                    });
+
+                    column.Item().Height(8);
+                }
+
+                // Grand Total
+                var grandTotalMarge = data.Recette - data.TotalCoutAchat;
+                var grandMargePercent = data.Recette > 0 ? Math.Round((grandTotalMarge / data.Recette) * 100, 1) : 0;
+                var grandMargeColor = grandTotalMarge >= 0 ? Green : Red;
+
+                column.Item().Background("#E3F2FD").Padding(8).Row(row =>
+                {
+                    row.RelativeItem(2).Text("TOTAL GENERAL").FontSize(10).Bold().FontColor(PrimaryBlue);
+                    row.RelativeItem().Text($"{data.TotalQuantite:N2} L").FontSize(10).Bold().AlignCenter();
+                    row.RelativeItem().Text($"Cout: {data.TotalCoutAchat:N2}").FontSize(9).AlignRight();
+                    row.RelativeItem().Text($"Vente: {data.Recette:N2}").FontSize(9).AlignRight();
+                    row.RelativeItem(1.5f).Text($"Marge: {grandTotalMarge:N2} ({grandMargePercent}%)")
+                        .FontSize(10).Bold().FontColor(grandMargeColor).AlignRight();
+                });
+            }
+            else if (data.MargesParProduit.Count > 0)
+            {
+                // Fallback to grouped marge data (old format)
+                // Header row
+                column.Item().Background(LightGray).Padding(6).Row(row =>
+                {
+                    row.RelativeItem(2).Text("Produit").FontSize(9).Bold();
+                    row.RelativeItem().Text("Quantite").FontSize(9).Bold().AlignCenter();
+                    row.RelativeItem().Text("Cout Achat").FontSize(9).Bold().AlignRight();
+                    row.RelativeItem().Text("Vente").FontSize(9).Bold().AlignRight();
+                    row.RelativeItem().Text("Marge").FontSize(9).Bold().AlignRight();
+                });
+
+                foreach (var marge in data.MargesParProduit)
+                {
+                    var margeColor = marge.Marge >= 0 ? Green : Red;
+                    column.Item().Padding(6).Row(row =>
+                    {
+                        row.RelativeItem(2).Text(marge.ProduitNom ?? "N/A").FontSize(9);
+                        row.RelativeItem().Text($"{marge.Quantite:N2} L").FontSize(9).AlignCenter();
+                        row.RelativeItem().Text($"{marge.CoutAchat:N2}").FontSize(9).AlignRight();
+                        row.RelativeItem().Text($"{marge.Vente:N2}").FontSize(9).AlignRight();
+                        row.RelativeItem().Text($"{marge.Marge:N2} ({marge.MargePercent}%)")
+                            .FontSize(9).Bold().FontColor(margeColor).AlignRight();
+                    });
+                }
+
+                // Total row
+                column.Item().Background("#E3F2FD").Padding(6).Row(row =>
+                {
+                    row.RelativeItem(2).Text("TOTAL").FontSize(10).Bold().FontColor(PrimaryBlue);
+                    row.RelativeItem().Text($"{data.TotalQuantite:N2} L").FontSize(10).Bold().AlignCenter();
+                    row.RelativeItem().Text($"{data.TotalCoutAchat:N2}").FontSize(10).Bold().AlignRight();
+                    row.RelativeItem().Text($"{data.Recette:N2}").FontSize(10).Bold().AlignRight();
+                    var totalMarge = data.Recette - data.TotalCoutAchat;
+                    var margeColor = totalMarge >= 0 ? Green : Red;
+                    row.RelativeItem().Text($"{totalMarge:N2} MAD")
+                        .FontSize(10).Bold().FontColor(margeColor).AlignRight();
+                });
+            }
+            else
+            {
+                // No marge data
+                column.Item().Text("Aucune donnee de marge disponible").FontSize(10).FontColor(Gray);
+            }
         });
     }
 
@@ -1320,7 +1512,7 @@ public class PdfGeneratorService
             {
                 row.RelativeItem(1.5f).Text("TOTAL").FontSize(10).Bold().FontColor(AchatOrange);
                 row.RelativeItem(1.5f);
-                row.RelativeItem().Text($"{totalAlloue:N0} L").FontSize(10).Bold().FontColor(AchatOrange).AlignCenter();
+                row.RelativeItem().Text($"{totalAlloue:N0} L").FontSize(10).Bold().AlignCenter();
                 row.RelativeItem();
                 row.RelativeItem();
             });

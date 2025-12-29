@@ -2,154 +2,222 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="BombaProMax.Views.ChauffeurViews.ChauffeurDetailsPopup">
+               x:Class="BombaProMax.Views.ChauffeurViews.ChauffeurDetailsPopup"
+               Color="Transparent">
 
     <Border BackgroundColor="White"       
-           Padding="20"
-           WidthRequest="600">
-        <ScrollView>
-            <VerticalStackLayout Spacing="20">
-                <!-- Header with Chauffeur Badge -->
+            Padding="0"
+            WidthRequest="550"
+            HeightRequest="650"
+            StrokeShape="RoundRectangle 12">
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" 
+                    BackgroundColor="#00897B" 
+                    Padding="20">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
                     <Border Grid.Column="0"
-                            BackgroundColor="#336860"
+                            BackgroundColor="#00695C"
                             WidthRequest="50"
                             HeightRequest="50"
-                            StrokeShape="RoundRectangle 25">
+                            StrokeShape="RoundRectangle 25"
+                            StrokeThickness="0">
                         <Label Text="🚗" 
                                FontSize="24"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
-
-                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                         <Label x:Name="ChauffeurNameLabel"
-                               FontSize="20" 
+                               Text="Nom du Chauffeur" 
+                               FontSize="18" 
                                FontAttributes="Bold"
-                               TextColor="#2C3E50"/>
-                        <Border BackgroundColor="#336860"
-                               Padding="6,2"
-                               HorizontalOptions="Start"
-                               StrokeShape="RoundRectangle 4">
+                               TextColor="White"/>
+                        <Border BackgroundColor="#004D40"
+                                Padding="8,3"
+                                HorizontalOptions="Start"
+                                StrokeShape="RoundRectangle 4"
+                                StrokeThickness="0">
                             <Label x:Name="ChauffeurCINLabel"
-                                   FontSize="12"
+                                   Text="CIN"
+                                   FontSize="11"
                                    TextColor="White"/>
                         </Border>
                     </VerticalStackLayout>
-
                     <Button Grid.Column="2" 
                             Text="✕" 
                             BackgroundColor="Transparent"
-                            TextColor="#666"
+                            TextColor="White"
                             FontSize="20"
                             Clicked="OnCloseClicked"
                             VerticalOptions="Start"/>
                 </Grid>
+            </Border>
 
-                <BoxView Color="#E0E0E0" HeightRequest="1"/>
+            <!-- ========================================= -->
+            <!-- CONTENT                                   -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20">
+                <VerticalStackLayout Spacing="15">
 
-                <!-- Statistics Cards -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                    <!-- Total Achats Card -->
-                    <Border Grid.Column="0"
-                            BackgroundColor="#E3F2FD"
+                    <!-- Statistics Cards -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <!-- Total Achats Card -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="#E3F2FD"
+                                Padding="15"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="#2196F3"
+                                StrokeThickness="2">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="🛒" 
+                                       FontSize="24"
+                                       HorizontalOptions="Center"/>
+                                <Label x:Name="TotalAchatsLabel"
+                                       Text="0" 
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#1565C0"/>
+                                <Label Text="TOTAL ACHATS" 
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Fournisseur Card -->
+                        <Border Grid.Column="1"
+                                BackgroundColor="#FFF3E0"
+                                Padding="15"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="#FF9800"
+                                StrokeThickness="2">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="🏢" 
+                                       FontSize="24"
+                                       HorizontalOptions="Center"/>
+                                <Label x:Name="FournisseurLabel"
+                                       Text="N/A" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#E65100"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="1"/>
+                                <Label Text="FOURNISSEUR" 
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Personal Information Section -->
+                    <Border BackgroundColor="#E0F2F1" 
                             Padding="15"
                             StrokeShape="RoundRectangle 8"
-                            Stroke="#2196F3"
-                            StrokeThickness="2">
+                            Stroke="#00897B">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="🛒" 
-                                   FontSize="24"
-                                   HorizontalOptions="Center"/>
-                            <Label x:Name="TotalAchatsLabel"
-                                   Text="0" 
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="#333"/>
-                            <Label Text="TOTAL ACHATS" 
-                                   FontSize="10"
-                                   HorizontalOptions="Center"
-                                   TextColor="#666"/>
+                            <Label Text="👤 Informations Personnelles" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#00695C" 
+                                   FontSize="14"/>
+                            <BoxView Color="#B2DFDB" HeightRequest="1"/>
+
+                            <Grid RowDefinitions="Auto,Auto" 
+                                  ColumnDefinitions="*,*"
+                                  RowSpacing="10"
+                                  ColumnSpacing="15">
+
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                    <Label Text="Nom" FontAttributes="Bold" TextColor="#666" FontSize="11"/>
+                                    <Label x:Name="NomDetailLabel" Text="N/A" TextColor="#333" FontSize="14" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                    <Label Text="Prénom" FontAttributes="Bold" TextColor="#666" FontSize="11"/>
+                                    <Label x:Name="PrenomDetailLabel" Text="N/A" TextColor="#333" FontSize="14"/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                                    <Label Text="CIN" FontAttributes="Bold" TextColor="#666" FontSize="11"/>
+                                    <Label x:Name="CINDetailLabel" Text="N/A" TextColor="#333" FontSize="14"/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2">
+                                    <Label Text="Téléphone" FontAttributes="Bold" TextColor="#666" FontSize="11"/>
+                                    <Label x:Name="TelephoneDetailLabel" Text="N/A" TextColor="#333" FontSize="14"/>
+                                </VerticalStackLayout>
+                            </Grid>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Fournisseur Card -->
-                    <Border Grid.Column="1"
-                            BackgroundColor="#FFF3E0"
+                    <!-- Permis Section -->
+                    <Border BackgroundColor="#F3E5F5" 
                             Padding="15"
                             StrokeShape="RoundRectangle 8"
-                            Stroke="#FF9800"
-                            StrokeThickness="2">
+                            Stroke="#7B1FA2">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="🚚" 
-                                   FontSize="24"
-                                   HorizontalOptions="Center"/>
-                            <Label x:Name="FournisseurLabel"
-                                   Text="N/A" 
-                                   FontSize="14"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="#333"
-                                   LineBreakMode="TailTruncation"
-                                   MaxLines="1"/>
-                            <Label Text="FOURNISSEUR" 
-                                   FontSize="10"
-                                   HorizontalOptions="Center"
-                                   TextColor="#666"/>
+                            <Label Text="🚗 Permis de Conduire" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#7B1FA2" 
+                                   FontSize="14"/>
+                            <BoxView Color="#E1BEE7" HeightRequest="1"/>
+
+                            <HorizontalStackLayout Spacing="10">
+                                <Label Text="N° Permis:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label x:Name="PermisDetailLabel" Text="N/A" TextColor="#7B1FA2" FontSize="13" FontAttributes="Bold"/>
+                            </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </Border>
-                </Grid>
 
-                <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                    <!-- Metadata Section -->
+                    <Border BackgroundColor="#F8F8F8" 
+                            Padding="15"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="#E0E0E0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="📅 Informations Système" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#666" 
+                                   FontSize="14"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
 
-                <!-- Chauffeur Details Section -->
-                <Border BackgroundColor="#F8F8F8" 
-                       Padding="15"
-                       StrokeShape="RoundRectangle 8">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="📋 Informations du chauffeur" 
-                               FontAttributes="Bold" 
-                               TextColor="#333" 
-                               FontSize="16"/>
-                        <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid RowDefinitions="Auto,Auto" 
+                                  ColumnDefinitions="140,*"
+                                  RowSpacing="10">
 
-                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" 
-                              ColumnDefinitions="140,*"
-                              RowSpacing="10">
+                                <Label Grid.Row="0" Grid.Column="0" Text="Créé le:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="0" Grid.Column="1" x:Name="DateCreationLabel" Text="N/A" TextColor="#333" FontSize="13"/>
 
-                            <Label Grid.Row="0" Grid.Column="0" Text="Nom:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="0" Grid.Column="1" x:Name="NomDetailLabel" TextColor="#333"/>
+                                <Label Grid.Row="1" Grid.Column="0" Text="Modifié le:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="1" Grid.Column="1" x:Name="DateModificationLabel" Text="N/A" TextColor="#333" FontSize="13"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
 
-                            <Label Grid.Row="1" Grid.Column="0" Text="Prénom:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="1" Grid.Column="1" x:Name="PrenomDetailLabel" TextColor="#333"/>
+                </VerticalStackLayout>
+            </ScrollView>
 
-                            <Label Grid.Row="2" Grid.Column="0" Text="CIN:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="2" Grid.Column="1" x:Name="CINDetailLabel" TextColor="#333"/>
-
-                            <Label Grid.Row="3" Grid.Column="0" Text="Téléphone:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="3" Grid.Column="1" x:Name="TelephoneDetailLabel" TextColor="#333"/>
-
-                            <Label Grid.Row="4" Grid.Column="0" Text="N° Permis:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="4" Grid.Column="1" x:Name="PermisDetailLabel" TextColor="#333"/>
-
-                            <Label Grid.Row="5" Grid.Column="0" Text="Créé le:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="5" Grid.Column="1" x:Name="DateCreationLabel" TextColor="#333"/>
-
-                            <Label Grid.Row="6" Grid.Column="0" Text="Modifié le:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="6" Grid.Column="1" x:Name="DateModificationLabel" TextColor="#333"/>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Close Button -->
+            <!-- ========================================= -->
+            <!-- FOOTER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" 
+                    BackgroundColor="#F5F5F5" 
+                    Padding="15">
                 <Button Text="Fermer" 
-                        BackgroundColor="#336860"
+                        BackgroundColor="#00897B"
                         TextColor="White"
+                        Padding="30,10"
                         CornerRadius="8"
-                        HeightRequest="45"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
                         Clicked="OnCloseClicked"/>
-            </VerticalStackLayout>
-        </ScrollView>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>

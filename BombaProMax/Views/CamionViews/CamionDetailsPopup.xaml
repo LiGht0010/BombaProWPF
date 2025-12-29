@@ -2,177 +2,217 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="BombaProMax.Views.CamionViews.CamionDetailsPopup">
+               x:Class="BombaProMax.Views.CamionViews.CamionDetailsPopup"
+               Color="Transparent">
 
-    <Border Style="{StaticResource CamionPopupContainer}">
-        <ScrollView>
-            <VerticalStackLayout Spacing="20">
-                <!-- Header with Matricule -->
-                <Grid ColumnDefinitions="*,Auto">
-                    <VerticalStackLayout Grid.Column="0" Spacing="5">
-                        <Label Text="🚛 Détails du Camion" 
-                               Style="{StaticResource CamionPopupTitle}"
-                               FontSize="20"
-                               TextColor="#7F8C8D"/>
+    <Border BackgroundColor="White"       
+            Padding="0"
+            WidthRequest="550"
+            HeightRequest="620"
+            StrokeShape="RoundRectangle 12">
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" 
+                    BackgroundColor="#5C6BC0" 
+                    Padding="20">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#3F51B5"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            StrokeShape="RoundRectangle 25"
+                            StrokeThickness="0">
+                        <Label Text="🚛" 
+                               FontSize="24"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Détails du Camion" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               TextColor="White"/>
                         <Label x:Name="MatriculeLabel"
-                               Text="Camion" 
-                               Style="{StaticResource CamionPopupTitle}"/>
+                               Text="Matricule" 
+                               FontSize="14"
+                               TextColor="#C5CAE9"/>
                     </VerticalStackLayout>
-
-                    <Button Grid.Column="1" 
+                    <Button Grid.Column="2" 
                             Text="✕" 
-                            Style="{StaticResource CamionPopupCloseButton}"
-                            Clicked="OnCloseClicked"/>
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            FontSize="20"
+                            Clicked="OnCloseClicked"
+                            VerticalOptions="Start"/>
                 </Grid>
+            </Border>
 
-                <BoxView Style="{StaticResource CamionPopupDivider}"/>
+            <!-- ========================================= -->
+            <!-- CONTENT                                   -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20">
+                <VerticalStackLayout Spacing="15">
 
-                <!-- Sections -->
-                <VerticalStackLayout Spacing="18">
+                    <!-- Statistics Cards -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <!-- Achats Card -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="#E3F2FD"
+                                Padding="15"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="#2196F3"
+                                StrokeThickness="2">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="🛒" 
+                                       FontSize="24"
+                                       HorizontalOptions="Center"/>
+                                <Label x:Name="AchatsCountLabel"
+                                       Text="0" 
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#1565C0"/>
+                                <Label Text="ACHATS" 
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Fournisseur Card -->
+                        <Border Grid.Column="1"
+                                BackgroundColor="#FFF3E0"
+                                Padding="15"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="#FF9800"
+                                StrokeThickness="2">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="🏢" 
+                                       FontSize="24"
+                                       HorizontalOptions="Center"/>
+                                <Label x:Name="FournisseurLabel"
+                                       Text="N/A" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#E65100"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="1"/>
+                                <Label Text="FOURNISSEUR" 
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
 
                     <!-- Basic Information Section -->
-                    <Border Style="{StaticResource CamionPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
+                    <Border BackgroundColor="#F8F8F8" 
+                            Padding="15"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="#E0E0E0">
+                        <VerticalStackLayout Spacing="10">
                             <Label Text="ℹ️ Informations de Base" 
-                                   Style="{StaticResource CamionPopupSectionTitle}"/>
+                                   FontAttributes="Bold" 
+                                   TextColor="#333" 
+                                   FontSize="14"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
 
-                            <BoxView Style="{StaticResource CamionPopupDivider}"/>
+                            <Grid RowDefinitions="Auto,Auto,Auto" 
+                                  ColumnDefinitions="120,*"
+                                  RowSpacing="10">
 
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="15" RowDefinitions="Auto,Auto">
-                                <!-- ID -->
-                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="5">
-                                    <Label Text="ID" 
-                                           Style="{StaticResource CamionPopupFieldLabel}"/>
-                                    <Label x:Name="IdLabel"
-                                           Text="N/A"
-                                           Style="{StaticResource CamionDetailsValueLabel}"/>
-                                </VerticalStackLayout>
+                                <Label Grid.Row="0" Grid.Column="0" Text="ID:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="0" Grid.Column="1" x:Name="IdLabel" Text="N/A" TextColor="#333" FontSize="13"/>
 
-                                <!-- Marque -->
-                                <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
-                                    <Label Text="Marque" 
-                                           Style="{StaticResource CamionPopupFieldLabel}"/>
-                                    <Label x:Name="MarqueLabel"
-                                           Text="N/A"
-                                           Style="{StaticResource CamionDetailsValueLabel}"/>
-                                </VerticalStackLayout>
+                                <Label Grid.Row="1" Grid.Column="0" Text="Matricule:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="1" Grid.Column="1" x:Name="MatriculeValueLabel" Text="N/A" TextColor="#333" FontSize="13" FontAttributes="Bold"/>
 
-                                <!-- Matricule (full width) -->
-                                <VerticalStackLayout Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Spacing="5">
-                                    <Label Text="Matricule" 
-                                           Style="{StaticResource CamionPopupFieldLabel}"/>
-                                    <Label x:Name="MatriculeValueLabel"
-                                           Text="N/A"
-                                           Style="{StaticResource CamionDetailsValueLabel}"/>
-                                </VerticalStackLayout>
+                                <Label Grid.Row="2" Grid.Column="0" Text="Marque:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="2" Grid.Column="1" x:Name="MarqueLabel" Text="N/A" TextColor="#333" FontSize="13"/>
                             </Grid>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Assignment Information Section -->
-                    <Border Style="{StaticResource CamionPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="🔗 Informations d'Affectation" 
-                                   Style="{StaticResource CamionPopupSectionTitle}"/>
+                    <!-- Citerne Section -->
+                    <Border BackgroundColor="#E8F5E9" 
+                            Padding="15"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="#4CAF50">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="🛢️ Citerne Assignée" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#2E7D32" 
+                                   FontSize="14"/>
+                            <BoxView Color="#C8E6C9" HeightRequest="1"/>
 
-                            <BoxView Style="{StaticResource CamionPopupDivider}"/>
-
-                            <VerticalStackLayout Spacing="15">
-                                <!-- Fournisseur -->
-                                <VerticalStackLayout Spacing="5">
-                                    <Label Text="Fournisseur" 
-                                           Style="{StaticResource CamionPopupFieldLabel}"/>
-                                    <Label x:Name="FournisseurLabel"
-                                           Text="Non assigné"
-                                           Style="{StaticResource CamionDetailsValueLabel}"/>
-                                </VerticalStackLayout>
-
-                                <!-- Citerne -->
-                                <VerticalStackLayout Spacing="5">
-                                    <Label Text="Citerne" 
-                                           Style="{StaticResource CamionPopupFieldLabel}"/>
-                                    <HorizontalStackLayout Spacing="10">
-                                        <Border x:Name="CiterneStatusBadge"
-                                                Style="{StaticResource CamionCiterneStatusBadge}"
-                                                WidthRequest="120">
-                                            <Label x:Name="CiterneStatusLabel"
-                                                   Text="Non assignée"
-                                                   Style="{StaticResource CamionCiterneStatusLabel}"/>
-                                        </Border>
-                                        <Label x:Name="CiterneDetailsLabel"
-                                               Text=""
-                                               Style="{StaticResource CamionDetailsValueLabel}"
-                                               VerticalTextAlignment="Center"/>
-                                    </HorizontalStackLayout>
-                                </VerticalStackLayout>
-                            </VerticalStackLayout>
+                            <HorizontalStackLayout Spacing="10">
+                                <Border x:Name="CiterneStatusBadge"
+                                        BackgroundColor="#9E9E9E"
+                                        Padding="10,5"
+                                        StrokeShape="RoundRectangle 4"
+                                        StrokeThickness="0">
+                                    <Label x:Name="CiterneStatusLabel"
+                                           Text="Non assignée"
+                                           TextColor="White"
+                                           FontSize="12"
+                                           FontAttributes="Bold"/>
+                                </Border>
+                                <Label x:Name="CiterneDetailsLabel"
+                                       Text=""
+                                       TextColor="#333"
+                                       FontSize="13"
+                                       VerticalTextAlignment="Center"/>
+                            </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
                     <!-- Metadata Section -->
-                    <Border Style="{StaticResource CamionPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
+                    <Border BackgroundColor="#F3E5F5" 
+                            Padding="15"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="#9C27B0">
+                        <VerticalStackLayout Spacing="10">
                             <Label Text="📅 Informations Système" 
-                                   Style="{StaticResource CamionPopupSectionTitle}"/>
+                                   FontAttributes="Bold" 
+                                   TextColor="#7B1FA2" 
+                                   FontSize="14"/>
+                            <BoxView Color="#E1BEE7" HeightRequest="1"/>
 
-                            <BoxView Style="{StaticResource CamionPopupDivider}"/>
+                            <Grid RowDefinitions="Auto,Auto" 
+                                  ColumnDefinitions="140,*"
+                                  RowSpacing="10">
 
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="15">
-                                <!-- Date de Création -->
-                                <VerticalStackLayout Grid.Column="0" Spacing="5">
-                                    <Label Text="Date de Création" 
-                                           Style="{StaticResource CamionPopupFieldLabel}"/>
-                                    <Label x:Name="DateCreationLabel"
-                                           Text="N/A"
-                                           Style="{StaticResource CamionDetailsValueLabel}"/>
-                                </VerticalStackLayout>
+                                <Label Grid.Row="0" Grid.Column="0" Text="Créé le:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="0" Grid.Column="1" x:Name="DateCreationLabel" Text="N/A" TextColor="#333" FontSize="13"/>
 
-                                <!-- Date de Modification -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="5">
-                                    <Label Text="Dernière Modification" 
-                                           Style="{StaticResource CamionPopupFieldLabel}"/>
-                                    <Label x:Name="DateModificationLabel"
-                                           Text="N/A"
-                                           Style="{StaticResource CamionDetailsValueLabel}"/>
-                                </VerticalStackLayout>
+                                <Label Grid.Row="1" Grid.Column="0" Text="Modifié le:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="1" Grid.Column="1" x:Name="DateModificationLabel" Text="N/A" TextColor="#333" FontSize="13"/>
                             </Grid>
                         </VerticalStackLayout>
                     </Border>
-
-                    <!-- Related Records Statistics -->
-                    <Border Style="{StaticResource CamionPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="📊 Enregistrements Associés" 
-                                   Style="{StaticResource CamionPopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource CamionPopupDivider}"/>
-
-                            <Grid ColumnDefinitions="*" ColumnSpacing="10">
-                                <!-- Achats -->
-                                <Border Grid.Column="0" Style="{StaticResource CamionStatsCard}">
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="🛒" 
-                                               FontSize="24"
-                                               HorizontalTextAlignment="Center"/>
-                                        <Label x:Name="AchatsCountLabel"
-                                               Text="0"
-                                               Style="{StaticResource CamionStatsNumber}"/>
-                                        <Label Text="Achats" 
-                                               Style="{StaticResource CamionStatsLabel}"/>
-                                    </VerticalStackLayout>
-                                </Border>
-                            </Grid>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Close Button -->
-                    <Button Text="Fermer"
-                            Style="{StaticResource CamionDetailsCloseButton}"
-                            Margin="0,10,0,0"
-                            Clicked="OnCloseClicked"/>
 
                 </VerticalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" 
+                    BackgroundColor="#F5F5F5" 
+                    Padding="15">
+                <Button Text="Fermer" 
+                        BackgroundColor="#5C6BC0"
+                        TextColor="White"
+                        Padding="30,10"
+                        CornerRadius="8"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        Clicked="OnCloseClicked"/>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>

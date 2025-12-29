@@ -439,57 +439,291 @@ public partial class PeriodeViewPopup : Popup
 
         if (_analytics.ConsommationsStock.Count > 0)
         {
+            // Group by product for sub-totals
             var groupedByProduit = _analytics.ConsommationsStock
                 .GroupBy(c => c.ProduitNom ?? "N/A")
+                .OrderBy(g => g.Key)
                 .ToList();
 
             foreach (var group in groupedByProduit)
             {
+                // Product header
+                var productHeader = new Grid
+                {
+                    ColumnDefinitions = [
+                        new ColumnDefinition { Width = GridLength.Star },
+                        new ColumnDefinition { Width = GridLength.Auto }
+                    ],
+                    Padding = new Thickness(0, 8, 0, 4),
+                    BackgroundColor = Color.FromArgb("#F5F5F5")
+                };
+                
+                productHeader.Add(new Label 
+                { 
+                    Text = $"?? {group.Key}", 
+                    FontSize = 13, 
+                    FontAttributes = FontAttributes.Bold, 
+                    TextColor = Color.FromArgb("#1976D2"),
+                    Padding = new Thickness(8, 0)
+                }, 0, 0);
+                
+                var productTotalMarge = group.Sum(c => c.Marge);
+                var productMargeColor = productTotalMarge >= 0 ? "#2E7D32" : "#C62828";
+                productHeader.Add(new Label 
+                { 
+                    Text = $"Marge: {productTotalMarge:N2} MAD", 
+                    FontSize = 12, 
+                    FontAttributes = FontAttributes.Bold, 
+                    TextColor = Color.FromArgb(productMargeColor),
+                    Padding = new Thickness(0, 0, 8, 0)
+                }, 1, 0);
+                
+                MargeContainer.Add(productHeader);
+
+                // Column headers for stock lots
+                var columnHeader = new Grid
+                {
+                    ColumnDefinitions = [
+                        new ColumnDefinition { Width = new GridLength(0.8, GridUnitType.Star) },  // Lot
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Reservoir
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Qté
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Prix Achat
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Coût
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Prix Vente
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Vente
+                        new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) }   // Marge
+                    ],
+                    ColumnSpacing = 8,
+                    Padding = new Thickness(8, 4),
+                    BackgroundColor = Color.FromArgb("#ECEFF1")
+                };
+
+                columnHeader.Add(new Label { Text = "Lot", FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#666") }, 0, 0);
+                columnHeader.Add(new Label { Text = "Réservoir", FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#666") }, 1, 0);
+                columnHeader.Add(new Label { Text = "Qté (L)", FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End }, 2, 0);
+                columnHeader.Add(new Label { Text = "P.Achat", FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End }, 3, 0);
+                columnHeader.Add(new Label { Text = "Coût", FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End }, 4, 0);
+                columnHeader.Add(new Label { Text = "P.Vente", FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End }, 5, 0);
+                columnHeader.Add(new Label { Text = "Vente", FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End }, 6, 0);
+                columnHeader.Add(new Label { Text = "Marge", FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End }, 7, 0);
+
+                MargeContainer.Add(columnHeader);
+
+                // Individual stock lot rows
+                var isAlternate = false;
+                foreach (var consumption in group.OrderBy(c => c.StockLotID))
+                {
+                    var bgColor = isAlternate ? Color.FromArgb("#FAFAFA") : Colors.White;
+                    isAlternate = !isAlternate;
+
+                    var row = new Grid
+                    {
+                        ColumnDefinitions = [
+                            new ColumnDefinition { Width = new GridLength(0.8, GridUnitType.Star) },  // Lot
+                            new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Reservoir
+                            new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Qté
+                            new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Prix Achat
+                            new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Coût
+                            new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Prix Vente
+                            new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },    // Vente
+                            new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) }   // Marge
+                        ],
+                        ColumnSpacing = 8,
+                        Padding = new Thickness(8, 6),
+                        BackgroundColor = bgColor
+                    };
+
+                    // Lot ID
+                    row.Add(new Label 
+                    { 
+                        Text = $"#{consumption.StockLotID}", 
+                        FontSize = 11, 
+                        TextColor = Color.FromArgb("#666"),
+                        VerticalOptions = LayoutOptions.Center 
+                    }, 0, 0);
+
+                    // Reservoir
+                    row.Add(new Label 
+                    { 
+                        Text = consumption.ReservoirNumero ?? "N/A", 
+                        FontSize = 11, 
+                        TextColor = Color.FromArgb("#666"),
+                        VerticalOptions = LayoutOptions.Center 
+                    }, 1, 0);
+
+                    // Quantité
+                    row.Add(new Label 
+                    { 
+                        Text = $"{consumption.QuantiteConsommee:N2}", 
+                        FontSize = 11, 
+                        TextColor = Color.FromArgb("#333"),
+                        FontAttributes = FontAttributes.Bold,
+                        HorizontalTextAlignment = TextAlignment.End,
+                        VerticalOptions = LayoutOptions.Center 
+                    }, 2, 0);
+
+                    // Prix Achat (per liter)
+                    row.Add(new Label 
+                    { 
+                        Text = $"{consumption.PrixAchat:N2}", 
+                        FontSize = 11, 
+                        TextColor = Color.FromArgb("#E65100"),
+                        HorizontalTextAlignment = TextAlignment.End,
+                        VerticalOptions = LayoutOptions.Center 
+                    }, 3, 0);
+
+                    // Coût (Qté × Prix Achat)
+                    row.Add(new Label 
+                    { 
+                        Text = $"{consumption.CoutAchat:N2}", 
+                        FontSize = 11, 
+                        TextColor = Color.FromArgb("#666"),
+                        HorizontalTextAlignment = TextAlignment.End,
+                        VerticalOptions = LayoutOptions.Center 
+                    }, 4, 0);
+
+                    // Prix Vente (per liter)
+                    row.Add(new Label 
+                    { 
+                        Text = $"{consumption.PrixVente:N2}", 
+                        FontSize = 11, 
+                        TextColor = Color.FromArgb("#1976D2"),
+                        HorizontalTextAlignment = TextAlignment.End,
+                        VerticalOptions = LayoutOptions.Center 
+                    }, 5, 0);
+
+                    // Vente (Qté × Prix Vente)
+                    row.Add(new Label 
+                    { 
+                        Text = $"{consumption.Vente:N2}", 
+                        FontSize = 11, 
+                        TextColor = Color.FromArgb("#666"),
+                        HorizontalTextAlignment = TextAlignment.End,
+                        VerticalOptions = LayoutOptions.Center 
+                    }, 6, 0);
+
+                    // Marge
+                    var margeColor = consumption.Marge >= 0 ? "#2E7D32" : "#C62828";
+                    var margeStack = new VerticalStackLayout 
+                    { 
+                        HorizontalOptions = LayoutOptions.End, 
+                        VerticalOptions = LayoutOptions.Center 
+                    };
+                    margeStack.Add(new Label 
+                    { 
+                        Text = $"{consumption.Marge:N2}", 
+                        FontSize = 11, 
+                        FontAttributes = FontAttributes.Bold,
+                        TextColor = Color.FromArgb(margeColor),
+                        HorizontalTextAlignment = TextAlignment.End
+                    });
+                    margeStack.Add(new Label 
+                    { 
+                        Text = $"({consumption.MargePercent:N1}%)", 
+                        FontSize = 9, 
+                        TextColor = Color.FromArgb("#999"),
+                        HorizontalTextAlignment = TextAlignment.End
+                    });
+                    row.Add(margeStack, 7, 0);
+
+                    MargeContainer.Add(row);
+                }
+
+                // Product subtotal row
                 var totalQte = group.Sum(c => c.QuantiteConsommee);
                 var totalCout = group.Sum(c => c.CoutAchat);
                 var totalVente = group.Sum(c => c.Vente);
                 var totalMarge = totalVente - totalCout;
                 var prixAchatMoyen = totalQte > 0 ? totalCout / totalQte : 0;
 
-                var row = new Grid
+                var subtotalRow = new Grid
                 {
                     ColumnDefinitions = [
-                        new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(0.8, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                         new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) }
                     ],
-                    ColumnSpacing = 15,
-                    Padding = new Thickness(0, 6)
+                    ColumnSpacing = 8,
+                    Padding = new Thickness(8, 6),
+                    BackgroundColor = Color.FromArgb("#E3F2FD")
                 };
 
-                // Product name
-                row.Add(new Label { Text = group.Key, FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#333"), VerticalOptions = LayoutOptions.Center }, 0, 0);
+                subtotalRow.Add(new Label 
+                { 
+                    Text = "Sous-total", 
+                    FontSize = 11, 
+                    FontAttributes = FontAttributes.Bold, 
+                    TextColor = Color.FromArgb("#1976D2") 
+                }, 0, 0);
                 
-                // Quantity
-                row.Add(new Label { Text = $"{totalQte:N2} L", FontSize = 12, TextColor = Color.FromArgb("#666"), VerticalOptions = LayoutOptions.Center }, 1, 0);
+                subtotalRow.Add(new Label 
+                { 
+                    Text = $"{group.Count()} lots", 
+                    FontSize = 10, 
+                    TextColor = Color.FromArgb("#666") 
+                }, 1, 0);
                 
-                // Prix Achat Moyen
-                row.Add(new Label { Text = $"@ {prixAchatMoyen:N2}", FontSize = 11, TextColor = Color.FromArgb("#999"), VerticalOptions = LayoutOptions.Center }, 2, 0);
+                subtotalRow.Add(new Label 
+                { 
+                    Text = $"{totalQte:N2}", 
+                    FontSize = 11, 
+                    FontAttributes = FontAttributes.Bold, 
+                    TextColor = Color.FromArgb("#333"),
+                    HorizontalTextAlignment = TextAlignment.End 
+                }, 2, 0);
                 
-                // Cout Achat
-                row.Add(new Label { Text = $"{totalCout:N2}", FontSize = 12, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 3, 0);
+                subtotalRow.Add(new Label 
+                { 
+                    Text = $"~{prixAchatMoyen:N2}", 
+                    FontSize = 10, 
+                    TextColor = Color.FromArgb("#999"),
+                    HorizontalTextAlignment = TextAlignment.End 
+                }, 3, 0);
                 
-                // Vente
-                row.Add(new Label { Text = $"{totalVente:N2}", FontSize = 12, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 4, 0);
+                subtotalRow.Add(new Label 
+                { 
+                    Text = $"{totalCout:N2}", 
+                    FontSize = 11, 
+                    FontAttributes = FontAttributes.Bold, 
+                    TextColor = Color.FromArgb("#666"),
+                    HorizontalTextAlignment = TextAlignment.End 
+                }, 4, 0);
                 
-                // Marge
-                var margeColor = totalMarge >= 0 ? "#2E7D32" : "#C62828";
-                var margePercent = totalVente > 0 ? Math.Round((totalMarge / totalVente) * 100, 1) : 0;
-                row.Add(new Label { Text = $"{totalMarge:N2} ({margePercent}%)", FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb(margeColor), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 5, 0);
+                subtotalRow.Add(new Label { Text = "", FontSize = 11 }, 5, 0); // Empty prix vente column
+                
+                subtotalRow.Add(new Label 
+                { 
+                    Text = $"{totalVente:N2}", 
+                    FontSize = 11, 
+                    FontAttributes = FontAttributes.Bold, 
+                    TextColor = Color.FromArgb("#666"),
+                    HorizontalTextAlignment = TextAlignment.End 
+                }, 6, 0);
+                
+                var subtotalMargeColor = totalMarge >= 0 ? "#2E7D32" : "#C62828";
+                var subtotalMargePercent = totalVente > 0 ? Math.Round((totalMarge / totalVente) * 100, 1) : 0;
+                subtotalRow.Add(new Label 
+                { 
+                    Text = $"{totalMarge:N2} ({subtotalMargePercent}%)", 
+                    FontSize = 11, 
+                    FontAttributes = FontAttributes.Bold, 
+                    TextColor = Color.FromArgb(subtotalMargeColor),
+                    HorizontalTextAlignment = TextAlignment.End 
+                }, 7, 0);
 
-                MargeContainer.Add(row);
+                MargeContainer.Add(subtotalRow);
+
+                // Add spacing between product groups
+                MargeContainer.Add(new BoxView { HeightRequest = 8, Color = Colors.Transparent });
             }
 
             // Update totals
-            TotalCoutAchatLabel.Text = $"Cout: {_analytics.TotalCoutAchat:N2} MAD";
+            TotalCoutAchatLabel.Text = $"Coût: {_analytics.TotalCoutAchat:N2} MAD";
             TotalVenteLabel.Text = $"Vente: {_analytics.TotalVente:N2} MAD";
             TotalMargeLabel.Text = $"{_analytics.TotalMarge:N2} MAD ({_analytics.MargePercent}%)";
             TotalMargeLabel.TextColor = _analytics.TotalMarge >= 0 ? Color.FromArgb("#2E7D32") : Color.FromArgb("#C62828");
@@ -507,7 +741,7 @@ public partial class PeriodeViewPopup : Popup
             MargeContainer.Add(infoLabel);
 
             // Still show totals based on Recette
-            TotalCoutAchatLabel.Text = "Cout: N/A";
+            TotalCoutAchatLabel.Text = "Coût: N/A";
             TotalVenteLabel.Text = $"Vente: {_analytics.Recette:N2} MAD";
             TotalMargeLabel.Text = "N/A";
             TotalMargeLabel.TextColor = Color.FromArgb("#999");
@@ -652,6 +886,8 @@ public partial class PeriodeViewPopup : Popup
 
     private PeriodePdfData BuildPdfData()
     {
+        var totalCredite = _creditTransactions.Sum(ct => ct.MontantTotal);
+        
         var pdfData = new PeriodePdfData
         {
             PeriodeID = _analytics.PeriodeID,
@@ -662,7 +898,8 @@ public partial class PeriodeViewPopup : Popup
             Especes = _analytics.Especes,
             Recette = _analytics.Recette,
             TotalQuantite = _analytics.TotalQuantite,
-            TotalCoutAchat = _analytics.TotalCoutAchat
+            TotalCoutAchat = _analytics.TotalCoutAchat,
+            TotalCredite = totalCredite
         };
 
         pdfData.TotauxParReservoir = _analytics.TotauxParReservoir
@@ -682,6 +919,19 @@ public partial class PeriodeViewPopup : Popup
                 Montant = p.Montant
             }).ToList();
 
+        // Individual stock lot consumptions (detailed)
+        pdfData.ConsommationsStock = _analytics.ConsommationsStock
+            .Select(c => new StockLotConsumptionPdfData
+            {
+                StockLotID = c.StockLotID,
+                ProduitNom = c.ProduitNom,
+                ReservoirNumero = c.ReservoirNumero,
+                QuantiteConsommee = c.QuantiteConsommee,
+                PrixAchat = c.PrixAchat,
+                PrixVente = c.PrixVente
+            }).ToList();
+
+        // Fallback grouped marge data (for backwards compatibility)
         pdfData.MargesParProduit = _analytics.ConsommationsStock
             .GroupBy(c => c.ProduitNom ?? "N/A")
             .Select(g => new MargePdfData
@@ -690,6 +940,19 @@ public partial class PeriodeViewPopup : Popup
                 Quantite = g.Sum(c => c.QuantiteConsommee),
                 CoutAchat = g.Sum(c => c.CoutAchat),
                 Vente = g.Sum(c => c.Vente)
+            }).ToList();
+
+        // Credit transactions
+        pdfData.CreditTransactions = _creditTransactions
+            .Select(ct => new CreditTransactionPdfData
+            {
+                CreditID = ct.CreditID,
+                ClientNom = ct.ClientNom,
+                ProduitNom = ct.ProduitNom,
+                DateCredit = ct.DateCredit,
+                Quantite = ct.Quantite,
+                PrixUnitaire = ct.PrixTTC,
+                MontantTotal = ct.MontantTotal
             }).ToList();
 
         pdfData.DetailsParPompe = _analytics.DetailsParPompe

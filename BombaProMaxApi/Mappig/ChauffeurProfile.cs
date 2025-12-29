@@ -10,7 +10,7 @@ namespace BombaProMaxApi.Mappig
         {
             CreateMap<Chauffeur, ChauffeurDto>()
                 .ForMember(d => d.FournisseurNom,
-                    opt => opt.MapFrom(s => s.Fournisseur != null ? s.Fournisseur.Nom : null))
+                    opt => opt.MapFrom(s => s.Fournisseur != null ? s.Fournisseur.Societe : null))
                 .ReverseMap();
         }
     }
