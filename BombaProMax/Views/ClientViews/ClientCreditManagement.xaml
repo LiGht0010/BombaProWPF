@@ -19,7 +19,7 @@
             <!-- ========================================= -->
             <!-- HEADER with Back Navigation               -->
             <!-- ========================================= -->
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12" Margin="0,0,0,8">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Margin="0,0,0,8">
                 <Button Grid.Column="0"
                         Text="← Retour Clients"
                         Style="{StaticResource CreditBackButton}"
@@ -27,19 +27,14 @@
 
                 <VerticalStackLayout Grid.Column="1" 
                                      Style="{StaticResource CreditHeaderStack}">
-                    <Label Text="Gestion du Crédit Client" 
+                    <Label Text="Gestion Complète Client" 
                            Style="{StaticResource CreditTitleLabel}"/>
-                    <Label Text="Gérez les transactions et règlements de crédit" 
+                    <Label Text="Transactions, Règlements, Factures et Bons de Livraison" 
                            Style="{StaticResource CreditSubtitleLabel}"/>
                 </VerticalStackLayout>
                 
                 <Button Grid.Column="2"
-                        Text="📄 Factures &amp; BL"
-                        Style="{StaticResource CreditRefreshButton}"
-                        Clicked="OnNavigateToFactureEtBLClicked"/>
-                
-                <Button Grid.Column="3"
-                        Text="Rafraîchir"
+                        Text="⟳ Rafraîchir"
                         Command="{Binding RefreshBilanCommand}"
                         Style="{StaticResource CreditRefreshButton}"
                         IsEnabled="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}"/>
@@ -140,24 +135,34 @@
             </Grid>
 
             <!-- ========================================= -->
-            <!-- TABS CARD - Neumorphic Table Card         -->
+            <!-- TABS CARD - 4 Tabs Now                    -->
             <!-- ========================================= -->
             <Border Style="{StaticResource CreditTabsCard}"
                     IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
                 <VerticalStackLayout Style="{StaticResource ClientTableContainer}">
                     
-                    <!-- Tab Headers - Primary Color Bar -->
-                    <Grid Style="{StaticResource CreditTabsHeaderGrid}">
+                    <!-- Tab Headers - 4 Columns Now -->
+                    <Grid ColumnDefinitions="*,*,*,*" BackgroundColor="{StaticResource ClientPrimary}">
                         <Button x:Name="TransactionsTabButton"
                                 Grid.Column="0"
-                                Text="Transactions Crédit"
+                                Text="📦 Transactions"
                                 Style="{StaticResource CreditTabButtonActive}"
                                 Clicked="OnTransactionsTabClicked"/>
                         <Button x:Name="ReglementsTabButton"
                                 Grid.Column="1"
-                                Text="Règlements"
+                                Text="💵 Règlements"
                                 Style="{StaticResource CreditTabButtonInactive}"
                                 Clicked="OnReglementsTabClicked"/>
+                        <Button x:Name="FacturesTabButton"
+                                Grid.Column="2"
+                                Text="📄 Factures"
+                                Style="{StaticResource CreditTabButtonInactive}"
+                                Clicked="OnFacturesTabClicked"/>
+                        <Button x:Name="BLTabButton"
+                                Grid.Column="3"
+                                Text="🚚 Bons Livraison"
+                                Style="{StaticResource CreditTabButtonInactive}"
+                                Clicked="OnBLTabClicked"/>
                     </Grid>
 
                     <!-- ========================================= -->
@@ -389,6 +394,355 @@
                                 </VerticalStackLayout>
                             </CollectionView.EmptyView>
                         </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- ========================================= -->
+                    <!-- TAB 3: FACTURES                           -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="FacturesTab" 
+                                         Style="{StaticResource CreditTabContent}" 
+                                         IsVisible="False">
+                        
+                        <!-- Filter/Selection Buttons Row -->
+                        <HorizontalStackLayout Style="{StaticResource CreditAddButtonStack}" Spacing="10">
+                            <Button Text="Tout Sélectionner"
+                                    Command="{Binding SelectAllFacturesCommand}"
+                                    Style="{StaticResource CreditAddButton}"
+                                    BackgroundColor="#E8ECF1"
+                                    TextColor="#5A6068"/>
+                            <Button Text="Désélectionner"
+                                    Command="{Binding DeselectAllFacturesCommand}"
+                                    Style="{StaticResource CreditAddButton}"
+                                    BackgroundColor="#E8ECF1"
+                                    TextColor="#5A6068"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Factures Table Header -->
+                        <Grid ColumnDefinitions="0.5*,1*,1.4*,1.5*,1.2*,1.3*" 
+                              ColumnSpacing="12" 
+                              Padding="28,18" 
+                              BackgroundColor="{StaticResource ClientNeuCardBg}">
+                            <Label Grid.Column="0" Text="✓" Style="{StaticResource CreditTableHeaderLabelCenter}"/>
+                            <Label Grid.Column="1" Text="Date" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="2" Text="Numéro" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Client" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Montant" Style="{StaticResource CreditTableHeaderLabelEnd}"/>
+                            <Label Grid.Column="5" Text="Actions" Style="{StaticResource CreditTableHeaderLabelCenter}"/>
+                        </Grid>
+
+                        <!-- Factures List -->
+                        <CollectionView ItemsSource="{Binding Factures}"
+                                       Style="{StaticResource CreditTransactionCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:FactureDto">
+                                    <VerticalStackLayout>
+                                        <Border BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToSelectionColorConverter}}"
+                                                Padding="0" StrokeThickness="0">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientCreditManagementViewModel}}, Path=ToggleFactureSelectionCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
+                                            <Grid ColumnDefinitions="0.5*,1*,1.4*,1.5*,1.2*,1.3*" 
+                                                  ColumnSpacing="12" 
+                                                  Padding="28,14">
+                                                
+                                                <!-- CheckBox for selection -->
+                                                <CheckBox Grid.Column="0" 
+                                                          IsChecked="{Binding IsSelected}"
+                                                          CheckedChanged="OnFactureCheckBoxChanged"
+                                                          VerticalOptions="Center"
+                                                          HorizontalOptions="Center"/>
+                                                
+                                                <!-- Date -->
+                                                <Label Grid.Column="1" 
+                                                       Text="{Binding DateFacture, StringFormat='{0:dd/MM/yyyy}'}"
+                                                       Style="{StaticResource CreditTableCellText}"/>
+                                                
+                                                <!-- Numéro - Pill Style -->
+                                                <Border Grid.Column="2" Style="{StaticResource ClientNumberCell}"
+                                                        HorizontalOptions="Start">
+                                                    <Label Text="{Binding NumeroFacture}" 
+                                                           Style="{StaticResource ClientNumberLabel}"/>
+                                                </Border>
+                                                
+                                                <!-- Client -->
+                                                <Label Grid.Column="3" 
+                                                       Text="{Binding ClientNom}"
+                                                       Style="{StaticResource CreditTableCellText}"
+                                                       LineBreakMode="TailTruncation"
+                                                       MaxLines="1"/>
+                                                
+                                                <!-- Montant -->
+                                                <Label Grid.Column="4" 
+                                                       Text="{Binding MontantTotal, StringFormat='{0:N2} MAD'}"
+                                                       Style="{StaticResource CreditTableCellAmountGreen}"/>
+                                                
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="5" 
+                                                                       Style="{StaticResource CreditRowActionsStack}">
+                                                    <Button Text="Détails"
+                                                            Style="{StaticResource CreditEditButton}"
+                                                            Clicked="OnFactureDetailsClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="🗑️"
+                                                            Style="{StaticResource CreditDeleteButton}"
+                                                            Clicked="OnDeleteFactureClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Row Divider -->
+                                        <BoxView Style="{StaticResource CreditRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            
+                            <!-- Empty View -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource ClientEmptyView}">
+                                    <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="{StaticResource ClientNeuShadowDark}"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="📄"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucune facture" 
+                                           Style="{StaticResource ClientEmptyTitle}"/>
+                                    <Label Text="Ce client n'a pas de factures enregistrées" 
+                                           Style="{StaticResource ClientEmptySubtitle}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+
+                        <!-- Facture Selection Summary & Merge Button -->
+                        <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                                Padding="0" StrokeThickness="0"
+                                IsVisible="{Binding SelectedFactureCount, Converter={StaticResource IntToVisibilityConverter}}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Padding="16,12">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding SelectedFactureCount, StringFormat='{0} facture(s) sélectionnée(s)'}" 
+                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource ClientTextPrimary}"/>
+                                    <Label Text="{Binding SelectedFactureTotal, StringFormat='Total: {0:N2} MAD'}" 
+                                           FontSize="13" TextColor="{StaticResource ClientTextMuted}"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1"
+                                        Text="🧾 Fusionner Factures"
+                                        Command="{Binding MergeFacturesCommand}"
+                                        IsEnabled="{Binding CanMergeFactures}"
+                                        BackgroundColor="#5EAA8D"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        Padding="16,10"
+                                        CornerRadius="8"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- ========================================= -->
+                    <!-- TAB 4: BONS DE LIVRAISON                  -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="BLTab" 
+                                         Style="{StaticResource CreditTabContent}" 
+                                         IsVisible="False">
+                        
+                        <!-- Filter Buttons Row -->
+                        <HorizontalStackLayout Style="{StaticResource CreditAddButtonStack}" Spacing="10">
+                            <Button x:Name="BLFilterAllBtn"
+                                    Text="Tous"
+                                    Command="{Binding SetBLFilterAllCommand}"
+                                    Style="{StaticResource CreditAddButton}"/>
+                            <Button x:Name="BLFilterInvoicedBtn"
+                                    Text="Facturés"
+                                    Command="{Binding SetBLFilterInvoicedCommand}"
+                                    Style="{StaticResource CreditAddButton}"
+                                    BackgroundColor="#E8ECF1"
+                                    TextColor="#5A6068"/>
+                            <Button x:Name="BLFilterNotInvoicedBtn"
+                                    Text="Non Facturés"
+                                    Command="{Binding SetBLFilterNotInvoicedCommand}"
+                                    Style="{StaticResource CreditAddButton}"
+                                    BackgroundColor="#E8ECF1"
+                                    TextColor="#5A6068"/>
+                            <Button Text="Tout Sélectionner"
+                                    Command="{Binding SelectAllBLsCommand}"
+                                    Style="{StaticResource CreditAddButton}"
+                                    BackgroundColor="#E8ECF1"
+                                    TextColor="#5A6068"/>
+                            <Button Text="Désélectionner"
+                                    Command="{Binding DeselectAllBLsCommand}"
+                                    Style="{StaticResource CreditAddButton}"
+                                    BackgroundColor="#E8ECF1"
+                                    TextColor="#5A6068"/>
+                        </HorizontalStackLayout>
+
+                        <!-- BL Table Header -->
+                        <Grid ColumnDefinitions="0.5*,1*,1.4*,1.5*,1.2*,0.8*,1.3*" 
+                              ColumnSpacing="12" 
+                              Padding="28,18" 
+                              BackgroundColor="{StaticResource ClientNeuCardBg}">
+                            <Label Grid.Column="0" Text="✓" Style="{StaticResource CreditTableHeaderLabelCenter}"/>
+                            <Label Grid.Column="1" Text="Date" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="2" Text="Numéro" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Client" Style="{StaticResource CreditTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Montant" Style="{StaticResource CreditTableHeaderLabelEnd}"/>
+                            <Label Grid.Column="5" Text="Statut" Style="{StaticResource CreditTableHeaderLabelCenter}"/>
+                            <Label Grid.Column="6" Text="Actions" Style="{StaticResource CreditTableHeaderLabelCenter}"/>
+                        </Grid>
+
+                        <!-- BL List -->
+                        <CollectionView ItemsSource="{Binding BonsLivraison}"
+                                       Style="{StaticResource CreditTransactionCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:BonLivraisonDto">
+                                    <VerticalStackLayout>
+                                        <Border BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToSelectionColorConverter}}"
+                                                Padding="0" StrokeThickness="0">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ClientCreditManagementViewModel}}, Path=ToggleBLSelectionCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
+                                            <Grid ColumnDefinitions="0.5*,1*,1.4*,1.5*,1.2*,0.8*,1.3*" 
+                                                  ColumnSpacing="12" 
+                                                  Padding="28,14">
+                                                
+                                                <!-- CheckBox for selection (only for non-invoiced) -->
+                                                <CheckBox Grid.Column="0" 
+                                                          IsChecked="{Binding IsSelected}"
+                                                          IsEnabled="{Binding EstFacture, Converter={StaticResource InverseBoolConverter}}"
+                                                          CheckedChanged="OnBLCheckBoxChanged"
+                                                          VerticalOptions="Center"
+                                                          HorizontalOptions="Center"/>
+                                                
+                                                <!-- Date -->
+                                                <Label Grid.Column="1" 
+                                                       Text="{Binding DateBL, StringFormat='{0:dd/MM/yyyy}'}"
+                                                       Style="{StaticResource CreditTableCellText}"/>
+                                                
+                                                <!-- Numéro - Pill Style -->
+                                                <Border Grid.Column="2" Style="{StaticResource ClientNumberCell}"
+                                                        HorizontalOptions="Start">
+                                                    <Label Text="{Binding NumeroBL}" 
+                                                           Style="{StaticResource ClientNumberLabel}"/>
+                                                </Border>
+                                                
+                                                <!-- Client -->
+                                                <Label Grid.Column="3" 
+                                                       Text="{Binding ClientNom}"
+                                                       Style="{StaticResource CreditTableCellText}"
+                                                       LineBreakMode="TailTruncation"
+                                                       MaxLines="1"/>
+                                                
+                                                <!-- Montant -->
+                                                <Label Grid.Column="4" 
+                                                       Text="{Binding MontantTotal, StringFormat='{0:N2} MAD'}"
+                                                       Style="{StaticResource CreditTableCellAmountOrange}"/>
+                                                
+                                                <!-- Status Badge -->
+                                                <Border Grid.Column="5"
+                                                        BackgroundColor="{Binding EstFacture, Converter={StaticResource BoolToColorConverter}}"
+                                                        Style="{StaticResource CreditStatusBadge}">
+                                                    <Label Text="{Binding EstFacture, Converter={StaticResource BoolToFactureStatusConverter}}"
+                                                           Style="{StaticResource CreditStatusBadgeLabel}"/>
+                                                </Border>
+                                                
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="6" 
+                                                                       Style="{StaticResource CreditRowActionsStack}">
+                                                    <Button Text="Détails"
+                                                            Style="{StaticResource CreditEditButton}"
+                                                            Clicked="OnBLDetailsClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="🗑️"
+                                                            Style="{StaticResource CreditDeleteButton}"
+                                                            Clicked="OnDeleteBLClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <!-- Row Divider -->
+                                        <BoxView Style="{StaticResource CreditRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            
+                            <!-- Empty View -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource ClientEmptyView}">
+                                    <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="{StaticResource ClientNeuShadowDark}"
+                                                    Offset="6,6"
+                                                    Radius="12"
+                                                    Opacity="0.25"/>
+                                        </Border.Shadow>
+                                        <Label Text="🚚"
+                                               FontSize="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun bon de livraison" 
+                                           Style="{StaticResource ClientEmptyTitle}"/>
+                                    <Label Text="Ce client n'a pas de bons de livraison enregistrés" 
+                                           Style="{StaticResource ClientEmptySubtitle}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+
+                        <!-- BL Selection Summary & Action Buttons -->
+                        <Border BackgroundColor="{StaticResource ClientNeuCardBg}"
+                                Padding="0" StrokeThickness="0"
+                                IsVisible="{Binding SelectedBLCount, Converter={StaticResource IntToVisibilityConverter}}">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12" Padding="16,12">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding SelectedBLCount, StringFormat='{0} BL(s) sélectionné(s)'}" 
+                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource ClientTextPrimary}"/>
+                                    <Label Text="{Binding SelectedBLTotal, StringFormat='Total: {0:N2} MAD'}" 
+                                           FontSize="13" TextColor="{StaticResource ClientTextMuted}"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1"
+                                        Text="📄 Créer Facture"
+                                        Command="{Binding CreateFactureFromBLsCommand}"
+                                        IsEnabled="{Binding CanCreateFactureFromBLs}"
+                                        BackgroundColor="#4A8FBF"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        Padding="16,10"
+                                        CornerRadius="8"/>
+                                <Button Grid.Column="2"
+                                        Text="🔗 Fusionner BLs"
+                                        Command="{Binding MergeBLsCommand}"
+                                        IsEnabled="{Binding CanMergeBLs}"
+                                        BackgroundColor="#5EAA8D"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        Padding="16,10"
+                                        CornerRadius="8"/>
+                            </Grid>
+                        </Border>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
             </Border>

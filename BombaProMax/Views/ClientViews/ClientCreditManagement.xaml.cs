@@ -44,48 +44,67 @@ public partial class ClientCreditManagement : ContentPage
         await Shell.Current.GoToAsync("///ClientPage");
     }
 
-    private async void OnNavigateToFactureEtBLClicked(object? sender, EventArgs e)
-    {
-        if (_viewModel.CurrentClient != null)
-        {
-            await Shell.Current.GoToAsync($"{nameof(FactureEtBL)}?clientId={_viewModel.ClientId}");
-        }
-        else
-        {
-            await DisplayAlert("Erreur", "Veuillez sélectionner un client", "OK");
-        }
-    }
-
     // ============================
-    // TAB SWITCHING
+    // TAB SWITCHING (4 TABS)
     // ============================
 
-    private void OnTransactionsTabClicked(object? sender, EventArgs e)
+    private void SetAllTabsInactive()
     {
-        TransactionsTabButton.BackgroundColor = Color.FromArgb("#2196F3");
-        TransactionsTabButton.TextColor = Colors.White;
-        TransactionsTabButton.FontAttributes = FontAttributes.Bold;
+        // Reset all tab buttons to inactive state
+        TransactionsTabButton.BackgroundColor = Color.FromArgb("#E0E0E0");
+        TransactionsTabButton.TextColor = Color.FromArgb("#666666");
+        TransactionsTabButton.FontAttributes = FontAttributes.None;
 
         ReglementsTabButton.BackgroundColor = Color.FromArgb("#E0E0E0");
         ReglementsTabButton.TextColor = Color.FromArgb("#666666");
         ReglementsTabButton.FontAttributes = FontAttributes.None;
 
-        TransactionsTab.IsVisible = true;
+        FacturesTabButton.BackgroundColor = Color.FromArgb("#E0E0E0");
+        FacturesTabButton.TextColor = Color.FromArgb("#666666");
+        FacturesTabButton.FontAttributes = FontAttributes.None;
+
+        BLTabButton.BackgroundColor = Color.FromArgb("#E0E0E0");
+        BLTabButton.TextColor = Color.FromArgb("#666666");
+        BLTabButton.FontAttributes = FontAttributes.None;
+
+        // Hide all tabs
+        TransactionsTab.IsVisible = false;
         ReglementsTab.IsVisible = false;
+        FacturesTab.IsVisible = false;
+        BLTab.IsVisible = false;
+    }
+
+    private void SetTabActive(Button tabButton, VerticalStackLayout tabContent)
+    {
+        tabButton.BackgroundColor = Color.FromArgb("#2196F3");
+        tabButton.TextColor = Colors.White;
+        tabButton.FontAttributes = FontAttributes.Bold;
+        tabContent.IsVisible = true;
+    }
+
+    private void OnTransactionsTabClicked(object? sender, EventArgs e)
+    {
+        SetAllTabsInactive();
+        SetTabActive(TransactionsTabButton, TransactionsTab);
     }
 
     private void OnReglementsTabClicked(object? sender, EventArgs e)
     {
-        ReglementsTabButton.BackgroundColor = Color.FromArgb("#2196F3");
-        ReglementsTabButton.TextColor = Colors.White;
-        ReglementsTabButton.FontAttributes = FontAttributes.Bold;
+        SetAllTabsInactive();
+        SetTabActive(ReglementsTabButton, ReglementsTab);
+    }
 
-        TransactionsTabButton.BackgroundColor = Color.FromArgb("#E0E0E0");
-        TransactionsTabButton.TextColor = Color.FromArgb("#666666");
-        TransactionsTabButton.FontAttributes = FontAttributes.None;
+    private void OnFacturesTabClicked(object? sender, EventArgs e)
+    {
+        SetAllTabsInactive();
+        SetTabActive(FacturesTabButton, FacturesTab);
+    }
 
-        ReglementsTab.IsVisible = true;
-        TransactionsTab.IsVisible = false;
+    private void OnBLTabClicked(object? sender, EventArgs e)
+    {
+        SetAllTabsInactive();
+        SetTabActive(BLTabButton, BLTab);
+        UpdateBLFilterButtonStyles();
     }
 
     // ============================
@@ -241,5 +260,129 @@ public partial class ClientCreditManagement : ContentPage
                 await _viewModel.DeleteReglementAsync(reglement);
             }
         }
+    }
+
+    // ============================
+    // FACTURE CHECKBOX & ACTIONS
+    // ============================
+
+    /// <summary>
+    /// Handles Facture CheckBox CheckedChanged event to recalculate selection.
+    /// </summary>
+    private void OnFactureCheckBoxChanged(object? sender, CheckedChangedEventArgs e)
+    {
+        _viewModel.RecalculateFactureSelectionCommand?.Execute(null);
+    }
+
+    /// <summary>
+    /// Shows facture details popup.
+    /// </summary>
+    private async void OnFactureDetailsClicked(object? sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is FactureDto facture)
+        {
+            try
+            {
+                var popup = new FactureDetails(facture);
+                await this.ShowPopupAsync(popup);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing facture details: {ex.Message}");
+                await DisplayAlert("Erreur", $"Impossible d'afficher les détails: {ex.Message}", "OK");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Deletes a facture.
+    /// </summary>
+    private async void OnDeleteFactureClicked(object? sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is FactureDto facture)
+        {
+            await _viewModel.DeleteFactureCommand.ExecuteAsync(facture);
+        }
+    }
+
+    // ============================
+    // BL CHECKBOX & ACTIONS
+    // ============================
+
+    /// <summary>
+    /// Handles BL CheckBox CheckedChanged event to recalculate selection.
+    /// </summary>
+    private void OnBLCheckBoxChanged(object? sender, CheckedChangedEventArgs e)
+    {
+        _viewModel.RecalculateBLSelectionCommand?.Execute(null);
+    }
+
+    /// <summary>
+    /// Shows BL details popup.
+    /// </summary>
+    private async void OnBLDetailsClicked(object? sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is BonLivraisonDto bl)
+        {
+            try
+            {
+                var popup = new BLDetails(bl);
+                await this.ShowPopupAsync(popup);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing BL details: {ex.Message}");
+                await DisplayAlert("Erreur", $"Impossible d'afficher les détails: {ex.Message}", "OK");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Deletes a BL.
+    /// </summary>
+    private async void OnDeleteBLClicked(object? sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is BonLivraisonDto bl)
+        {
+            await _viewModel.DeleteBLCommand.ExecuteAsync(bl);
+            UpdateBLFilterButtonStyles();
+        }
+    }
+
+    // ============================
+    // BL FILTER BUTTON STYLE HELPERS
+    // ============================
+
+    private void UpdateBLFilterButtonStyles()
+    {
+        BLFilterAllBtn.BackgroundColor = _viewModel.IsBlFilterAll 
+            ? Color.FromArgb("#4A8FBF") 
+            : Color.FromArgb("#E8ECF1");
+        BLFilterAllBtn.TextColor = _viewModel.IsBlFilterAll 
+            ? Colors.White 
+            : Color.FromArgb("#5A6068");
+        BLFilterAllBtn.FontAttributes = _viewModel.IsBlFilterAll 
+            ? FontAttributes.Bold 
+            : FontAttributes.None;
+
+        BLFilterInvoicedBtn.BackgroundColor = _viewModel.IsBlFilterInvoiced 
+            ? Color.FromArgb("#4A8FBF") 
+            : Color.FromArgb("#E8ECF1");
+        BLFilterInvoicedBtn.TextColor = _viewModel.IsBlFilterInvoiced 
+            ? Colors.White 
+            : Color.FromArgb("#5A6068");
+        BLFilterInvoicedBtn.FontAttributes = _viewModel.IsBlFilterInvoiced 
+            ? FontAttributes.Bold 
+            : FontAttributes.None;
+
+        BLFilterNotInvoicedBtn.BackgroundColor = _viewModel.IsBlFilterNotInvoiced 
+            ? Color.FromArgb("#4A8FBF") 
+            : Color.FromArgb("#E8ECF1");
+        BLFilterNotInvoicedBtn.TextColor = _viewModel.IsBlFilterNotInvoiced 
+            ? Colors.White 
+            : Color.FromArgb("#5A6068");
+        BLFilterNotInvoicedBtn.FontAttributes = _viewModel.IsBlFilterNotInvoiced 
+            ? FontAttributes.Bold 
+            : FontAttributes.None;
     }
 }
