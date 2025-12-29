@@ -145,6 +145,36 @@ public partial class ClientCreditManagementViewModel : ObservableObject
     private bool _canMergeFactures;
 
     // ============================
+    // CT (Credit Transaction) SELECTION PROPERTIES
+    // ============================
+
+    // CT Filter states
+    [ObservableProperty]
+    private string _ctFilterMode = "available"; // available, inBL, invoiced
+
+    [ObservableProperty]
+    private bool _isCTFilterAvailable = true;
+
+    [ObservableProperty]
+    private bool _isCTFilterInBL;
+
+    [ObservableProperty]
+    private bool _isCTFilterInvoiced;
+
+    // CT Selection Properties (for BL/Facture creation)
+    [ObservableProperty]
+    private int _selectedCTCount;
+
+    [ObservableProperty]
+    private decimal _selectedCTTotal;
+
+    [ObservableProperty]
+    private bool _canCreateBLFromCTs;
+
+    [ObservableProperty]
+    private bool _canCreateFactureFromCTs;
+
+    // ============================
     // COLLECTIONS
     // ============================
 
@@ -603,6 +633,266 @@ public partial class ClientCreditManagementViewModel : ObservableObject
     public MoyensPaiementDto? GetMoyenPaiementById(int id)
     {
         return MoyensPaiement.FirstOrDefault(m => m.ID == id);
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // CT (CREDIT TRANSACTION) FILTER COMMANDS
+    // ════════════════════════════════════════════════════════════════
+
+    [RelayCommand]
+    private async Task SetCTFilterAvailableAsync()
+    {
+        CtFilterMode = "available";
+        IsCTFilterAvailable = true;
+        IsCTFilterInBL = false;
+        IsCTFilterInvoiced = false;
+        await LoadTransactionsWithFilterAsync();
+    }
+
+    [RelayCommand]
+    private async Task SetCTFilterInBLAsync()
+    {
+        CtFilterMode = "inBL";
+        IsCTFilterAvailable = false;
+        IsCTFilterInBL = true;
+        IsCTFilterInvoiced = false;
+        await LoadTransactionsWithFilterAsync();
+    }
+
+    [RelayCommand]
+    private async Task SetCTFilterInvoicedAsync()
+    {
+        CtFilterMode = "invoiced";
+        IsCTFilterAvailable = false;
+        IsCTFilterInBL = false;
+        IsCTFilterInvoiced = true;
+        await LoadTransactionsWithFilterAsync();
+    }
+
+    /// <summary>
+    /// Loads transactions with the current filter applied.
+    /// </summary>
+    private async Task LoadTransactionsWithFilterAsync()
+    {
+        if (CurrentClient == null) return;
+
+        try
+        {
+            IsLoading = true;
+
+            List<CreditTransactionDto> cts = CtFilterMode switch
+            {
+                "inBL" => await _transactionService.GetInBLByClientAsync(CurrentClient.ID),
+                "invoiced" => await _transactionService.GetInvoicedByClientAsync(CurrentClient.ID),
+                _ => await _transactionService.GetAvailableByClientAsync(CurrentClient.ID)
+            };
+
+            Transactions.Clear();
+            foreach (var ct in cts.OrderByDescending(c => c.DateCredit))
+            {
+                ct.IsSelected = false;
+                Transactions.Add(ct);
+            }
+
+            ClearCTSelection();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error loading transactions with filter: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // CT SELECTION COMMANDS
+    // ════════════════════════════════════════════════════════════════
+
+    [RelayCommand]
+    private void ToggleCTSelection(CreditTransactionDto? ct)
+    {
+        if (ct == null) return;
+        
+        // Only allow selection for non-invoiced transactions
+        if (ct.Facture) return;
+        
+        ct.IsSelected = !ct.IsSelected;
+        RecalculateCTSelection();
+    }
+
+    [RelayCommand]
+    private void SelectAllCTs()
+    {
+        // Only select available (non-invoiced, non-BL) transactions
+        foreach (var ct in Transactions.Where(c => !c.Facture && !c.EstEnBL))
+        {
+            ct.IsSelected = true;
+        }
+        RecalculateCTSelection();
+    }
+
+    [RelayCommand]
+    private void DeselectAllCTs()
+    {
+        foreach (var ct in Transactions)
+        {
+            ct.IsSelected = false;
+        }
+        RecalculateCTSelection();
+    }
+
+    private void ClearCTSelection()
+    {
+        SelectedCTCount = 0;
+        SelectedCTTotal = 0;
+        CanCreateBLFromCTs = false;
+        CanCreateFactureFromCTs = false;
+    }
+
+    [RelayCommand]
+    public void RecalculateCTSelection()
+    {
+        var selectedCTs = Transactions.Where(c => c.IsSelected && !c.Facture).ToList();
+        SelectedCTCount = selectedCTs.Count;
+        SelectedCTTotal = selectedCTs.Sum(c => c.MontantTotal);
+        
+        // Can create BL only from "available" transactions (not in BL yet)
+        CanCreateBLFromCTs = SelectedCTCount > 0 && CtFilterMode == "available";
+        
+        // Can create Facture from "available" OR "inBL" transactions
+        CanCreateFactureFromCTs = SelectedCTCount > 0 && (CtFilterMode == "available" || CtFilterMode == "inBL");
+        
+        OnPropertyChanged(nameof(Transactions));
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // CREATE BL FROM CTs COMMAND
+    // ════════════════════════════════════════════════════════════════
+
+    [RelayCommand]
+    private async Task CreateBLFromSelectedCTsAsync()
+    {
+        if (!CanCreateBLFromCTs || CurrentClient == null)
+        {
+            await ShowAlertAsync("Attention", "Veuillez sélectionner au moins 1 transaction disponible.");
+            return;
+        }
+
+        var selectedCTs = Transactions.Where(c => c.IsSelected && !c.Facture && !c.EstEnBL).ToList();
+
+        var confirm = await ShowConfirmationAsync(
+            "Créer un Bon de Livraison",
+            $"Voulez-vous créer un BL avec {selectedCTs.Count} transaction(s)?\n\n" +
+            $"Montant total: {SelectedCTTotal:N2} MAD\n\n" +
+            "Le BL pourra être facturé ultérieurement.");
+
+        if (!confirm) return;
+
+        try
+        {
+            IsLoading = true;
+
+            var request = new CreateBLFromCTsDto
+            {
+                CreditTransactionIds = selectedCTs.Select(c => c.CreditID).ToList(),
+                ClientID = CurrentClient.ID,
+                DateBL = DateOnly.FromDateTime(DateTime.Now)
+            };
+
+            var result = await _blService.CreateFromCreditTransactionsAsync(request);
+
+            if (result.Success)
+            {
+                await ShowAlertAsync("Succès",
+                    $"Bon de Livraison {result.NumeroBL} créé avec succès!\n\n" +
+                    $"Montant: {result.MontantTotal:N2} MAD\n" +
+                    $"Transactions converties: {result.CTsConverted}");
+
+                // Refresh all data
+                await LoadClientDataAsync();
+            }
+            else
+            {
+                var errorMsg = result.Errors?.Any() == true
+                    ? string.Join("\n", result.Errors)
+                    : result.Message;
+                await ShowAlertAsync("Erreur", errorMsg ?? "Erreur lors de la création du BL.");
+            }
+        }
+        catch (Exception ex)
+        {
+            await ShowAlertAsync("Erreur", $"Erreur: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // CREATE FACTURE FROM CTs COMMAND (Direct Facturation)
+    // ════════════════════════════════════════════════════════════════
+
+    [RelayCommand]
+    private async Task CreateFactureFromSelectedCTsAsync()
+    {
+        if (!CanCreateFactureFromCTs || CurrentClient == null)
+        {
+            await ShowAlertAsync("Attention", "Veuillez sélectionner au moins 1 transaction.");
+            return;
+        }
+
+        var selectedCTs = Transactions.Where(c => c.IsSelected && !c.Facture).ToList();
+
+        var confirm = await ShowConfirmationAsync(
+            "Facturation Directe",
+            $"Voulez-vous créer une facture directement avec {selectedCTs.Count} transaction(s)?\n\n" +
+            $"Montant total: {SelectedCTTotal:N2} MAD\n\n" +
+            "Les transactions seront marquées comme facturées.");
+
+        if (!confirm) return;
+
+        try
+        {
+            IsLoading = true;
+
+            var request = new CreateFactureFromCTsDto
+            {
+                CreditTransactionIds = selectedCTs.Select(c => c.CreditID).ToList(),
+                ClientID = CurrentClient.ID,
+                DateFacture = DateOnly.FromDateTime(DateTime.Now)
+            };
+
+            var result = await _factureService.CreateFromCreditTransactionsAsync(request);
+
+            if (result.Success)
+            {
+                await ShowAlertAsync("Succès",
+                    $"Facture {result.NumeroFacture} créée avec succès!\n\n" +
+                    $"Montant: {result.MontantTotal:N2} MAD\n" +
+                    $"Transactions facturées: {result.CTsConverted}");
+
+                // Refresh all data
+                await LoadClientDataAsync();
+            }
+            else
+            {
+                var errorMsg = result.Errors?.Any() == true
+                    ? string.Join("\n", result.Errors)
+                    : result.Message;
+                await ShowAlertAsync("Erreur", errorMsg ?? "Erreur lors de la facturation.");
+            }
+        }
+        catch (Exception ex)
+        {
+            await ShowAlertAsync("Erreur", $"Erreur: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     // ════════════════════════════════════════════════════════════════

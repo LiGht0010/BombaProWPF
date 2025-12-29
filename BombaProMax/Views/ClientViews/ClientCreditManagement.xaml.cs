@@ -14,6 +14,9 @@ public partial class ClientCreditManagement : ContentPage
         InitializeComponent();
         _viewModel = new ClientCreditManagementViewModel();
         BindingContext = _viewModel;
+        
+        // Subscribe to property changes to update filter button styles
+        _viewModel.PropertyChanged += ViewModel_PropertyChanged;
     }
 
     public ClientCreditManagement(ClientCreditManagementViewModel viewModel)
@@ -21,6 +24,31 @@ public partial class ClientCreditManagement : ContentPage
         InitializeComponent();
         _viewModel = viewModel;
         BindingContext = _viewModel;
+        
+        // Subscribe to property changes to update filter button styles
+        _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+    }
+
+    /// <summary>
+    /// Handles property changes from the ViewModel to update UI elements.
+    /// </summary>
+    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        // Update CT filter button styles when filter properties change
+        if (e.PropertyName == nameof(_viewModel.IsCTFilterAvailable) ||
+            e.PropertyName == nameof(_viewModel.IsCTFilterInBL) ||
+            e.PropertyName == nameof(_viewModel.IsCTFilterInvoiced))
+        {
+            UpdateCTFilterButtonStyles();
+        }
+        
+        // Update BL filter button styles when filter properties change
+        if (e.PropertyName == nameof(_viewModel.IsBlFilterAll) ||
+            e.PropertyName == nameof(_viewModel.IsBlFilterInvoiced) ||
+            e.PropertyName == nameof(_viewModel.IsBlFilterNotInvoiced))
+        {
+            UpdateBLFilterButtonStyles();
+        }
     }
 
     protected override async void OnAppearing()
@@ -33,6 +61,9 @@ public partial class ClientCreditManagement : ContentPage
         {
             await _viewModel.InitializeAsync();
         }
+        
+        // Initialize filter button styles
+        UpdateCTFilterButtonStyles();
     }
 
     // ============================
@@ -86,6 +117,7 @@ public partial class ClientCreditManagement : ContentPage
     {
         SetAllTabsInactive();
         SetTabActive(TransactionsTabButton, TransactionsTab);
+        UpdateCTFilterButtonStyles();
     }
 
     private void OnReglementsTabClicked(object? sender, EventArgs e)
@@ -183,6 +215,55 @@ public partial class ClientCreditManagement : ContentPage
                 await _viewModel.DeleteTransactionAsync(transaction);
             }
         }
+    }
+
+    // ============================
+    // CT CHECKBOX & FILTER HELPERS
+    // ============================
+
+    /// <summary>
+    /// Handles CT CheckBox CheckedChanged event to recalculate selection.
+    /// </summary>
+    private void OnCTCheckBoxChanged(object? sender, CheckedChangedEventArgs e)
+    {
+        _viewModel.RecalculateCTSelectionCommand?.Execute(null);
+        UpdateCTFilterButtonStyles();
+    }
+
+    /// <summary>
+    /// Updates CT filter button styles based on current filter mode.
+    /// </summary>
+    private void UpdateCTFilterButtonStyles()
+    {
+        CTFilterAvailableBtn.BackgroundColor = _viewModel.IsCTFilterAvailable 
+            ? Color.FromArgb("#4A8FBF") 
+            : Color.FromArgb("#E8ECF1");
+        CTFilterAvailableBtn.TextColor = _viewModel.IsCTFilterAvailable 
+            ? Colors.White 
+            : Color.FromArgb("#5A6068");
+        CTFilterAvailableBtn.FontAttributes = _viewModel.IsCTFilterAvailable 
+            ? FontAttributes.Bold 
+            : FontAttributes.None;
+
+        CTFilterInBLBtn.BackgroundColor = _viewModel.IsCTFilterInBL 
+            ? Color.FromArgb("#4A8FBF") 
+            : Color.FromArgb("#E8ECF1");
+        CTFilterInBLBtn.TextColor = _viewModel.IsCTFilterInBL 
+            ? Colors.White 
+            : Color.FromArgb("#5A6068");
+        CTFilterInBLBtn.FontAttributes = _viewModel.IsCTFilterInBL 
+            ? FontAttributes.Bold 
+            : FontAttributes.None;
+
+        CTFilterInvoicedBtn.BackgroundColor = _viewModel.IsCTFilterInvoiced 
+            ? Color.FromArgb("#4A8FBF") 
+            : Color.FromArgb("#E8ECF1");
+        CTFilterInvoicedBtn.TextColor = _viewModel.IsCTFilterInvoiced 
+            ? Colors.White 
+            : Color.FromArgb("#5A6068");
+        CTFilterInvoicedBtn.FontAttributes = _viewModel.IsCTFilterInvoiced 
+            ? FontAttributes.Bold 
+            : FontAttributes.None;
     }
 
     // ============================
