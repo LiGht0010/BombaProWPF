@@ -26,5 +26,7 @@
     <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
     <converters:CiterneIdToColorConverter x:Key="CiterneIdToColorConverter"/>
     <converters:EqualityToColorConverter x:Key="EqualityToColorConverter"/>
+    <converters:BalanceToColorConverter x:Key="BalanceToColorConverter"/>
+    <converters:BalanceToTextConverter x:Key="BalanceToTextConverter"/>
 
 </ResourceDictionary>

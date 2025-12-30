@@ -2,6 +2,7 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:sys="clr-namespace:System;assembly=netstandard"
                x:Class="BombaProMax.Views.DepenseViews.DepenseCreatePopup"
                Color="Transparent">
 
@@ -56,7 +57,8 @@
                                        FontAttributes="Bold"
                                        TextColor="#666"/>
                                 <DatePicker x:Name="DatePicker"
-                                            FontSize="14"/>
+                                            FontSize="14"
+                                            MaximumDate="{x:Static sys:DateTime.Today}"/>
                             </VerticalStackLayout>
                         </Border>
                         

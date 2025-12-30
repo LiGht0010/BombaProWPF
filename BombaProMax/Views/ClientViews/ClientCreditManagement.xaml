@@ -40,37 +40,70 @@
                         IsEnabled="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}"/>
             </Grid>
 
-            <!-- Client Header Banner - Shows selected client info -->
-            <Border Style="{StaticResource CreditClientSelectorCard}"
-                    IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
-                <Grid Style="{StaticResource CreditClientSelectorGrid}">
-                    <Label Text="👤" 
-                           Style="{StaticResource CreditClientIconLabel}"/>
-                    <VerticalStackLayout Grid.Column="1" 
-                                         Style="{StaticResource CreditClientSelectorStack}">
-                        <Label Text="{Binding CurrentClient.Nom}" 
-                               Style="{StaticResource CreditClientSelectorLabel}"
-                               FontSize="16"
+            <!-- Client Header Banner - Shows selected client info + Balance -->
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16"
+                  IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+                
+                <!-- Client Info Card -->
+                <Border Grid.Column="0" Style="{StaticResource CreditClientSelectorCard}">
+                    <Grid Style="{StaticResource CreditClientSelectorGrid}">
+                        <Label Text="👤" 
+                               Style="{StaticResource CreditClientIconLabel}"/>
+                        <VerticalStackLayout Grid.Column="1" 
+                                             Style="{StaticResource CreditClientSelectorStack}">
+                            <Label Text="{Binding CurrentClient.Nom}" 
+                                   Style="{StaticResource CreditClientSelectorLabel}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource ClientTextPrimary}"/>
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="{Binding CurrentClient.NomSociete, StringFormat='Société: {0}'}" 
+                                       Style="{StaticResource CreditClientSelectorLabel}"
+                                       IsVisible="{Binding CurrentClient.NomSociete, Converter={StaticResource IsNotNullConverter}}"/>
+                                <Label Text="•" 
+                                       Style="{StaticResource CreditClientSelectorLabel}"
+                                       IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
+                                <Label Text="{Binding CurrentClient.Contact, StringFormat='Tél: {0}'}" 
+                                       Style="{StaticResource CreditClientSelectorLabel}"
+                                       IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
+                            </HorizontalStackLayout>
+                            <Label Text="{Binding CurrentClient.NumeroClient, StringFormat='ID: {0}'}" 
+                                   Style="{StaticResource CreditClientSelectorLabel}"
+                                   FontSize="12"
+                                   TextColor="{StaticResource ClientTextMuted}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+                
+                <!-- Balance Card - Styled like other bilan cards -->
+                <Border Grid.Column="1" 
+                        BackgroundColor="{StaticResource ClientNeuCardBg}"
+                        Padding="40,24"
+                        WidthRequest="390"
+                        HeightRequest="110"
+                        StrokeThickness="0">
+
+                    <Border.Shadow>
+                        <Shadow Brush="{StaticResource ClientNeuShadowDark}"
+                                Offset="6,6"
+                                Radius="12"
+                                Opacity="0.2"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="8" VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="{Binding Bilan.Balance, Converter={StaticResource BalanceToTextConverter}}" 
+                               FontSize="26"
                                FontAttributes="Bold"
-                               TextColor="{StaticResource ClientTextPrimary}"/>
-                        <HorizontalStackLayout Spacing="8">
-                            <Label Text="{Binding CurrentClient.NomSociete, StringFormat='Société: {0}'}" 
-                                   Style="{StaticResource CreditClientSelectorLabel}"
-                                   IsVisible="{Binding CurrentClient.NomSociete, Converter={StaticResource IsNotNullConverter}}"/>
-                            <Label Text="•" 
-                                   Style="{StaticResource CreditClientSelectorLabel}"
-                                   IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
-                            <Label Text="{Binding CurrentClient.Contact, StringFormat='Tél: {0}'}" 
-                                   Style="{StaticResource CreditClientSelectorLabel}"
-                                   IsVisible="{Binding CurrentClient.Contact, Converter={StaticResource IsNotNullConverter}}"/>
-                        </HorizontalStackLayout>
-                        <Label Text="{Binding CurrentClient.NumeroClient, StringFormat='ID: {0}'}" 
-                               Style="{StaticResource CreditClientSelectorLabel}"
-                               FontSize="12"
-                               TextColor="{StaticResource ClientTextMuted}"/>
+                               HorizontalOptions="Center"
+                               TextColor="{Binding Bilan.Balance, Converter={StaticResource BalanceToColorConverter}}"/>
+                        <Label Text="BALANCE" 
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource ClientTextMuted}"
+                               HorizontalOptions="Center"
+                               CharacterSpacing="2"/>
                     </VerticalStackLayout>
-                </Grid>
-            </Border>
+                </Border>
+            </Grid>
 
             <!-- Loading Indicator -->
             <ActivityIndicator IsRunning="{Binding IsLoading}"
@@ -80,8 +113,9 @@
             <!-- ========================================= -->
             <!-- BILAN CARDS - Neumorphic Stats Row        -->
             <!-- ========================================= -->
-            <Grid Style="{StaticResource CreditBilanGrid}"
-                  IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}">
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16"
+                  IsVisible="{Binding CurrentClient, Converter={StaticResource IsNotNullConverter}}"
+                  Margin="0,8,0,0">
                 
                 <!-- Total Credit -->
                 <Border Grid.Column="0" Style="{StaticResource CreditBilanCardOrange}">
@@ -103,18 +137,8 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Balance -->
-                <Border Grid.Column="2" Style="{StaticResource CreditBilanCardRed}">
-                    <VerticalStackLayout Style="{StaticResource CreditBilanStack}">
-                        <Label Text="{Binding Bilan.Balance, StringFormat='{0:N2} MAD'}" 
-                               Style="{StaticResource CreditBilanValueRed}"/>
-                        <Label Text="Balance" 
-                               Style="{StaticResource CreditBilanLabel}"/>
-                    </VerticalStackLayout>
-                </Border>
-
                 <!-- Credit Facturé -->
-                <Border Grid.Column="3" Style="{StaticResource CreditBilanCardBlue}">
+                <Border Grid.Column="2" Style="{StaticResource CreditBilanCardBlue}">
                     <VerticalStackLayout Style="{StaticResource CreditBilanStack}">
                         <Label Text="{Binding Bilan.CreditFacture, StringFormat='{0:N2} MAD'}" 
                                Style="{StaticResource CreditBilanValueBlue}"/>
@@ -124,7 +148,7 @@
                 </Border>
 
                 <!-- Credit Non Facturé -->
-                <Border Grid.Column="4" Style="{StaticResource CreditBilanCardPurple}">
+                <Border Grid.Column="3" Style="{StaticResource CreditBilanCardPurple}">
                     <VerticalStackLayout Style="{StaticResource CreditBilanStack}">
                         <Label Text="{Binding Bilan.CreditNonFacture, StringFormat='{0:N2} MAD'}" 
                                Style="{StaticResource CreditBilanValuePurple}"/>

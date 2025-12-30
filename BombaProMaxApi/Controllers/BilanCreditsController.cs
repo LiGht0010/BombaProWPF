@@ -147,7 +147,10 @@ namespace BombaProMaxApi.Controllers
                 .Where(r => r.ClientID == clientId)
                 .SumAsync(r => r.MontantPaye);
 
-            var balance = totalCredit - totalPaye;
+            // Balance = TotalPaye - TotalCredit
+            // Positive balance = client overpaid (green)
+            // Negative balance = client owes money (red)
+            var balance = totalPaye - totalCredit;
 
             // Find or create bilan
             var bilan = await _context.BilansCredit

@@ -2,6 +2,7 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:sys="clr-namespace:System;assembly=netstandard"
                x:Class="BombaProMax.Views.VenteLubEtArticles.VenteLubrifiantsEtArticlesCreatePopup"
                Color="Transparent">
 
@@ -119,7 +120,8 @@
                                             Stroke="{StaticResource BorderLight}">
                                         <DatePicker x:Name="DateVentePicker"
                                                     FontSize="13"
-                                                    TextColor="{StaticResource TextPrimary}"/>
+                                                    TextColor="{StaticResource TextPrimary}"
+                                                    MaximumDate="{x:Static sys:DateTime.Today}"/>
                                     </Border>
                                 </VerticalStackLayout>
                                 

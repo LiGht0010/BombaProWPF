@@ -2,6 +2,7 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:sys="clr-namespace:System;assembly=netstandard"
                x:Class="BombaProMax.Views.VenteServiceViews.VenteServiceEditPopup"
                Color="Transparent">
 
@@ -31,7 +32,7 @@
                             </Border.StrokeShape>
                             <VerticalStackLayout Spacing="5">
                                 <Label Text="Date *" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
-                                <DatePicker x:Name="DatePicker" FontSize="14"/>
+                                <DatePicker x:Name="DatePicker" FontSize="14" MaximumDate="{x:Static sys:DateTime.Today}"/>
                             </VerticalStackLayout>
                         </Border>
                         <Border Grid.Column="1" BackgroundColor="#F8F8F8" Padding="12" Stroke="#E0E0E0">

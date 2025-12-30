@@ -3,6 +3,7 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                xmlns:models="clr-namespace:BombaProMax.Models"
+               xmlns:sys="clr-namespace:System;assembly=netstandard"
                x:Class="BombaProMax.Views.PeriodeViews.PeriodeEditPopup"
                Color="Transparent">
 
@@ -58,7 +59,8 @@
                                    TextColor="#666"/>
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
                                 <DatePicker x:Name="DateDebutPicker"
-                                            FontSize="12"/>
+                                            FontSize="12"
+                                            MaximumDate="{x:Static sys:DateTime.Today}"/>
                                 <TimePicker x:Name="TimeDebutPicker"
                                             Grid.Column="1"
                                             FontSize="12"/>
@@ -78,7 +80,8 @@
                                    TextColor="#666"/>
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
                                 <DatePicker x:Name="DateFinPicker"
-                                            FontSize="12"/>
+                                            FontSize="12"
+                                            MaximumDate="{x:Static sys:DateTime.Today}"/>
                                 <TimePicker x:Name="TimeFinPicker"
                                             Grid.Column="1"
                                             FontSize="12"/>
