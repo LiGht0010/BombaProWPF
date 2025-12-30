@@ -146,22 +146,44 @@ namespace BombaProMaxApi.Controllers
 
             var existing = await _context.Achats
                 .Include(a => a.Produit)
-                    .ThenInclude(p => p!.Categorie)
                 .FirstOrDefaultAsync(a => a.ID == id);
 
             if (existing == null)
                 return NotFound();
 
-            // Reverse old stock before updating
-            existing.ReverseProductStock();
+            // Save old values before mapping overwrites them
+            var oldProduitID = existing.ProduitID;
+            var oldQuantite = existing.Quantite;
+            var oldProduit = existing.Produit;
 
+            // Reverse old stock on the OLD product with OLD quantity
+            if (oldProduit != null && oldQuantite.HasValue && oldQuantite.Value > 0)
+            {
+                // Only reverse for non-fuel products (CategorieID != 1)
+                if (oldProduit.CategorieID != 1)
+                {
+                    oldProduit.Stock = Math.Max(0, (oldProduit.Stock ?? 0) - oldQuantite.Value);
+                }
+            }
+
+            // Apply DTO changes to entity
             _mapper.Map(dto, existing);
             existing.DateModification = DateTime.UtcNow;
 
-            // Apply new stock after updating
-            if (existing.Produit != null)
+            // If product changed, load the new product
+            if (existing.ProduitID != oldProduitID && existing.ProduitID.HasValue)
             {
-                existing.UpdateProductStock();
+                existing.Produit = await _context.Produits.FindAsync(existing.ProduitID);
+            }
+
+            // Apply new stock on the (possibly new) product with new quantity
+            if (existing.Produit != null && existing.Quantite.HasValue && existing.Quantite.Value > 0)
+            {
+                // Only update for non-fuel products (CategorieID != 1)
+                if (existing.Produit.CategorieID != 1)
+                {
+                    existing.Produit.Stock = (existing.Produit.Stock ?? 0) + existing.Quantite.Value;
+                }
             }
 
             await _context.SaveChangesAsync();
