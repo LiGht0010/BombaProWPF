@@ -123,6 +123,14 @@ public partial class AchatViewModel : ObservableObject
             {
                 Achats.Insert(0, newAchat);
                 CalculateStatistics();
+
+                // Auto-open allocation popup for fuel products
+                var allocationResult = await _dialogService.ShowAchatAllocationPopupForNewAchatAsync(newAchat);
+                if (allocationResult?.Success == true)
+                {
+                    await _dialogService.ShowAlertAsync("Succès", 
+                        allocationResult.Message ?? "Achat créé et allocation effectuée avec succès");
+                }
             }
         }
         else
@@ -143,6 +151,14 @@ public partial class AchatViewModel : ObservableObject
             if (success)
             {
                 await LoadAchatsAsync();
+
+                // Clear existing allocations and open allocation popup for re-allocation
+                var allocationResult = await _dialogService.ClearAndShowAllocationPopupAsync(achat);
+                if (allocationResult?.Success == true)
+                {
+                    await _dialogService.ShowAlertAsync("Succès", 
+                        allocationResult.Message ?? "Achat modifié et ré-allocation effectuée avec succès");
+                }
             }
         }
         else

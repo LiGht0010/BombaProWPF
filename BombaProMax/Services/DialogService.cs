@@ -344,6 +344,91 @@ public class DialogService : IDialogService
         return result as BatchAllocationResponseDto;
     }
 
+    public async Task<BatchAllocationResponseDto?> ShowAchatAllocationPopupForNewAchatAsync(AchatDto achat)
+    {
+        // For new achats, we don't need to check allocation status - use full quantity
+        if (!achat.Quantite.HasValue || achat.Quantite <= 0)
+        {
+            await ShowAlertAsync("Information", "Quantité non spécifiée pour cet achat.");
+            return null;
+        }
+
+        // Check if it's a fuel product by checking allocation status
+        var status = await _achatAllocationService.CheckAchatAllocationStatusAsync(achat.ID);
+        
+        if (status == null)
+        {
+            await ShowAlertAsync("Erreur", "Impossible de vérifier le type de produit");
+            return null;
+        }
+
+        if (!status.EstCarburant)
+        {
+            // Non-fuel product - no allocation needed
+            return null;
+        }
+
+        var quantiteToAllocate = achat.Quantite.Value;
+
+        var popup = new AchatAllocationPopup(_achatAllocationService, achat, quantiteToAllocate);
+        var result = await CurrentPage.ShowPopupAsync(popup);
+        return result as BatchAllocationResponseDto;
+    }
+
+    public async Task<BatchAllocationResponseDto?> ClearAndShowAllocationPopupAsync(AchatDto achat)
+    {
+        // First check if it's a fuel product
+        var status = await _achatAllocationService.CheckAchatAllocationStatusAsync(achat.ID);
+        
+        if (status == null)
+        {
+            await ShowAlertAsync("Erreur", "Impossible de vérifier le type de produit");
+            return null;
+        }
+
+        if (!status.EstCarburant)
+        {
+            // Non-fuel product - no allocation needed
+            return null;
+        }
+
+        // Clear existing allocations
+        if (status.TotalAlloue > 0)
+        {
+            var clearResult = await _achatAllocationService.ClearAllocationsByAchatAsync(achat.ID);
+            
+            if (!clearResult.Success && clearResult.CancelledCount == 0)
+            {
+                // All allocations failed to clear (stock consumed)
+                await ShowAlertAsync("Attention", 
+                    $"Impossible d'annuler les allocations existantes:\n{clearResult.Message}\n\n" +
+                    "Le stock a déjà été consommé (vendu).");
+                return null;
+            }
+
+            if (clearResult.FailedCount > 0)
+            {
+                // Partial success
+                await ShowAlertAsync("Attention", 
+                    $"{clearResult.CancelledCount} allocation(s) annulée(s).\n" +
+                    $"{clearResult.FailedCount} allocation(s) n'ont pas pu être annulées (stock consommé).\n\n" +
+                    "Vous pouvez allouer la quantité restante.");
+            }
+        }
+
+        // Show allocation popup with full quantity
+        var quantiteToAllocate = achat.Quantite ?? 0;
+        if (quantiteToAllocate <= 0)
+        {
+            await ShowAlertAsync("Information", "Quantité non spécifiée pour cet achat.");
+            return null;
+        }
+
+        var popup = new AchatAllocationPopup(_achatAllocationService, achat, quantiteToAllocate);
+        var result = await CurrentPage.ShowPopupAsync(popup);
+        return result as BatchAllocationResponseDto;
+    }
+
     public async Task ShowClientCreditManagementAsync(ClientDto client)
     {
         // Navigate to the credit management page with clientId as query parameter

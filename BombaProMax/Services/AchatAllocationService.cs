@@ -303,6 +303,34 @@ public class AchatAllocationService
     }
 
     // ============================
+    // CLEAR ALLOCATIONS BY ACHAT
+    // ============================
+    /// <summary>
+    /// Clears (cancels) all allocations for a specific achat.
+    /// Used when an achat is modified and needs re-allocation.
+    /// </summary>
+    public async Task<ClearAllocationsResult> ClearAllocationsByAchatAsync(int achatId)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsync($"{BaseUrl}/clear-by-achat/{achatId}", null);
+            var json = await response.Content.ReadAsStringAsync();
+            
+            var result = JsonConvert.DeserializeObject<ClearAllocationsResult>(json);
+            return result ?? new ClearAllocationsResult { Success = false, Message = "Erreur de désérialisation" };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Clear allocations error: {ex.Message}");
+            return new ClearAllocationsResult 
+            { 
+                Success = false, 
+                Message = $"Erreur: {ex.Message}" 
+            };
+        }
+    }
+
+    // ============================
     // HELPER: Get total allocated for achat
     // ============================
     public async Task<decimal> GetTotalAllocatedForAchatAsync(int achatId)
@@ -312,4 +340,16 @@ public class AchatAllocationService
             .Where(a => a.Statut != "Annulée")
             .Sum(a => a.QuantiteAllouee);
     }
+}
+
+/// <summary>
+/// Result of clearing allocations for an achat.
+/// </summary>
+public class ClearAllocationsResult
+{
+    public bool Success { get; set; }
+    public string? Message { get; set; }
+    public int CancelledCount { get; set; }
+    public int FailedCount { get; set; }
+    public List<string>? FailedReasons { get; set; }
 }

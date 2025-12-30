@@ -516,5 +516,83 @@ namespace BombaProMaxApi.Controllers
             _logger.LogInformation("Cancelled allocation {AllocationId} and reversed StockLot", id);
             return Ok(new { Message = "Allocation annulée avec succès" });
         }
+
+        // POST: api/AchatAllocations/clear-by-achat/{achatId}
+        /// <summary>
+        /// Clears (cancels) all allocations for a specific achat.
+        /// Used when an achat is modified and needs re-allocation.
+        /// </summary>
+        [HttpPost("clear-by-achat/{achatId}")]
+        public async Task<ActionResult<object>> ClearAllocationsByAchat(int achatId)
+        {
+            var allocations = await _context.AchatAllocations
+                .Include(a => a.Reservoir)
+                .Where(a => a.AchatID == achatId && a.Statut != "Annulée")
+                .ToListAsync();
+
+            if (allocations.Count == 0)
+            {
+                return Ok(new 
+                { 
+                    Success = true, 
+                    Message = "Aucune allocation à annuler",
+                    CancelledCount = 0
+                });
+            }
+
+            var cancelledCount = 0;
+            var failedCount = 0;
+            var failedReasons = new List<string>();
+
+            foreach (var allocation in allocations)
+            {
+                // Try to reverse the StockLot
+                var stockLotReversed = await _stockLotService.ReverseStockLotAsync(
+                    allocation.AchatID,
+                    allocation.ReservoirID,
+                    allocation.QuantiteAllouee);
+
+                if (!stockLotReversed)
+                {
+                    // StockLot has been consumed - cannot cancel this allocation
+                    failedCount++;
+                    failedReasons.Add($"Réservoir {allocation.Reservoir?.Numero ?? allocation.ReservoirID.ToString()}: stock déjà consommé");
+                    continue;
+                }
+
+                // Mark allocation as cancelled
+                allocation.Statut = "Annulée";
+                cancelledCount++;
+
+                _logger.LogInformation(
+                    "Cleared allocation {AllocationId} for Achat {AchatId}",
+                    allocation.ID, achatId);
+            }
+
+            await _context.SaveChangesAsync();
+
+            if (failedCount > 0 && cancelledCount == 0)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = "Impossible d'annuler les allocations - le stock a été consommé",
+                    CancelledCount = cancelledCount,
+                    FailedCount = failedCount,
+                    FailedReasons = failedReasons
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = failedCount > 0 
+                    ? $"{cancelledCount} allocation(s) annulée(s), {failedCount} échec(s)"
+                    : $"{cancelledCount} allocation(s) annulée(s) avec succès",
+                CancelledCount = cancelledCount,
+                FailedCount = failedCount,
+                FailedReasons = failedReasons
+            });
+        }
     }
 }

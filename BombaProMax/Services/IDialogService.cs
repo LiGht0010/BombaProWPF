@@ -160,6 +160,18 @@ public interface IDialogService
     Task<BatchAllocationResponseDto?> ShowAchatAllocationPopupAsync(AchatDto achat);
 
     /// <summary>
+    /// Shows the achat allocation popup for a newly created achat (full quantity).
+    /// Skips allocation status check since it's a new achat.
+    /// </summary>
+    Task<BatchAllocationResponseDto?> ShowAchatAllocationPopupForNewAchatAsync(AchatDto achat);
+
+    /// <summary>
+    /// Clears existing allocations for an achat and shows the allocation popup.
+    /// Used when an achat is modified and needs re-allocation.
+    /// </summary>
+    Task<BatchAllocationResponseDto?> ClearAndShowAllocationPopupAsync(AchatDto achat);
+
+    /// <summary>
     /// Navigates to the client credit management page.
     /// </summary>
     Task ShowClientCreditManagementAsync(ClientDto client);
