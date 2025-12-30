@@ -331,7 +331,8 @@ namespace BombaProMax
         }
 
         /// <summary>
-        /// Handles Shell navigating events to protect against manual navigation during journée.
+        /// Handles Shell navigating events to protect against manual navigation during journée
+        /// and to fix navigation issues when coming from sub-pages.
         /// </summary>
         private async void OnShellNavigating(object? sender, ShellNavigatingEventArgs e)
         {
@@ -339,11 +340,52 @@ namespace BombaProMax
             if (_journeeService == null)
                 return;
 
+            var targetRoute = e.Target?.Location?.ToString() ?? "";
+            var currentRoute = _currentRoute ?? "";
+            
+            // Detect if this is an absolute route navigation (from flyout menu)
+            // and if we're currently on a sub-page (like ClientCreditManagement)
+            bool isAbsoluteNavigation = targetRoute.StartsWith("//");
+            bool isOnSubPage = currentRoute.Contains("ClientCreditManagement") || 
+                              currentRoute.Contains("FactureEtBL") ||
+                              currentRoute.Contains("FacturationPage");
+            
+            // If navigating from a sub-page to a flyout item, we need to pop the navigation stack first
+            if (isAbsoluteNavigation && isOnSubPage && e.Source == ShellNavigationSource.ShellItemChanged)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Navigation] Detected flyout navigation from sub-page. Clearing stack.");
+                
+                // Cancel the current navigation
+                e.Cancel();
+                
+                // Pop to root first, then navigate to the target
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    try
+                    {
+                        // Pop all pages from the navigation stack
+                        await Shell.Current.Navigation.PopToRootAsync(false);
+                        
+                        // Small delay to ensure stack is cleared
+                        await Task.Delay(50);
+                        
+                        // Now navigate to the target
+                        await Shell.Current.GoToAsync(targetRoute);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[Navigation] Error during stack clearing: {ex.Message}");
+                        // Fallback: try direct navigation
+                        await Shell.Current.GoToAsync(targetRoute);
+                    }
+                });
+                
+                return;
+            }
+
             // If journée is active, intercept navigation attempts
             if (_journeeService.IsJourneeActive)
             {
-                var targetRoute = e.Target?.Location?.ToString() ?? "";
-                
                 // Allow the journée service to control navigation
                 if (!_journeeService.IsRouteAllowedDuringJournee(targetRoute))
                 {

@@ -170,6 +170,12 @@ public class JaugeagesController : ControllerBase
         var entity = _mapper.Map<Jaugeage>(dto);
         entity.DateCreation = DateTime.UtcNow;
 
+        // Auto-generate NumeroJaugeage if not provided
+        if (string.IsNullOrWhiteSpace(entity.NumeroJaugeage))
+        {
+            entity.NumeroJaugeage = GenerateNumeroJaugeage();
+        }
+
         _context.Jaugeages.Add(entity);
         await _context.SaveChangesAsync();
 
@@ -184,6 +190,7 @@ public class JaugeagesController : ControllerBase
     /// <summary>
     /// Creates a Jaugeage with all its details in a single transaction.
     /// Volumes are auto-calculated from calibration data if not provided.
+    /// NumeroJaugeage is auto-generated if not provided.
     /// </summary>
     [HttpPost("with-details")]
     public async Task<ActionResult<JaugeageWithDetailsDto>> PostJaugeageWithDetails([FromBody] JaugeageWithDetailsDto dto)
@@ -201,12 +208,17 @@ public class JaugeagesController : ControllerBase
                 ? dto.DateJaugeage
                 : DateTime.SpecifyKind(dto.DateJaugeage, DateTimeKind.Utc);
 
+            // Auto-generate NumeroJaugeage if not provided
+            var numeroJaugeage = string.IsNullOrWhiteSpace(dto.NumeroJaugeage)
+                ? GenerateNumeroJaugeage()
+                : dto.NumeroJaugeage;
+
             // Create the Jaugeage
             var jaugeage = new Jaugeage
             {
                 DateJaugeage = dateJaugeageUtc,
                 TemoinID = dto.TemoinID,
-                NumeroJaugeage = dto.NumeroJaugeage,
+                NumeroJaugeage = numeroJaugeage,
                 Observations = dto.Observations,
                 AjoutePar = dto.AjoutePar,
                 DateCreation = DateTime.UtcNow
@@ -297,7 +309,24 @@ public class JaugeagesController : ControllerBase
         if (existing == null)
             return NotFound();
 
-        _mapper.Map(dto, existing);
+        // Validate Temoin exists
+        var temoin = await _context.Employes.FindAsync(dto.TemoinID);
+        if (temoin == null)
+            return BadRequest("Temoin (employee) not found");
+
+        // Manually update fields to avoid navigation property issues with AutoMapper
+        existing.DateJaugeage = dto.DateJaugeage.Kind == DateTimeKind.Utc
+            ? dto.DateJaugeage
+            : DateTime.SpecifyKind(dto.DateJaugeage, DateTimeKind.Utc);
+        existing.TemoinID = dto.TemoinID;
+        
+        // Auto-generate NumeroJaugeage if empty
+        existing.NumeroJaugeage = string.IsNullOrWhiteSpace(dto.NumeroJaugeage)
+            ? GenerateNumeroJaugeage()
+            : dto.NumeroJaugeage;
+        
+        existing.Observations = dto.Observations;
+        existing.ModifiePar = dto.ModifiePar;
         existing.DateModification = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
@@ -388,5 +417,16 @@ public class JaugeagesController : ControllerBase
         // Linear interpolation
         var ratio = (hauteurCm - lower.HauteurCm) / (upper.HauteurCm - lower.HauteurCm);
         return Math.Round(lower.VolumeLitres + ratio * (upper.VolumeLitres - lower.VolumeLitres), 2);
+    }
+
+    /// <summary>
+    /// Generates a unique NumeroJaugeage in format JAU-YYYYMMDD-HH/mm/ss
+    /// </summary>
+    private static string GenerateNumeroJaugeage()
+    {
+        var now = DateTime.UtcNow;
+        var dateStr = now.ToString("yyyyMMdd");
+        var timeStr = now.ToString("hhMMss");
+        return $"JAU-{dateStr}-{timeStr}";
     }
 }

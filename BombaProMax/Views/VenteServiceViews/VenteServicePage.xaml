@@ -8,9 +8,31 @@
              Title="Ventes Services"
              BackgroundColor="#f5f5f5">
 
-    <Grid RowDefinitions="*">
+    <Grid RowDefinitions="*,Auto">
         <ScrollView Grid.Row="0" Padding="28">
             <VerticalStackLayout Spacing="24">
+
+                <!-- JOURNÉE PROGRESS BAR -->
+                <Border BackgroundColor="#E3F2FD" 
+                        Padding="15" 
+                        Margin="0,0,0,10"
+                        IsVisible="{Binding IsJourneeActive}" 
+                        StrokeShape="RoundRectangle 10" 
+                        Stroke="#1976D2">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🚀" FontSize="24" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="{Binding JourneeStepInfo}" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#1976D2" 
+                                   FontSize="14"/>
+                            <Label Text="Journée en cours - Suivez les étapes" 
+                                   TextColor="#666" 
+                                   FontSize="11"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="📋" FontSize="20" VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
 
                 <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
                     <VerticalStackLayout Spacing="6">
@@ -141,5 +163,42 @@
                 </Border>
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- JOURNÉE NAVIGATION BAR -->
+        <Border Grid.Row="1" 
+                BackgroundColor="#F5F5F5" 
+                Padding="15" 
+                IsVisible="{Binding IsJourneeActive}" 
+                StrokeThickness="0">
+            <Border.Shadow>
+                <Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                <Button Text="← Précédent" 
+                        Command="{Binding JourneePrecedentCommand}"
+                        BackgroundColor="#757575" 
+                        TextColor="White" 
+                        Padding="20,12" 
+                        CornerRadius="8"
+                        IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
+                <BoxView Grid.Column="1" Color="Transparent"/>
+                <Button Grid.Column="2" 
+                        Text="Passer cette étape" 
+                        Command="{Binding JourneePasserCommand}"
+                        BackgroundColor="#FFA726" 
+                        TextColor="White" 
+                        Padding="20,12" 
+                        CornerRadius="8"/>
+                <Button Grid.Column="3" 
+                        Text="{Binding IsLastStep, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Terminer la journée|Suivant →'}"
+                        Command="{Binding JourneeSuivantCommand}" 
+                        BackgroundColor="#4CAF50" 
+                        TextColor="White"
+                        Padding="20,12" 
+                        CornerRadius="8" 
+                        FontAttributes="Bold"/>
+            </Grid>
+        </Border>
+
     </Grid>
 </ContentPage>

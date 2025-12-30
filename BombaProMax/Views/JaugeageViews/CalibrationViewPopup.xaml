@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:models="clr-namespace:BombaProMax.Models"
+               x:Class="BombaProMax.Views.JaugeageViews.CalibrationViewPopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="White" Padding="0" WidthRequest="600" HeightRequest="550" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        <Grid RowDefinitions="Auto,Auto,*,Auto">
+            
+            <!-- HEADER -->
+            <Border Grid.Row="0" BackgroundColor="#00796B" Padding="20" StrokeThickness="0">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label x:Name="HeaderLabel" 
+                               Text="Calibration" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                        <Label x:Name="SubHeaderLabel" 
+                               Text="Table de calibration" 
+                               FontSize="12"
+                               TextColor="#B2DFDB"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" 
+                            Text="X" 
+                            BackgroundColor="#00695C"
+                            TextColor="White"
+                            FontSize="16"
+                            WidthRequest="36"
+                            HeightRequest="36"
+                            CornerRadius="18"
+                            Clicked="OnCloseClicked"/>
+                </Grid>
+            </Border>
+
+            <!-- STATS -->
+            <Grid Grid.Row="1" 
+                  ColumnDefinitions="*,*,*,*" 
+                  ColumnSpacing="12"
+                  Padding="20,16"
+                  BackgroundColor="#F8F9FA">
+                
+                <Border Grid.Column="0" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label x:Name="TotalEntriesLabel" 
+                               Text="0" 
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#1976D2"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="Entrees" FontSize="10" TextColor="#8B939E" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label x:Name="MinHauteurLabel" 
+                               Text="0 cm" 
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#7B1FA2"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="Hauteur Min" FontSize="10" TextColor="#8B939E" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="2" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label x:Name="MaxHauteurLabel" 
+                               Text="0 cm" 
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#00796B"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="Hauteur Max" FontSize="10" TextColor="#8B939E" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="3" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label x:Name="MaxVolumeLabel" 
+                               Text="0 L" 
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#E65100"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="Volume Max" FontSize="10" TextColor="#8B939E" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- CONTENT -->
+            <ScrollView Grid.Row="2" Padding="20">
+                <VerticalStackLayout Spacing="0">
+                    
+                    <!-- Table Header -->
+                    <Grid ColumnDefinitions="0.5*,*,*" 
+                          ColumnSpacing="8"
+                          Padding="12,10"
+                          BackgroundColor="#ECEFF1">
+                        <Label Grid.Column="0" Text="#" FontSize="11" FontAttributes="Bold" TextColor="#546E7A" HorizontalTextAlignment="Center"/>
+                        <Label Grid.Column="1" Text="Hauteur (cm)" FontSize="11" FontAttributes="Bold" TextColor="#546E7A" HorizontalTextAlignment="Center"/>
+                        <Label Grid.Column="2" Text="Volume (L)" FontSize="11" FontAttributes="Bold" TextColor="#546E7A" HorizontalTextAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Calibration Rows -->
+                    <VerticalStackLayout x:Name="CalibrationContainer" Spacing="0">
+                        <!-- Populated dynamically -->
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- FOOTER -->
+            <Border Grid.Row="3" BackgroundColor="#F5F5F5" Padding="15" StrokeThickness="0">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="15">
+                    <!-- Volume Lookup Test -->
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                        <Label Text="Test:" 
+                               FontSize="12"
+                               TextColor="#5A6068"
+                               VerticalOptions="Center"/>
+                        <Entry x:Name="TestHauteurEntry"
+                               Grid.Column="1"
+                               Placeholder="Hauteur (cm)"
+                               Keyboard="Numeric"
+                               BackgroundColor="#E8ECF1"
+                               FontSize="12"/>
+                        <Button Grid.Column="2"
+                                Text="Calculer"
+                                BackgroundColor="#1976D2"
+                                TextColor="White"
+                                FontSize="11"
+                                Padding="12,8"
+                                CornerRadius="6"
+                                Clicked="OnTestLookupClicked"/>
+                        <Label x:Name="TestResultLabel"
+                               Grid.Column="3"
+                               Text="-- L"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#00796B"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                    <Button Grid.Column="1"
+                            Text="Fermer" 
+                            BackgroundColor="#00796B"
+                            TextColor="White"
+                            Padding="20,10"
+                            CornerRadius="8"
+                            Clicked="OnCloseClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

@@ -7,216 +7,277 @@
              x:DataType="viewmodels:PeriodeViewModel"
              Style="{StaticResource PeriodePageStyle}">
 
-    <ScrollView Style="{StaticResource PeriodePageScrollView}">
-        <VerticalStackLayout Style="{StaticResource PeriodePageMainStack}">
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0" Style="{StaticResource PeriodePageScrollView}">
+            <VerticalStackLayout Style="{StaticResource PeriodePageMainStack}">
 
-            <!-- HEADER SECTION with Action Button -->
-            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                <VerticalStackLayout Style="{StaticResource PeriodePageHeaderStack}">
-                    <Label Text="Gestion des Periodes" Style="{StaticResource PeriodePageTitleLabel}"/>
-                    <Label Text="{Binding Periodes.Count, StringFormat='{0} periodes enregistrees'}" 
-                           Style="{StaticResource PeriodePageSubtitleLabel}"/>
-                </VerticalStackLayout>
-                <Button Grid.Column="1" 
-                        Text="+ Nouvelle Periode" 
-                        Style="{StaticResource PeriodeAddButton}"
-                        Clicked="OnAddPeriodeClicked" 
-                        VerticalOptions="Center"
-                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
-            </Grid>
-
-            <!-- FILTER SECTION -->
-            <Border Style="{StaticResource PeriodeFilterContainer}"
-                    IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
-                <Grid ColumnDefinitions="*,*,*,Auto,Auto" ColumnSpacing="16" RowDefinitions="Auto,Auto" RowSpacing="12">
-                    
-                    <!-- Date Debut -->
-                    <VerticalStackLayout Grid.Column="0" Spacing="0">
-                        <Label Text="DATE DEBUT" Style="{StaticResource PeriodeFilterLabel}"/>
-                        <Border Style="{StaticResource PeriodeFilterInputBorder}">
-                            <DatePicker Date="{Binding FilterStartDate}" 
-                                        Style="{StaticResource PeriodeFilterDatePicker}"/>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Date Fin -->
-                    <VerticalStackLayout Grid.Column="1" Spacing="0">
-                        <Label Text="DATE FIN" Style="{StaticResource PeriodeFilterLabel}"/>
-                        <Border Style="{StaticResource PeriodeFilterInputBorder}">
-                            <DatePicker Date="{Binding FilterEndDate}" 
-                                        Style="{StaticResource PeriodeFilterDatePicker}"/>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Mois Picker -->
-                    <VerticalStackLayout Grid.Column="2" Spacing="0">
-                        <Label Text="MOIS" Style="{StaticResource PeriodeFilterLabel}"/>
-                        <Border Style="{StaticResource PeriodeFilterInputBorder}">
-                            <Picker Title="Selectionner" Style="{StaticResource PeriodeFilterPicker}">
-                                <Picker.ItemsSource>
-                                    <x:Array Type="{x:Type x:String}">
-                                        <x:String>Janvier</x:String>
-                                        <x:String>Fevrier</x:String>
-                                        <x:String>Mars</x:String>
-                                        <x:String>Avril</x:String>
-                                        <x:String>Mai</x:String>
-                                        <x:String>Juin</x:String>
-                                        <x:String>Juillet</x:String>
-                                        <x:String>Aout</x:String>
-                                        <x:String>Septembre</x:String>
-                                        <x:String>Octobre</x:String>
-                                        <x:String>Novembre</x:String>
-                                        <x:String>Decembre</x:String>
-                                    </x:Array>
-                                </Picker.ItemsSource>
-                            </Picker>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Filter Buttons -->
-                    <Button Grid.Column="3" 
-                            Text="Filtrer"
-                            Command="{Binding LoadPeriodesByDateRangeCommand}"
-                            Style="{StaticResource PeriodeFilterButton}"
-                            VerticalOptions="End"/>
-                    <Button Grid.Column="4" 
-                            Text="Reset"
-                            Command="{Binding LoadPeriodesCommand}"
-                            Style="{StaticResource PeriodeResetButton}"
-                            VerticalOptions="End"/>
-                </Grid>
-            </Border>
-
-            <!-- Loading Indicator -->
-            <ActivityIndicator Style="{StaticResource PeriodePageLoadingIndicator}"
-                               IsRunning="{Binding IsLoading}"
-                               IsVisible="{Binding IsLoading}"/>
-
-            <!-- TABLE CARD -->
-            <Border Style="{StaticResource PeriodeTableCard}"
-                    IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
-                <VerticalStackLayout Style="{StaticResource PeriodeTableContainer}">
-                    
-                    <!-- Table Header -->
-                    <Grid Style="{StaticResource PeriodeTableHeaderGrid}">
-                        <Label Grid.Column="0" Text="Date Debut" Style="{StaticResource PeriodeTableHeaderLabel}"/>
-                        <Label Grid.Column="1" Text="Date Fin" Style="{StaticResource PeriodeTableHeaderLabel}"/>
-                        <Label Grid.Column="2" Text="Employe" Style="{StaticResource PeriodeTableHeaderLabelLeft}"/>
-                        <Label Grid.Column="3" Text="TPE" Style="{StaticResource PeriodeTableHeaderLabel}"/>
-                        <Label Grid.Column="4" Text="Especes" Style="{StaticResource PeriodeTableHeaderLabel}"/>
-                        <Label Grid.Column="5" Text="Actions" Style="{StaticResource PeriodeTableHeaderLabel}"/>
+                <!-- JOURNÉE PROGRESS BAR -->
+                <Border BackgroundColor="#E3F2FD" 
+                        Padding="15" 
+                        Margin="0,0,0,10"
+                        IsVisible="{Binding IsJourneeActive}" 
+                        StrokeShape="RoundRectangle 10" 
+                        Stroke="#1976D2">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🚀" FontSize="24" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="{Binding JourneeStepInfo}" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#1976D2" 
+                                   FontSize="14"/>
+                            <Label Text="Journée en cours - Suivez les étapes" 
+                                   TextColor="#666" 
+                                   FontSize="11"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="📋" FontSize="20" VerticalOptions="Center"/>
                     </Grid>
+                </Border>
 
-                    <!-- Table Rows -->
-                    <CollectionView ItemsSource="{Binding Periodes}" SelectionMode="None">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:PeriodeDto">
-                                <SwipeView BackgroundColor="Transparent">
-                                    <!-- Left Swipe Actions -->
-                                    <SwipeView.LeftItems>
-                                        <SwipeItems Mode="Reveal">
-                                            <SwipeItem Text="Afficher" BackgroundColor="#8FA3B8"
-                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PeriodeViewModel}}, Path=SelectPeriodeCommand}"
-                                                       CommandParameter="{Binding .}"/>
-                                            <SwipeItem Text="Modifier" BackgroundColor="#5EAA8D"
-                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PeriodeViewModel}}, Path=SelectPeriodeCommand}"
-                                                       CommandParameter="{Binding .}"/>
-                                        </SwipeItems>
-                                    </SwipeView.LeftItems>
+                <!-- HEADER SECTION with Action Button -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <VerticalStackLayout Style="{StaticResource PeriodePageHeaderStack}">
+                        <Label Text="Gestion des Periodes" Style="{StaticResource PeriodePageTitleLabel}"/>
+                        <Label Text="{Binding Periodes.Count, StringFormat='{0} periodes enregistrees'}" 
+                               Style="{StaticResource PeriodePageSubtitleLabel}"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" 
+                            Text="+ Nouvelle Periode" 
+                            Style="{StaticResource PeriodeAddButton}"
+                            Clicked="OnAddPeriodeClicked" 
+                            VerticalOptions="Center"
+                            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </Grid>
 
-                                    <!-- Right Swipe Actions -->
-                                    <SwipeView.RightItems>
-                                        <SwipeItems Mode="Reveal">
-                                            <SwipeItem Text="Supprimer" BackgroundColor="#E16C6C"
-                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PeriodeViewModel}}, Path=DeleteCommand}"
-                                                       CommandParameter="{Binding .}"/>
-                                        </SwipeItems>
-                                    </SwipeView.RightItems>
+                <!-- FILTER SECTION -->
+                <Border Style="{StaticResource PeriodeFilterContainer}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Grid ColumnDefinitions="*,*,*,Auto,Auto" ColumnSpacing="16" RowDefinitions="Auto,Auto" RowSpacing="12">
+                        
+                        <!-- Date Debut -->
+                        <VerticalStackLayout Grid.Column="0" Spacing="0">
+                            <Label Text="DATE DEBUT" Style="{StaticResource PeriodeFilterLabel}"/>
+                            <Border Style="{StaticResource PeriodeFilterInputBorder}">
+                                <DatePicker Date="{Binding FilterStartDate}" 
+                                            Style="{StaticResource PeriodeFilterDatePicker}"/>
+                            </Border>
+                        </VerticalStackLayout>
 
-                                    <!-- Row Content -->
-                                    <VerticalStackLayout BackgroundColor="Transparent">
-                                        <Grid Style="{StaticResource PeriodeTableRowGrid}">
-                                            <Grid.GestureRecognizers>
-                                                <TapGestureRecognizer 
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PeriodeViewModel}}, Path=SelectPeriodeCommand}"
-                                                    CommandParameter="{Binding .}"/>
-                                            </Grid.GestureRecognizers>
+                        <!-- Date Fin -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="0">
+                            <Label Text="DATE FIN" Style="{StaticResource PeriodeFilterLabel}"/>
+                            <Border Style="{StaticResource PeriodeFilterInputBorder}">
+                                <DatePicker Date="{Binding FilterEndDate}" 
+                                            Style="{StaticResource PeriodeFilterDatePicker}"/>
+                            </Border>
+                        </VerticalStackLayout>
 
-                                            <!-- Date Debut -->
-                                            <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
-                                                <Label Text="{Binding DateDebut, StringFormat='{0:dd/MM/yyyy}'}"
-                                                       Style="{StaticResource PeriodeDateCell}"/>
-                                                <Label Text="{Binding DateDebut, StringFormat='{0:HH:mm}'}"
-                                                       Style="{StaticResource PeriodeTimeCell}"/>
-                                            </VerticalStackLayout>
+                        <!-- Mois Picker -->
+                        <VerticalStackLayout Grid.Column="2" Spacing="0">
+                            <Label Text="MOIS" Style="{StaticResource PeriodeFilterLabel}"/>
+                            <Border Style="{StaticResource PeriodeFilterInputBorder}">
+                                <Picker Title="Selectionner" Style="{StaticResource PeriodeFilterPicker}">
+                                    <Picker.ItemsSource>
+                                        <x:Array Type="{x:Type x:String}">
+                                            <x:String>Janvier</x:String>
+                                            <x:String>Fevrier</x:String>
+                                            <x:String>Mars</x:String>
+                                            <x:String>Avril</x:String>
+                                            <x:String>Mai</x:String>
+                                            <x:String>Juin</x:String>
+                                            <x:String>Juillet</x:String>
+                                            <x:String>Aout</x:String>
+                                            <x:String>Septembre</x:String>
+                                            <x:String>Octobre</x:String>
+                                            <x:String>Novembre</x:String>
+                                            <x:String>Decembre</x:String>
+                                        </x:Array>
+                                    </Picker.ItemsSource>
+                                </Picker>
+                            </Border>
+                        </VerticalStackLayout>
 
-                                            <!-- Date Fin -->
-                                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
-                                                <Label Text="{Binding DateFin, StringFormat='{0:dd/MM/yyyy}'}"
-                                                       Style="{StaticResource PeriodeDateCell}"/>
-                                                <Label Text="{Binding DateFin, StringFormat='{0:HH:mm}'}"
-                                                       Style="{StaticResource PeriodeTimeCell}"/>
-                                            </VerticalStackLayout>
+                        <!-- Filter Buttons -->
+                        <Button Grid.Column="3" 
+                                Text="Filtrer"
+                                Command="{Binding LoadPeriodesByDateRangeCommand}"
+                                Style="{StaticResource PeriodeFilterButton}"
+                                VerticalOptions="End"/>
+                        <Button Grid.Column="4" 
+                                Text="Reset"
+                                Command="{Binding LoadPeriodesCommand}"
+                                Style="{StaticResource PeriodeResetButton}"
+                                VerticalOptions="End"/>
+                    </Grid>
+                </Border>
 
-                                            <!-- Employe -->
-                                            <Label Grid.Column="2" 
-                                                   Text="{Binding EmployeNom, TargetNullValue='Non assigne'}" 
-                                                   Style="{StaticResource PeriodeEmployeCell}"/>
+                <!-- Loading Indicator -->
+                <ActivityIndicator Style="{StaticResource PeriodePageLoadingIndicator}"
+                                   IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"/>
 
-                                            <!-- TPE -->
-                                            <Label Grid.Column="3" 
-                                                   Text="{Binding TPE, StringFormat='{0:N2} DH'}" 
-                                                   Style="{StaticResource PeriodeTPECell}"/>
+                <!-- TABLE CARD -->
+                <Border Style="{StaticResource PeriodeTableCard}"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <VerticalStackLayout Style="{StaticResource PeriodeTableContainer}">
+                        
+                        <!-- Table Header -->
+                        <Grid Style="{StaticResource PeriodeTableHeaderGrid}">
+                            <Label Grid.Column="0" Text="Date Debut" Style="{StaticResource PeriodeTableHeaderLabel}"/>
+                            <Label Grid.Column="1" Text="Date Fin" Style="{StaticResource PeriodeTableHeaderLabel}"/>
+                            <Label Grid.Column="2" Text="Employe" Style="{StaticResource PeriodeTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="3" Text="TPE" Style="{StaticResource PeriodeTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Especes" Style="{StaticResource PeriodeTableHeaderLabel}"/>
+                            <Label Grid.Column="5" Text="Actions" Style="{StaticResource PeriodeTableHeaderLabel}"/>
+                        </Grid>
 
-                                            <!-- Especes -->
-                                            <Label Grid.Column="4" 
-                                                   Text="{Binding Especes, StringFormat='{0:N2} DH'}" 
-                                                   Style="{StaticResource PeriodeEspecesCell}"/>
+                        <!-- Table Rows -->
+                        <CollectionView ItemsSource="{Binding Periodes}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:PeriodeDto">
+                                    <SwipeView BackgroundColor="Transparent">
+                                        <!-- Left Swipe Actions -->
+                                        <SwipeView.LeftItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Afficher" BackgroundColor="#8FA3B8"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PeriodeViewModel}}, Path=SelectPeriodeCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                                <SwipeItem Text="Modifier" BackgroundColor="#5EAA8D"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PeriodeViewModel}}, Path=SelectPeriodeCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.LeftItems>
 
-                                            <!-- Actions -->
-                                            <HorizontalStackLayout Grid.Column="5" Style="{StaticResource PeriodeActionsCell}">
-                                                <Button Text="Afficher" 
-                                                        Style="{StaticResource PeriodeDetailsButton}"
-                                                        Clicked="OnViewPeriodeClicked"
+                                        <!-- Right Swipe Actions -->
+                                        <SwipeView.RightItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Supprimer" BackgroundColor="#E16C6C"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PeriodeViewModel}}, Path=DeleteCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.RightItems>
+
+                                        <!-- Row Content -->
+                                        <VerticalStackLayout BackgroundColor="Transparent">
+                                            <Grid Style="{StaticResource PeriodeTableRowGrid}">
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:PeriodeViewModel}}, Path=SelectPeriodeCommand}"
                                                         CommandParameter="{Binding .}"/>
-                                                <Button Text="Modifier" 
-                                                        Style="{StaticResource PeriodeModifierButton}"
-                                                        Clicked="OnEditPeriodeClicked"
-                                                        CommandParameter="{Binding .}"/>
-                                                <Button Text="Supprimer" 
-                                                        Style="{StaticResource PeriodeSupprimerButton}"
-                                                        Clicked="OnDeletePeriodeClicked"
-                                                        CommandParameter="{Binding .}"/>
-                                            </HorizontalStackLayout>
-                                        </Grid>
+                                                </Grid.GestureRecognizers>
 
-                                        <!-- Row Divider -->
-                                        <BoxView Style="{StaticResource PeriodeRowDivider}"/>
-                                    </VerticalStackLayout>
-                                </SwipeView>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
+                                                <!-- Date Debut -->
+                                                <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
+                                                    <Label Text="{Binding DateDebut, StringFormat='{0:dd/MM/yyyy}'}"
+                                                           Style="{StaticResource PeriodeDateCell}"/>
+                                                    <Label Text="{Binding DateDebut, StringFormat='{0:HH:mm}'}"
+                                                           Style="{StaticResource PeriodeTimeCell}"/>
+                                                </VerticalStackLayout>
 
-                        <!-- Empty View -->
-                        <CollectionView.EmptyView>
-                            <VerticalStackLayout Style="{StaticResource PeriodeEmptyView}">
-                                <Border BackgroundColor="#EEF1F5" WidthRequest="100" HeightRequest="100" StrokeThickness="0" Margin="0,0,0,16">
-                                    <Border.StrokeShape><RoundRectangle CornerRadius="50"/></Border.StrokeShape>
-                                    <Border.Shadow><Shadow Brush="#C5CAD1" Offset="6,6" Radius="12" Opacity="0.25"/></Border.Shadow>
-                                    <Label Text="&#x1F4C5;" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                </Border>
-                                <Label Text="Aucune periode disponible" Style="{StaticResource PeriodeEmptyTitle}"/>
-                                <Label Text="Commencez par ajouter votre premiere periode pour gerer vos shifts" 
-                                       Style="{StaticResource PeriodeEmptySubtitle}"/>
-                                <Button Text="+ Ajouter une Periode" 
-                                        Style="{StaticResource PeriodeEmptyButton}" 
-                                        Clicked="OnAddPeriodeClicked"/>
-                            </VerticalStackLayout>
-                        </CollectionView.EmptyView>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Border>
+                                                <!-- Date Fin -->
+                                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
+                                                    <Label Text="{Binding DateFin, StringFormat='{0:dd/MM/yyyy}'}"
+                                                           Style="{StaticResource PeriodeDateCell}"/>
+                                                    <Label Text="{Binding DateFin, StringFormat='{0:HH:mm}'}"
+                                                           Style="{StaticResource PeriodeTimeCell}"/>
+                                                </VerticalStackLayout>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                                                <!-- Employe -->
+                                                <Label Grid.Column="2" 
+                                                       Text="{Binding EmployeNom, TargetNullValue='Non assigne'}" 
+                                                       Style="{StaticResource PeriodeEmployeCell}"/>
+
+                                                <!-- TPE -->
+                                                <Label Grid.Column="3" 
+                                                       Text="{Binding TPE, StringFormat='{0:N2} DH'}" 
+                                                       Style="{StaticResource PeriodeTPECell}"/>
+
+                                                <!-- Especes -->
+                                                <Label Grid.Column="4" 
+                                                       Text="{Binding Especes, StringFormat='{0:N2} DH'}" 
+                                                       Style="{StaticResource PeriodeEspecesCell}"/>
+
+                                                <!-- Actions -->
+                                                <HorizontalStackLayout Grid.Column="5" Style="{StaticResource PeriodeActionsCell}">
+                                                    <Button Text="Afficher" 
+                                                            Style="{StaticResource PeriodeDetailsButton}"
+                                                            Clicked="OnViewPeriodeClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Modifier" 
+                                                            Style="{StaticResource PeriodeModifierButton}"
+                                                            Clicked="OnEditPeriodeClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Supprimer" 
+                                                            Style="{StaticResource PeriodeSupprimerButton}"
+                                                            Clicked="OnDeletePeriodeClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+
+                                            <!-- Row Divider -->
+                                            <BoxView Style="{StaticResource PeriodeRowDivider}"/>
+                                        </VerticalStackLayout>
+                                    </SwipeView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                            <!-- Empty View -->
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource PeriodeEmptyView}">
+                                    <Border BackgroundColor="#EEF1F5" WidthRequest="100" HeightRequest="100" StrokeThickness="0" Margin="0,0,0,16">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="50"/></Border.StrokeShape>
+                                        <Border.Shadow><Shadow Brush="#C5CAD1" Offset="6,6" Radius="12" Opacity="0.25"/></Border.Shadow>
+                                        <Label Text="&#x1F4C5;" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucune periode disponible" Style="{StaticResource PeriodeEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter votre premiere periode pour gerer vos shifts" 
+                                           Style="{StaticResource PeriodeEmptySubtitle}"/>
+                                    <Button Text="+ Ajouter une Periode" 
+                                            Style="{StaticResource PeriodeEmptyButton}" 
+                                            Clicked="OnAddPeriodeClicked"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- JOURNÉE NAVIGATION BAR -->
+        <Border Grid.Row="1" 
+                BackgroundColor="#F5F5F5" 
+                Padding="15" 
+                IsVisible="{Binding IsJourneeActive}" 
+                StrokeThickness="0">
+            <Border.Shadow>
+                <Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                <Button Text="← Précédent" 
+                        Command="{Binding JourneePrecedentCommand}"
+                        BackgroundColor="#757575" 
+                        TextColor="White" 
+                        Padding="20,12" 
+                        CornerRadius="8"
+                        IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
+                <BoxView Grid.Column="1" Color="Transparent"/>
+                <Button Grid.Column="2" 
+                        Text="Passer cette étape" 
+                        Command="{Binding JourneePasserCommand}"
+                        BackgroundColor="#FFA726" 
+                        TextColor="White" 
+                        Padding="20,12" 
+                        CornerRadius="8"/>
+                <Button Grid.Column="3" 
+                        Text="{Binding IsLastStep, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Terminer la journée|Suivant →'}"
+                        Command="{Binding JourneeSuivantCommand}" 
+                        BackgroundColor="#4CAF50" 
+                        TextColor="White"
+                        Padding="20,12" 
+                        CornerRadius="8" 
+                        FontAttributes="Bold"/>
+            </Grid>
+        </Border>
+
+    </Grid>
 </ContentPage>

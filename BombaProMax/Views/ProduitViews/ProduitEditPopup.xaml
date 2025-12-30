@@ -69,6 +69,7 @@
                                        TextColor="#E65100"/>
                                 <Picker x:Name="CategoriePicker"
                                         Title="Sélectionner..."
+                                        ItemDisplayBinding="{Binding Nom}"
                                         FontSize="14"/>
                             </VerticalStackLayout>
                         </Border>

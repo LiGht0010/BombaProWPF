@@ -21,51 +21,49 @@ public partial class ProduitEditPopup : Popup
         _categorieService = categorieService;
         _produit = produit;
 
-        // Load product data immediately (synchronous)
-        LoadProduitData();
-        
-        // Load categories after component is ready
-        Dispatcher.DispatchAsync(LoadCategoriesAsync);
+        // Load all data in a single async method
+        LoadDataAsync();
     }
 
-    private async Task LoadCategoriesAsync()
+    private async void LoadDataAsync()
     {
         try
         {
+            // Step 1: Load categories FIRST
             _categories = await _categorieService.GetAllCategoriesAsync();
             
-            CategoriePicker.Items.Clear();
+            if (_categories.Count == 0)
+            {
+                // Add fallback categories if none found
+                _categories = new List<CategorieDto>
+                {
+                    new CategorieDto { ID = 1, Nom = "Carburant" },
+                    new CategorieDto { ID = 2, Nom = "Lubrifiant" },
+                    new CategorieDto { ID = 3, Nom = "Articles" },
+                    new CategorieDto { ID = 4, Nom = "Accessoires" }
+                };
+            }
             
-            if (_categories.Count > 0)
-            {
-                foreach (var category in _categories)
-                {
-                    CategoriePicker.Items.Add(category.Nom);
-                }
-                
-                // Select the current product's category
-                if (_produit.CategorieID.HasValue)
-                {
-                    var currentCategory = _categories.FirstOrDefault(c => c.ID == _produit.CategorieID.Value);
-                    if (currentCategory != null)
-                    {
-                        var index = _categories.IndexOf(currentCategory);
-                        if (index >= 0)
-                        {
-                            CategoriePicker.SelectedIndex = index;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                AddFallbackCategories();
-            }
+            // Step 2: Set ItemsSource (not Items.Add)
+            CategoriePicker.ItemsSource = _categories;
+            
+            // Step 3: Now populate product data including category selection
+            PopulateProductData();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading categories: {ex.Message}");
-            AddFallbackCategories();
+            Console.WriteLine($"Error loading data: {ex.Message}");
+            
+            // Fallback categories
+            _categories = new List<CategorieDto>
+            {
+                new CategorieDto { ID = 1, Nom = "Carburant" },
+                new CategorieDto { ID = 2, Nom = "Lubrifiant" },
+                new CategorieDto { ID = 3, Nom = "Articles" },
+                new CategorieDto { ID = 4, Nom = "Accessoires" }
+            };
+            CategoriePicker.ItemsSource = _categories;
+            PopulateProductData();
         }
         finally
         {
@@ -73,30 +71,31 @@ public partial class ProduitEditPopup : Popup
         }
     }
 
-    private void AddFallbackCategories()
+    private void PopulateProductData()
     {
-        CategoriePicker.Items.Clear();
-        CategoriePicker.Items.Add("Carburant");
-        CategoriePicker.Items.Add("Lubrifiant");
-        CategoriePicker.Items.Add("Articles");
-        CategoriePicker.Items.Add("Accessoires");
-    }
-
-    private void LoadProduitData()
-    {
-        if (_produit != null)
+        if (_produit == null) return;
+        
+        // Populate text fields
+        NumeroProduitEntry.Text = _produit.NumeroProduit;
+        DescriptionEntry.Text = _produit.Description;
+        PrixAchatEntry.Text = _produit.PrixAchat?.ToString("F2") ?? "0.00";
+        PrixHTEntry.Text = _produit.PrixHT?.ToString("F2") ?? "0.00";
+        TVAEntry.Text = _produit.TVA?.ToString("F0") ?? "20";
+        StockEntry.Text = _produit.Stock?.ToString() ?? "0";
+        StockMinimumEntry.Text = _produit.StockMinimum?.ToString() ?? "0";
+        DelaiLivraisonEntry.Text = _produit.DelaiDeLivraison?.ToString() ?? "";
+        
+        // Select category using SelectedItem (object reference)
+        if (_produit.CategorieID.HasValue)
         {
-            NumeroProduitEntry.Text = _produit.NumeroProduit;
-            DescriptionEntry.Text = _produit.Description;
-            PrixAchatEntry.Text = _produit.PrixAchat?.ToString("F2") ?? "0.00";
-            PrixHTEntry.Text = _produit.PrixHT?.ToString("F2") ?? "0.00";
-            TVAEntry.Text = _produit.TVA?.ToString("F0") ?? "20";
-            StockEntry.Text = _produit.Stock?.ToString() ?? "0";
-            StockMinimumEntry.Text = _produit.StockMinimum?.ToString() ?? "0";
-            DelaiLivraisonEntry.Text = _produit.DelaiDeLivraison?.ToString() ?? "";
-            
-            CalculatePrices();
+            var selectedCategory = _categories.FirstOrDefault(c => c.ID == _produit.CategorieID.Value);
+            if (selectedCategory != null)
+            {
+                CategoriePicker.SelectedItem = selectedCategory;
+            }
         }
+        
+        CalculatePrices();
     }
 
     private void CalculatePrices()
@@ -170,7 +169,7 @@ public partial class ProduitEditPopup : Popup
             return;
         }
 
-        if (CategoriePicker.SelectedIndex < 0 || _categories.Count == 0)
+        if (CategoriePicker.SelectedItem is not CategorieDto selectedCategory)
         {
             ErrorLabel.Text = "Veuillez sélectionner une catégorie";
             ErrorLabel.IsVisible = true;
@@ -179,16 +178,6 @@ public partial class ProduitEditPopup : Popup
 
         try
         {
-            var selectedCategoryName = CategoriePicker.SelectedItem?.ToString();
-            var selectedCategory = _categories.FirstOrDefault(c => c.Nom == selectedCategoryName);
-            
-            if (selectedCategory == null)
-            {
-                ErrorLabel.Text = "Catégorie invalide";
-                ErrorLabel.IsVisible = true;
-                return;
-            }
-
             _produit.NumeroProduit = NumeroProduitEntry.Text.Trim();
             _produit.Description = DescriptionEntry.Text.Trim();
             _produit.PrixAchat = string.IsNullOrWhiteSpace(PrixAchatEntry.Text) ? null : decimal.Parse(PrixAchatEntry.Text);

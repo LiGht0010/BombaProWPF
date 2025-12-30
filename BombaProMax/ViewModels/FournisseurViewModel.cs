@@ -10,7 +10,6 @@ public partial class FournisseurViewModel : ObservableObject
 {
     private readonly FournisseurService _fournisseurService;
     private readonly IDialogService _dialogService;
-    private readonly JourneeNavigationService _journeeService;
 
     public ObservableCollection<FournisseurDto> Fournisseurs { get; } = new();
 
@@ -23,94 +22,16 @@ public partial class FournisseurViewModel : ObservableObject
     [ObservableProperty]
     private string _searchText = string.Empty;
 
-    // ════════════════════════════════════════════════════════════════
-    // JOURNÉE PROPERTIES (bound to service)
-    // ════════════════════════════════════════════════════════════════
-    
-    /// <summary>
-    /// Whether the journée workflow is currently active.
-    /// </summary>
-    public bool IsJourneeActive => _journeeService.IsJourneeActive;
-
-    /// <summary>
-    /// Whether we can navigate to the previous step.
-    /// </summary>
-    public bool CanGoPrevious => _journeeService.CanGoPrevious;
-
-    /// <summary>
-    /// Whether we can navigate to the next step.
-    /// </summary>
-    public bool CanGoNext => _journeeService.CanGoNext;
-
-    /// <summary>
-    /// Whether this is the first step (hide Précédent button).
-    /// </summary>
-    public bool IsFirstStep => _journeeService.IsFirstStep;
-
-    /// <summary>
-    /// Whether this is the last step (show Terminer instead of Suivant).
-    /// </summary>
-    public bool IsLastStep => _journeeService.IsLastStep;
-
-    /// <summary>
-    /// Current step info for display.
-    /// </summary>
-    public string JourneeStepInfo => $"Étape {_journeeService.CurrentStepNumber}/{_journeeService.TotalSteps}: {_journeeService.CurrentStepName}";
-
     public FournisseurViewModel(
         FournisseurService fournisseurService, 
-        IDialogService dialogService,
-        JourneeNavigationService journeeService)
+        IDialogService dialogService)
     {
         _fournisseurService = fournisseurService;
         _dialogService = dialogService;
-        _journeeService = journeeService;
-
-        // Subscribe to journée service property changes
-        _journeeService.PropertyChanged += (s, e) =>
-        {
-            OnPropertyChanged(nameof(IsJourneeActive));
-            OnPropertyChanged(nameof(CanGoPrevious));
-            OnPropertyChanged(nameof(CanGoNext));
-            OnPropertyChanged(nameof(IsFirstStep));
-            OnPropertyChanged(nameof(IsLastStep));
-            OnPropertyChanged(nameof(JourneeStepInfo));
-        };
     }
 
     // ════════════════════════════════════════════════════════════════
-    // JOURNÉE COMMANDS
-    // ════════════════════════════════════════════════════════════════
-
-    /// <summary>
-    /// Navigate to the next step in the journée workflow.
-    /// </summary>
-    [RelayCommand]
-    private async Task JourneeSuivantAsync()
-    {
-        await _journeeService.GoNextAsync(skipped: false);
-    }
-
-    /// <summary>
-    /// Skip the current step and navigate to the next one.
-    /// </summary>
-    [RelayCommand]
-    private async Task JourneePasserAsync()
-    {
-        await _journeeService.GoNextAsync(skipped: true);
-    }
-
-    /// <summary>
-    /// Navigate to the previous step in the journée workflow.
-    /// </summary>
-    [RelayCommand]
-    private async Task JourneePrecedentAsync()
-    {
-        await _journeeService.GoPreviousAsync();
-    }
-
-    // ════════════════════════════════════════════════════════════════
-    // EXISTING COMMANDS
+    // COMMANDS
     // ════════════════════════════════════════════════════════════════
 
     [RelayCommand]

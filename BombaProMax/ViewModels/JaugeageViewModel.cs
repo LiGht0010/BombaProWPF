@@ -18,6 +18,7 @@ public partial class JaugeageViewModel : ObservableObject
     private readonly ReservoirService _reservoirService;
     private readonly EmployeService _employeService;
     private readonly JourneeNavigationService _journeeService;
+    private readonly ReservoirCalibrationService _calibrationService;
 
     #region Observable Properties
 
@@ -126,11 +127,49 @@ public partial class JaugeageViewModel : ObservableObject
 
     #endregion
 
+    #region Calibration Properties
+
+    private ReservoirDto? _selectedCalibrationReservoir;
+    public ReservoirDto? SelectedCalibrationReservoir
+    {
+        get => _selectedCalibrationReservoir;
+        set
+        {
+            if (SetProperty(ref _selectedCalibrationReservoir, value))
+            {
+                OnPropertyChanged(nameof(HasSelectedCalibrationReservoir));
+                if (value != null)
+                {
+                    _ = LoadCalibrationsAsync(value.ID);
+                }
+                else
+                {
+                    Calibrations.Clear();
+                    NotifyCalibrationStatsChanged();
+                }
+            }
+        }
+    }
+
+    public bool HasSelectedCalibrationReservoir => SelectedCalibrationReservoir != null;
+
+    #endregion
+
     #region Collections
 
     public ObservableCollection<ReservoirMeasurementItem> ReservoirMeasurements { get; } = [];
     public ObservableCollection<JaugeageDto> JaugeageHistory { get; } = [];
     public ObservableCollection<EmployeDto> Employes { get; } = [];
+    
+    /// <summary>
+    /// All reservoirs for calibration tab (with calibration status)
+    /// </summary>
+    public ObservableCollection<ReservoirDto> CalibrationReservoirs { get; } = [];
+    
+    /// <summary>
+    /// Calibration data for selected reservoir
+    /// </summary>
+    public ObservableCollection<ReservoirCalibrationDto> Calibrations { get; } = [];
 
     #endregion
 
@@ -145,6 +184,17 @@ public partial class JaugeageViewModel : ObservableObject
     // Stats for the list view
     public int TotalJaugeages => JaugeageHistory.Count;
     public decimal TotalVolumeJaugeages => JaugeageHistory.Sum(j => j.TotalVolume);
+
+    // Calibration stats
+    public int TotalCalibrations => Calibrations.Count;
+    public decimal CalibrationMinHauteur => Calibrations.Count > 0 ? Calibrations.Min(c => c.HauteurCm) : 0;
+    public decimal CalibrationMaxHauteur => Calibrations.Count > 0 ? Calibrations.Max(c => c.HauteurCm) : 0;
+    public decimal CalibrationMaxVolume => Calibrations.Count > 0 ? Calibrations.Max(c => c.VolumeLitres) : 0;
+    public bool HasCalibrationData => Calibrations.Count > 0;
+    
+    // Reservoir calibration stats
+    public int CalibratedReservoirsCount => CalibrationReservoirs.Count(r => r.HasCalibration);
+    public int NotCalibratedReservoirsCount => CalibrationReservoirs.Count(r => !r.HasCalibration);
 
     #endregion
 
@@ -171,6 +221,9 @@ public partial class JaugeageViewModel : ObservableObject
     public IAsyncRelayCommand JourneeSuivantCommand { get; }
     public IAsyncRelayCommand JourneePasserCommand { get; }
     public IAsyncRelayCommand JourneePrecedentCommand { get; }
+    public IAsyncRelayCommand LoadCalibrationReservoirsCommand { get; }
+    public IAsyncRelayCommand RefreshCalibrationsCommand { get; }
+    public IAsyncRelayCommand DeleteAllCalibrationsCommand { get; }
 
     #endregion
 
@@ -183,6 +236,7 @@ public partial class JaugeageViewModel : ObservableObject
         _reservoirService = new ReservoirService();
         _employeService = new EmployeService();
         _journeeService = journeeService;
+        _calibrationService = new ReservoirCalibrationService();
 
         // Initialize commands
         InitializeCommand = new AsyncRelayCommand(InitializeAsync);
@@ -195,6 +249,9 @@ public partial class JaugeageViewModel : ObservableObject
         JourneeSuivantCommand = new AsyncRelayCommand(JourneeSuivantAsync);
         JourneePasserCommand = new AsyncRelayCommand(JourneePasserAsync);
         JourneePrecedentCommand = new AsyncRelayCommand(JourneePrecedentAsync);
+        LoadCalibrationReservoirsCommand = new AsyncRelayCommand(LoadCalibrationReservoirsAsync);
+        RefreshCalibrationsCommand = new AsyncRelayCommand(RefreshCalibrationsAsync);
+        DeleteAllCalibrationsCommand = new AsyncRelayCommand(DeleteAllCalibrationsAsync);
 
         // Subscribe to journee changes
         _journeeService.PropertyChanged += (s, e) =>
@@ -225,6 +282,7 @@ public partial class JaugeageViewModel : ObservableObject
         await LoadEmployesAsync();
         await LoadReservoirsAsync();
         await LoadHistoryAsync();
+        await LoadCalibrationReservoirsAsync();
     }
 
     #endregion
@@ -528,6 +586,199 @@ public partial class JaugeageViewModel : ObservableObject
 
         NotifyStatsChanged();
         await Task.CompletedTask;
+    }
+
+    #endregion
+
+    #region Calibration Operations
+
+    /// <summary>
+    /// Loads all reservoirs for the calibration tab, sorted by calibration status
+    /// </summary>
+    public async Task LoadCalibrationReservoirsAsync()
+    {
+        try
+        {
+            IsLoading = true;
+            ErrorMessage = null;
+
+            var reservoirs = await _reservoirService.GetAllReservoirsAsync();
+
+            CalibrationReservoirs.Clear();
+            
+            // Add calibrated reservoirs first, then non-calibrated
+            foreach (var reservoir in reservoirs.OrderByDescending(r => r.HasCalibration).ThenBy(r => r.Numero))
+            {
+                CalibrationReservoirs.Add(reservoir);
+            }
+
+            OnPropertyChanged(nameof(CalibratedReservoirsCount));
+            OnPropertyChanged(nameof(NotCalibratedReservoirsCount));
+            
+            Debug.WriteLine($"[JaugeageVM] Loaded {CalibrationReservoirs.Count} reservoirs for calibration tab ({CalibratedReservoirsCount} calibrated, {NotCalibratedReservoirsCount} not calibrated)");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur de chargement: {ex.Message}";
+            Debug.WriteLine($"[JaugeageVM] Error loading calibration reservoirs: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Loads calibration data for a specific reservoir
+    /// </summary>
+    public async Task LoadCalibrationsAsync(int reservoirId)
+    {
+        try
+        {
+            IsLoading = true;
+            ErrorMessage = null;
+
+            var calibrations = await _calibrationService.GetCalibrationsByReservoirAsync(reservoirId);
+
+            Calibrations.Clear();
+            foreach (var calibration in calibrations)
+            {
+                Calibrations.Add(calibration);
+            }
+
+            NotifyCalibrationStatsChanged();
+            Debug.WriteLine($"[JaugeageVM] Loaded {Calibrations.Count} calibrations for reservoir {reservoirId}");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur de chargement: {ex.Message}";
+            Debug.WriteLine($"[JaugeageVM] Error loading calibrations: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Refreshes calibration data for selected reservoir
+    /// </summary>
+    public async Task RefreshCalibrationsAsync()
+    {
+        if (SelectedCalibrationReservoir == null) return;
+        await LoadCalibrationsAsync(SelectedCalibrationReservoir.ID);
+    }
+
+    /// <summary>
+    /// Imports calibration data from CSV content for a specific reservoir
+    /// </summary>
+    public async Task<bool> ImportCalibrationForReservoirAsync(int reservoirId, string csvContent)
+    {
+        try
+        {
+            IsSaving = true;
+            ErrorMessage = null;
+
+            var calibrations = _calibrationService.ParseCsvData(csvContent);
+
+            if (calibrations.Count == 0)
+            {
+                ErrorMessage = "Aucune donnee valide trouvee dans le fichier CSV";
+                return false;
+            }
+
+            var result = await _calibrationService.ImportCalibrationsAsync(reservoirId, calibrations);
+
+            if (result != null)
+            {
+                Debug.WriteLine($"[JaugeageVM] Imported {result.Count} calibrations for reservoir {reservoirId}, HauteurMax: {result.HauteurMax}");
+                return true;
+            }
+            else
+            {
+                ErrorMessage = "Echec de l'importation";
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur d'importation: {ex.Message}";
+            Debug.WriteLine($"[JaugeageVM] Error importing calibrations for reservoir {reservoirId}: {ex.Message}");
+            return false;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    /// <summary>
+    /// Deletes all calibration data for selected reservoir (command method)
+    /// </summary>
+    public async Task DeleteAllCalibrationsAsync()
+    {
+        if (SelectedCalibrationReservoir == null) return;
+        await DeleteCalibrationForReservoirAsync(SelectedCalibrationReservoir.ID);
+    }
+
+    /// <summary>
+    /// Deletes all calibration data for a specific reservoir
+    /// </summary>
+    public async Task<bool> DeleteCalibrationForReservoirAsync(int reservoirId)
+    {
+        try
+        {
+            IsSaving = true;
+            ErrorMessage = null;
+
+            var success = await _calibrationService.DeleteAllCalibrationsAsync(reservoirId);
+
+            if (success)
+            {
+                Debug.WriteLine($"[JaugeageVM] Deleted all calibrations for reservoir {reservoirId}");
+                return true;
+            }
+            else
+            {
+                ErrorMessage = "Echec de la suppression";
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur de suppression: {ex.Message}";
+            Debug.WriteLine($"[JaugeageVM] Error deleting calibrations for reservoir {reservoirId}: {ex.Message}");
+            return false;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    /// <summary>
+    /// Looks up volume for a given height using calibration data for a specific reservoir
+    /// </summary>
+    public async Task<VolumeLookupResultDto?> LookupVolumeForReservoirAsync(int reservoirId, decimal hauteurCm)
+    {
+        try
+        {
+            return await _calibrationService.LookupVolumeAsync(reservoirId, hauteurCm);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[JaugeageVM] Error looking up volume for reservoir {reservoirId}: {ex.Message}");
+            return null;
+        }
+    }
+
+    private void NotifyCalibrationStatsChanged()
+    {
+        OnPropertyChanged(nameof(TotalCalibrations));
+        OnPropertyChanged(nameof(CalibrationMinHauteur));
+        OnPropertyChanged(nameof(CalibrationMaxHauteur));
+        OnPropertyChanged(nameof(CalibrationMaxVolume));
+        OnPropertyChanged(nameof(HasCalibrationData));
     }
 
     #endregion

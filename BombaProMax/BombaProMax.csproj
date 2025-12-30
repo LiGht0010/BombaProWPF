@@ -318,6 +318,9 @@
 	  <MauiXaml Update="Views\HomePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\JaugeageViews\CalibrationViewPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\JaugeageViews\JaugeageCreatePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

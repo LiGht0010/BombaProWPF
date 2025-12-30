@@ -17,19 +17,13 @@ public partial class JourneeNavigationService : ObservableObject
     // Ordered list of routes for the journée workflow
     private readonly List<string> _journeeRoutes =
     [
-        "//JaugeagePage",           // NEW: Jaugeage at start of day
-        "//FournisseurPage",
-        "//ProduitPage",
-        "//ChauffeurPage",
-        "//CamionPage",
-        "//CiternePage",
-        "//ReservoirPage",
-        "//PompePage",
-        "//AchatPage",
-        "//PeriodePage",
-        "//VenteLubrifiantsEtArticlesPage",
-        "//ClientPage",
-        "//DepensePage"
+        "//ClientPage",                     // Step 1: Manage clients
+        "//AchatPage",                      // Step 2: Record purchases
+        "//JaugeagePage",                   // Step 3: Jaugeage measurements
+        "//PeriodePage",                    // Step 4: Sales periods
+        "//VenteLubrifiantsEtArticlesPage", // Step 5: Lubricants & articles sales
+        "//VenteServicePage",               // Step 6: Service sales
+        "//DepensePage"                     // Step 7: Expenses
     ];
 
     [ObservableProperty]
@@ -174,7 +168,16 @@ public partial class JourneeNavigationService : ObservableObject
         if (CurrentStepIndex >= 0 && CurrentStepIndex < _journeeRoutes.Count)
         {
             var currentRoute = _journeeRoutes[CurrentStepIndex];
-            return route.Contains(currentRoute.TrimStart('/'), StringComparison.OrdinalIgnoreCase);
+            
+            // Check if navigating to the current step's route
+            if (route.Contains(currentRoute.TrimStart('/'), StringComparison.OrdinalIgnoreCase))
+                return true;
+            
+            // Allow sub-routes based on current step
+            // ClientPage allows navigation to ClientCreditManagement
+            if (currentRoute == "//ClientPage" && 
+                route.Contains("ClientCreditManagement", StringComparison.OrdinalIgnoreCase))
+                return true;
         }
 
         return false;

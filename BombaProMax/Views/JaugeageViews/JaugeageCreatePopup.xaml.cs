@@ -70,7 +70,7 @@ public partial class JaugeageCreatePopup : Popup
     private void UpdateSummary()
     {
         var totalReservoirs = _reservoirRows.Count;
-        var measuredCount = _reservoirRows.Count(r => r.HauteurMesuree > 0);
+        var measuredCount = _reservoirRows.Count(r => r.HasMeasurement);
         var totalVolume = _reservoirRows.Sum(r => r.VolumeCalcule);
         
         TotalReservoirsLabel.Text = totalReservoirs.ToString();
@@ -104,14 +104,14 @@ public partial class JaugeageCreatePopup : Popup
                 NumeroJaugeage = string.IsNullOrWhiteSpace(NumeroEntry.Text) ? null : NumeroEntry.Text,
                 Observations = string.IsNullOrWhiteSpace(ObservationsEntry.Text) ? null : ObservationsEntry.Text,
                 Details = _reservoirRows
-                    .Where(r => r.HauteurMesuree > 0)
+                    .Where(r => r.HasMeasurement)
                     .Select(r => new JaugeageDetailDto
                     {
                         ReservoirID = r.ReservoirID,
                         HauteurMesuree = r.HauteurMesuree,
                         VolumeCalcule = r.VolumeCalcule,
                         Temperature = null,
-                        Notes = null
+                        Notes = r.IsDirectVolume ? "Saisie directe" : null
                     })
                     .ToList()
             };
@@ -146,7 +146,7 @@ public partial class JaugeageCreatePopup : Popup
             return false;
         }
 
-        var measuredCount = _reservoirRows.Count(r => r.HauteurMesuree > 0);
+        var measuredCount = _reservoirRows.Count(r => r.HasMeasurement);
         if (measuredCount == 0)
         {
             ShowError("Veuillez mesurer au moins un reservoir");
@@ -164,7 +164,8 @@ public partial class JaugeageCreatePopup : Popup
 }
 
 /// <summary>
-/// Helper class to manage a single reservoir measurement row
+/// Helper class to manage a single reservoir measurement row.
+/// Supports both height-based calculation and direct volume entry.
 /// </summary>
 public class ReservoirMeasurementRow
 {
@@ -173,13 +174,16 @@ public class ReservoirMeasurementRow
     private readonly Action _onChanged;
     
     private Entry? _hauteurEntry;
-    private Label? _volumeLabel;
-    private Label? _statusLabel;
+    private Entry? _volumeEntry;
+    private Label? _modeLabel;
     private System.Timers.Timer? _debounceTimer;
+    private bool _isUpdatingFromCode;
 
     public int ReservoirID => _reservoir.ID;
     public decimal HauteurMesuree { get; private set; }
     public decimal VolumeCalcule { get; private set; }
+    public bool IsDirectVolume { get; private set; }
+    public bool HasMeasurement => HauteurMesuree > 0 || VolumeCalcule > 0;
 
     public ReservoirMeasurementRow(ReservoirDto reservoir, JaugeageDetailService detailService, Action onChanged)
     {
@@ -195,7 +199,7 @@ public class ReservoirMeasurementRow
             ColumnDefinitions =
             [
                 new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(0.8, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(0.8, GridUnitType.Star) }
@@ -208,7 +212,7 @@ public class ReservoirMeasurementRow
         // Reservoir numero
         var numeroBorder = new Border
         {
-            BackgroundColor = Color.FromArgb("#E0F2F1"),
+            BackgroundColor = _reservoir.HasCalibration ? Color.FromArgb("#E0F2F1") : Color.FromArgb("#FFF3E0"),
             Padding = new Thickness(8, 4),
             StrokeThickness = 0,
             StrokeShape = new RoundRectangle { CornerRadius = 6 },
@@ -218,7 +222,7 @@ public class ReservoirMeasurementRow
                 Text = _reservoir.Numero,
                 FontSize = 12,
                 FontAttributes = FontAttributes.Bold,
-                TextColor = Color.FromArgb("#00796B"),
+                TextColor = _reservoir.HasCalibration ? Color.FromArgb("#00796B") : Color.FromArgb("#E65100"),
                 VerticalTextAlignment = TextAlignment.Center
             }
         };
@@ -228,26 +232,28 @@ public class ReservoirMeasurementRow
         grid.Add(new Label
         {
             Text = _reservoir.ProduitNom ?? "-",
-            FontSize = 12,
+            FontSize = 11,
             TextColor = Color.FromArgb("#333"),
-            VerticalTextAlignment = TextAlignment.Center
+            VerticalTextAlignment = TextAlignment.Center,
+            LineBreakMode = LineBreakMode.TailTruncation
         }, 1);
 
         // Hauteur Entry
         _hauteurEntry = new Entry
         {
-            Placeholder = "0",
+            Placeholder = _reservoir.HasCalibration ? "cm" : "-",
             Keyboard = Keyboard.Numeric,
-            FontSize = 14,
+            FontSize = 13,
             HorizontalTextAlignment = TextAlignment.Center,
-            BackgroundColor = Colors.White
+            BackgroundColor = Colors.White,
+            IsEnabled = _reservoir.HasCalibration
         };
         _hauteurEntry.TextChanged += OnHauteurChanged;
         
         var hauteurBorder = new Border
         {
-            BackgroundColor = Colors.White,
-            Stroke = Color.FromArgb("#E0E0E0"),
+            BackgroundColor = _reservoir.HasCalibration ? Colors.White : Color.FromArgb("#F5F5F5"),
+            Stroke = _reservoir.HasCalibration ? Color.FromArgb("#00796B") : Color.FromArgb("#E0E0E0"),
             StrokeThickness = 1,
             Padding = new Thickness(4),
             StrokeShape = new RoundRectangle { CornerRadius = 6 },
@@ -255,28 +261,40 @@ public class ReservoirMeasurementRow
         };
         grid.Add(hauteurBorder, 2);
 
-        // Volume Label
-        _volumeLabel = new Label
+        // Volume Entry (editable for direct entry)
+        _volumeEntry = new Entry
         {
-            Text = "0",
-            FontSize = 14,
-            FontAttributes = FontAttributes.Bold,
-            TextColor = Color.FromArgb("#2E7D32"),
+            Placeholder = "L",
+            Keyboard = Keyboard.Numeric,
+            FontSize = 13,
             HorizontalTextAlignment = TextAlignment.Center,
-            VerticalTextAlignment = TextAlignment.Center
+            BackgroundColor = Colors.White,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = Color.FromArgb("#1976D2")
         };
-        grid.Add(_volumeLabel, 3);
+        _volumeEntry.TextChanged += OnVolumeChanged;
+        
+        var volumeBorder = new Border
+        {
+            BackgroundColor = Colors.White,
+            Stroke = Color.FromArgb("#1976D2"),
+            StrokeThickness = 1,
+            Padding = new Thickness(4),
+            StrokeShape = new RoundRectangle { CornerRadius = 6 },
+            Content = _volumeEntry
+        };
+        grid.Add(volumeBorder, 3);
 
-        // Status Label
-        _statusLabel = new Label
+        // Mode Label
+        _modeLabel = new Label
         {
             Text = "-",
-            FontSize = 11,
+            FontSize = 10,
             TextColor = Color.FromArgb("#9E9E9E"),
             HorizontalTextAlignment = TextAlignment.Center,
             VerticalTextAlignment = TextAlignment.Center
         };
-        grid.Add(_statusLabel, 4);
+        grid.Add(_modeLabel, 4);
 
         // Add bottom border
         var container = new VerticalStackLayout { Spacing = 0 };
@@ -293,37 +311,81 @@ public class ReservoirMeasurementRow
 
     private void OnHauteurChanged(object? sender, TextChangedEventArgs e)
     {
+        if (_isUpdatingFromCode) return;
+        
         // Debounce the calculation
         _debounceTimer?.Stop();
         _debounceTimer?.Dispose();
-        _debounceTimer = new System.Timers.Timer(300);
+        _debounceTimer = new System.Timers.Timer(400);
         _debounceTimer.Elapsed += async (s, args) =>
         {
             _debounceTimer?.Stop();
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                await CalculateVolumeAsync();
+                await CalculateVolumeFromHeightAsync();
             });
         };
         _debounceTimer.Start();
     }
 
-    private async Task CalculateVolumeAsync()
+    private void OnVolumeChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_isUpdatingFromCode) return;
+        
+        // Direct volume entry - clear hauteur and set flag
+        if (decimal.TryParse(_volumeEntry?.Text, out var volume) && volume > 0)
+        {
+            _isUpdatingFromCode = true;
+            _hauteurEntry!.Text = "";
+            HauteurMesuree = 0;
+            _isUpdatingFromCode = false;
+            
+            VolumeCalcule = volume;
+            IsDirectVolume = true;
+            
+            _modeLabel!.Text = "Direct";
+            _modeLabel.TextColor = Color.FromArgb("#1976D2");
+            
+            _onChanged?.Invoke();
+        }
+        else if (string.IsNullOrWhiteSpace(_volumeEntry?.Text))
+        {
+            // Volume cleared
+            if (HauteurMesuree <= 0)
+            {
+                VolumeCalcule = 0;
+                IsDirectVolume = false;
+                _modeLabel!.Text = "-";
+                _modeLabel.TextColor = Color.FromArgb("#9E9E9E");
+                _onChanged?.Invoke();
+            }
+        }
+    }
+
+    private async Task CalculateVolumeFromHeightAsync()
     {
         if (!decimal.TryParse(_hauteurEntry?.Text, out var hauteur) || hauteur <= 0)
         {
             HauteurMesuree = 0;
-            VolumeCalcule = 0;
-            _volumeLabel!.Text = "0";
-            _statusLabel!.Text = "-";
-            _statusLabel.TextColor = Color.FromArgb("#9E9E9E");
+            // Only reset if no direct volume
+            if (!IsDirectVolume || VolumeCalcule <= 0)
+            {
+                VolumeCalcule = 0;
+                IsDirectVolume = false;
+                _isUpdatingFromCode = true;
+                _volumeEntry!.Text = "";
+                _isUpdatingFromCode = false;
+                _modeLabel!.Text = "-";
+                _modeLabel.TextColor = Color.FromArgb("#9E9E9E");
+            }
             _onChanged?.Invoke();
             return;
         }
 
         HauteurMesuree = hauteur;
-        _statusLabel!.Text = "...";
-        _statusLabel.TextColor = Color.FromArgb("#FF9800");
+        IsDirectVolume = false;
+        _modeLabel!.Text = "...";
+        _modeLabel.TextColor = Color.FromArgb("#FF9800");
 
         try
         {
@@ -332,25 +394,33 @@ public class ReservoirMeasurementRow
             if (result != null)
             {
                 VolumeCalcule = result.VolumeLitres;
-                _volumeLabel!.Text = $"{result.VolumeLitres:N0}";
-                _statusLabel.Text = result.IsInterpolated ? "Interpole" : "Exact";
-                _statusLabel.TextColor = Color.FromArgb("#4CAF50");
+                
+                _isUpdatingFromCode = true;
+                _volumeEntry!.Text = $"{result.VolumeLitres:N0}";
+                _isUpdatingFromCode = false;
+                
+                _modeLabel.Text = result.IsInterpolated ? "Calcule" : "Exact";
+                _modeLabel.TextColor = Color.FromArgb("#4CAF50");
             }
             else
             {
                 VolumeCalcule = 0;
-                _volumeLabel!.Text = "?";
-                _statusLabel.Text = "Pas de calib.";
-                _statusLabel.TextColor = Color.FromArgb("#F44336");
+                _isUpdatingFromCode = true;
+                _volumeEntry!.Text = "";
+                _isUpdatingFromCode = false;
+                _modeLabel.Text = "Pas calib.";
+                _modeLabel.TextColor = Color.FromArgb("#F44336");
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"[ReservoirRow] Calc error: {ex.Message}");
             VolumeCalcule = 0;
-            _volumeLabel!.Text = "Err";
-            _statusLabel.Text = "Erreur";
-            _statusLabel.TextColor = Color.FromArgb("#F44336");
+            _isUpdatingFromCode = true;
+            _volumeEntry!.Text = "";
+            _isUpdatingFromCode = false;
+            _modeLabel.Text = "Erreur";
+            _modeLabel.TextColor = Color.FromArgb("#F44336");
         }
 
         _onChanged?.Invoke();

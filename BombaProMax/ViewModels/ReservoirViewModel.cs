@@ -10,7 +10,6 @@ public partial class ReservoirViewModel : ObservableObject
 {
     private readonly ReservoirService _reservoirService;
     private readonly IDialogService _dialogService;
-    private readonly JourneeNavigationService _journeeService;
 
     public ObservableCollection<ReservoirDto> Reservoirs { get; } = new();
 
@@ -33,50 +32,16 @@ public partial class ReservoirViewModel : ObservableObject
     [ObservableProperty]
     private decimal _fillPercentage;
 
-    // ════════════════════════════════════════════════════════════════
-    // JOURNÉE PROPERTIES
-    // ════════════════════════════════════════════════════════════════
-    public bool IsJourneeActive => _journeeService.IsJourneeActive;
-    public bool CanGoPrevious => _journeeService.CanGoPrevious;
-    public bool CanGoNext => _journeeService.CanGoNext;
-    public bool IsFirstStep => _journeeService.IsFirstStep;
-    public bool IsLastStep => _journeeService.IsLastStep;
-    public string JourneeStepInfo => $"Étape {_journeeService.CurrentStepNumber}/{_journeeService.TotalSteps}: {_journeeService.CurrentStepName}";
-
     public ReservoirViewModel(
         ReservoirService reservoirService, 
-        IDialogService dialogService,
-        JourneeNavigationService journeeService)
+        IDialogService dialogService)
     {
         _reservoirService = reservoirService;
         _dialogService = dialogService;
-        _journeeService = journeeService;
-
-        _journeeService.PropertyChanged += (s, e) =>
-        {
-            OnPropertyChanged(nameof(IsJourneeActive));
-            OnPropertyChanged(nameof(CanGoPrevious));
-            OnPropertyChanged(nameof(CanGoNext));
-            OnPropertyChanged(nameof(IsFirstStep));
-            OnPropertyChanged(nameof(IsLastStep));
-            OnPropertyChanged(nameof(JourneeStepInfo));
-        };
     }
 
     // ════════════════════════════════════════════════════════════════
-    // JOURNÉE COMMANDS
-    // ════════════════════════════════════════════════════════════════
-    [RelayCommand]
-    private async Task JourneeSuivantAsync() => await _journeeService.GoNextAsync(skipped: false);
-
-    [RelayCommand]
-    private async Task JourneePasserAsync() => await _journeeService.GoNextAsync(skipped: true);
-
-    [RelayCommand]
-    private async Task JourneePrecedentAsync() => await _journeeService.GoPreviousAsync();
-
-    // ════════════════════════════════════════════════════════════════
-    // EXISTING COMMANDS
+    // COMMANDS
     // ════════════════════════════════════════════════════════════════
 
     [RelayCommand]

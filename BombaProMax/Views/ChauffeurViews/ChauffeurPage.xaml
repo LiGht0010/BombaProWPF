@@ -7,321 +7,290 @@
              x:DataType="viewmodels:ChauffeurViewModel"
              Style="{StaticResource ChauffeurPageStyle}">
 
-    <Grid RowDefinitions="*,Auto">
-        <!-- Main Content -->
-        <ScrollView Grid.Row="0" Style="{StaticResource ChauffeurPageScrollView}">
-            <VerticalStackLayout Style="{StaticResource ChauffeurPageMainStack}">
+    <ScrollView Style="{StaticResource ChauffeurPageScrollView}">
+        <VerticalStackLayout Style="{StaticResource ChauffeurPageMainStack}">
 
-                <!-- JOURNÉE PROGRESS BAR -->
-                <Border BackgroundColor="#E3F2FD" Padding="15" Margin="0,0,0,10"
-                        IsVisible="{Binding IsJourneeActive}" StrokeShape="RoundRectangle 10" Stroke="#1976D2">
-                    <Grid ColumnDefinitions="Auto,*,Auto">
-                        <Label Text="🚀" FontSize="24" VerticalOptions="Center"/>
-                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
-                            <Label Text="{Binding JourneeStepInfo}" FontAttributes="Bold" TextColor="#1976D2" FontSize="14"/>
-                            <Label Text="Journée en cours - Suivez les étapes" TextColor="#666" FontSize="11"/>
-                        </VerticalStackLayout>
-                        <Label Grid.Column="2" Text="📋" FontSize="20" VerticalOptions="Center"/>
-                    </Grid>
-                </Border>
-
-                <!-- ========================================= -->
-                <!-- HEADER SECTION with Action Button         -->
-                <!-- ========================================= -->
-                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                    <VerticalStackLayout Style="{StaticResource ChauffeurPageHeaderStack}">
-                        <Label Text="Chauffeurs" 
-                               Style="{StaticResource ChauffeurPageTitleLabel}"/>
-                        <Label Text="{Binding Chauffeurs.Count, StringFormat='{0} chauffeurs enregistrés'}" 
-                               Style="{StaticResource ChauffeurPageSubtitleLabel}"/>
-                    </VerticalStackLayout>
-                    
-                    <!-- Add Button -->
-                    <Button Grid.Column="1"
-                            Text="+ Nouveau Chauffeur"
-                            Style="{StaticResource ChauffeurAddButton}"
-                            Command="{Binding AddChauffeurCommand}"
-                            VerticalOptions="Center"
-                            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
-                </Grid>
-
-                <!-- ========================================= -->
-                <!-- STATS CARDS ROW - Neumorphic Raised       -->
-                <!-- ========================================= -->
-                <Grid ColumnDefinitions="*,*,*,*" 
-                      ColumnSpacing="16"
-                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
-                    
-                    <!-- Total Chauffeurs -->
-                    <Border Grid.Column="0" Style="{StaticResource ChauffeurStatCard}">
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="{Binding Chauffeurs.Count}" 
-                                   Style="{StaticResource ChauffeurStatNumber}"/>
-                            <Label Text="Total Chauffeurs" 
-                                   Style="{StaticResource ChauffeurStatLabel}"/>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Active Today -->
-                    <Border Grid.Column="1" Style="{StaticResource ChauffeurStatCard}">
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="—" 
-                                   Style="{StaticResource ChauffeurStatNumber}"
-                                   TextColor="#5EAA8D"/>
-                            <Label Text="Actifs Aujourd'hui" 
-                                   Style="{StaticResource ChauffeurStatLabel}"/>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Deliveries -->
-                    <Border Grid.Column="2" Style="{StaticResource ChauffeurStatCard}">
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="—" 
-                                   Style="{StaticResource ChauffeurStatNumber}"
-                                   TextColor="#E8A84C"/>
-                            <Label Text="Livraisons Mois" 
-                                   Style="{StaticResource ChauffeurStatLabel}"/>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Disponibles -->
-                    <Border Grid.Column="3" Style="{StaticResource ChauffeurStatCard}">
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="—" 
-                                   Style="{StaticResource ChauffeurStatNumber}"
-                                   TextColor="#8FA3B8"/>
-                            <Label Text="Disponibles" 
-                                   Style="{StaticResource ChauffeurStatLabel}"/>
-                        </VerticalStackLayout>
-                    </Border>
-                </Grid>
-
-                <!-- ========================================= -->
-                <!-- SEARCH BAR - Neumorphic Inset             -->
-                <!-- ========================================= -->
-                <Border Style="{StaticResource ChauffeurSearchContainer}"
-                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <!--<Label Grid.Column="0" 
-                               Text="🔍" 
-                               
-                               FontSize="18"
-                               TextColor="#8B939E"
-                               VerticalOptions="Center"/>-->
-                        <Image Source="search.png"
-                               Width="24"
-                               Height="24"/>
-
-                        <Entry Grid.Column="1"
-                               Placeholder="Rechercher par nom, CIN, téléphone..."
-                               Style="{StaticResource ChauffeurSearchEntry}"/>
-                        <Button Grid.Column="2"
-                                Text="Filtres"
-                                BackgroundColor="#E8ECF1"
-                                TextColor="#5A6068"
-                                FontSize="13"
-                                FontAttributes="Bold"
-                                Padding="16,10"
-                                CornerRadius="10"/>
-                    </Grid>
-                </Border>
-
-                <!-- Loading Indicator -->
-                <ActivityIndicator Style="{StaticResource ChauffeurPageLoadingIndicator}"
-                                  IsRunning="{Binding IsLoading}"
-                                  IsVisible="{Binding IsLoading}"/>
-
-                <!-- ========================================= -->
-                <!-- TABLE CARD - Neumorphic Raised Container  -->
-                <!-- ========================================= -->
-                <Border Style="{StaticResource ChauffeurTableCard}"
-                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
-                    <VerticalStackLayout Style="{StaticResource ChauffeurTableContainer}">
-
-                        <!-- Table Header -->
-                        <Grid Style="{StaticResource ChauffeurTableHeaderGrid}">
-                            <Label Grid.Column="0" 
-                                   Text="Nom" 
-                                   Style="{StaticResource ChauffeurTableHeaderLabelLeft}"/>
-                            <Label Grid.Column="1" 
-                                   Text="Prénom" 
-                                   Style="{StaticResource ChauffeurTableHeaderLabelLeft}"/>
-                            <Label Grid.Column="2" 
-                                   Text="CIN" 
-                                   Style="{StaticResource ChauffeurTableHeaderLabel}"/>
-                            <Label Grid.Column="3" 
-                                   Text="Téléphone" 
-                                   Style="{StaticResource ChauffeurTableHeaderLabel}"/>
-                            <Label Grid.Column="4" 
-                                   Text="N° Permis" 
-                                   Style="{StaticResource ChauffeurTableHeaderLabel}"/>
-                            <Label Grid.Column="5" 
-                                   Text="Actions" 
-                                   Style="{StaticResource ChauffeurTableHeaderLabel}"/>
-                        </Grid>
-
-                        <!-- Table Rows with SwipeView -->
-                        <CollectionView ItemsSource="{Binding Chauffeurs}"
-                                        Style="{StaticResource ChauffeurTableCollectionView}">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="models:ChauffeurDto">
-                                    <SwipeView BackgroundColor="Transparent">
-                                        <!-- Left Swipe Actions -->
-                                        <SwipeView.LeftItems>
-                                            <SwipeItems Mode="Reveal">
-                                                <SwipeItem Text="Détails"
-                                                           BackgroundColor="#4A8FBF"
-                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=ShowDetailsCommand}"
-                                                           CommandParameter="{Binding .}"/>
-                                                <SwipeItem Text="Modifier"
-                                                           BackgroundColor="#E8A84C"
-                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=EditChauffeurCommand}"
-                                                           CommandParameter="{Binding .}"/>
-                                            </SwipeItems>
-                                        </SwipeView.LeftItems>
-
-                                        <!-- Right Swipe Actions -->
-                                        <SwipeView.RightItems>
-                                            <SwipeItems Mode="Reveal">
-                                                <SwipeItem Text="Supprimer"
-                                                           BackgroundColor="#E16C6C"
-                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=DeleteChauffeurCommand}"
-                                                           CommandParameter="{Binding .}"/>
-                                            </SwipeItems>
-                                        </SwipeView.RightItems>
-
-                                        <!-- Row Content -->
-                                        <VerticalStackLayout BackgroundColor="Transparent">
-                                            <Grid Style="{StaticResource ChauffeurTableRowGrid}">
-                                                <Grid.GestureRecognizers>
-                                                    <TapGestureRecognizer 
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=ShowDetailsCommand}"
-                                                        CommandParameter="{Binding .}"/>
-                                                </Grid.GestureRecognizers>
-
-                                                <!-- Nom with Neumorphic Avatar -->
-                                                <HorizontalStackLayout Grid.Column="0" Spacing="12" VerticalOptions="Center">
-                                                    <Border BackgroundColor="#E8ECF1"
-                                                            WidthRequest="42"
-                                                            HeightRequest="42"
-                                                            StrokeThickness="0">
-                                                        <Border.StrokeShape>
-                                                            <RoundRectangle CornerRadius="21"/>
-                                                        </Border.StrokeShape>
-                                                        <Border.Shadow>
-                                                            <Shadow Brush="#C5CAD1"
-                                                                    Offset="2,2"
-                                                                    Radius="4"
-                                                                    Opacity="0.2"/>
-                                                        </Border.Shadow>
-                                                        <Label Text="{Binding Nom, Converter={StaticResource FirstLetterConverter}, FallbackValue='?'}"
-                                                               TextColor="#4A8FBF"
-                                                               FontSize="16"
-                                                               FontAttributes="Bold"
-                                                               HorizontalOptions="Center"
-                                                               VerticalOptions="Center"/>
-                                                    </Border>
-                                                    <Label Text="{Binding Nom, FallbackValue='Sans nom'}" 
-                                                           Style="{StaticResource ChauffeurNameCell}"/>
-                                                </HorizontalStackLayout>
-
-                                                <!-- Prénom -->
-                                                <Label Grid.Column="1" 
-                                                       Text="{Binding Prenom, FallbackValue='N/A'}" 
-                                                       Style="{StaticResource ChauffeurPrenomCell}"/>
-
-                                                <!-- CIN Badge - Neumorphic Pill -->
-                                                <Border Grid.Column="2" 
-                                                        Style="{StaticResource ChauffeurCINCell}">
-                                                    <Label Text="{Binding CIN, FallbackValue='N/A'}" 
-                                                           Style="{StaticResource ChauffeurCINLabel}"/>
-                                                </Border>
-
-                                                <!-- Téléphone -->
-                                                <Label Grid.Column="3" 
-                                                       Text="{Binding Telephone, FallbackValue='—'}" 
-                                                       Style="{StaticResource ChauffeurTelephoneCell}"/>
-
-                                                <!-- N° Permis -->
-                                                <Label Grid.Column="4" 
-                                                       Text="{Binding NumeroPermis, FallbackValue='—'}" 
-                                                       Style="{StaticResource ChauffeurPermisCell}"/>
-
-                                                <!-- Actions -->
-                                                <HorizontalStackLayout Grid.Column="5" 
-                                                                       Style="{StaticResource ChauffeurActionsCell}">
-
-                                                    <Button Text="Modifier"
-                                                            Style="{StaticResource ChauffeurModifierButton}"
-                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=EditChauffeurCommand}"
-                                                            CommandParameter="{Binding .}"/>
-                                                    <Button Text="Supprimer"
-                                                            Style="{StaticResource ChauffeurSupprimerButton}"
-                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=DeleteChauffeurCommand}"
-                                                            CommandParameter="{Binding .}"/>
-                                                </HorizontalStackLayout>
-                                            </Grid>
-
-                                            <!-- Row Divider -->
-                                            <BoxView Style="{StaticResource ChauffeurRowDivider}"/>
-                                        </VerticalStackLayout>
-                                    </SwipeView>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-
-                            <!-- Modern Empty View - Neumorphic Style -->
-                            <CollectionView.EmptyView>
-                                <VerticalStackLayout Style="{StaticResource ChauffeurEmptyView}">
-                                    <!-- Neumorphic Icon Container -->
-                                    <Border BackgroundColor="#EEF1F5"
-                                            WidthRequest="100"
-                                            HeightRequest="100"
-                                            StrokeThickness="0"
-                                            Margin="0,0,0,16">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="50"/>
-                                        </Border.StrokeShape>
-                                        <Border.Shadow>
-                                            <Shadow Brush="#C5CAD1"
-                                                    Offset="6,6"
-                                                    Radius="12"
-                                                    Opacity="0.25"/>
-                                        </Border.Shadow>
-                                        <Label Text="👤"
-                                               FontSize="48"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-                                    <Label Text="Aucun chauffeur" 
-                                           Style="{StaticResource ChauffeurEmptyTitle}"/>
-                                    <Label Text="Commencez par ajouter votre premier chauffeur pour gérer votre flotte de livraison" 
-                                           Style="{StaticResource ChauffeurEmptySubtitle}"/>
-                                    <Button Text="+ Ajouter un Chauffeur"
-                                            Style="{StaticResource ChauffeurEmptyButton}"
-                                            Command="{Binding AddChauffeurCommand}"/>
-                                </VerticalStackLayout>
-                            </CollectionView.EmptyView>
-                        </CollectionView>
-                    </VerticalStackLayout>
-                </Border>
-
-            </VerticalStackLayout>
-        </ScrollView>
-
-        <!-- JOURNÉE NAVIGATION BAR -->
-        <Border Grid.Row="1" BackgroundColor="#F5F5F5" Padding="15" IsVisible="{Binding IsJourneeActive}" StrokeThickness="0">
-            <Border.Shadow><Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/></Border.Shadow>
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
-                <Button Text="← Précédent" Command="{Binding JourneePrecedentCommand}"
-                        BackgroundColor="#757575" TextColor="White" Padding="20,12" CornerRadius="8"
-                        IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
-                <BoxView Grid.Column="1" Color="Transparent"/>
-                <Button Grid.Column="2" Text="Passer cette étape" Command="{Binding JourneePasserCommand}"
-                        BackgroundColor="#FFA726" TextColor="White" Padding="20,12" CornerRadius="8"/>
-                <Button Grid.Column="3" Text="{Binding IsLastStep, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Terminer la journée|Suivant →'}"
-                        Command="{Binding JourneeSuivantCommand}" BackgroundColor="#4CAF50" TextColor="White"
-                        Padding="20,12" CornerRadius="8" FontAttributes="Bold"/>
+            <!-- ========================================= -->
+            <!-- HEADER SECTION with Action Button         -->
+            <!-- ========================================= -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                <VerticalStackLayout Style="{StaticResource ChauffeurPageHeaderStack}">
+                    <Label Text="Chauffeurs" 
+                           Style="{StaticResource ChauffeurPageTitleLabel}"/>
+                    <Label Text="{Binding Chauffeurs.Count, StringFormat='{0} chauffeurs enregistrés'}" 
+                           Style="{StaticResource ChauffeurPageSubtitleLabel}"/>
+                </VerticalStackLayout>
+                
+                <!-- Add Button -->
+                <Button Grid.Column="1"
+                        Text="+ Nouveau Chauffeur"
+                        Style="{StaticResource ChauffeurAddButton}"
+                        Command="{Binding AddChauffeurCommand}"
+                        VerticalOptions="Center"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
             </Grid>
-        </Border>
-    </Grid>
+
+            <!-- ========================================= -->
+            <!-- STATS CARDS ROW - Neumorphic Raised       -->
+            <!-- ========================================= -->
+            <Grid ColumnDefinitions="*,*,*,*" 
+                  ColumnSpacing="16"
+                  IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                
+                <!-- Total Chauffeurs -->
+                <Border Grid.Column="0" Style="{StaticResource ChauffeurStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding Chauffeurs.Count}" 
+                               Style="{StaticResource ChauffeurStatNumber}"/>
+                        <Label Text="Total Chauffeurs" 
+                               Style="{StaticResource ChauffeurStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Active Today -->
+                <Border Grid.Column="1" Style="{StaticResource ChauffeurStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="—" 
+                               Style="{StaticResource ChauffeurStatNumber}"
+                               TextColor="#5EAA8D"/>
+                        <Label Text="Actifs Aujourd'hui" 
+                               Style="{StaticResource ChauffeurStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Deliveries -->
+                <Border Grid.Column="2" Style="{StaticResource ChauffeurStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="—" 
+                               Style="{StaticResource ChauffeurStatNumber}"
+                               TextColor="#E8A84C"/>
+                        <Label Text="Livraisons Mois" 
+                               Style="{StaticResource ChauffeurStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Disponibles -->
+                <Border Grid.Column="3" Style="{StaticResource ChauffeurStatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="—" 
+                               Style="{StaticResource ChauffeurStatNumber}"
+                               TextColor="#8FA3B8"/>
+                        <Label Text="Disponibles" 
+                               Style="{StaticResource ChauffeurStatLabel}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- ========================================= -->
+            <!-- SEARCH BAR - Neumorphic Inset             -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource ChauffeurSearchContainer}"
+                    IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <!--<Label Grid.Column="0" 
+                           Text="🔍" 
+                           
+                           FontSize="18"
+                           TextColor="#8B939E"
+                           VerticalOptions="Center"/>-->
+                    <Image Source="search.png"
+                           Width="24"
+                           Height="24"/>
+
+                    <Entry Grid.Column="1"
+                           Placeholder="Rechercher par nom, CIN, téléphone..."
+                           Style="{StaticResource ChauffeurSearchEntry}"/>
+                    <Button Grid.Column="2"
+                            Text="Filtres"
+                            BackgroundColor="#E8ECF1"
+                            TextColor="#5A6068"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            Padding="16,10"
+                            CornerRadius="10"/>
+                </Grid>
+            </Border>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator Style="{StaticResource ChauffeurPageLoadingIndicator}"
+                              IsRunning="{Binding IsLoading}"
+                              IsVisible="{Binding IsLoading}"/>
+
+            <!-- ========================================= -->
+            <!-- TABLE CARD - Neumorphic Raised Container  -->
+            <!-- ========================================= -->
+            <Border Style="{StaticResource ChauffeurTableCard}"
+                    IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Style="{StaticResource ChauffeurTableContainer}">
+
+                    <!-- Table Header -->
+                    <Grid Style="{StaticResource ChauffeurTableHeaderGrid}">
+                        <Label Grid.Column="0" 
+                               Text="Nom" 
+                               Style="{StaticResource ChauffeurTableHeaderLabelLeft}"/>
+                        <Label Grid.Column="1" 
+                               Text="Prénom" 
+                               Style="{StaticResource ChauffeurTableHeaderLabelLeft}"/>
+                        <Label Grid.Column="2" 
+                               Text="CIN" 
+                               Style="{StaticResource ChauffeurTableHeaderLabel}"/>
+                        <Label Grid.Column="3" 
+                               Text="Téléphone" 
+                               Style="{StaticResource ChauffeurTableHeaderLabel}"/>
+                        <Label Grid.Column="4" 
+                               Text="N° Permis" 
+                               Style="{StaticResource ChauffeurTableHeaderLabel}"/>
+                        <Label Grid.Column="5" 
+                               Text="Actions" 
+                               Style="{StaticResource ChauffeurTableHeaderLabel}"/>
+                    </Grid>
+
+                    <!-- Table Rows with SwipeView -->
+                    <CollectionView ItemsSource="{Binding Chauffeurs}"
+                                    Style="{StaticResource ChauffeurTableCollectionView}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ChauffeurDto">
+                                <SwipeView BackgroundColor="Transparent">
+                                    <!-- Left Swipe Actions -->
+                                    <SwipeView.LeftItems>
+                                        <SwipeItems Mode="Reveal">
+                                            <SwipeItem Text="Détails"
+                                                       BackgroundColor="#4A8FBF"
+                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=ShowDetailsCommand}"
+                                                       CommandParameter="{Binding .}"/>
+                                            <SwipeItem Text="Modifier"
+                                                       BackgroundColor="#E8A84C"
+                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=EditChauffeurCommand}"
+                                                       CommandParameter="{Binding .}"/>
+                                        </SwipeItems>
+                                    </SwipeView.LeftItems>
+
+                                    <!-- Right Swipe Actions -->
+                                    <SwipeView.RightItems>
+                                        <SwipeItems Mode="Reveal">
+                                            <SwipeItem Text="Supprimer"
+                                                       BackgroundColor="#E16C6C"
+                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=DeleteChauffeurCommand}"
+                                                       CommandParameter="{Binding .}"/>
+                                        </SwipeItems>
+                                    </SwipeView.RightItems>
+
+                                    <!-- Row Content -->
+                                    <VerticalStackLayout BackgroundColor="Transparent">
+                                        <Grid Style="{StaticResource ChauffeurTableRowGrid}">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=ShowDetailsCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Grid.GestureRecognizers>
+
+                                            <!-- Nom with Neumorphic Avatar -->
+                                            <HorizontalStackLayout Grid.Column="0" Spacing="12" VerticalOptions="Center">
+                                                <Border BackgroundColor="#E8ECF1"
+                                                        WidthRequest="42"
+                                                        HeightRequest="42"
+                                                        StrokeThickness="0">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="21"/>
+                                                    </Border.StrokeShape>
+                                                    <Border.Shadow>
+                                                        <Shadow Brush="#C5CAD1"
+                                                                Offset="2,2"
+                                                                Radius="4"
+                                                                Opacity="0.2"/>
+                                                    </Border.Shadow>
+                                                    <Label Text="{Binding Nom, Converter={StaticResource FirstLetterConverter}, FallbackValue='?'}"
+                                                           TextColor="#4A8FBF"
+                                                           FontSize="16"
+                                                           FontAttributes="Bold"
+                                                           HorizontalOptions="Center"
+                                                           VerticalOptions="Center"/>
+                                                </Border>
+                                                <Label Text="{Binding Nom, FallbackValue='Sans nom'}" 
+                                                       Style="{StaticResource ChauffeurNameCell}"/>
+                                            </HorizontalStackLayout>
+
+                                            <!-- Prénom -->
+                                            <Label Grid.Column="1" 
+                                                   Text="{Binding Prenom, FallbackValue='N/A'}" 
+                                                   Style="{StaticResource ChauffeurPrenomCell}"/>
+
+                                            <!-- CIN Badge - Neumorphic Pill -->
+                                            <Border Grid.Column="2" 
+                                                    Style="{StaticResource ChauffeurCINCell}">
+                                                <Label Text="{Binding CIN, FallbackValue='N/A'}" 
+                                                       Style="{StaticResource ChauffeurCINLabel}"/>
+                                            </Border>
+
+                                            <!-- Téléphone -->
+                                            <Label Grid.Column="3" 
+                                                   Text="{Binding Telephone, FallbackValue='—'}" 
+                                                   Style="{StaticResource ChauffeurTelephoneCell}"/>
+
+                                            <!-- N° Permis -->
+                                            <Label Grid.Column="4" 
+                                                   Text="{Binding NumeroPermis, FallbackValue='—'}" 
+                                                   Style="{StaticResource ChauffeurPermisCell}"/>
+
+                                            <!-- Actions -->
+                                            <HorizontalStackLayout Grid.Column="5" 
+                                                                   Style="{StaticResource ChauffeurActionsCell}">
+
+                                                <Button Text="Modifier"
+                                                        Style="{StaticResource ChauffeurModifierButton}"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=EditChauffeurCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                <Button Text="Supprimer"
+                                                        Style="{StaticResource ChauffeurSupprimerButton}"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChauffeurViewModel}}, Path=DeleteChauffeurCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+
+                                        <!-- Row Divider -->
+                                        <BoxView Style="{StaticResource ChauffeurRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                        <!-- Modern Empty View - Neumorphic Style -->
+                        <CollectionView.EmptyView>
+                            <VerticalStackLayout Style="{StaticResource ChauffeurEmptyView}">
+                                <!-- Neumorphic Icon Container -->
+                                <Border BackgroundColor="#EEF1F5"
+                                        WidthRequest="100"
+                                        HeightRequest="100"
+                                        StrokeThickness="0"
+                                        Margin="0,0,0,16">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="50"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="#C5CAD1"
+                                                Offset="6,6"
+                                                Radius="12"
+                                                Opacity="0.25"/>
+                                    </Border.Shadow>
+                                    <Label Text="👤"
+                                           FontSize="48"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                <Label Text="Aucun chauffeur" 
+                                       Style="{StaticResource ChauffeurEmptyTitle}"/>
+                                <Label Text="Commencez par ajouter votre premier chauffeur pour gérer votre flotte de livraison" 
+                                       Style="{StaticResource ChauffeurEmptySubtitle}"/>
+                                <Button Text="+ Ajouter un Chauffeur"
+                                        Style="{StaticResource ChauffeurEmptyButton}"
+                                        Command="{Binding AddChauffeurCommand}"/>
+                            </VerticalStackLayout>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

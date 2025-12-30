@@ -25,18 +25,14 @@
     xmlns:venteService="clr-namespace:BombaProMax.Views.VenteServiceViews"
     FlyoutBackgroundColor="#FFFFFF"
     BackgroundColor="#F8FAFC"
-    Shell.TitleColor="Black"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False"
     FlyoutWidth="300"
     FlyoutBehavior="Flyout"
     Navigated="OnShellNavigated"
     Navigating="OnShellNavigating">
 
-    <!-- Back Button Behavior with Text -->
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior TextOverride="← Retour"
-                            IsVisible="True"
-                            IsEnabled="True"/>
-    </Shell.BackButtonBehavior>
+    <!-- Removed BackButtonBehavior -->
 
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>

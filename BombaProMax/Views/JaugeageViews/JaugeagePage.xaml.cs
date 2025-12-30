@@ -1,6 +1,7 @@
 using BombaProMax.Models;
 using BombaProMax.Services;
 using BombaProMax.ViewModels;
+using BombaProMax.Views.ReservoirCalibrationViews;
 using CommunityToolkit.Maui.Views;
 
 namespace BombaProMax.Views.JaugeageViews;
@@ -42,7 +43,7 @@ public partial class JaugeagePage : ContentPage
         CalibrationTab.IsVisible = false;
     }
 
-    private void OnCalibrationTabClicked(object sender, EventArgs e)
+    private async void OnCalibrationTabClicked(object sender, EventArgs e)
     {
         // Update tab button styles
         CalibrationTabButton.BackgroundColor = Color.FromArgb("#00796B");
@@ -56,6 +57,9 @@ public partial class JaugeagePage : ContentPage
         // Show/Hide tabs
         JaugeagesTab.IsVisible = false;
         CalibrationTab.IsVisible = true;
+
+        // Load calibration reservoirs
+        await _viewModel.LoadCalibrationReservoirsAsync();
     }
 
     #endregion
@@ -164,6 +168,84 @@ public partial class JaugeagePage : ContentPage
                     {
                         await _viewModel.LoadHistoryAsync();
                     }
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    #region Calibration Handlers
+
+    /// <summary>
+    /// Import CSV for a specific reservoir from the grid row
+    /// </summary>
+    private async void OnImportCsvForReservoirClicked(object sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is ReservoirDto reservoir)
+        {
+            var popup = new CalibrationImportPopup(reservoir);
+            var result = await this.ShowPopupAsync(popup);
+
+            if (result is string csvContent && !string.IsNullOrWhiteSpace(csvContent))
+            {
+                var success = await _viewModel.ImportCalibrationForReservoirAsync(reservoir.ID, csvContent);
+                if (success)
+                {
+                    await DisplayAlert("Succes", 
+                        $"Importation reussie pour le reservoir {reservoir.Numero}!", 
+                        "OK");
+                    // Refresh the list to update calibration status
+                    await _viewModel.LoadCalibrationReservoirsAsync();
+                }
+                else
+                {
+                    await DisplayAlert("Erreur", 
+                        _viewModel.ErrorMessage ?? "Echec de l'importation", 
+                        "OK");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// View calibration data for a specific reservoir
+    /// </summary>
+    private async void OnViewCalibrationClicked(object sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is ReservoirDto reservoir)
+        {
+            var popup = new CalibrationViewPopup(reservoir, _viewModel);
+            await this.ShowPopupAsync(popup);
+        }
+    }
+
+    /// <summary>
+    /// Delete all calibration data for a specific reservoir from the grid row
+    /// </summary>
+    private async void OnDeleteCalibrationForReservoirClicked(object sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is ReservoirDto reservoir)
+        {
+            var confirm = await DisplayAlert(
+                "Confirmer la suppression",
+                $"Etes-vous sur de vouloir supprimer toutes les donnees de calibration pour le reservoir '{reservoir.Numero}'?\n\nCette action est irreversible.",
+                "Supprimer",
+                "Annuler");
+
+            if (confirm)
+            {
+                var success = await _viewModel.DeleteCalibrationForReservoirAsync(reservoir.ID);
+                
+                if (success)
+                {
+                    await DisplayAlert("Succes", "Donnees de calibration supprimees", "OK");
+                    // Refresh the list to update calibration status
+                    await _viewModel.LoadCalibrationReservoirsAsync();
+                }
+                else
+                {
+                    await DisplayAlert("Erreur", _viewModel.ErrorMessage ?? "Echec de la suppression", "OK");
                 }
             }
         }

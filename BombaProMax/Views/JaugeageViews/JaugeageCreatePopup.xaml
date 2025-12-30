@@ -115,7 +115,7 @@
                     </Border>
 
                     <!-- Reservoirs Table Header -->
-                    <Grid ColumnDefinitions="1.2*,1*,1*,1*,0.8*" 
+                    <Grid ColumnDefinitions="1.2*,0.8*,1*,1*,0.8*" 
                           ColumnSpacing="8" 
                           Padding="12,8"
                           BackgroundColor="#ECEFF1">
@@ -123,7 +123,7 @@
                         <Label Grid.Column="1" Text="PRODUIT" FontSize="10" FontAttributes="Bold" TextColor="#546E7A"/>
                         <Label Grid.Column="2" Text="HAUTEUR (CM)" FontSize="10" FontAttributes="Bold" TextColor="#546E7A" HorizontalTextAlignment="Center"/>
                         <Label Grid.Column="3" Text="VOLUME (L)" FontSize="10" FontAttributes="Bold" TextColor="#546E7A" HorizontalTextAlignment="Center"/>
-                        <Label Grid.Column="4" Text="STATUT" FontSize="10" FontAttributes="Bold" TextColor="#546E7A" HorizontalTextAlignment="Center"/>
+                        <Label Grid.Column="4" Text="MODE" FontSize="10" FontAttributes="Bold" TextColor="#546E7A" HorizontalTextAlignment="Center"/>
                     </Grid>
 
                     <!-- Reservoirs List -->

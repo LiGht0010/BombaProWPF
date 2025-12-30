@@ -10,7 +10,6 @@ public partial class ProduitViewModel : ObservableObject
 {
     private readonly ProduitService _produitService;
     private readonly IDialogService _dialogService;
-    private readonly JourneeNavigationService _journeeService;
 
     public ObservableCollection<ProduitDto> Produits { get; } = new();
 
@@ -23,62 +22,16 @@ public partial class ProduitViewModel : ObservableObject
     [ObservableProperty]
     private string _searchText = string.Empty;
 
-    // ════════════════════════════════════════════════════════════════
-    // JOURNÉE PROPERTIES (bound to service)
-    // ════════════════════════════════════════════════════════════════
-    
-    public bool IsJourneeActive => _journeeService.IsJourneeActive;
-    public bool CanGoPrevious => _journeeService.CanGoPrevious;
-    public bool CanGoNext => _journeeService.CanGoNext;
-    public bool IsFirstStep => _journeeService.IsFirstStep;
-    public bool IsLastStep => _journeeService.IsLastStep;
-    public string JourneeStepInfo => $"Étape {_journeeService.CurrentStepNumber}/{_journeeService.TotalSteps}: {_journeeService.CurrentStepName}";
-
     public ProduitViewModel(
         ProduitService produitService, 
-        IDialogService dialogService,
-        JourneeNavigationService journeeService)
+        IDialogService dialogService)
     {
         _produitService = produitService;
         _dialogService = dialogService;
-        _journeeService = journeeService;
-
-        // Subscribe to journée service property changes
-        _journeeService.PropertyChanged += (s, e) =>
-        {
-            OnPropertyChanged(nameof(IsJourneeActive));
-            OnPropertyChanged(nameof(CanGoPrevious));
-            OnPropertyChanged(nameof(CanGoNext));
-            OnPropertyChanged(nameof(IsFirstStep));
-            OnPropertyChanged(nameof(IsLastStep));
-            OnPropertyChanged(nameof(JourneeStepInfo));
-        };
     }
 
     // ════════════════════════════════════════════════════════════════
-    // JOURNÉE COMMANDS
-    // ════════════════════════════════════════════════════════════════
-
-    [RelayCommand]
-    private async Task JourneeSuivantAsync()
-    {
-        await _journeeService.GoNextAsync(skipped: false);
-    }
-
-    [RelayCommand]
-    private async Task JourneePasserAsync()
-    {
-        await _journeeService.GoNextAsync(skipped: true);
-    }
-
-    [RelayCommand]
-    private async Task JourneePrecedentAsync()
-    {
-        await _journeeService.GoPreviousAsync();
-    }
-
-    // ════════════════════════════════════════════════════════════════
-    // EXISTING COMMANDS
+    // COMMANDS
     // ════════════════════════════════════════════════════════════════
 
     [RelayCommand]
