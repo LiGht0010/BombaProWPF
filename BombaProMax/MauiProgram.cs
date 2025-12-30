@@ -20,6 +20,7 @@ using BombaProMax.Views.FactureViews;
 using BombaProMax.Views.RapportViews;
 using BombaProMax.Views.ServiceViews;
 using BombaProMax.Views.VenteServiceViews;
+using BombaProMax.Views.CaisseViews;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
@@ -162,6 +163,11 @@ namespace BombaProMax
             builder.Services.AddSingleton<VenteServicePage>();
             builder.Services.AddTransient<VenteServiceCreatePopup>();
 
+            //CaisseViews
+            builder.Services.AddSingleton<CaissePage>();
+            builder.Services.AddTransient<DepotCaisseCreatePopup>();
+            builder.Services.AddTransient<DepotCaisseDetailsPopup>();
+
             //ViewModels---------------------------------------------------
             builder.Services.AddSingleton<ViewModels.LoginPageViewModel>();
             builder.Services.AddSingleton<ViewModels.DashboardViewModel>();
@@ -185,6 +191,7 @@ namespace BombaProMax
             builder.Services.AddSingleton<ViewModels.RapportViewModel>();
             builder.Services.AddSingleton<ViewModels.ServiceViewModel>();
             builder.Services.AddSingleton<ViewModels.VenteServiceViewModel>();
+            builder.Services.AddSingleton<ViewModels.CaisseViewModel>();
 
             //Services-----------------------------------------------------
             builder.Services.AddSingleton<Services.IDialogService, Services.DialogService>();
@@ -217,6 +224,7 @@ namespace BombaProMax
             builder.Services.AddSingleton<Services.ServiceService>();
             builder.Services.AddSingleton<Services.ServiceCategorieService>();
             builder.Services.AddSingleton<Services.VenteServiceService>();
+            builder.Services.AddSingleton<Services.CaisseService>();
 
             //Interfaces--------------------------------------------------------------------------------------------------------------------------------------
             builder.Services.AddSingleton<Services.ILoginRepository, Services.LoginServices>();

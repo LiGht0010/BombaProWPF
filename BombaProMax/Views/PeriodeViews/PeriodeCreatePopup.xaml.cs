@@ -22,11 +22,11 @@ public partial class PeriodeCreatePopup : Popup
         BindingContext = _viewModel;
 
         // Set default date/time values
-        var now = DateTime.Now;
-        DateDebutPicker.Date = now.Date;
-        TimeDebutPicker.Time = new TimeSpan(now.Hour, 0, 0);
-        DateFinPicker.Date = now.Date;
-        TimeFinPicker.Time = new TimeSpan(Math.Min(now.Hour + 8, 23), 0, 0);
+        var today = DateTime.Today;
+        DateDebutPicker.Date = today.AddDays(-1); // Yesterday
+        TimeDebutPicker.Time = new TimeSpan(10, 0, 0); // 10:00 AM
+        DateFinPicker.Date = today; // Today
+        TimeFinPicker.Time = new TimeSpan(10, 0, 0); // 10:00 AM
         
         // Set default payment values
         TPEEntry.Text = "0";

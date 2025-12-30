@@ -51,6 +51,9 @@ public class AppDbContext : DbContext
     public DbSet<StockLot> StockLots { get; set; } = default!;
     public DbSet<StockLotConsumption> StockLotConsumptions { get; set; } = default!;
 
+    // Cash management entities
+    public DbSet<DepotCaisse> DepotsCaisse { get; set; } = default!;
+
 
     //seeding an admin user and super admin user
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -171,6 +174,13 @@ public class AppDbContext : DbContext
             new Categorie { ID = 1, Nom = "CARBURANT" },
             new Categorie { ID = 2, Nom = "LUBRIFIANT" },
             new Categorie { ID = 3, Nom = "ARTICLE" }
+        );
+
+        // Seed MoyensPaiement (ID 1=Espèces, 2=TPE, 3=Chèque)
+        modelBuilder.Entity<MoyensPaiement>().HasData(
+            new MoyensPaiement { ID = 1, Nom = "Espèces" },
+            new MoyensPaiement { ID = 2, Nom = "TPE" },
+            new MoyensPaiement { ID = 3, Nom = "Chèque" }
         );
 
         // Configure Client entity

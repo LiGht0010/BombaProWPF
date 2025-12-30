@@ -3,6 +3,7 @@ using System;
 using BombaProMaxApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BombaProMaxApi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251230183659_AddDepotCaisseAndMoyensPaiement")]
+    partial class AddDepotCaisseAndMoyensPaiement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -689,17 +692,6 @@ namespace BombaProMaxApi.Data.Migrations
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.Property<string>("PieceJustificativeBase64")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PieceJustificativeNom")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("PieceJustificativeType")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("ReferenceBancaire")
                         .HasMaxLength(100)
@@ -1892,7 +1884,7 @@ namespace BombaProMaxApi.Data.Migrations
                             ShowDepenses = true,
                             ShowTableauDeBord = true,
                             ShowVente = true,
-                            UpdatedAt = new DateTime(2025, 12, 30, 19, 0, 39, 290, DateTimeKind.Utc).AddTicks(469),
+                            UpdatedAt = new DateTime(2025, 12, 30, 18, 36, 58, 407, DateTimeKind.Utc).AddTicks(841),
                             createdBy = 0,
                             updatedBy = 0
                         },
@@ -1925,7 +1917,7 @@ namespace BombaProMaxApi.Data.Migrations
                             ShowDepenses = true,
                             ShowTableauDeBord = true,
                             ShowVente = true,
-                            UpdatedAt = new DateTime(2025, 12, 30, 19, 0, 39, 290, DateTimeKind.Utc).AddTicks(482),
+                            UpdatedAt = new DateTime(2025, 12, 30, 18, 36, 58, 407, DateTimeKind.Utc).AddTicks(856),
                             createdBy = 0,
                             updatedBy = 0
                         });

@@ -22,6 +22,7 @@ using BombaProMax.Views.ReservoirCalibrationViews;
 using BombaProMax.Views.RapportViews;
 using BombaProMax.Views.ServiceViews;
 using BombaProMax.Views.VenteServiceViews;
+using BombaProMax.Views.CaisseViews;
 
 namespace BombaProMax
 {
@@ -78,6 +79,7 @@ namespace BombaProMax
             Routing.RegisterRoute(nameof(RapportPage), typeof(RapportPage));
             Routing.RegisterRoute(nameof(ServicePage), typeof(ServicePage));
             Routing.RegisterRoute(nameof(VenteServicePage), typeof(VenteServicePage));
+            Routing.RegisterRoute(nameof(CaissePage), typeof(CaissePage));
 
             // Set ShellContent pages from DI
             LoginShellContent.Content = serviceProvider.GetRequiredService<LoginPage>();
@@ -102,6 +104,7 @@ namespace BombaProMax
             RapportShellContent.Content = serviceProvider.GetRequiredService<RapportPage>();
             ServiceShellContent.Content = serviceProvider.GetRequiredService<ServicePage>();
             VenteServiceShellContent.Content = serviceProvider.GetRequiredService<VenteServicePage>();
+            CaisseShellContent.Content = serviceProvider.GetRequiredService<CaissePage>();
 
             // Navigate to LoginPage on startup
             Dispatcher.Dispatch(async () =>

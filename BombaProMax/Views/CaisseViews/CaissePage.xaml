@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             x:Class="BombaProMax.Views.CaisseViews.CaissePage"
+             x:DataType="viewmodels:CaisseViewModel"
+             Title="Caisse"
+             BackgroundColor="#EEF1F5">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0" Padding="24">
+            <VerticalStackLayout Spacing="20">
+
+                <!-- JOURNEE PROGRESS BAR -->
+                <Border BackgroundColor="#E8F5E9" 
+                        Padding="15" 
+                        Margin="0,0,0,10"
+                        IsVisible="{Binding IsJourneeActive}" 
+                        StrokeShape="RoundRectangle 10" 
+                        Stroke="#2E7D32">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Border BackgroundColor="#2E7D32" WidthRequest="40" HeightRequest="40" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20"/>
+                            </Border.StrokeShape>
+                            <Label Text="J" FontSize="18" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0">
+                            <Label Text="{Binding JourneeStepInfo}" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#2E7D32" 
+                                   FontSize="14"/>
+                            <Label Text="Journee en cours - Suivez les etapes" 
+                                   TextColor="#666" 
+                                   FontSize="11"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- HEADER -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Gestion de la Caisse" 
+                               FontSize="28" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Label Text="Suivez les especes et gerez les depots bancaires" 
+                               FontSize="14" TextColor="#6B7280"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="Rafraichir" 
+                            BackgroundColor="#E5E7EB" TextColor="#6B7280" 
+                            FontSize="13" Padding="12,10" CornerRadius="10"
+                            Command="{Binding InitializeCommand}" VerticalOptions="Center"/>
+                </Grid>
+
+                <!-- SOLDE ACTUEL (BIG CARD) -->
+                <Border BackgroundColor="#F8FAFC" Padding="24" StrokeThickness="0"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Spacing="8" VerticalOptions="Center">
+                            <Label Text="SOLDE EN CAISSE" TextColor="#6B7280" FontSize="14" FontAttributes="Bold"/>
+                            <Label Text="{Binding SoldeActuel, StringFormat='{0:N2} MAD'}" 
+                                   FontSize="32" FontAttributes="Bold" TextColor="#4CAF50" HorizontalTextAlignment="Start"/>
+                            <Label Text="Especes disponibles dans la station" TextColor="#6B7280" FontSize="12"/>
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1" BackgroundColor="#E8F5E9" WidthRequest="80" HeightRequest="80" StrokeThickness="0" VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="40"/>
+                            </Border.StrokeShape>
+                            <Label Text="MAD" FontSize="20" FontAttributes="Bold" TextColor="#2E7D32" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- ENTREES ESPECES LABEL -->
+                <Label Text="Sources des Especes" TextColor="#1F2937" FontSize="16" FontAttributes="Bold" Margin="0,8,0,4"/>
+
+                <!-- SOURCE CARDS -->
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16"
+                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Border Grid.Column="0" BackgroundColor="#F8FAFC" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="PERIODES" FontSize="10" TextColor="#1976D2" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding EspecesPeriodes, StringFormat='{0:N2}'}" 
+                                   FontSize="22" FontAttributes="Bold" TextColor="#1976D2" HorizontalTextAlignment="Center"/>
+                            <Label Text="MAD" FontSize="11" TextColor="#6B7280" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" BackgroundColor="#F8FAFC" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="LUB/ARTICLES" FontSize="10" TextColor="#FF9800" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding EspecesVenteLubArticles, StringFormat='{0:N2}'}" 
+                                   FontSize="22" FontAttributes="Bold" TextColor="#FF9800" HorizontalTextAlignment="Center"/>
+                            <Label Text="MAD" FontSize="11" TextColor="#6B7280" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="2" BackgroundColor="#F8FAFC" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="SERVICES" FontSize="10" TextColor="#7B1FA2" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding EspecesVenteServices, StringFormat='{0:N2}'}" 
+                                   FontSize="22" FontAttributes="Bold" TextColor="#7B1FA2" HorizontalTextAlignment="Center"/>
+                            <Label Text="MAD" FontSize="11" TextColor="#6B7280" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="3" BackgroundColor="#F8FAFC" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="REGLEMENTS" FontSize="10" TextColor="#00796B" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding EspecesReglementCredits, StringFormat='{0:N2}'}" 
+                                   FontSize="22" FontAttributes="Bold" TextColor="#00796B" HorizontalTextAlignment="Center"/>
+                            <Label Text="MAD" FontSize="11" TextColor="#6B7280" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- TOTAUX SUMMARY -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="16"
+                      IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Border Grid.Column="0" BackgroundColor="#E3F2FD" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="TOTAL ENCAISSE" TextColor="#1976D2" FontSize="11" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding TotalEncaisse, StringFormat='{0:N2} MAD'}" TextColor="#1976D2" FontSize="20" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" BackgroundColor="#FFF3E0" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="TOTAL DEPOSE" TextColor="#E65100" FontSize="11" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding TotalDepots, StringFormat='{0:N2} MAD'}" TextColor="#E65100" FontSize="20" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Loading -->
+                <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" 
+                                   HeightRequest="50" WidthRequest="50" Color="#2E7D32" HorizontalOptions="Center"/>
+
+                <!-- DEPOTS TABLE -->
+                <Border BackgroundColor="#F8FAFC" StrokeThickness="0"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="0">
+                        
+                        <!-- Section Header -->
+                        <Grid ColumnDefinitions="Auto,*" Padding="20,16" BackgroundColor="#2E7D32">
+                            <Label Text="Depots Bancaires" TextColor="White" FontSize="16" FontAttributes="Bold" VerticalOptions="Center"/>
+                        </Grid>
+
+                        <!-- Filters Row -->
+                        <Border BackgroundColor="#F8FAFC" Padding="20" StrokeThickness="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,Auto,Auto" ColumnSpacing="12">
+                                <Label Text="Du:" FontSize="13" TextColor="#6B7280" VerticalTextAlignment="Center"/>
+                                <DatePicker Grid.Column="1" Date="{Binding FilterStartDate}" FontSize="13" MinimumWidthRequest="130"/>
+                                <Label Grid.Column="2" Text="Au:" FontSize="13" TextColor="#6B7280" VerticalTextAlignment="Center"/>
+                                <DatePicker Grid.Column="3" Date="{Binding FilterEndDate}" FontSize="13" MinimumWidthRequest="130"/>
+                                <Button Grid.Column="4" Text="Filtrer" Command="{Binding LoadCashSummaryByFilterCommand}"
+                                        BackgroundColor="#4CAF50" TextColor="White" FontSize="13" Padding="16,10" CornerRadius="10"/>
+                                <Button Grid.Column="5" Text="Reset" Command="{Binding InitializeCommand}"
+                                        BackgroundColor="#E5E7EB" TextColor="#6B7280" FontSize="13" Padding="12,10" CornerRadius="10"/>
+                                <Button Grid.Column="6" Text="+ Nouveau Depot" BackgroundColor="#2E7D32" TextColor="White"
+                                        FontAttributes="Bold" FontSize="14" Padding="20,12" CornerRadius="12" Clicked="OnAddDepotClicked"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Table Header -->
+                        <Grid ColumnDefinitions="1.2*,1.2*,1.2*,1.2*,1.8*,0.6*,1.4*" ColumnSpacing="8" Padding="20,16" BackgroundColor="#2E7D32">
+                            <Label Grid.Column="0" Text="DATE" FontSize="12" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="1" Text="MONTANT" FontSize="12" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="2" Text="REFERENCE" FontSize="12" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="3" Text="BANQUE" FontSize="12" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="4" Text="NOTES" FontSize="12" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="5" Text="PIECE" FontSize="12" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="6" Text="ACTIONS" FontSize="12" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                        </Grid>
+
+                        <!-- Depots Rows -->
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Depots}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:DepotCaisseDto">
+                                    <VerticalStackLayout BackgroundColor="Transparent">
+                                        <Grid ColumnDefinitions="1.2*,1.2*,1.2*,1.2*,1.8*,0.6*,1.4*" ColumnSpacing="8" Padding="20,14" MinimumHeightRequest="60">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnRowTapped" CommandParameter="{Binding .}"/>
+                                            </Grid.GestureRecognizers>
+                                            <Label Grid.Column="0" Text="{Binding DateDisplay}" TextColor="#1F2937" FontSize="13" VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="1" Text="{Binding MontantDisplay}" TextColor="#4CAF50" FontSize="14" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="2" Text="{Binding ReferenceBancaire, TargetNullValue='-'}" TextColor="#1976D2" FontSize="13" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="3" Text="{Binding Banque, TargetNullValue='-'}" TextColor="#1F2937" FontSize="13" VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="4" Text="{Binding Notes, TargetNullValue='-'}" TextColor="#6B7280" FontSize="12" LineBreakMode="TailTruncation" MaxLines="2" VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="5" Text="{Binding HasPieceJustificative, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Oui|-'}" TextColor="#9C27B0" FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <HorizontalStackLayout Grid.Column="6" Spacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                                                <Button Text="Voir" BackgroundColor="#F3E5F5" TextColor="#9C27B0" FontSize="11" Padding="10,6" CornerRadius="6" Clicked="OnViewDepotClicked" CommandParameter="{Binding .}"/>
+                                                <Button Text="Modifier" BackgroundColor="#E3F2FD" TextColor="#1976D2" FontSize="11" Padding="10,6" CornerRadius="6" Clicked="OnEditDepotClicked" CommandParameter="{Binding .}"/>
+                                                <Button Text="Suppr." BackgroundColor="#FFEBEE" TextColor="#E53935" FontSize="11" Padding="10,6" CornerRadius="6" Clicked="OnDeleteDepotClicked" CommandParameter="{Binding .}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB" Margin="20,0"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                            <BindableLayout.EmptyView>
+                                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40" Spacing="12">
+                                    <Border BackgroundColor="#E8F5E9" WidthRequest="100" HeightRequest="100" StrokeThickness="0" Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="50"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="DEPOT" FontSize="16" FontAttributes="Bold" TextColor="#2E7D32" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun depot trouve" FontSize="18" TextColor="#1F2937" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                                    <Label Text="Enregistrez vos depots bancaires pour suivre le solde de caisse" FontSize="14" TextColor="#6B7280" HorizontalTextAlignment="Center"/>
+                                    <Button Text="+ Nouveau Depot" BackgroundColor="#2E7D32" TextColor="White" FontAttributes="Bold" FontSize="14" Padding="24,14" CornerRadius="12" Margin="0,8,0,0" Clicked="OnAddDepotClicked"/>
+                                </VerticalStackLayout>
+                            </BindableLayout.EmptyView>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- JOURNEE NAVIGATION BAR -->
+        <Border Grid.Row="1" BackgroundColor="#F5F5F5" Padding="15" IsVisible="{Binding IsJourneeActive}" StrokeThickness="0">
+            <Border.Shadow>
+                <Shadow Brush="#000" Offset="0,-2" Radius="8" Opacity="0.1"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                <Button Text="Precedent" Command="{Binding JourneePrecedentCommand}" BackgroundColor="#757575" TextColor="White" Padding="20,12" CornerRadius="8" IsVisible="{Binding IsFirstStep, Converter={StaticResource InvertedBoolConverter}}"/>
+                <BoxView Grid.Column="1" Color="Transparent"/>
+                <Button Grid.Column="2" Text="Passer cette etape" Command="{Binding JourneePasserCommand}" BackgroundColor="#FFA726" TextColor="White" Padding="20,12" CornerRadius="8"/>
+                <Button Grid.Column="3" Text="{Binding IsLastStep, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Terminer la journee|Suivant'}" Command="{Binding JourneeSuivantCommand}" BackgroundColor="#4CAF50" TextColor="White" Padding="20,12" CornerRadius="8" FontAttributes="Bold"/>
+            </Grid>
+        </Border>
+
+    </Grid>
+</ContentPage>

@@ -50,4 +50,5 @@ public static class ApiConfig
     public static string Dashboard => $"{BaseUrl}/Dashboard";
     public static string Rapports => $"{BaseUrl}/Rapports";
     public static string Home => $"{BaseUrl}";
+    public static string DepotCaisses => $"{BaseUrl}/DepotCaisses";
  }

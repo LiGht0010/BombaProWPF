@@ -91,12 +91,73 @@
                     <VerticalStackLayout Style="{StaticResource AchatTableContainer}">
                         <!-- Table Header -->
                         <Grid Style="{StaticResource AchatTableHeaderGrid}">
-                            <Label Grid.Column="0" Text="Numéro" Style="{StaticResource AchatTableHeaderLabel}"/>
-                            <Label Grid.Column="1" Text="Date" Style="{StaticResource AchatTableHeaderLabel}"/>
-                            <Label Grid.Column="2" Text="Fournisseur" Style="{StaticResource AchatTableHeaderLabelLeft}"/>
-                            <Label Grid.Column="3" Text="Produit" Style="{StaticResource AchatTableHeaderLabelLeft}"/>
-                            <Label Grid.Column="4" Text="Quantité" Style="{StaticResource AchatTableHeaderLabel}"/>
-                            <Label Grid.Column="5" Text="Coût Total" Style="{StaticResource AchatTableHeaderLabel}"/>
+                            <!-- Numéro - Sortable -->
+                            <Border Grid.Column="0" BackgroundColor="Transparent" Padding="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SortByColumnCommand}" CommandParameter="Numero"/>
+                                </Border.GestureRecognizers>
+                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="Numéro" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                    <Label Text="{Binding NumeroSortIndicator}" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                            
+                            <!-- Date - Sortable (Default) -->
+                            <Border Grid.Column="1" BackgroundColor="Transparent" Padding="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SortByColumnCommand}" CommandParameter="Date"/>
+                                </Border.GestureRecognizers>
+                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="Date" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                    <Label Text="{Binding DateSortIndicator}" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                            
+                            <!-- Fournisseur - Sortable -->
+                            <Border Grid.Column="2" BackgroundColor="Transparent" Padding="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SortByColumnCommand}" CommandParameter="Fournisseur"/>
+                                </Border.GestureRecognizers>
+                                <HorizontalStackLayout HorizontalOptions="Start" Spacing="4">
+                                    <Label Text="Fournisseur" Style="{StaticResource AchatTableHeaderLabelLeft}"/>
+                                    <Label Text="{Binding FournisseurSortIndicator}" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                            
+                            <!-- Produit - Sortable -->
+                            <Border Grid.Column="3" BackgroundColor="Transparent" Padding="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SortByColumnCommand}" CommandParameter="Produit"/>
+                                </Border.GestureRecognizers>
+                                <HorizontalStackLayout HorizontalOptions="Start" Spacing="4">
+                                    <Label Text="Produit" Style="{StaticResource AchatTableHeaderLabelLeft}"/>
+                                    <Label Text="{Binding ProduitSortIndicator}" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                            
+                            <!-- Quantité - Sortable -->
+                            <Border Grid.Column="4" BackgroundColor="Transparent" Padding="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SortByColumnCommand}" CommandParameter="Quantite"/>
+                                </Border.GestureRecognizers>
+                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="Quantité" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                    <Label Text="{Binding QuantiteSortIndicator}" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                            
+                            <!-- Coût Total - Sortable -->
+                            <Border Grid.Column="5" BackgroundColor="Transparent" Padding="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SortByColumnCommand}" CommandParameter="Cout"/>
+                                </Border.GestureRecognizers>
+                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="Coût Total" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                    <Label Text="{Binding CoutSortIndicator}" Style="{StaticResource AchatTableHeaderLabel}"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                            
+                            <!-- Actions - Not Sortable -->
                             <Label Grid.Column="6" Text="Actions" Style="{StaticResource AchatTableHeaderLabel}"/>
                         </Grid>
 

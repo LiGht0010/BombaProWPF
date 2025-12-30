@@ -72,26 +72,30 @@ public partial class Achat
 // Add this method to the Achat class
 public partial class Achat
 {
+    // Category IDs as seeded in AppDbContext
+    private const int CarburantCategoryId = 1;
+
     /// <summary>
-    /// Updates product stock for non-fuel purchases (Lubricants and Articles)
+    /// Updates product stock for non-fuel purchases (Lubricants, Articles, etc.)
+    /// Stock is updated for all product categories EXCEPT CARBURANT (ID = 1).
     /// </summary>
-    /// <returns>True if stock was updated, false if not applicable</returns>
+    /// <returns>True if stock was updated, false if not applicable (carburant or missing data)</returns>
     public bool UpdateProductStock()
     {
         // Only update stock for non-fuel products
-        if (Produit?.Categorie?.Nom != null)
+        if (Produit?.CategorieID != null)
         {
-            var categoryName = Produit.Categorie.Nom.ToLower();
-
-            // Check if it's a non-fuel product (Lubricant or Articles)
-            if (categoryName == "lubrifiant" || categoryName == "articles")
+            // Skip fuel products (CategorieID = 1) - their stock is handled via reservoir allocations
+            if (Produit.CategorieID == CarburantCategoryId)
             {
-                // Increase stock by the quantity purchased
-                if (Quantite.HasValue && Quantite.Value > 0)
-                {
-                    Produit.Stock = (Produit.Stock ?? 0) + Quantite.Value;
-                    return true;
-                }
+                return false;
+            }
+
+            // Update stock for all other categories (LUBRIFIANT = 2, ARTICLE = 3, etc.)
+            if (Quantite.HasValue && Quantite.Value > 0)
+            {
+                Produit.Stock = (Produit.Stock ?? 0) + Quantite.Value;
+                return true;
             }
         }
 
@@ -99,21 +103,25 @@ public partial class Achat
     }
 
     /// <summary>
-    /// Reverses stock update when purchase is deleted or modified
+    /// Reverses stock update when purchase is deleted or modified.
+    /// Applies to all non-fuel product categories.
     /// </summary>
+    /// <returns>True if stock was reversed, false if not applicable</returns>
     public bool ReverseProductStock()
     {
-        if (Produit?.Categorie?.Nom != null)
+        if (Produit?.CategorieID != null)
         {
-            var categoryName = Produit.Categorie.Nom.ToLower();
-
-            if (categoryName == "lubrifiant" || categoryName == "articles")
+            // Skip fuel products (CategorieID = 1) - their stock is handled via reservoir allocations
+            if (Produit.CategorieID == CarburantCategoryId)
             {
-                if (Quantite.HasValue && Quantite.Value > 0)
-                {
-                    Produit.Stock = Math.Max(0, (Produit.Stock ?? 0) - Quantite.Value);
-                    return true;
-                }
+                return false;
+            }
+
+            // Reverse stock for all other categories
+            if (Quantite.HasValue && Quantite.Value > 0)
+            {
+                Produit.Stock = Math.Max(0, (Produit.Stock ?? 0) - Quantite.Value);
+                return true;
             }
         }
 

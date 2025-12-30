@@ -12,6 +12,9 @@ public partial class AchatViewModel : ObservableObject
     private readonly IDialogService _dialogService;
     private readonly JourneeNavigationService _journeeService;
 
+    // Master list for sorting/filtering
+    private List<AchatDto> _allAchats = [];
+
     public ObservableCollection<AchatDto> Achats { get; } = new();
 
     [ObservableProperty]
@@ -32,6 +35,39 @@ public partial class AchatViewModel : ObservableObject
 
     [ObservableProperty]
     private decimal _totalCost;
+
+    // ════════════════════════════════════════════════════════════════
+    // SORTING PROPERTIES
+    // ════════════════════════════════════════════════════════════════
+    [ObservableProperty]
+    private string _currentSortColumn = "Date";
+
+    [ObservableProperty]
+    private bool _isSortAscending = false; // Default descending for Date
+
+    // Sort indicator texts for each column
+    public string NumeroSortIndicator => GetSortIndicator("Numero");
+    public string DateSortIndicator => GetSortIndicator("Date");
+    public string FournisseurSortIndicator => GetSortIndicator("Fournisseur");
+    public string ProduitSortIndicator => GetSortIndicator("Produit");
+    public string QuantiteSortIndicator => GetSortIndicator("Quantite");
+    public string CoutSortIndicator => GetSortIndicator("Cout");
+
+    private string GetSortIndicator(string column)
+    {
+        if (CurrentSortColumn != column) return "";
+        return IsSortAscending ? " ↑" : " ↓";
+    }
+
+    private void NotifySortIndicators()
+    {
+        OnPropertyChanged(nameof(NumeroSortIndicator));
+        OnPropertyChanged(nameof(DateSortIndicator));
+        OnPropertyChanged(nameof(FournisseurSortIndicator));
+        OnPropertyChanged(nameof(ProduitSortIndicator));
+        OnPropertyChanged(nameof(QuantiteSortIndicator));
+        OnPropertyChanged(nameof(CoutSortIndicator));
+    }
 
     // ════════════════════════════════════════════════════════════════
     // JOURNÉE PROPERTIES
@@ -76,6 +112,60 @@ public partial class AchatViewModel : ObservableObject
     private async Task JourneePrecedentAsync() => await _journeeService.GoPreviousAsync();
 
     // ════════════════════════════════════════════════════════════════
+    // SORTING COMMANDS
+    // ════════════════════════════════════════════════════════════════
+    [RelayCommand]
+    private void SortByColumn(string column)
+    {
+        if (CurrentSortColumn == column)
+        {
+            // Toggle sort direction
+            IsSortAscending = !IsSortAscending;
+        }
+        else
+        {
+            // New column - default to ascending (except Date which defaults to descending)
+            CurrentSortColumn = column;
+            IsSortAscending = column != "Date";
+        }
+
+        ApplySorting();
+        NotifySortIndicators();
+    }
+
+    private void ApplySorting()
+    {
+        var sorted = CurrentSortColumn switch
+        {
+            "Numero" => IsSortAscending
+                ? _allAchats.OrderBy(a => a.Numero).ToList()
+                : _allAchats.OrderByDescending(a => a.Numero).ToList(),
+            "Date" => IsSortAscending
+                ? _allAchats.OrderBy(a => a.Date).ToList()
+                : _allAchats.OrderByDescending(a => a.Date).ToList(),
+            "Fournisseur" => IsSortAscending
+                ? _allAchats.OrderBy(a => a.FournisseurNom).ToList()
+                : _allAchats.OrderByDescending(a => a.FournisseurNom).ToList(),
+            "Produit" => IsSortAscending
+                ? _allAchats.OrderBy(a => a.ProduitNom).ToList()
+                : _allAchats.OrderByDescending(a => a.ProduitNom).ToList(),
+            "Quantite" => IsSortAscending
+                ? _allAchats.OrderBy(a => a.Quantite ?? 0).ToList()
+                : _allAchats.OrderByDescending(a => a.Quantite ?? 0).ToList(),
+            "Cout" => IsSortAscending
+                ? _allAchats.OrderBy(a => a.Cout ?? 0).ToList()
+                : _allAchats.OrderByDescending(a => a.Cout ?? 0).ToList(),
+            _ => _allAchats.OrderByDescending(a => a.Date).ToList()
+        };
+
+        Achats.Clear();
+        foreach (var achat in sorted)
+        {
+            Achats.Add(achat);
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
     // EXISTING COMMANDS
     // ════════════════════════════════════════════════════════════════
 
@@ -86,13 +176,18 @@ public partial class AchatViewModel : ObservableObject
         {
             IsLoading = true;
             var achats = await _achatService.GetAllAsync();
+            
+            // Store in master list and apply default sorting (Date descending)
+            _allAchats = achats.OrderByDescending(a => a.Date).ToList();
+            
             Achats.Clear();
-            foreach (var achat in achats)
+            foreach (var achat in _allAchats)
             {
                 Achats.Add(achat);
             }
 
             CalculateStatistics();
+            NotifySortIndicators();
         }
         catch (Exception ex)
         {
@@ -121,6 +216,7 @@ public partial class AchatViewModel : ObservableObject
             var newAchat = await _dialogService.ShowAchatCreatePopupAsync();
             if (newAchat != null)
             {
+                _allAchats.Insert(0, newAchat);
                 Achats.Insert(0, newAchat);
                 CalculateStatistics();
 
@@ -212,6 +308,7 @@ public partial class AchatViewModel : ObservableObject
                     var success = await _achatService.DeleteAsync(achat.ID);
                     if (success)
                     {
+                        _allAchats.Remove(achat);
                         Achats.Remove(achat);
                         CalculateStatistics();
                         await _dialogService.ShowAlertAsync("Succès", "Achat supprimé avec succès");
@@ -279,11 +376,9 @@ public partial class AchatViewModel : ObservableObject
                     .ToList();
             }
 
-            Achats.Clear();
-            foreach (var achat in results)
-            {
-                Achats.Add(achat);
-            }
+            // Store and apply current sorting
+            _allAchats = results;
+            ApplySorting();
             CalculateStatistics();
         }
         catch (Exception ex)
@@ -307,11 +402,9 @@ public partial class AchatViewModel : ObservableObject
             
             var achats = await _achatService.GetByDateRangeAsync(startDate, endDate);
             
-            Achats.Clear();
-            foreach (var achat in achats)
-            {
-                Achats.Add(achat);
-            }
+            // Store and apply current sorting
+            _allAchats = achats;
+            ApplySorting();
             CalculateStatistics();
 
             if (achats.Count == 0)

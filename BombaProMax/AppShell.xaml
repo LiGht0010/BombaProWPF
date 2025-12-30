@@ -23,6 +23,7 @@
     xmlns:rapport="clr-namespace:BombaProMax.Views.RapportViews"
     xmlns:service="clr-namespace:BombaProMax.Views.ServiceViews"
     xmlns:venteService="clr-namespace:BombaProMax.Views.VenteServiceViews"
+    xmlns:caisse="clr-namespace:BombaProMax.Views.CaisseViews"
     FlyoutBackgroundColor="#FFFFFF"
     BackgroundColor="#F8FAFC"
     Shell.NavBarIsVisible="False"
@@ -145,6 +146,7 @@
         <ShellContent x:Name="VenteLubShellContent" Title="Ventes Lub/Articles" Route="VenteLubrifiantsEtArticlesPage"/>
         <ShellContent x:Name="VenteServiceShellContent" Title="Ventes Services" Route="VenteServicePage"/>
         <ShellContent x:Name="DepenseShellContent" Title="Dépenses" Route="DepensePage"/>
+        <ShellContent x:Name="CaisseShellContent" Title="Caisse" Route="CaissePage"/>
     </FlyoutItem>
 
     <!-- ════════════════════════════════════════════════════════════ -->

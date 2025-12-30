@@ -43,6 +43,7 @@
                 <ResourceDictionary Source="Styles/DepenseStyles.xaml" />
                 <ResourceDictionary Source="Styles/JaugeageStyles.xaml" />
                 <ResourceDictionary Source="Styles/ServiceStyles.xaml" />
+                <ResourceDictionary Source="Styles/CaisseStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.CaisseViews.DepotCaisseDetailsPopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="White" Padding="0" WidthRequest="550" HeightRequest="700">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="16"/>
+        </Border.StrokeShape>
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- Header -->
+            <Border Grid.Row="0" BackgroundColor="#2E7D32" Padding="24">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Details du Depot" FontSize="22" FontAttributes="Bold" TextColor="White"/>
+                        <Label x:Name="SubtitleLabel" Text="Informations completes" FontSize="12" TextColor="#A5D6A7"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="X" BackgroundColor="Transparent" TextColor="White" FontSize="20" Padding="8" Clicked="OnCloseClicked"/>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <ScrollView Grid.Row="1" Padding="24">
+                <VerticalStackLayout Spacing="20">
+
+                    <!-- Montant Card -->
+                    <Border BackgroundColor="#E8F5E9" Padding="20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="MONTANT DEPOSE" FontSize="11" TextColor="#6B7280" HorizontalTextAlignment="Center" FontAttributes="Bold"/>
+                            <Label x:Name="MontantLabel" Text="0.00 MAD" FontSize="32" FontAttributes="Bold" TextColor="#2E7D32" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Info Grid -->
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
+                        
+                        <!-- Date -->
+                        <Border Grid.Row="0" Grid.Column="0" BackgroundColor="#F8F8F8" Padding="16" Stroke="#E0E0E0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Date du Depot" FontSize="11" TextColor="#6B7280" FontAttributes="Bold"/>
+                                <Label x:Name="DateLabel" Text="-" FontSize="14" TextColor="#1F2937" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Reference -->
+                        <Border Grid.Row="0" Grid.Column="1" BackgroundColor="#E3F2FD" Padding="16" Stroke="#1976D2" StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Reference Bancaire" FontSize="11" TextColor="#1976D2" FontAttributes="Bold"/>
+                                <Label x:Name="ReferenceLabel" Text="-" FontSize="14" TextColor="#1976D2" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Banque -->
+                        <Border Grid.Row="1" Grid.Column="0" BackgroundColor="#FFF3E0" Padding="16" Stroke="#FF9800" StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Banque" FontSize="11" TextColor="#E65100" FontAttributes="Bold"/>
+                                <Label x:Name="BanqueLabel" Text="-" FontSize="14" TextColor="#E65100" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Validateur -->
+                        <Border Grid.Row="1" Grid.Column="1" BackgroundColor="#F8F8F8" Padding="16" Stroke="#E0E0E0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Valide Par" FontSize="11" TextColor="#6B7280" FontAttributes="Bold"/>
+                                <Label x:Name="ValidateurLabel" Text="-" FontSize="14" TextColor="#1F2937" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Notes -->
+                    <Border BackgroundColor="#F8F8F8" Padding="16" Stroke="#E0E0E0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Notes" FontSize="11" TextColor="#6B7280" FontAttributes="Bold"/>
+                            <Label x:Name="NotesLabel" Text="Aucune note" FontSize="13" TextColor="#1F2937" LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Piece Justificative Section -->
+                    <Border x:Name="PieceJustificativeSection" BackgroundColor="#F3E5F5" Padding="16" Stroke="#9C27B0" StrokeThickness="1" IsVisible="False">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Piece Justificative" FontSize="11" TextColor="#7B1FA2" FontAttributes="Bold"/>
+                            
+                            <!-- File Info -->
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label x:Name="FileNameLabel" Text="fichier.jpg" FontSize="13" TextColor="#1F2937" FontAttributes="Bold" LineBreakMode="TailTruncation"/>
+                                    <Label x:Name="FileTypeLabel" Text="Image JPEG" FontSize="11" TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                                <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                                    <Button x:Name="ViewButton" Text="Voir" BackgroundColor="#9C27B0" TextColor="White" FontSize="12" Padding="12,8" CornerRadius="8" Clicked="OnViewFileClicked"/>
+                                    <Button x:Name="DownloadButton" Text="Telecharger" BackgroundColor="#7B1FA2" TextColor="White" FontSize="12" Padding="12,8" CornerRadius="8" Clicked="OnDownloadFileClicked"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+
+                            <!-- Image Preview (for images only) -->
+                            <Border x:Name="ImagePreviewContainer" BackgroundColor="White" Padding="8" Stroke="#E0E0E0" IsVisible="False" HeightRequest="200">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Image x:Name="ImagePreview" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- No Piece Justificative -->
+                    <Border x:Name="NoPieceSection" BackgroundColor="#FAFAFA" Padding="20" Stroke="#E0E0E0" IsVisible="True">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Label Text="Aucune piece justificative attachee" FontSize="13" TextColor="#9E9E9E" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+
+                    <!-- Audit Info -->
+                    <Border BackgroundColor="#FAFAFA" Padding="12" Stroke="#E0E0E0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Cree le" FontSize="10" TextColor="#9E9E9E" HorizontalTextAlignment="Center"/>
+                                <Label x:Name="DateCreationLabel" Text="-" FontSize="11" TextColor="#6B7280" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                            <BoxView WidthRequest="1" BackgroundColor="#E0E0E0"/>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Modifie le" FontSize="10" TextColor="#9E9E9E" HorizontalTextAlignment="Center"/>
+                                <Label x:Name="DateModificationLabel" Text="-" FontSize="11" TextColor="#6B7280" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" BackgroundColor="#F5F5F5" Padding="20">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <BoxView Color="Transparent"/>
+                    <Button Grid.Column="1" Text="Modifier" BackgroundColor="#1976D2" TextColor="White" FontSize="14" Padding="20,12" CornerRadius="10" Clicked="OnEditClicked"/>
+                    <Button Grid.Column="2" Text="Fermer" BackgroundColor="#9E9E9E" TextColor="White" FontSize="14" Padding="20,12" CornerRadius="10" Clicked="OnCloseClicked"/>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Border>
+</toolkit:Popup>

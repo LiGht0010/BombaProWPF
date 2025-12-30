@@ -167,15 +167,15 @@
                             
                             <!-- Allocation Summary -->
                             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="20">
-                                <VerticalStackLayout Spacing="2">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
                                     <Label Text="Quantité Achetée" FontSize="11" TextColor="#666"/>
                                     <Label x:Name="AllocationTotalLabel" Text="0 L" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
                                 </VerticalStackLayout>
-                                <VerticalStackLayout Spacing="2">
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
                                     <Label Text="Quantité Allouée" FontSize="11" TextColor="#666"/>
                                     <Label x:Name="AllocationAlloueeLabel" Text="0 L" FontSize="16" FontAttributes="Bold" TextColor="#2E7D32"/>
                                 </VerticalStackLayout>
-                                <VerticalStackLayout Spacing="2">
+                                <VerticalStackLayout Grid.Column="2" Spacing="2">
                                     <Label Text="Quantité Restante" FontSize="11" TextColor="#666"/>
                                     <Label x:Name="AllocationRestanteLabel" Text="0 L" FontSize="16" FontAttributes="Bold" TextColor="#E65100"/>
                                 </VerticalStackLayout>

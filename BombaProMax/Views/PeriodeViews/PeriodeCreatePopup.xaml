@@ -45,7 +45,7 @@
             <Border Grid.Row="1" 
                     BackgroundColor="#F5F5F5" 
                     Padding="15">
-                <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="15">
+                <Grid ColumnDefinitions="Auto,Auto,*,*,*" ColumnSpacing="15">
                     <!-- Date Début -->
                     <Border Grid.Column="0"
                            BackgroundColor="White" 
@@ -56,14 +56,14 @@
                             <Label Text="📅 Début" 
                                    FontSize="11"
                                    TextColor="#666"/>
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                            <HorizontalStackLayout Spacing="8">
                                 <DatePicker x:Name="DateDebutPicker"
                                             FontSize="12"
                                             DateSelected="OnDateRangeChanged"/>
                                 <TimePicker x:Name="TimeDebutPicker"
-                                            Grid.Column="1"
-                                            FontSize="12"/>
-                            </Grid>
+                                            FontSize="12"
+                                            Format="HH:mm"/>
+                            </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </Border>
                     
@@ -77,14 +77,14 @@
                             <Label Text="📅 Fin" 
                                    FontSize="11"
                                    TextColor="#666"/>
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                            <HorizontalStackLayout Spacing="8">
                                 <DatePicker x:Name="DateFinPicker"
                                             FontSize="12"
                                             DateSelected="OnDateRangeChanged"/>
                                 <TimePicker x:Name="TimeFinPicker"
-                                            Grid.Column="1"
-                                            FontSize="12"/>
-                            </Grid>
+                                            FontSize="12"
+                                            Format="HH:mm"/>
+                            </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </Border>
                     
@@ -306,7 +306,8 @@
                             </Grid.RowDefinitions>
                             
                             <Grid Grid.Row="0"
-                                  ColumnDefinitions="Auto,*,Auto,Auto"
+                                  ColumnDefinitions="Auto,*,60,80"
+                                  ColumnSpacing="12"
                                   Padding="10,8"
                                   BackgroundColor="#ECEFF1">
                                 <Label Text="✓" FontAttributes="Bold" TextColor="#37474F" FontSize="11"/>
@@ -328,7 +329,7 @@
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="OnCreditTransactionTapped" CommandParameter="{Binding .}"/>
                                             </Border.GestureRecognizers>
-                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                                            <Grid ColumnDefinitions="Auto,*,60,80" ColumnSpacing="12">
                                                 <CheckBox IsChecked="{Binding IsSelected}"
                                                           CheckedChanged="OnCreditCheckBoxChanged"
                                                           VerticalOptions="Center"
