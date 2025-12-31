@@ -44,6 +44,9 @@ namespace BombaProMax
 
             //Views---------------------------------------------
 
+            // TenantSelectionPage (shown before login)
+            builder.Services.AddSingleton<TenantSelectionPage>();
+
             //LoginPage neummorphic
             builder.Services.AddSingleton<LoginPage>();
 

@@ -23,14 +23,34 @@
                 </Border.Shadow>
                 
                 <VerticalStackLayout Style="{StaticResource HomeHeaderStack}">
+                    <!-- Tenant Badge -->
+                    <Border BackgroundColor="Transparent"
+                            StrokeThickness="0"
+                            Padding="16,8"
+                            HorizontalOptions="Center"
+                            Margin="0,0,0,12">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="🏪" FontSize="14" VerticalOptions="Center"/>
+                            <Label x:Name="TenantNameLabel"
+                                   Text="Base de donnees" 
+                                   FontSize="25" 
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
                     <HorizontalStackLayout Style="{StaticResource HomeHeaderTitleStack}">
-                        <Label Text="🛡️" Style="{StaticResource HomeHeaderIcon}"/>
+                        <Label Text="&#x1F6E1;" Style="{StaticResource HomeHeaderIcon}"/>
                         <Label Text="Espace Administration" Style="{StaticResource HomeHeaderTitle}"/>
                     </HorizontalStackLayout>
-                    <Label Text="Centre de contrôle et gestion de votre station-service" 
+                    <Label Text="Centre de controle et gestion de votre station-service" 
                            Style="{StaticResource HomeHeaderSubtitle}"/>
                     <Label x:Name="UserStatusLabel"
-                           Text="Connecté en tant qu'administrateur • Système actif" 
+                           Text="Connecte en tant qu'administrateur - Systeme actif" 
                            Style="{StaticResource HomeHeaderStatus}"/>
                 </VerticalStackLayout>
             </Border>

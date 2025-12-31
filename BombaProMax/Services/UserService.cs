@@ -9,14 +9,15 @@ public class UserService
 {
     private readonly HttpClient _httpClient;
     private static string BaseUrl => ApiConfig.Users;
+    
+    // Cache for user names to avoid repeated API calls
+    private static readonly Dictionary<int, string> _userNameCache = new();
+    private static DateTime _cacheLastRefresh = DateTime.MinValue;
+    private static readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(10);
 
     public UserService()
     {
-        var handler = new HttpClientHandler
-        {
-            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-        };
-        _httpClient = new HttpClient(handler);
+        _httpClient = HttpClientFactory.Create();
     }
 
     /// <summary>
@@ -233,5 +234,79 @@ public class UserService
             Debug.WriteLine($"[UserService] Error checking email: {ex.Message}");
             return false;
         }
+    }
+
+    /// <summary>
+    /// Gets a user's name by their ID. Uses caching for performance.
+    /// </summary>
+    public async Task<string> GetUserNameByIdAsync(int? userId)
+    {
+        if (!userId.HasValue || userId.Value <= 0)
+            return "N/A";
+
+        // Check if cache needs refresh
+        if (DateTime.Now - _cacheLastRefresh > _cacheExpiration)
+        {
+            _userNameCache.Clear();
+        }
+
+        // Check cache first
+        if (_userNameCache.TryGetValue(userId.Value, out var cachedName))
+            return cachedName;
+
+        try
+        {
+            var user = await GetByIdAsync(userId.Value);
+            var userName = user?.Name ?? "Utilisateur inconnu";
+            
+            // Cache the result
+            _userNameCache[userId.Value] = userName;
+            _cacheLastRefresh = DateTime.Now;
+            
+            return userName;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[UserService] Error fetching user name for ID {userId}: {ex.Message}");
+            return "Utilisateur inconnu";
+        }
+    }
+
+    /// <summary>
+    /// Preloads user names into cache for multiple IDs at once.
+    /// </summary>
+    public async Task PreloadUserNamesAsync(IEnumerable<int?> userIds)
+    {
+        var idsToLoad = userIds
+            .Where(id => id.HasValue && id.Value > 0 && !_userNameCache.ContainsKey(id.Value))
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
+
+        if (idsToLoad.Count == 0)
+            return;
+
+        try
+        {
+            var allUsers = await GetAllAsync();
+            foreach (var user in allUsers.Where(u => idsToLoad.Contains(u.UserId)))
+            {
+                _userNameCache[user.UserId] = user.Name ?? "Utilisateur inconnu";
+            }
+            _cacheLastRefresh = DateTime.Now;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[UserService] Error preloading user names: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Clears the user name cache.
+    /// </summary>
+    public static void ClearCache()
+    {
+        _userNameCache.Clear();
+        _cacheLastRefresh = DateTime.MinValue;
     }
 }

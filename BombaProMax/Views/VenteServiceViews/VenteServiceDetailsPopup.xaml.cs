@@ -1,4 +1,5 @@
 using BombaProMax.Models;
+using BombaProMax.Services;
 using CommunityToolkit.Maui.Views;
 
 namespace BombaProMax.Views.VenteServiceViews;
@@ -6,14 +7,17 @@ namespace BombaProMax.Views.VenteServiceViews;
 public partial class VenteServiceDetailsPopup : Popup
 {
     private readonly VenteServiceDto _vente;
+    private readonly UserService _userService;
     private bool _requestEdit;
 
     public VenteServiceDetailsPopup(VenteServiceDto vente)
     {
         InitializeComponent();
         _vente = vente;
+        _userService = new UserService();
         _requestEdit = false;
         PopulateDetails();
+        LoadAuditUserNamesAsync();
     }
 
     private void PopulateDetails()
@@ -52,11 +56,31 @@ public partial class VenteServiceDetailsPopup : Popup
             NotesCard.IsVisible = false;
         }
 
-        // Audit info
+        // Audit info - dates
         DateCreationLabel.Text = _vente.DateCreation?.ToString("dd/MM/yyyy HH:mm") ?? "-";
-        CreeParLabel.Text = _vente.CreePar?.ToString() ?? "-";
         DateModificationLabel.Text = _vente.DateModification?.ToString("dd/MM/yyyy HH:mm") ?? "-";
-        ModifieParLabel.Text = _vente.ModifiePar?.ToString() ?? "-";
+        
+        // Set loading state for user names
+        CreeParLabel.Text = "Chargement...";
+        ModifieParLabel.Text = "Chargement...";
+    }
+
+    private async void LoadAuditUserNamesAsync()
+    {
+        try
+        {
+            var createdByName = await _userService.GetUserNameByIdAsync(_vente.CreePar);
+            CreeParLabel.Text = createdByName;
+
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_vente.ModifiePar);
+            ModifieParLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[VenteServiceDetailsPopup] Error loading audit info: {ex.Message}");
+            CreeParLabel.Text = "Erreur de chargement";
+            ModifieParLabel.Text = "Erreur de chargement";
+        }
     }
 
     private void OnEditClicked(object? sender, EventArgs e)

@@ -7,6 +7,7 @@ namespace BombaProMax.Views.EmployeViews;
 public partial class EmployeDetailsPopup : Popup
 {
     private readonly EmployeService _employeService;
+    private readonly UserService _userService;
     private readonly EmployeDto _employe;
 
     public EmployeDetailsPopup(EmployeDto employe, EmployeService employeService)
@@ -16,6 +17,7 @@ public partial class EmployeDetailsPopup : Popup
 
         _employe = employe;
         _employeService = employeService;
+        _userService = new UserService();
 
         LoadEmployeDetails();
     }
@@ -45,9 +47,9 @@ public partial class EmployeDetailsPopup : Popup
             DateModificationLabel.Text = _employe.DateModification.HasValue 
                 ? _employe.DateModification.Value.ToString("dd/MM/yyyy HH:mm") 
                 : "Jamais modifié";
-            AjouteParLabel.Text = _employe.AjoutePar.HasValue 
-                ? $"Utilisateur ID: {_employe.AjoutePar.Value}" 
-                : "N/A";
+
+            // Load user names asynchronously
+            await LoadAuditUserNamesAsync();
 
             // Load statistics
             await LoadEmployeStatistics();
@@ -59,6 +61,26 @@ public partial class EmployeDetailsPopup : Popup
                 "Erreur",
                 $"Impossible de charger les détails: {ex.Message}",
                 "OK");
+        }
+    }
+
+    private async Task LoadAuditUserNamesAsync()
+    {
+        try
+        {
+            // Load created by user name
+            var createdByName = await _userService.GetUserNameByIdAsync(_employe.AjoutePar);
+            AjouteParLabel.Text = createdByName;
+
+            // Load modified by user name
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_employe.ModifiePar);
+            ModifieParLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[EmployeDetailsPopup] Error loading audit info: {ex.Message}");
+            AjouteParLabel.Text = "Erreur de chargement";
+            ModifieParLabel.Text = "Erreur de chargement";
         }
     }
 

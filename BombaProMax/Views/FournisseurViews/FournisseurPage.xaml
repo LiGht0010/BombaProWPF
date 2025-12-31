@@ -11,271 +11,549 @@
         <VerticalStackLayout Style="{StaticResource FournisseurPageMainStack}">
 
             <!-- ========================================= -->
-            <!-- HEADER SECTION with Action Button         -->
+            <!-- HEADER SECTION                            -->
             <!-- ========================================= -->
             <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
                 <VerticalStackLayout Style="{StaticResource FournisseurPageHeaderStack}">
-                    <Label Text="Gestion des Fournisseurs" 
+                    <Label Text="Gestion Fournisseurs &amp; Flotte" 
                            Style="{StaticResource FournisseurPageTitleLabel}"/>
-                    <Label Text="{Binding Fournisseurs.Count, StringFormat='{0} fournisseurs enregistrés'}" 
+                    <Label Text="Fournisseurs, Chauffeurs, Camions et Citernes" 
                            Style="{StaticResource FournisseurPageSubtitleLabel}"/>
                 </VerticalStackLayout>
-                
-                <!-- Add Button -->
-                <Button Grid.Column="1"
-                        Text="+ Nouveau Fournisseur"
-                        Style="{StaticResource FournisseurAddButton}"
-                        Command="{Binding AddFournisseurCommand}"
-                        VerticalOptions="Center"
-                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
             </Grid>
 
             <!-- ========================================= -->
-            <!-- STATS CARDS ROW - Neumorphic Raised       -->
+            <!-- TABS CARD - 4 Tabs                        -->
             <!-- ========================================= -->
-            <Grid ColumnDefinitions="*,*,*,*" 
-                  ColumnSpacing="16"
-                  IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
-                
-                <!-- Total Fournisseurs -->
-                <Border Grid.Column="0" Style="{StaticResource FournisseurStatCard}">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="{Binding Fournisseurs.Count}" 
-                               Style="{StaticResource FournisseurStatNumber}"/>
-                        <Label Text="Total Fournisseurs" 
-                               Style="{StaticResource FournisseurStatLabel}"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Actifs -->
-                <Border Grid.Column="1" Style="{StaticResource FournisseurStatCard}">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="—" 
-                               Style="{StaticResource FournisseurStatNumber}"
-                               TextColor="#5EAA8D"/>
-                        <Label Text="Actifs" 
-                               Style="{StaticResource FournisseurStatLabel}"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Inactifs -->
-                <Border Grid.Column="2" Style="{StaticResource FournisseurStatCard}">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="—" 
-                               Style="{StaticResource FournisseurStatNumber}"
-                               TextColor="#E8A84C"/>
-                        <Label Text="Inactifs" 
-                               Style="{StaticResource FournisseurStatLabel}"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Ce Mois -->
-                <Border Grid.Column="3" Style="{StaticResource FournisseurStatCard}">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="—" 
-                               Style="{StaticResource FournisseurStatNumber}"
-                               TextColor="#8FA3B8"/>
-                        <Label Text="Ce Mois" 
-                               Style="{StaticResource FournisseurStatLabel}"/>
-                    </VerticalStackLayout>
-                </Border>
-            </Grid>
-
-            <!-- ========================================= -->
-            <!-- SEARCH BAR - Neumorphic Inset             -->
-            <!-- ========================================= -->
-            <Border Style="{StaticResource FournisseurSearchContainer}"
-                    IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
-                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                    <Image Source="search.png"
-                           WidthRequest="24"
-                           HeightRequest="24"/>
-
-                    <Entry Grid.Column="1"
-                           Placeholder="Rechercher par nom, société, email..."
-                           Text="{Binding SearchText}"
-                           Style="{StaticResource FournisseurSearchEntry}"/>
-                    <Button Grid.Column="2"
-                            Text="Rechercher"
-                            Command="{Binding SearchFournisseursCommand}"
-                            BackgroundColor="#E8ECF1"
-                            TextColor="#5A6068"
-                            FontSize="13"
-                            FontAttributes="Bold"
-                            Padding="16,10"
-                            CornerRadius="10"/>
-                </Grid>
-            </Border>
-
-            <!-- Loading Indicator -->
-            <ActivityIndicator Style="{StaticResource FournisseurPageLoadingIndicator}"
-                              IsRunning="{Binding IsLoading}"
-                              IsVisible="{Binding IsLoading}"/>
-
-            <!-- ========================================= -->
-            <!-- TABLE CARD - Neumorphic Raised Container  -->
-            <!-- ========================================= -->
-            <Border Style="{StaticResource FournisseurTableCard}"
-                    IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+            <Border Style="{StaticResource FournisseurTableCard}">
                 <VerticalStackLayout Style="{StaticResource FournisseurTableContainer}">
-
-                    <!-- Table Header -->
-                    <Grid Style="{StaticResource FournisseurTableHeaderGrid}">
-                        <Label Grid.Column="0" 
-                               Text="Statut" 
-                               Style="{StaticResource FournisseurTableHeaderLabel}"/>
-                        <Label Grid.Column="1" 
-                               Text="Nom / Société" 
-                               Style="{StaticResource FournisseurTableHeaderLabelLeft}"/>
-                        <Label Grid.Column="2" 
-                               Text="Contact" 
-                               Style="{StaticResource FournisseurTableHeaderLabel}"/>
-                        <Label Grid.Column="3" 
-                               Text="Email" 
-                               Style="{StaticResource FournisseurTableHeaderLabel}"/>
-                        <Label Grid.Column="4" 
-                               Text="Téléphone" 
-                               Style="{StaticResource FournisseurTableHeaderLabel}"/>
-                        <Label Grid.Column="5" 
-                               Text="Actions" 
-                               Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                    
+                    <!-- Tab Headers - 4 Columns -->
+                    <Grid ColumnDefinitions="*,*,*,*" BackgroundColor="#4A8FBF">
+                        <Button x:Name="FournisseursTabButton"
+                                Grid.Column="0"
+                                Text="🏭 Fournisseurs"
+                                BackgroundColor="#FFFFFF"
+                                TextColor="#4A8FBF"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                Padding="16,14"
+                                CornerRadius="0"
+                                Clicked="OnFournisseursTabClicked"/>
+                        <Button x:Name="ChauffeursTabButton"
+                                Grid.Column="1"
+                                Text="👤 Chauffeurs"
+                                BackgroundColor="Transparent"
+                                TextColor="#FFFFFF"
+                                FontSize="14"
+                                Padding="16,14"
+                                CornerRadius="0"
+                                Opacity="0.85"
+                                Clicked="OnChauffeursTabClicked"/>
+                        <Button x:Name="CamionsTabButton"
+                                Grid.Column="2"
+                                Text="🚛 Camions"
+                                BackgroundColor="Transparent"
+                                TextColor="#FFFFFF"
+                                FontSize="14"
+                                Padding="16,14"
+                                CornerRadius="0"
+                                Opacity="0.85"
+                                Clicked="OnCamionsTabClicked"/>
+                        <Button x:Name="CiternesTabButton"
+                                Grid.Column="3"
+                                Text="🛢️ Citernes"
+                                BackgroundColor="Transparent"
+                                TextColor="#FFFFFF"
+                                FontSize="14"
+                                Padding="16,14"
+                                CornerRadius="0"
+                                Opacity="0.85"
+                                Clicked="OnCiternesTabClicked"/>
                     </Grid>
 
-                    <!-- Table Rows with SwipeView -->
-                    <CollectionView ItemsSource="{Binding Fournisseurs}"
-                                    Style="{StaticResource FournisseurTableCollectionView}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:FournisseurDto">
-                                <SwipeView BackgroundColor="Transparent">
-                                    <!-- Left Swipe Actions -->
-                                    <SwipeView.LeftItems>
-                                        <SwipeItems Mode="Reveal">
-                                            <SwipeItem Text="Détails"
-                                                       BackgroundColor="#8FA3B8"
-                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=ShowDetailsCommand}"
-                                                       CommandParameter="{Binding .}"/>
-                                            <SwipeItem Text="Modifier"
-                                                       BackgroundColor="#4A8FBF"
-                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=EditFournisseurCommand}"
-                                                       CommandParameter="{Binding .}"/>
-                                        </SwipeItems>
-                                    </SwipeView.LeftItems>
+                    <!-- ========================================= -->
+                    <!-- TAB 1: FOURNISSEURS                       -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="FournisseursTab" IsVisible="True">
+                        
+                        <!-- Stats Cards Row -->
+                        <Grid ColumnDefinitions="*,*,*,*" 
+                              ColumnSpacing="16"
+                              Padding="16"
+                              IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                            
+                            <Border Grid.Column="0" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding Fournisseurs.Count}" 
+                                           Style="{StaticResource FournisseurStatNumber}"/>
+                                    <Label Text="Total Fournisseurs" 
+                                           Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
 
-                                    <!-- Right Swipe Actions -->
-                                    <SwipeView.RightItems>
-                                        <SwipeItems Mode="Reveal">
-                                            <SwipeItem Text="Supprimer"
-                                                       BackgroundColor="#E16C6C"
-                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=DeleteFournisseurCommand}"
-                                                       CommandParameter="{Binding .}"/>
-                                        </SwipeItems>
-                                    </SwipeView.RightItems>
+                            <Border Grid.Column="1" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" 
+                                           Style="{StaticResource FournisseurStatNumber}"
+                                           TextColor="#5EAA8D"/>
+                                    <Label Text="Actifs" 
+                                           Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
 
-                                    <!-- Row Content -->
+                            <Border Grid.Column="2" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" 
+                                           Style="{StaticResource FournisseurStatNumber}"
+                                           TextColor="#E8A84C"/>
+                                    <Label Text="Inactifs" 
+                                           Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Border Grid.Column="3" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" 
+                                           Style="{StaticResource FournisseurStatNumber}"
+                                           TextColor="#8FA3B8"/>
+                                    <Label Text="Ce Mois" 
+                                           Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+                        <!-- Search & Add Button Row -->
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Padding="16,0,16,16">
+                            <Border Style="{StaticResource FournisseurSearchContainer}">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Image Source="search.png" WidthRequest="24" HeightRequest="24"/>
+                                    <Entry Grid.Column="1"
+                                           Placeholder="Rechercher par nom, société, email..."
+                                           Text="{Binding SearchText}"
+                                           Style="{StaticResource FournisseurSearchEntry}"/>
+                                    <Button Grid.Column="2"
+                                            Text="Rechercher"
+                                            Command="{Binding SearchFournisseursCommand}"
+                                            BackgroundColor="#E8ECF1"
+                                            TextColor="#5A6068"
+                                            FontSize="13"
+                                            FontAttributes="Bold"
+                                            Padding="16,10"
+                                            CornerRadius="10"/>
+                                </Grid>
+                            </Border>
+                            <Button Grid.Column="1"
+                                    Text="+ Nouveau Fournisseur"
+                                    Style="{StaticResource FournisseurAddButton}"
+                                    Command="{Binding AddFournisseurCommand}"/>
+                        </Grid>
+
+                        <!-- Loading Indicator -->
+                        <ActivityIndicator Style="{StaticResource FournisseurPageLoadingIndicator}"
+                                          IsRunning="{Binding IsLoading}"
+                                          IsVisible="{Binding IsLoading}"/>
+
+                        <!-- Table Header -->
+                        <Grid Style="{StaticResource FournisseurTableHeaderGrid}"
+                              IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                            <Label Grid.Column="0" Text="Statut" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="1" Text="Nom / Société" Style="{StaticResource FournisseurTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="2" Text="Contact" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Email" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Téléphone" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="5" Text="Actions" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                        </Grid>
+
+                        <!-- Fournisseurs List -->
+                        <CollectionView ItemsSource="{Binding Fournisseurs}"
+                                        Style="{StaticResource FournisseurTableCollectionView}"
+                                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:FournisseurDto">
+                                    <SwipeView BackgroundColor="Transparent">
+                                        <SwipeView.LeftItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Détails" BackgroundColor="#8FA3B8"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=ShowDetailsCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                                <SwipeItem Text="Modifier" BackgroundColor="#4A8FBF"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=EditFournisseurCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.LeftItems>
+                                        <SwipeView.RightItems>
+                                            <SwipeItems Mode="Reveal">
+                                                <SwipeItem Text="Supprimer" BackgroundColor="#E16C6C"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=DeleteFournisseurCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.RightItems>
+
+                                        <VerticalStackLayout BackgroundColor="Transparent">
+                                            <Grid Style="{StaticResource FournisseurTableRowGrid}">
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=ShowFournisseurRowDetailsCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Grid.GestureRecognizers>
+
+                                                <Border Grid.Column="0" Style="{StaticResource FournisseurStatusBadge}"
+                                                        BackgroundColor="{Binding Statut, Converter={StaticResource StatusColorConverter}}">
+                                                    <Label Text="{Binding Statut, FallbackValue='Actif'}" Style="{StaticResource FournisseurStatusLabel}"/>
+                                                </Border>
+
+                                                <VerticalStackLayout Grid.Column="1" Style="{StaticResource FournisseurNameCell}">
+                                                    <Label Style="{StaticResource FournisseurNameLabel}">
+                                                        <Label.Text>
+                                                            <MultiBinding StringFormat="{}{0} {1}">
+                                                                <Binding Path="Prenom" FallbackValue="" />
+                                                                <Binding Path="Nom" FallbackValue="" />
+                                                            </MultiBinding>
+                                                        </Label.Text>
+                                                    </Label>
+                                                    <Label Text="{Binding Societe, FallbackValue='Aucune société'}" Style="{StaticResource FournisseurCompanyLabel}"/>
+                                                </VerticalStackLayout>
+
+                                                <Label Grid.Column="2" Text="{Binding Contact, FallbackValue='N/A'}" Style="{StaticResource FournisseurContactCell}"/>
+                                                <Label Grid.Column="3" Text="{Binding Email, FallbackValue='N/A'}" Style="{StaticResource FournisseurEmailCell}"/>
+                                                <Label Grid.Column="4" Text="{Binding Telephone, FallbackValue='N/A'}" Style="{StaticResource FournisseurPhoneCell}"/>
+
+                                                <HorizontalStackLayout Grid.Column="5" Style="{StaticResource FournisseurActionsCell}">
+                                                    <Button Text="Détails" Style="{StaticResource FournisseurDetailsButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=ShowDetailsCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Modifier" Style="{StaticResource FournisseurModifierButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=EditFournisseurCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Button Text="Supprimer" Style="{StaticResource FournisseurSupprimerButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=DeleteFournisseurCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource FournisseurRowDivider}"/>
+                                        </VerticalStackLayout>
+                                    </SwipeView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource FournisseurEmptyView}">
+                                    <Border BackgroundColor="#EEF1F5" WidthRequest="100" HeightRequest="100" StrokeThickness="0" Margin="0,0,0,16">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="50"/></Border.StrokeShape>
+                                        <Border.Shadow><Shadow Brush="#C5CAD1" Offset="6,6" Radius="12" Opacity="0.25"/></Border.Shadow>
+                                        <Label Text="🏭" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun fournisseur disponible" Style="{StaticResource FournisseurEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter votre premier fournisseur" Style="{StaticResource FournisseurEmptySubtitle}"/>
+                                    <Button Text="+ Ajouter un Fournisseur" Style="{StaticResource FournisseurEmptyButton}" Command="{Binding AddFournisseurCommand}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- ========================================= -->
+                    <!-- TAB 2: CHAUFFEURS                         -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="ChauffeursTab" IsVisible="False">
+                        
+                        <!-- Stats Cards Row -->
+                        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16" Padding="16">
+                            <Border Grid.Column="0" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label x:Name="ChauffeurCountLabel" Text="0" Style="{StaticResource FournisseurStatNumber}"/>
+                                    <Label Text="Total Chauffeurs" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" Style="{StaticResource FournisseurStatNumber}" TextColor="#5EAA8D"/>
+                                    <Label Text="Actifs Aujourd'hui" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" Style="{StaticResource FournisseurStatNumber}" TextColor="#E8A84C"/>
+                                    <Label Text="Livraisons Mois" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="3" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" Style="{StaticResource FournisseurStatNumber}" TextColor="#8FA3B8"/>
+                                    <Label Text="Disponibles" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+                        <!-- Search & Add Button -->
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Padding="16,0,16,16">
+                            <Border Style="{StaticResource FournisseurSearchContainer}">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                    <Image Source="search.png" WidthRequest="24" HeightRequest="24"/>
+                                    <Entry Grid.Column="1" Placeholder="Rechercher par nom, CIN, téléphone..." Style="{StaticResource FournisseurSearchEntry}"/>
+                                </Grid>
+                            </Border>
+                            <Button Grid.Column="1" x:Name="AddChauffeurButton" Text="+ Nouveau Chauffeur" Style="{StaticResource FournisseurAddButton}" Clicked="OnAddChauffeurClicked"/>
+                        </Grid>
+
+                        <!-- Loading -->
+                        <ActivityIndicator x:Name="ChauffeurLoadingIndicator" Style="{StaticResource FournisseurPageLoadingIndicator}"/>
+
+                        <!-- Table Header -->
+                        <Grid ColumnDefinitions="1.5*,1.2*,1*,1*,1*,1.3*" ColumnSpacing="8" Padding="20,18" BackgroundColor="#2265b6">
+                            <Label Grid.Column="0" Text="Nom" Style="{StaticResource FournisseurTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="1" Text="Prénom" Style="{StaticResource FournisseurTableHeaderLabelLeft}"/>
+                            <Label Grid.Column="2" Text="CIN" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Téléphone" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="N° Permis" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="5" Text="Actions" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                        </Grid>
+
+                        <!-- Chauffeurs List -->
+                        <CollectionView x:Name="ChauffeursCollectionView" Style="{StaticResource FournisseurTableCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ChauffeurDto">
                                     <VerticalStackLayout BackgroundColor="Transparent">
-                                        <Grid Style="{StaticResource FournisseurTableRowGrid}">
-                                            <Grid.GestureRecognizers>
-                                                <TapGestureRecognizer 
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=ShowFournisseurRowDetailsCommand}"
-                                                    CommandParameter="{Binding .}"/>
-                                            </Grid.GestureRecognizers>
-
-                                            <!-- Status Badge - Neumorphic -->
-                                            <Border Grid.Column="0" 
-                                                    Style="{StaticResource FournisseurStatusBadge}"
-                                                    BackgroundColor="{Binding Statut, Converter={StaticResource StatusColorConverter}}">
-                                                <Label Text="{Binding Statut, FallbackValue='Actif'}" 
-                                                       Style="{StaticResource FournisseurStatusLabel}"/>
+                                        <Grid ColumnDefinitions="1.5*,1.2*,1*,1*,1*,1.3*" ColumnSpacing="8" Padding="20,14">
+                                            <HorizontalStackLayout Grid.Column="0" Spacing="12" VerticalOptions="Center">
+                                                <Border BackgroundColor="#E8ECF1" WidthRequest="42" HeightRequest="42" StrokeThickness="0">
+                                                    <Border.StrokeShape><RoundRectangle CornerRadius="21"/></Border.StrokeShape>
+                                                    <Label Text="{Binding Nom, Converter={StaticResource FirstLetterConverter}, FallbackValue='?'}"
+                                                           TextColor="#4A8FBF" FontSize="16" FontAttributes="Bold"
+                                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                </Border>
+                                                <Label Text="{Binding Nom, FallbackValue='Sans nom'}" 
+                                                       FontSize="14" TextColor="#3A4550" VerticalOptions="Center"/>
+                                            </HorizontalStackLayout>
+                                            <Label Grid.Column="1" Text="{Binding Prenom, FallbackValue='N/A'}" FontSize="14" TextColor="#5A6068" VerticalOptions="Center"/>
+                                            <Border Grid.Column="2" BackgroundColor="#E8ECF1" Padding="8,4" StrokeThickness="0" HorizontalOptions="Start">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="6"/></Border.StrokeShape>
+                                                <Label Text="{Binding CIN, FallbackValue='N/A'}" FontSize="12" TextColor="#4A8FBF" FontAttributes="Bold"/>
                                             </Border>
-
-                                            <!-- Name / Company -->
-                                            <VerticalStackLayout Grid.Column="1" 
-                                                                Style="{StaticResource FournisseurNameCell}">
-                                                <Label Style="{StaticResource FournisseurNameLabel}">
-                                                    <Label.Text>
-                                                        <MultiBinding StringFormat="{}{0} {1}">
-                                                            <Binding Path="Prenom" FallbackValue="" />
-                                                            <Binding Path="Nom" FallbackValue="" />
-                                                        </MultiBinding>
-                                                    </Label.Text>
-                                                </Label>
-                                                <Label Text="{Binding Societe, FallbackValue='Aucune société'}" 
-                                                       Style="{StaticResource FournisseurCompanyLabel}"/>
-                                            </VerticalStackLayout>
-
-                                            <!-- Contact -->
-                                            <Label Grid.Column="2" 
-                                                   Text="{Binding Contact, FallbackValue='N/A'}" 
-                                                   Style="{StaticResource FournisseurContactCell}"/>
-
-                                            <!-- Email -->
-                                            <Label Grid.Column="3" 
-                                                   Text="{Binding Email, FallbackValue='N/A'}" 
-                                                   Style="{StaticResource FournisseurEmailCell}"/>
-
-                                            <!-- Phone -->
-                                            <Label Grid.Column="4" 
-                                                   Text="{Binding Telephone, FallbackValue='N/A'}" 
-                                                   Style="{StaticResource FournisseurPhoneCell}"/>
-
-                                            <!-- Actions -->
-                                            <HorizontalStackLayout Grid.Column="5" 
-                                                                   Style="{StaticResource FournisseurActionsCell}">
-                                                <Button Text="Détails"
-                                                        Style="{StaticResource FournisseurDetailsButton}"
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=ShowDetailsCommand}"
-                                                        CommandParameter="{Binding .}"/>
-                                                <Button Text="Modifier"
-                                                        Style="{StaticResource FournisseurModifierButton}"
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=EditFournisseurCommand}"
-                                                        CommandParameter="{Binding .}"/>
-                                                <Button Text="Supprimer"
-                                                        Style="{StaticResource FournisseurSupprimerButton}"
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:FournisseurViewModel}}, Path=DeleteFournisseurCommand}"
-                                                        CommandParameter="{Binding .}"/>
+                                            <Label Grid.Column="3" Text="{Binding Telephone, FallbackValue='—'}" FontSize="14" TextColor="#5A6068" VerticalOptions="Center"/>
+                                            <Label Grid.Column="4" Text="{Binding NumeroPermis, FallbackValue='—'}" FontSize="14" TextColor="#5A6068" VerticalOptions="Center"/>
+                                            <HorizontalStackLayout Grid.Column="5" Spacing="8" HorizontalOptions="Center">
+                                                <Button Text="Modifier" Style="{StaticResource FournisseurModifierButton}" Clicked="OnEditChauffeurClicked" CommandParameter="{Binding .}"/>
+                                                <Button Text="Supprimer" Style="{StaticResource FournisseurSupprimerButton}" Clicked="OnDeleteChauffeurClicked" CommandParameter="{Binding .}"/>
                                             </HorizontalStackLayout>
                                         </Grid>
-
-                                        <!-- Row Divider -->
                                         <BoxView Style="{StaticResource FournisseurRowDivider}"/>
                                     </VerticalStackLayout>
-                                </SwipeView>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource FournisseurEmptyView}">
+                                    <Border BackgroundColor="#EEF1F5" WidthRequest="100" HeightRequest="100" StrokeThickness="0" Margin="0,0,0,16">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="50"/></Border.StrokeShape>
+                                        <Label Text="👤" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun chauffeur" Style="{StaticResource FournisseurEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter votre premier chauffeur" Style="{StaticResource FournisseurEmptySubtitle}"/>
+                                    <Button Text="+ Ajouter un Chauffeur" Style="{StaticResource FournisseurEmptyButton}" Clicked="OnAddChauffeurClicked"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
 
-                        <!-- Modern Empty View - Neumorphic Style -->
-                        <CollectionView.EmptyView>
-                            <VerticalStackLayout Style="{StaticResource FournisseurEmptyView}">
-                                <!-- Neumorphic Icon Container -->
-                                <Border BackgroundColor="#EEF1F5"
-                                        WidthRequest="100"
-                                        HeightRequest="100"
-                                        StrokeThickness="0"
-                                        Margin="0,0,0,16">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="50"/>
-                                    </Border.StrokeShape>
-                                    <Border.Shadow>
-                                        <Shadow Brush="#C5CAD1"
-                                                Offset="6,6"
-                                                Radius="12"
-                                                Opacity="0.25"/>
-                                    </Border.Shadow>
-                                    <Label Text="🏭"
-                                           FontSize="48"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"/>
-                                </Border>
-                                <Label Text="Aucun fournisseur disponible" 
-                                       Style="{StaticResource FournisseurEmptyTitle}"/>
-                                <Label Text="Commencez par ajouter votre premier fournisseur pour gérer vos approvisionnements" 
-                                       Style="{StaticResource FournisseurEmptySubtitle}"/>
-                                <Button Text="+ Ajouter un Fournisseur"
-                                        Style="{StaticResource FournisseurEmptyButton}"
-                                        Command="{Binding AddFournisseurCommand}"/>
-                            </VerticalStackLayout>
-                        </CollectionView.EmptyView>
-                    </CollectionView>
+                    <!-- ========================================= -->
+                    <!-- TAB 3: CAMIONS                            -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="CamionsTab" IsVisible="False">
+                        
+                        <!-- Stats Cards Row -->
+                        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16" Padding="16">
+                            <Border Grid.Column="0" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label x:Name="CamionCountLabel" Text="0" Style="{StaticResource FournisseurStatNumber}"/>
+                                    <Label Text="Total Camions" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" Style="{StaticResource FournisseurStatNumber}" TextColor="#5EAA8D"/>
+                                    <Label Text="Avec Citerne" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" Style="{StaticResource FournisseurStatNumber}" TextColor="#E8A84C"/>
+                                    <Label Text="Sans Citerne" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="3" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" Style="{StaticResource FournisseurStatNumber}" TextColor="#8FA3B8"/>
+                                    <Label Text="En Service" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+                        <!-- Search & Add Button -->
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Padding="16,0,16,16">
+                            <Border Style="{StaticResource FournisseurSearchContainer}">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                    <Image Source="search.png" WidthRequest="24" HeightRequest="24"/>
+                                    <Entry Grid.Column="1" Placeholder="Rechercher par matricule, marque..." Style="{StaticResource FournisseurSearchEntry}"/>
+                                </Grid>
+                            </Border>
+                            <Button Grid.Column="1" x:Name="AddCamionButton" Text="+ Nouveau Camion" Style="{StaticResource FournisseurAddButton}" Clicked="OnAddCamionClicked"/>
+                        </Grid>
+
+                        <!-- Loading -->
+                        <ActivityIndicator x:Name="CamionLoadingIndicator" Style="{StaticResource FournisseurPageLoadingIndicator}"/>
+
+                        <!-- Table Header -->
+                        <Grid ColumnDefinitions="0.8*,1.2*,1*,1.2*,1*,1.3*" ColumnSpacing="8" Padding="20,18" BackgroundColor="#2265b6">
+                            <Label Grid.Column="0" Text="ID" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="1" Text="Matricule" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="2" Text="Marque" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Fournisseur" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Citerne" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="5" Text="Actions" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                        </Grid>
+
+                        <!-- Camions List -->
+                        <CollectionView x:Name="CamionsCollectionView" Style="{StaticResource FournisseurTableCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:CamionDto">
+                                    <VerticalStackLayout BackgroundColor="Transparent">
+                                        <Grid ColumnDefinitions="0.8*,1.2*,1*,1.2*,1*,1.3*" ColumnSpacing="8" Padding="20,14">
+                                            <Border Grid.Column="0" BackgroundColor="#E8ECF1" Padding="8,4" StrokeThickness="0" HorizontalOptions="Start">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="6"/></Border.StrokeShape>
+                                                <Label Text="{Binding ID}" FontSize="12" TextColor="#4A8FBF" FontAttributes="Bold"/>
+                                            </Border>
+                                            <Label Grid.Column="1" Text="{Binding Matricule, TargetNullValue='N/A'}" FontSize="14" FontAttributes="Bold" TextColor="#3A4550" VerticalOptions="Center"/>
+                                            <Label Grid.Column="2" Text="{Binding Marque, TargetNullValue='N/A'}" FontSize="14" TextColor="#5A6068" VerticalOptions="Center"/>
+                                            <Label Grid.Column="3" Text="{Binding FournisseurNom, TargetNullValue='N/A'}" FontSize="14" TextColor="#5A6068" VerticalOptions="Center"/>
+                                            <Border Grid.Column="4" BackgroundColor="{Binding CiterneID, Converter={StaticResource CiterneIdToColorConverter}}" Padding="8,4" StrokeThickness="0" HorizontalOptions="Start">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="6"/></Border.StrokeShape>
+                                                <Label Text="{Binding CiterneNumero, TargetNullValue='Sans citerne'}" FontSize="12" TextColor="White" FontAttributes="Bold"/>
+                                            </Border>
+                                            <HorizontalStackLayout Grid.Column="5" Spacing="8" HorizontalOptions="Center">
+                                                <Button Text="Détails" Style="{StaticResource FournisseurDetailsButton}" Clicked="OnCamionDetailsClicked" CommandParameter="{Binding .}"/>
+                                                <Button Text="Modifier" Style="{StaticResource FournisseurModifierButton}" Clicked="OnEditCamionClicked" CommandParameter="{Binding .}"/>
+                                                <Button Text="Supprimer" Style="{StaticResource FournisseurSupprimerButton}" Clicked="OnDeleteCamionClicked" CommandParameter="{Binding .}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        <BoxView Style="{StaticResource FournisseurRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource FournisseurEmptyView}">
+                                    <Border BackgroundColor="#EEF1F5" WidthRequest="100" HeightRequest="100" StrokeThickness="0" Margin="0,0,0,16">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="50"/></Border.StrokeShape>
+                                        <Label Text="🚛" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun camion disponible" Style="{StaticResource FournisseurEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter votre premier camion" Style="{StaticResource FournisseurEmptySubtitle}"/>
+                                    <Button Text="+ Ajouter un Camion" Style="{StaticResource FournisseurEmptyButton}" Clicked="OnAddCamionClicked"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- ========================================= -->
+                    <!-- TAB 4: CITERNES                           -->
+                    <!-- ========================================= -->
+                    <VerticalStackLayout x:Name="CiternesTab" IsVisible="False">
+                        
+                        <!-- Stats Cards Row -->
+                        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16" Padding="16">
+                            <Border Grid.Column="0" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label x:Name="CiterneCountLabel" Text="0" Style="{StaticResource FournisseurStatNumber}"/>
+                                    <Label Text="Total Citernes" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" Style="{StaticResource FournisseurStatNumber}" TextColor="#5EAA8D"/>
+                                    <Label Text="Capacité (L)" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" Style="{StaticResource FournisseurStatNumber}" TextColor="#E8A84C"/>
+                                    <Label Text="Avec Camion" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="3" Style="{StaticResource FournisseurStatCard}">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="—" Style="{StaticResource FournisseurStatNumber}" TextColor="#8FA3B8"/>
+                                    <Label Text="Disponibles" Style="{StaticResource FournisseurStatLabel}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+                        <!-- Search & Add Button -->
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Padding="16,0,16,16">
+                            <Border Style="{StaticResource FournisseurSearchContainer}">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                    <Image Source="search.png" WidthRequest="24" HeightRequest="24"/>
+                                    <Entry Grid.Column="1" Placeholder="Rechercher par matricule, capacité..." Style="{StaticResource FournisseurSearchEntry}"/>
+                                </Grid>
+                            </Border>
+                            <Button Grid.Column="1" x:Name="AddCiterneButton" Text="+ Nouvelle Citerne" Style="{StaticResource FournisseurAddButton}" Clicked="OnAddCiterneClicked"/>
+                        </Grid>
+
+                        <!-- Loading -->
+                        <ActivityIndicator x:Name="CiterneLoadingIndicator" Style="{StaticResource FournisseurPageLoadingIndicator}"/>
+
+                        <!-- Table Header -->
+                        <Grid ColumnDefinitions="0.8*,1*,1.2*,1.2*,0.8*,1.3*" ColumnSpacing="8" Padding="20,18" BackgroundColor="#2265b6">
+                            <Label Grid.Column="0" Text="ID" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="1" Text="Capacité" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="2" Text="Matricule" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="3" Text="Fournisseur" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="4" Text="Partitions" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                            <Label Grid.Column="5" Text="Actions" Style="{StaticResource FournisseurTableHeaderLabel}"/>
+                        </Grid>
+
+                        <!-- Citernes List -->
+                        <CollectionView x:Name="CiternesCollectionView" Style="{StaticResource FournisseurTableCollectionView}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:CiterneDto">
+                                    <VerticalStackLayout BackgroundColor="Transparent">
+                                        <Grid ColumnDefinitions="0.8*,1*,1.2*,1.2*,0.8*,1.3*" ColumnSpacing="8" Padding="20,14">
+                                            <Border Grid.Column="0" BackgroundColor="#E8ECF1" Padding="8,4" StrokeThickness="0" HorizontalOptions="Start">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="6"/></Border.StrokeShape>
+                                                <Label Text="{Binding ID}" FontSize="12" TextColor="#4A8FBF" FontAttributes="Bold"/>
+                                            </Border>
+                                            <Border Grid.Column="1" BackgroundColor="#5EAA8D" Padding="8,4" StrokeThickness="0" HorizontalOptions="Start">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="6"/></Border.StrokeShape>
+                                                <Label Text="{Binding Capacite, StringFormat='{0:N0}L'}" FontSize="12" TextColor="White" FontAttributes="Bold"/>
+                                            </Border>
+                                            <Label Grid.Column="2" Text="{Binding MatriculeCiterne, FallbackValue='N/A'}" FontSize="14" TextColor="#3A4550" VerticalOptions="Center"/>
+                                            <Label Grid.Column="3" Text="{Binding FournisseurNom, FallbackValue='N/A'}" FontSize="14" TextColor="#5A6068" VerticalOptions="Center"/>
+                                            <Border Grid.Column="4" BackgroundColor="#8FA3B8" Padding="8,4" StrokeThickness="0" HorizontalOptions="Start">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="6"/></Border.StrokeShape>
+                                                <Label Text="{Binding PartitionsNumber, StringFormat='{0} part.'}" FontSize="12" TextColor="White" FontAttributes="Bold"/>
+                                            </Border>
+                                            <HorizontalStackLayout Grid.Column="5" Spacing="8" HorizontalOptions="Center">
+                                                <Button Text="Détails" Style="{StaticResource FournisseurDetailsButton}" Clicked="OnCiterneDetailsClicked" CommandParameter="{Binding .}"/>
+                                                <Button Text="Modifier" Style="{StaticResource FournisseurModifierButton}" Clicked="OnEditCiterneClicked" CommandParameter="{Binding .}"/>
+                                                <Button Text="Supprimer" Style="{StaticResource FournisseurSupprimerButton}" Clicked="OnDeleteCiterneClicked" CommandParameter="{Binding .}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        <BoxView Style="{StaticResource FournisseurRowDivider}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Style="{StaticResource FournisseurEmptyView}">
+                                    <Border BackgroundColor="#EEF1F5" WidthRequest="100" HeightRequest="100" StrokeThickness="0" Margin="0,0,0,16">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="50"/></Border.StrokeShape>
+                                        <Label Text="🛢️" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucune citerne disponible" Style="{StaticResource FournisseurEmptyTitle}"/>
+                                    <Label Text="Commencez par ajouter votre première citerne" Style="{StaticResource FournisseurEmptySubtitle}"/>
+                                    <Button Text="+ Ajouter une Citerne" Style="{StaticResource FournisseurEmptyButton}" Clicked="OnAddCiterneClicked"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
                 </VerticalStackLayout>
             </Border>
 

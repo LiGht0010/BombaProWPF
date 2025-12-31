@@ -7,6 +7,7 @@ namespace BombaProMax.Views.PompeViews;
 public partial class PompeDetailsPopup : Popup
 {
     private readonly PompeService _pompeService;
+    private readonly UserService _userService;
     private readonly PompeDto _pompe;
 
     public PompeDetailsPopup(PompeDto pompe, PompeService pompeService)
@@ -16,6 +17,7 @@ public partial class PompeDetailsPopup : Popup
 
         _pompe = pompe;
         _pompeService = pompeService;
+        _userService = new UserService();
 
         LoadPompeDetails();
     }
@@ -85,19 +87,16 @@ public partial class PompeDetailsPopup : Popup
                 ReservoirNiveauLabel.Text = "N/A";
             }
 
-            // Audit information
+            // Audit information - dates
             DateCreationLabel.Text = _pompe.DateCreation.HasValue 
                 ? _pompe.DateCreation.Value.ToString("dd/MM/yyyy HH:mm") 
-                : "N/A";
-            AjouteParLabel.Text = _pompe.AjoutePar.HasValue 
-                ? $"Utilisateur ID: {_pompe.AjoutePar.Value}" 
                 : "N/A";
             DateModificationLabel.Text = _pompe.DateModification.HasValue 
                 ? _pompe.DateModification.Value.ToString("dd/MM/yyyy HH:mm") 
                 : "Jamais modifié";
-            ModifieParLabel.Text = _pompe.ModifiePar.HasValue 
-                ? $"Utilisateur ID: {_pompe.ModifiePar.Value}" 
-                : "N/A";
+
+            // Load user names asynchronously
+            await LoadAuditUserNamesAsync();
         }
         catch (Exception ex)
         {
@@ -106,6 +105,26 @@ public partial class PompeDetailsPopup : Popup
                 "Erreur",
                 $"Impossible de charger les détails: {ex.Message}",
                 "OK");
+        }
+    }
+
+    private async Task LoadAuditUserNamesAsync()
+    {
+        try
+        {
+            // Load created by user name
+            var createdByName = await _userService.GetUserNameByIdAsync(_pompe.AjoutePar);
+            AjouteParLabel.Text = createdByName;
+
+            // Load modified by user name
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_pompe.ModifiePar);
+            ModifieParLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[PompeDetailsPopup] Error loading audit info: {ex.Message}");
+            AjouteParLabel.Text = "Erreur de chargement";
+            ModifieParLabel.Text = "Erreur de chargement";
         }
     }
 

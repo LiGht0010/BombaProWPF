@@ -1,4 +1,5 @@
 using BombaProMax.Models;
+using BombaProMax.Services;
 using CommunityToolkit.Maui.Views;
 
 namespace BombaProMax.Views.CaisseViews;
@@ -6,13 +7,16 @@ namespace BombaProMax.Views.CaisseViews;
 public partial class DepotCaisseDetailsPopup : Popup
 {
     private readonly DepotCaisseDto _depot;
+    private readonly UserService _userService;
 
     public DepotCaisseDetailsPopup(DepotCaisseDto depot)
     {
         InitializeComponent();
         _depot = depot;
+        _userService = new UserService();
         CanBeDismissedByTappingOutsideOfPopup = false;
         LoadDepotDetails();
+        LoadAuditUserNamesAsync();
     }
 
     private void LoadDepotDetails()
@@ -28,7 +32,7 @@ public partial class DepotCaisseDetailsPopup : Popup
         // Subtitle
         SubtitleLabel.Text = $"Depot du {_depot.DateDepot:dd/MM/yyyy}";
 
-        // Audit info
+        // Audit info - dates
         DateCreationLabel.Text = _depot.DateCreation?.ToString("dd/MM/yyyy HH:mm") ?? "-";
         DateModificationLabel.Text = _depot.DateModification?.ToString("dd/MM/yyyy HH:mm") ?? "-";
 
@@ -64,6 +68,24 @@ public partial class DepotCaisseDetailsPopup : Popup
         {
             PieceJustificativeSection.IsVisible = false;
             NoPieceSection.IsVisible = true;
+        }
+    }
+
+    private async void LoadAuditUserNamesAsync()
+    {
+        try
+        {
+            var createdByName = await _userService.GetUserNameByIdAsync(_depot.AjoutePar);
+            CreatedByLabel.Text = createdByName;
+
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_depot.ModifiePar);
+            ModifiedByLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DepotCaisseDetailsPopup] Error loading audit info: {ex.Message}");
+            CreatedByLabel.Text = "Erreur de chargement";
+            ModifiedByLabel.Text = "Erreur de chargement";
         }
     }
 

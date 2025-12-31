@@ -414,6 +414,9 @@
 	  <MauiXaml Update="Views\ServiceViews\ServicePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\TenantSelectionPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\User\User.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -181,21 +181,27 @@
                             StrokeShape="RoundRectangle 8"
                             Stroke="#E0E0E0">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="📅 Informations Système" 
+                            <Label Text="📅 Informations d'Audit" 
                                    FontAttributes="Bold" 
                                    TextColor="#666" 
                                    FontSize="14"/>
                             <BoxView Color="#E0E0E0" HeightRequest="1"/>
 
-                            <Grid RowDefinitions="Auto,Auto" 
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
                                   ColumnDefinitions="140,*"
                                   RowSpacing="10">
 
-                                <Label Grid.Row="0" Grid.Column="0" Text="Créé le:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
-                                <Label Grid.Row="0" Grid.Column="1" x:Name="DateCreationLabel" Text="N/A" TextColor="#333" FontSize="13"/>
+                                <Label Grid.Row="0" Grid.Column="0" Text="Créé par:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="0" Grid.Column="1" x:Name="CreatedByLabel" Text="Chargement..." TextColor="#333" FontSize="13"/>
 
-                                <Label Grid.Row="1" Grid.Column="0" Text="Modifié le:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
-                                <Label Grid.Row="1" Grid.Column="1" x:Name="DateModificationLabel" Text="N/A" TextColor="#333" FontSize="13"/>
+                                <Label Grid.Row="1" Grid.Column="0" Text="Créé le:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="1" Grid.Column="1" x:Name="DateCreationLabel" Text="N/A" TextColor="#333" FontSize="13"/>
+
+                                <Label Grid.Row="2" Grid.Column="0" Text="Modifié par:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="2" Grid.Column="1" x:Name="ModifiedByLabel" Text="Chargement..." TextColor="#333" FontSize="13"/>
+
+                                <Label Grid.Row="3" Grid.Column="0" Text="Modifié le:" FontAttributes="Bold" TextColor="#666" FontSize="13"/>
+                                <Label Grid.Row="3" Grid.Column="1" x:Name="DateModificationLabel" Text="N/A" TextColor="#333" FontSize="13"/>
                             </Grid>
                         </VerticalStackLayout>
                     </Border>

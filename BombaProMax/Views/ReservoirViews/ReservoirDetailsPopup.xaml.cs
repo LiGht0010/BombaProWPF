@@ -7,6 +7,7 @@ namespace BombaProMax.Views.ReservoirViews;
 public partial class ReservoirDetailsPopup : Popup
 {
     private readonly ReservoirService _reservoirService;
+    private readonly UserService _userService;
     private readonly ReservoirDto _reservoir;
 
     public ReservoirDetailsPopup(ReservoirDto reservoir, ReservoirService reservoirService)
@@ -16,8 +17,10 @@ public partial class ReservoirDetailsPopup : Popup
 
         _reservoir = reservoir;
         _reservoirService = reservoirService;
+        _userService = new UserService();
 
         LoadReservoirDetails();
+        LoadAuditInfoAsync();
     }
 
     private void LoadReservoirDetails()
@@ -65,21 +68,19 @@ public partial class ReservoirDetailsPopup : Popup
             NiveauDetailLabel.Text = $"{niveau:N2} Litres";
             EspaceDetailLabel.Text = $"{espaceDisponible:N2} Litres";
 
-            // Audit information
+            // Audit information - dates
             DateCreationLabel.Text = _reservoir.DateCreation.HasValue 
                 ? _reservoir.DateCreation.Value.ToString("dd/MM/yyyy HH:mm") 
-                : "N/A";
-            AjouteParLabel.Text = _reservoir.AjoutePar.HasValue 
-                ? $"Utilisateur ID: {_reservoir.AjoutePar.Value}" 
                 : "N/A";
             DateModificationLabel.Text = _reservoir.DateModification.HasValue 
                 ? _reservoir.DateModification.Value.ToString("dd/MM/yyyy HH:mm") 
                 : "Jamais modifié";
-            ModifieParLabel.Text = _reservoir.ModifiePar.HasValue 
-                ? $"Utilisateur ID: {_reservoir.ModifiePar.Value}" 
-                : "N/A";
 
-            // Set default values for related records (navigation properties not available in DTO)
+            // Set initial loading state for user names
+            AjouteParLabel.Text = "Chargement...";
+            ModifieParLabel.Text = "Chargement...";
+
+            // Set default values for related records
             PompesCountLabel.Text = "Voir dans le module Pompes";
             AllocationsCountLabel.Text = "Voir dans le module Allocations";
             JaugeagesCountLabel.Text = "Voir dans le module Jaugeages";
@@ -87,6 +88,26 @@ public partial class ReservoirDetailsPopup : Popup
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading reservoir details: {ex.Message}");
+        }
+    }
+
+    private async void LoadAuditInfoAsync()
+    {
+        try
+        {
+            // Load created by user name
+            var createdByName = await _userService.GetUserNameByIdAsync(_reservoir.AjoutePar);
+            AjouteParLabel.Text = createdByName;
+
+            // Load modified by user name
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_reservoir.ModifiePar);
+            ModifieParLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ReservoirDetailsPopup] Error loading audit info: {ex.Message}");
+            AjouteParLabel.Text = "Erreur de chargement";
+            ModifieParLabel.Text = "Erreur de chargement";
         }
     }
 

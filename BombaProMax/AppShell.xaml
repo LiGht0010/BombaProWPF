@@ -116,6 +116,11 @@
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
+    <!-- Tenant Selection Page (Hidden from Flyout, shown first) -->
+    <FlyoutItem FlyoutItemIsVisible="False">
+        <ShellContent x:Name="TenantSelectionShellContent" Route="TenantSelectionPage"/>
+    </FlyoutItem>
+
     <!-- Login Page (Hidden from Flyout) -->
     <FlyoutItem FlyoutItemIsVisible="False">
         <ShellContent x:Name="LoginShellContent" Route="LoginPage"/>
@@ -156,25 +161,15 @@
         <ShellContent x:Name="ProductsShellContent" Title="Produits" Route="ProduitPage"/>
         <ShellContent x:Name="ReservoirShellContent" Title="Réservoirs" Route="ReservoirPage"/>
         <ShellContent x:Name="PompeShellContent" Title="Pompes" Route="PompePage"/>
-        <ShellContent x:Name="CiterneShellContent" Title="Citernes" Route="CiternePage"/>
-        <ShellContent x:Name="ReservoirCalibrationContent" Title="Calibration Réservoirs" Route="ReservoirCalibrationPage"/>
         <ShellContent x:Name="JaugeageShellContent" Title="Jaugeage" Route="JaugeagePage"/>
         <ShellContent x:Name="ServiceShellContent" Title="Services" Route="ServicePage"/>
-    </FlyoutItem>
-
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- LOGISTIQUE & TRANSPORT -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <FlyoutItem Title="LOGISTIQUE &amp; TRANSPORT" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent x:Name="ChauffeurShellContent" Title="Chauffeurs" Route="ChauffeurPage"/>
-        <ShellContent x:Name="CamionShellContent" Title="Camions" Route="CamionPage"/>
     </FlyoutItem>
 
     <!-- ════════════════════════════════════════════════════════════ -->
     <!-- GESTION DES RESSOURCES -->
     <!-- ════════════════════════════════════════════════════════════ -->
     <FlyoutItem Title="GESTION DES RESSOURCES" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent x:Name="FournisseurShellContent" Title="Fournisseurs" Route="FournisseurPage"/>
+        <ShellContent x:Name="FournisseurShellContent" Title="Fournisseurs &amp; Flotte" Route="FournisseurPage"/>
         <ShellContent x:Name="EmployeShellContent" Title="Employés" Route="EmployePage"/>
     </FlyoutItem>
 </Shell>

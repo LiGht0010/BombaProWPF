@@ -1,5 +1,6 @@
 using BombaProMaxApi.Data;
 using BombaProMaxApi.Services;
+using BombaProMaxApi.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
@@ -14,8 +15,43 @@ if (builder.Environment.IsDevelopment())
 
 // Add services to the container
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Configure Multi-Tenancy
+var multiTenantSettings = builder.Configuration
+    .GetSection(MultiTenantSettings.SectionName)
+    .Get<MultiTenantSettings>() ?? new MultiTenantSettings();
+
+// If no tenants configured, fall back to single-tenant mode using DefaultConnection
+if (multiTenantSettings.Tenants.Count == 0)
+{
+    var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (!string.IsNullOrEmpty(defaultConnectionString))
+    {
+        multiTenantSettings.DefaultTenant = "default";
+        multiTenantSettings.Tenants.Add(new TenantSettings
+        {
+            TenantId = "default",
+            Name = "Default",
+            ConnectionString = defaultConnectionString
+        });
+    }
+}
+
+builder.Services.AddSingleton(multiTenantSettings);
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ITenantService, TenantService>();
+
+// Register DbContext with tenant-aware factory
+builder.Services.AddScoped<AppDbContext>(sp =>
+{
+    var tenantService = sp.GetRequiredService<ITenantService>();
+    var connectionString = tenantService.GetConnectionString();
+    
+    var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+    optionsBuilder.UseNpgsql(connectionString);
+    
+    return new AppDbContext(optionsBuilder.Options);
+});
 
 // Register application services
 builder.Services.AddScoped<IStockLotService, StockLotService>();
@@ -29,50 +65,71 @@ builder.Services.AddCors(options =>
         {
             policy.AllowAnyOrigin()
                   .AllowAnyMethod()
-                  .AllowAnyHeader();
+                  .AllowAnyHeader()
+                  .WithExposedHeaders(TenantService.TenantHeaderName);
         });
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "BombaProMax API",
+        Version = "v1",
+        Description = "Multi-tenant API for BombaProMax gas station management"
+    });
+
+    // Add tenant header as a global parameter (not security - just a regular header)
+    c.OperationFilter<TenantHeaderOperationFilter>();
+});
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
-// Initialize database - create if not exists and apply migrations
+// Initialize databases for all tenants - create if not exists and apply migrations
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var logger = services.GetRequiredService<ILogger<Program>>();
-    
-    try
+    var settings = services.GetRequiredService<MultiTenantSettings>();
+
+    foreach (var tenant in settings.Tenants)
     {
-        var context = services.GetRequiredService<AppDbContext>();
-        
-        logger.LogInformation("Checking database connection and applying migrations...");
-        
-        // This will create the database if it doesn't exist and apply any pending migrations
-        await context.Database.MigrateAsync();
-        
-        logger.LogInformation("Database initialization completed successfully.");
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "An error occurred while initializing the database.");
-        
-        // Optionally fall back to EnsureCreated if migrations fail
-        // This is useful if you don't have any migrations yet
         try
         {
-            var context = services.GetRequiredService<AppDbContext>();
-            logger.LogWarning("Attempting to create database without migrations...");
-            await context.Database.EnsureCreatedAsync();
-            logger.LogInformation("Database created using EnsureCreated.");
+            logger.LogInformation("Initializing database for tenant '{TenantId}'...", tenant.TenantId);
+
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseNpgsql(tenant.ConnectionString);
+
+            using var context = new AppDbContext(optionsBuilder.Options);
+
+            // This will create the database if it doesn't exist and apply any pending migrations
+            await context.Database.MigrateAsync();
+
+            logger.LogInformation("Database initialization completed for tenant '{TenantId}'.", tenant.TenantId);
         }
-        catch (Exception innerEx)
+        catch (Exception ex)
         {
-            logger.LogError(innerEx, "Failed to create database. Please check your connection string and database server.");
-            throw;
+            logger.LogError(ex, "An error occurred while initializing database for tenant '{TenantId}'.", tenant.TenantId);
+
+            // Optionally fall back to EnsureCreated if migrations fail
+            try
+            {
+                var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+                optionsBuilder.UseNpgsql(tenant.ConnectionString);
+
+                using var context = new AppDbContext(optionsBuilder.Options);
+                logger.LogWarning("Attempting to create database without migrations for tenant '{TenantId}'...", tenant.TenantId);
+                await context.Database.EnsureCreatedAsync();
+                logger.LogInformation("Database created using EnsureCreated for tenant '{TenantId}'.", tenant.TenantId);
+            }
+            catch (Exception innerEx)
+            {
+                logger.LogError(innerEx, "Failed to create database for tenant '{TenantId}'. Please check connection string.", tenant.TenantId);
+                // Don't throw - allow other tenants to initialize
+            }
         }
     }
 }
@@ -93,6 +150,12 @@ app.UseCors("AllowMAUI");
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Add endpoint to list available tenants (useful for debugging/admin)
+app.MapGet("/api/tenants", (ITenantService tenantService) => 
+{
+    return Results.Ok(tenantService.GetAllTenantIds());
+}).WithTags("System");
 
 // Auto-launch browser only in Development (no browser on Linux server)
 if (app.Environment.IsDevelopment())

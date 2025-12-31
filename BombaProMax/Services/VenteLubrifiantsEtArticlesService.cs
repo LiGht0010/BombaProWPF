@@ -20,12 +20,7 @@ namespace BombaProMax.Services
 
         public VenteLubrifiantsEtArticlesService()
         {
-            // Create handler that ignores SSL certificate errors for development
-            var handler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-            };
-            _httpClient = new HttpClient(handler);
+            _httpClient = HttpClientFactory.Create();
         }
 
         #region CRUD Operations

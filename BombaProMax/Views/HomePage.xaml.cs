@@ -22,7 +22,13 @@ public partial class HomePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        UpdateTenantDisplay();
         await LoadDashboardDataAsync();
+    }
+
+    private void UpdateTenantDisplay()
+    {
+        TenantNameLabel.Text = ApiConfig.TenantFullDisplayName;
     }
 
     private async Task LoadDashboardDataAsync()
@@ -33,8 +39,8 @@ public partial class HomePage : ContentPage
             var userName = App.CurrentUser?.Name ?? App.user?.Name ?? "Utilisateur";
             UserStatusLabel.Text = $"Connecté en tant que {userName} • Système actif";
 
-            // Load all counts in parallel
-            using var httpClient = new HttpClient();
+            // Use HttpClientFactory for tenant-aware requests
+            using var httpClient = HttpClientFactory.Create();
             var baseUrl = ApiConfig.Home;
 
             var tasks = new List<Task<string>>

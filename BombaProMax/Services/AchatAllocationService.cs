@@ -14,12 +14,8 @@ public class AchatAllocationService
 
     public AchatAllocationService()
     {
-        // Create handler that ignores SSL certificate errors for development
-        var handler = new HttpClientHandler
-        {
-            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-        };
-        _httpClient = new HttpClient(handler);
+        // Use HttpClientFactory to get a client configured with tenant header
+        _httpClient = HttpClientFactory.Create();
     }
 
     // ============================
@@ -242,6 +238,7 @@ public class AchatAllocationService
     // ============================
     // UPDATE
     // ============================
+
     public async Task<bool> UpdateAsync(AchatAllocationDto dto)
     {
         try

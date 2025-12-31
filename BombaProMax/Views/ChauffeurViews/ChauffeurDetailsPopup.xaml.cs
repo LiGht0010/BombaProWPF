@@ -8,6 +8,7 @@ public partial class ChauffeurDetailsPopup : Popup
 {
     private readonly ChauffeurDto _chauffeur;
     private readonly AchatService _achatService;
+    private readonly UserService _userService;
 
     public ChauffeurDetailsPopup(ChauffeurDto chauffeur)
     {
@@ -15,6 +16,7 @@ public partial class ChauffeurDetailsPopup : Popup
         CanBeDismissedByTappingOutsideOfPopup = true;
         _chauffeur = chauffeur;
         _achatService = new AchatService();
+        _userService = new UserService();
 
         // Populate the details
         PopulateDetailsAsync();
@@ -48,6 +50,27 @@ public partial class ChauffeurDetailsPopup : Popup
         
         DateCreationLabel.Text = _chauffeur.DateCreation?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
         DateModificationLabel.Text = _chauffeur.DateModification?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
+
+        // Load audit user names
+        await LoadAuditUserNamesAsync();
+    }
+
+    private async Task LoadAuditUserNamesAsync()
+    {
+        try
+        {
+            var createdByName = await _userService.GetUserNameByIdAsync(_chauffeur.AjoutePar);
+            CreatedByLabel.Text = createdByName;
+
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_chauffeur.ModifiePar);
+            ModifiedByLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ChauffeurDetailsPopup] Error loading audit info: {ex.Message}");
+            CreatedByLabel.Text = "Erreur de chargement";
+            ModifiedByLabel.Text = "Erreur de chargement";
+        }
     }
 
     private void OnCloseClicked(object sender, EventArgs e)

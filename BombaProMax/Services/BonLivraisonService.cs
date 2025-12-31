@@ -18,12 +18,7 @@ public class BonLivraisonService
 
     public BonLivraisonService()
     {
-        // Create handler that ignores SSL certificate errors for development
-        var handler = new HttpClientHandler
-        {
-            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-        };
-        _httpClient = new HttpClient(handler);
+        _httpClient = HttpClientFactory.Create();
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -242,7 +237,8 @@ public class BonLivraisonService
     // ============================
     // UPDATE
     // ============================
-    public async Task<bool> UpdateAsync(UpdateBonLivraisonDto dto)
+    public async Task<bool> UpdateAsync(UpdateBonLivraisonDto dto
+)
     {
         try
         {

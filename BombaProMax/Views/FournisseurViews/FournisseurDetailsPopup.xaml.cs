@@ -1,11 +1,13 @@
 using CommunityToolkit.Maui.Views;
 using BombaProMax.Models;
+using BombaProMax.Services;
 
 namespace BombaProMax.Views.FournisseurViews;
 
 public partial class FournisseurDetailsPopup : Popup
 {
     private readonly FournisseurDto _fournisseur;
+    private readonly UserService _userService;
 
     public FournisseurDetailsPopup(FournisseurDto fournisseur)
     {
@@ -13,8 +15,10 @@ public partial class FournisseurDetailsPopup : Popup
         CanBeDismissedByTappingOutsideOfPopup = false;
         
         _fournisseur = fournisseur;
+        _userService = new UserService();
         
         LoadFournisseurDetails();
+        LoadAuditInfoAsync();
     }
 
     private void LoadFournisseurDetails()
@@ -52,6 +56,30 @@ public partial class FournisseurDetailsPopup : Popup
             CamionsCountLabel.Text = "—";
             CiternesCountLabel.Text = "—";
             ChauffeursCountLabel.Text = "—";
+            
+            // Set date labels (dates are available synchronously)
+            CreatedAtLabel.Text = _fournisseur.DateCreation?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
+            ModifiedAtLabel.Text = _fournisseur.DateModification?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
+        }
+    }
+
+    private async void LoadAuditInfoAsync()
+    {
+        try
+        {
+            // Load created by user name
+            var createdByName = await _userService.GetUserNameByIdAsync(_fournisseur.AjoutePar);
+            CreatedByLabel.Text = createdByName;
+            
+            // Load modified by user name
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_fournisseur.ModifiePar);
+            ModifiedByLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[FournisseurDetailsPopup] Error loading audit info: {ex.Message}");
+            CreatedByLabel.Text = "Erreur de chargement";
+            ModifiedByLabel.Text = "Erreur de chargement";
         }
     }
 

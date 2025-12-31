@@ -11,6 +11,39 @@
                 MaximumWidthRequest="450">
             
             <VerticalStackLayout Spacing="20">
+                <!-- Back to Profiles Button -->
+                <HorizontalStackLayout Spacing="8" Margin="0,0,0,10">
+                    <HorizontalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackToProfilesCommand}"/>
+                    </HorizontalStackLayout.GestureRecognizers>
+                    <Label Text="&#x2190;" 
+                           FontSize="18" 
+                           TextColor="{StaticResource NeumorphicAccent}"
+                           VerticalTextAlignment="Center"/>
+                    <Label Text="Changer de profil" 
+                           FontSize="14" 
+                           TextColor="{StaticResource NeumorphicAccent}"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Current Tenant Badge -->
+                <Border BackgroundColor="#F0FDF4"
+                        Stroke="#86EFAC"
+                        StrokeThickness="1"
+                        Padding="12,8"
+                        HorizontalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="&#x1F4BC;" FontSize="14"/>
+                        <Label Text="{Binding CurrentTenantName}" 
+                               FontSize="14" 
+                               FontAttributes="Bold"
+                               TextColor="#166534"/>
+                    </HorizontalStackLayout>
+                </Border>
+
                 <!-- Header -->
                 <VerticalStackLayout Spacing="0">
                     <Label Text="Login Form" 

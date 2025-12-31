@@ -8,6 +8,7 @@ public partial class AchatDetailsPopup : Popup
 {
     private readonly AchatDto _achat;
     private readonly AchatAllocationService _allocationService;
+    private readonly UserService _userService;
     private readonly List<AchatAllocationDto> _allocations = [];
     private AchatAllocationStatusDto? _allocationStatus;
 
@@ -17,6 +18,7 @@ public partial class AchatDetailsPopup : Popup
 
         _achat = achat;
         _allocationService = new AchatAllocationService();
+        _userService = new UserService();
 
         // Load data asynchronously
         _ = LoadDataAsync();
@@ -38,11 +40,35 @@ public partial class AchatDetailsPopup : Popup
             }
 
             PopulateUI();
+            await LoadAuditInfoAsync();
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error loading achat details: {ex.Message}");
             PopulateUI(); // Populate with basic info
+        }
+    }
+
+    private async Task LoadAuditInfoAsync()
+    {
+        try
+        {
+            // Set dates synchronously
+            CreatedAtLabel.Text = _achat.DateCreation?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
+            ModifiedAtLabel.Text = _achat.DateModification?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
+
+            // Load user names asynchronously
+            var createdByName = await _userService.GetUserNameByIdAsync(_achat.AjoutePar);
+            CreatedByLabel.Text = createdByName;
+
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_achat.ModifiePar);
+            ModifiedByLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[AchatDetailsPopup] Error loading audit info: {ex.Message}");
+            CreatedByLabel.Text = "Erreur de chargement";
+            ModifiedByLabel.Text = "Erreur de chargement";
         }
     }
 

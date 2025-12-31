@@ -1,19 +1,129 @@
 namespace BombaProMax.Services;
 
 /// <summary>
-/// Centralized API configuration. Change BaseUrl here to switch between environments.
+/// Centralized API configuration. BaseUrl and TenantId can be configured per client installation.
 /// </summary>
 public static class ApiConfig
 {
     // ===========================================
-    // CHANGE THIS URL TO SWITCH ENVIRONMENTS
+    // CONFIGURATION (can be overridden at runtime)
     // ===========================================
+    private static string _baseUrl = "https://localhost:7100/api";
+    private static string _tenantId = "sidikacem";
 
-    // Production (Debian Server)
-    //public const string BaseUrl = "http://62.84.189.17:5000/api";
+    /// <summary>
+    /// HTTP header name used to identify the tenant. Must match the API.
+    /// </summary>
+    public const string TenantHeaderName = "X-Tenant-ID";
 
-    // Development (Local)
-    public const string BaseUrl = "https://localhost:7100/api";
+    /// <summary>
+    /// Gets or sets the API base URL. Set this at app startup based on client configuration.
+    /// </summary>
+    public static string BaseUrl
+    {
+        get => _baseUrl;
+        set => _baseUrl = value?.TrimEnd('/') ?? throw new ArgumentNullException(nameof(value));
+    }
+
+    /// <summary>
+    /// Gets or sets the Tenant ID for multi-tenant API. Each client has their own TenantId.
+    /// </summary>
+    public static string TenantId
+    {
+        get => _tenantId;
+        set => _tenantId = value ?? throw new ArgumentNullException(nameof(value));
+    }
+
+    /// <summary>
+    /// Gets the friendly display name for the current tenant.
+    /// </summary>
+    public static string TenantDisplayName => _tenantId switch
+    {
+        "sidikacem" => "Sidi Kacem",
+        "qserkber" => "Qser Kber",
+        "sidiaddi" => "Sidi Addi",
+        _ => _tenantId
+    };
+
+    /// <summary>
+    /// Gets the database name for the current tenant.
+    /// </summary>
+    public static string TenantDatabaseName => _tenantId switch
+    {
+        "sidikacem" => "SidiKacemDB",
+        "qserkber" => "QserKberDB",
+        "sidiaddi" => "SidiAddiDB",
+        _ => _tenantId
+    };
+
+    /// <summary>
+    /// Gets the full display string with tenant name and database.
+    /// </summary>
+    public static string TenantFullDisplayName => $"{TenantDisplayName} ({TenantDatabaseName})";
+
+    /// <summary>
+    /// Initializes the API configuration from saved preferences or defaults.
+    /// Call this in MauiProgram.cs or App.xaml.cs at startup.
+    /// </summary>
+    public static void Initialize()
+    {
+        var savedUrl = Preferences.Get("ApiBaseUrl", _baseUrl);
+        if (!string.IsNullOrWhiteSpace(savedUrl))
+        {
+            _baseUrl = savedUrl.TrimEnd('/');
+        }
+
+        var savedTenantId = Preferences.Get("TenantId", _tenantId);
+        if (!string.IsNullOrWhiteSpace(savedTenantId))
+        {
+            _tenantId = savedTenantId;
+        }
+    }
+
+    /// <summary>
+    /// Updates the API base URL and saves it to preferences.
+    /// </summary>
+    /// <param name="newBaseUrl">The new API base URL</param>
+    public static void SetAndSaveBaseUrl(string newBaseUrl)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(newBaseUrl);
+        _baseUrl = newBaseUrl.TrimEnd('/');
+        Preferences.Set("ApiBaseUrl", _baseUrl);
+    }
+
+    /// <summary>
+    /// Updates the Tenant ID and saves it to preferences.
+    /// </summary>
+    /// <param name="newTenantId">The new tenant ID (e.g., "client1", "sidikassem")</param>
+    public static void SetAndSaveTenantId(string newTenantId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(newTenantId);
+        _tenantId = newTenantId;
+        Preferences.Set("TenantId", _tenantId);
+    }
+
+    /// <summary>
+    /// Clears the tenant configuration. Call this when logging out.
+    /// </summary>
+    public static void ClearTenant()
+    {
+        _tenantId = string.Empty;
+        Preferences.Remove("TenantId");
+    }
+
+    /// <summary>
+    /// Configures an HttpClient with the tenant header.
+    /// Call this on every HttpClient before making API requests.
+    /// </summary>
+    /// <param name="client">The HttpClient to configure</param>
+    public static void ConfigureHttpClient(HttpClient client)
+    {
+        ArgumentNullException.ThrowIfNull(client);
+        
+        // Remove existing header if present, then add the current tenant
+        client.DefaultRequestHeaders.Remove(TenantHeaderName);
+        client.DefaultRequestHeaders.Add(TenantHeaderName, _tenantId);
+    }
 
     // ===========================================
     // API Endpoints
@@ -51,4 +161,4 @@ public static class ApiConfig
     public static string Rapports => $"{BaseUrl}/Rapports";
     public static string Home => $"{BaseUrl}";
     public static string DepotCaisses => $"{BaseUrl}/DepotCaisses";
- }
+}

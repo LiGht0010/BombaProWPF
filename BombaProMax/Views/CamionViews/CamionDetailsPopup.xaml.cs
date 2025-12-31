@@ -8,6 +8,7 @@ public partial class CamionDetailsPopup : Popup
 {
     private readonly CamionDto _camion;
     private readonly AchatService _achatService;
+    private readonly UserService _userService;
 
     public CamionDetailsPopup(CamionDto camion)
     {
@@ -16,6 +17,7 @@ public partial class CamionDetailsPopup : Popup
 
         _camion = camion;
         _achatService = new AchatService();
+        _userService = new UserService();
 
         LoadCamionDetailsAsync();
     }
@@ -47,7 +49,7 @@ public partial class CamionDetailsPopup : Popup
                 CiterneDetailsLabel.Text = "Aucune citerne";
             }
 
-            // Metadata
+            // Metadata - dates
             DateCreationLabel.Text = _camion.DateCreation?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
             DateModificationLabel.Text = _camion.DateModification?.ToString("dd/MM/yyyy HH:mm") ?? "N/A";
 
@@ -61,6 +63,27 @@ public partial class CamionDetailsPopup : Popup
             {
                 AchatsCountLabel.Text = "—";
             }
+
+            // Load audit user names
+            await LoadAuditUserNamesAsync();
+        }
+    }
+
+    private async Task LoadAuditUserNamesAsync()
+    {
+        try
+        {
+            var createdByName = await _userService.GetUserNameByIdAsync(_camion.AjoutePar);
+            CreatedByLabel.Text = createdByName;
+
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_camion.ModifiePar);
+            ModifiedByLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[CamionDetailsPopup] Error loading audit info: {ex.Message}");
+            CreatedByLabel.Text = "Erreur de chargement";
+            ModifiedByLabel.Text = "Erreur de chargement";
         }
     }
 

@@ -169,7 +169,7 @@
 
                         <BoxView Style="{StaticResource EmployePopupDivider}"/>
 
-                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" 
                               ColumnDefinitions="150,*"
                               RowSpacing="12">
 
@@ -188,17 +188,26 @@
                                    Style="{StaticResource EmployeDetailsValueLabel}"/>
 
                             <Label Grid.Row="2" Grid.Column="0" 
-                                   Text="Modifié le:" 
+                                   Text="Ajouté par:" 
                                    Style="{StaticResource EmployePopupFieldLabel}"/>
                             <Label Grid.Row="2" Grid.Column="1" 
-                                   x:Name="DateModificationLabel"
+                                   x:Name="AjouteParLabel"
+                                   Text="Chargement..."
                                    Style="{StaticResource EmployeDetailsValueLabel}"/>
 
                             <Label Grid.Row="3" Grid.Column="0" 
-                                   Text="Ajouté par:" 
+                                   Text="Modifié le:" 
                                    Style="{StaticResource EmployePopupFieldLabel}"/>
                             <Label Grid.Row="3" Grid.Column="1" 
-                                   x:Name="AjouteParLabel"
+                                   x:Name="DateModificationLabel"
+                                   Style="{StaticResource EmployeDetailsValueLabel}"/>
+
+                            <Label Grid.Row="4" Grid.Column="0" 
+                                   Text="Modifié par:" 
+                                   Style="{StaticResource EmployePopupFieldLabel}"/>
+                            <Label Grid.Row="4" Grid.Column="1" 
+                                   x:Name="ModifieParLabel"
+                                   Text="Chargement..."
                                    Style="{StaticResource EmployeDetailsValueLabel}"/>
                         </Grid>
                     </VerticalStackLayout>

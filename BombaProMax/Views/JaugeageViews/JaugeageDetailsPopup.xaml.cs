@@ -10,6 +10,7 @@ public partial class JaugeageDetailsPopup : Popup
 {
     private readonly JaugeageDto _jaugeageDto;
     private readonly JaugeageService _jaugeageService;
+    private readonly UserService _userService;
     private JaugeageWithDetailsDto? _jaugeageWithDetails;
 
     public JaugeageDetailsPopup(JaugeageDto jaugeage)
@@ -17,6 +18,7 @@ public partial class JaugeageDetailsPopup : Popup
         InitializeComponent();
         _jaugeageDto = jaugeage;
         _jaugeageService = new JaugeageService();
+        _userService = new UserService();
 
         // Set initial header info
         NumeroLabel.Text = jaugeage.NumeroJaugeage ?? "-";
@@ -71,15 +73,38 @@ public partial class JaugeageDetailsPopup : Popup
                 ObservationsLabel.Text = _jaugeageWithDetails.Observations;
             }
 
-            // Audit info
+            // Audit info - dates
             DateCreationLabel.Text = _jaugeageWithDetails.DateCreation?.ToString("dd/MM/yyyy HH:mm") ?? "-";
-            CreeParLabel.Text = _jaugeageWithDetails.AjoutePar?.ToString() ?? "-";
             DateModificationLabel.Text = _jaugeageWithDetails.DateModification?.ToString("dd/MM/yyyy HH:mm") ?? "-";
-            ModifieParLabel.Text = _jaugeageWithDetails.ModifiePar?.ToString() ?? "-";
+
+            // Load user names asynchronously
+            await LoadAuditUserNamesAsync();
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"[JaugeageDetailsPopup] Error loading details: {ex.Message}");
+        }
+    }
+
+    private async Task LoadAuditUserNamesAsync()
+    {
+        try
+        {
+            if (_jaugeageWithDetails == null) return;
+
+            // Load created by user name
+            var createdByName = await _userService.GetUserNameByIdAsync(_jaugeageWithDetails.AjoutePar);
+            CreeParLabel.Text = createdByName;
+
+            // Load modified by user name
+            var modifiedByName = await _userService.GetUserNameByIdAsync(_jaugeageWithDetails.ModifiePar);
+            ModifieParLabel.Text = modifiedByName;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[JaugeageDetailsPopup] Error loading audit info: {ex.Message}");
+            CreeParLabel.Text = "Erreur de chargement";
+            ModifieParLabel.Text = "Erreur de chargement";
         }
     }
 

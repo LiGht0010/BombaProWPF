@@ -1,4 +1,5 @@
 ﻿using BombaProMax.Models;
+using BombaProMax.Services;
 
 namespace BombaProMax
 {
@@ -10,6 +11,9 @@ namespace BombaProMax
         public App(IServiceProvider serviceProvider)
         {
             InitializeComponent();
+
+            // Initialize API configuration from saved preferences
+            ApiConfig.Initialize();
 
             // Force light theme
             //Application.Current!.UserAppTheme = AppTheme.Light;

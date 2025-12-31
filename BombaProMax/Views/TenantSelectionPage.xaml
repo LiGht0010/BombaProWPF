@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BombaProMax.ViewModels"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             x:Class="BombaProMax.Views.TenantSelectionPage"
+             BackgroundColor="{StaticResource NeumorphicBackground}"
+             Title="Selection du Client">
+
+    <ContentPage.BindingContext>
+        <vm:TenantSelectionViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="20">
+        
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Spacing="8" Padding="0,40,0,30">
+            <!-- Logo -->
+            <Border StrokeThickness="0"
+                    BackgroundColor="#1F4E45"
+                    WidthRequest="80"
+                    HeightRequest="80"
+                    HorizontalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+                <Label Text="BP" 
+                       FontSize="32"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"/>
+            </Border>
+            
+            <Label Text="BombaProMax" 
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#1F4E45"
+                   HorizontalTextAlignment="Center"/>
+            
+            <Label Text="Selectionnez votre profil client" 
+                   FontSize="16"
+                   TextColor="#64748B"
+                   HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+
+        <!-- Tenant Cards Grid -->
+        <ScrollView Grid.Row="1" VerticalOptions="Center">
+            <FlexLayout Direction="Row"
+                        Wrap="Wrap"
+                        JustifyContent="Center"
+                        AlignItems="Center"
+                        AlignContent="Center"
+                        BindableLayout.ItemsSource="{Binding Tenants}">
+                
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:TenantInfo">
+                        <Border Margin="10"
+                                Padding="0"
+                                WidthRequest="160"
+                                HeightRequest="180"
+                                StrokeThickness="3"
+                                Stroke="{Binding Color}"
+                                BackgroundColor="White">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#20000000"
+                                        Offset="0,4"
+                                        Radius="12"
+                                        Opacity="0.3"/>
+                            </Border.Shadow>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TenantSelectionViewModel}}, Path=SelectTenantCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                            
+                            <Grid RowDefinitions="Auto,*,Auto" Padding="16">
+                                <!-- Selection indicator -->
+                                <Border Grid.Row="0"
+                                        IsVisible="{Binding IsSelected}"
+                                        WidthRequest="24"
+                                        HeightRequest="24"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        BackgroundColor="{Binding Color}"
+                                        StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="&#x2713;"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center"/>
+                                </Border>
+                                
+                                <!-- Initials Circle -->
+                                <Border Grid.Row="1"
+                                        WidthRequest="64"
+                                        HeightRequest="64"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="{Binding Color}"
+                                        StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="32"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding Initials}"
+                                           FontSize="24"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center"/>
+                                </Border>
+                                
+                                <!-- Name and Description -->
+                                <VerticalStackLayout Grid.Row="2" Spacing="2" Margin="0,12,0,0">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="#1E293B"
+                                           HorizontalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Label Text="{Binding Description}"
+                                           FontSize="11"
+                                           TextColor="#64748B"
+                                           HorizontalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </ScrollView>
+
+        <!-- Footer with loading indicator -->
+        <VerticalStackLayout Grid.Row="2" Spacing="16" Padding="0,20">
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="#1F4E45"
+                               HeightRequest="40"/>
+            
+            <Label Text="Appuyez sur un profil pour continuer"
+                   FontSize="14"
+                   TextColor="#94A3B8"
+                   HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

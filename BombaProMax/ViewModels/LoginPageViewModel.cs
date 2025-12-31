@@ -14,7 +14,20 @@ public partial class LoginPageViewModel : ObservableObject
     [ObservableProperty]
     private string _password = string.Empty;
 
+    [ObservableProperty]
+    private string _currentTenantName = string.Empty;
+
     readonly ILoginRepository loginservice = new LoginServices();
+
+    public LoginPageViewModel()
+    {
+        LoadCurrentTenantName();
+    }
+
+    private void LoadCurrentTenantName()
+    {
+        CurrentTenantName = ApiConfig.TenantFullDisplayName;
+    }
 
     [RelayCommand]
     public async Task SignIn()
@@ -60,6 +73,14 @@ public partial class LoginPageViewModel : ObservableObject
         {
             await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
         }
+    }
+
+    [RelayCommand]
+    public async Task BackToProfiles()
+    {
+        // Clear the saved tenant so the selection page shows
+        Preferences.Remove("TenantId");
+        await Shell.Current.GoToAsync("//TenantSelectionPage");
     }
 
     [RelayCommand]

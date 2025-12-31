@@ -135,21 +135,31 @@
                     </Border>
 
                     <!-- Audit Info -->
-                    <Border BackgroundColor="#FAFAFA" Padding="12" Stroke="#E0E0E0">
+                    <Border BackgroundColor="#FAFAFA" Padding="16" Stroke="#E0E0E0">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="Cree le" FontSize="10" TextColor="#9E9E9E" HorizontalTextAlignment="Center"/>
-                                <Label x:Name="DateCreationLabel" Text="-" FontSize="11" TextColor="#6B7280" HorizontalTextAlignment="Center"/>
-                            </VerticalStackLayout>
-                            <BoxView WidthRequest="1" BackgroundColor="#E0E0E0"/>
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="Modifie le" FontSize="10" TextColor="#9E9E9E" HorizontalTextAlignment="Center"/>
-                                <Label x:Name="DateModificationLabel" Text="-" FontSize="11" TextColor="#6B7280" HorizontalTextAlignment="Center"/>
-                            </VerticalStackLayout>
-                        </HorizontalStackLayout>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Informations d'Audit" FontSize="11" TextColor="#6B7280" FontAttributes="Bold"/>
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="8">
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                    <Label Text="Créé par" FontSize="10" TextColor="#9E9E9E"/>
+                                    <Label x:Name="CreatedByLabel" Text="Chargement..." FontSize="11" TextColor="#1F2937" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                    <Label Text="Créé le" FontSize="10" TextColor="#9E9E9E"/>
+                                    <Label x:Name="DateCreationLabel" Text="-" FontSize="11" TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                                    <Label Text="Modifié par" FontSize="10" TextColor="#9E9E9E"/>
+                                    <Label x:Name="ModifiedByLabel" Text="Chargement..." FontSize="11" TextColor="#1F2937" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2">
+                                    <Label Text="Modifié le" FontSize="10" TextColor="#9E9E9E"/>
+                                    <Label x:Name="DateModificationLabel" Text="-" FontSize="11" TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
                     </Border>
 
                 </VerticalStackLayout>

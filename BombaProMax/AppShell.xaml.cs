@@ -18,7 +18,6 @@ using BombaProMax.Views.User;
 using BombaProMax.Views.VenteLubEtArticles;
 using BombaProMax.Services;
 using Microsoft.Maui.Controls.Shapes;
-using BombaProMax.Views.ReservoirCalibrationViews;
 using BombaProMax.Views.RapportViews;
 using BombaProMax.Views.ServiceViews;
 using BombaProMax.Views.VenteServiceViews;
@@ -52,6 +51,7 @@ namespace BombaProMax
             _journeeService = serviceProvider.GetRequiredService<JourneeNavigationService>();
 
             // Register routes for navigation
+            Routing.RegisterRoute(nameof(TenantSelectionPage), typeof(TenantSelectionPage));
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
             Routing.RegisterRoute(nameof(User), typeof(User));
@@ -73,7 +73,6 @@ namespace BombaProMax
             Routing.RegisterRoute(nameof(AboutPage), typeof(AboutPage));
             Routing.RegisterRoute(nameof(ContactPage), typeof(ContactPage));
             Routing.RegisterRoute(nameof(ClientCreditManagement), typeof(ClientCreditManagement));
-            Routing.RegisterRoute(nameof(ReservoirCalibrationPage), typeof(ReservoirCalibrationPage));
             Routing.RegisterRoute(nameof(JaugeagePage), typeof(JaugeagePage));
             Routing.RegisterRoute(nameof(DashboardPage), typeof(DashboardPage));
             Routing.RegisterRoute(nameof(RapportPage), typeof(RapportPage));
@@ -82,6 +81,7 @@ namespace BombaProMax
             Routing.RegisterRoute(nameof(CaissePage), typeof(CaissePage));
 
             // Set ShellContent pages from DI
+            TenantSelectionShellContent.Content = serviceProvider.GetRequiredService<TenantSelectionPage>();
             LoginShellContent.Content = serviceProvider.GetRequiredService<LoginPage>();
             HomeShellContent.Content = serviceProvider.GetRequiredService<HomePage>();
             UsersShellContent.Content = serviceProvider.GetRequiredService<User>();
@@ -89,16 +89,12 @@ namespace BombaProMax
             ClientShellContent.Content = serviceProvider.GetRequiredService<ClientPage>();
             ProductsShellContent.Content = serviceProvider.GetRequiredService<ProduitPage>();
             ReservoirShellContent.Content = serviceProvider.GetRequiredService<ReservoirPage>();
-            ChauffeurShellContent.Content = serviceProvider.GetRequiredService<ChauffeurPage>();
-            CamionShellContent.Content = serviceProvider.GetRequiredService<CamionPage>();
-            CiterneShellContent.Content = serviceProvider.GetRequiredService<CiternePage>();
             FournisseurShellContent.Content = serviceProvider.GetRequiredService<FournisseurPage>();
             EmployeShellContent.Content = serviceProvider.GetRequiredService<EmployePage>();
             PompeShellContent.Content = serviceProvider.GetRequiredService<PompePage>();
             PeriodeShellContent.Content = serviceProvider.GetRequiredService<PeriodePage>();
             VenteLubShellContent.Content = serviceProvider.GetRequiredService<VenteLubrifiantsEtArticlesPage>();
             DepenseShellContent.Content = serviceProvider.GetRequiredService<DepensePage>();
-            ReservoirCalibrationContent.Content = serviceProvider.GetRequiredService<ReservoirCalibrationPage>();
             JaugeageShellContent.Content = serviceProvider.GetRequiredService<JaugeagePage>();
             DashboardShellContent.Content = serviceProvider.GetRequiredService<DashboardPage>();
             RapportShellContent.Content = serviceProvider.GetRequiredService<RapportPage>();
@@ -106,10 +102,21 @@ namespace BombaProMax
             VenteServiceShellContent.Content = serviceProvider.GetRequiredService<VenteServicePage>();
             CaisseShellContent.Content = serviceProvider.GetRequiredService<CaissePage>();
 
-            // Navigate to LoginPage on startup
+            // Navigate to TenantSelectionPage on startup (before login)
             Dispatcher.Dispatch(async () =>
             {
-                await GoToAsync("//LoginPage");
+                // Check if a tenant has already been selected previously
+                var savedTenantId = Preferences.Get("TenantId", string.Empty);
+                if (string.IsNullOrEmpty(savedTenantId))
+                {
+                    // No tenant selected, show tenant selection
+                    await GoToAsync("//TenantSelectionPage");
+                }
+                else
+                {
+                    // Tenant already selected, go to login
+                    await GoToAsync("//LoginPage");
+                }
             });
         }
 
@@ -458,12 +465,23 @@ namespace BombaProMax
             bool confirm = await DisplayAlert("Déconnexion", "Voulez-vous vraiment vous déconnecter?", "Oui", "Non");
             if (confirm)
             {
+                // Clear current user
                 App.CurrentUser = null;
+                
+                // Clear saved tenant preference so user can select a different tenant
+                Preferences.Remove("TenantId");
+                Preferences.Remove("TenantName");
+                
+                // Clear the API tenant header
+                HttpClientFactory.ClearTenantHeader();
+                
                 UpdateUserDisplay(); // Reset the user display
                 ClearNavigationHistory();
                 Shell.Current.FlyoutIsPresented = false;
                 Shell.SetNavBarIsVisible(this, false);
-                await Shell.Current.GoToAsync("//LoginPage");
+                
+                // Navigate to TenantSelectionPage instead of LoginPage
+                await Shell.Current.GoToAsync("//TenantSelectionPage");
             }
         }
 
