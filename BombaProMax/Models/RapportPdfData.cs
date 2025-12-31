@@ -39,10 +39,13 @@ public class RapportVentesPdfData
     public decimal TotalQuantiteCarburant { get; set; }
     public decimal TotalVentesLubArticles { get; set; }
     public int TotalQuantiteLubArticles { get; set; }
+    public decimal TotalVentesServices { get; set; }
+    public int TotalQuantiteServices { get; set; }
 
     // Detailed tables
     public List<RapportVenteCarburantProduitPdfData> VentesCarburantParProduit { get; set; } = [];
     public List<RapportVenteLubArticleProduitPdfData> VentesLubArticlesParProduit { get; set; } = [];
+    public List<RapportVenteServicePdfData> VentesServicesParService { get; set; } = [];
 }
 
 /// <summary>
@@ -62,6 +65,18 @@ public class RapportVenteCarburantProduitPdfData
 public class RapportVenteLubArticleProduitPdfData
 {
     public string ProduitNom { get; set; } = string.Empty;
+    public string? CategorieNom { get; set; }
+    public int TotalQuantite { get; set; }
+    public decimal TotalMontant { get; set; }
+    public int NombreVentes { get; set; }
+}
+
+/// <summary>
+/// Service sales by service for PDF.
+/// </summary>
+public class RapportVenteServicePdfData
+{
+    public string ServiceDescription { get; set; } = string.Empty;
     public string? CategorieNom { get; set; }
     public int TotalQuantite { get; set; }
     public decimal TotalMontant { get; set; }

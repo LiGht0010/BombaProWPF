@@ -29,8 +29,13 @@ public class RapportVentesDto
     public int TotalQuantiteLubArticles { get; set; }
     public List<RapportVenteLubArticleProduitDto> VentesLubArticlesParProduit { get; set; } = [];
 
+    // Ventes Services
+    public decimal TotalVentesServices { get; set; }
+    public int TotalQuantiteServices { get; set; }
+    public List<RapportVenteServiceDto> VentesServicesParService { get; set; } = [];
+
     // Grand Total
-    public decimal TotalVentes => TotalVentesCarburant + TotalVentesLubArticles;
+    public decimal TotalVentes => TotalVentesCarburant + TotalVentesLubArticles + TotalVentesServices;
 }
 
 /// <summary>
@@ -52,6 +57,19 @@ public class RapportVenteLubArticleProduitDto
 {
     public int ProduitId { get; set; }
     public string ProduitNom { get; set; } = string.Empty;
+    public string? CategorieNom { get; set; }
+    public int TotalQuantite { get; set; }
+    public decimal TotalMontant { get; set; }
+    public int NombreVentes { get; set; }
+}
+
+/// <summary>
+/// Service sales grouped by service.
+/// </summary>
+public class RapportVenteServiceDto
+{
+    public int ServiceId { get; set; }
+    public string ServiceDescription { get; set; } = string.Empty;
     public string? CategorieNom { get; set; }
     public int TotalQuantite { get; set; }
     public decimal TotalMontant { get; set; }

@@ -59,6 +59,12 @@ public partial class RapportViewModel : ObservableObject
     private int _totalQuantiteLubArticles;
 
     [ObservableProperty]
+    private decimal _totalVentesServices;
+
+    [ObservableProperty]
+    private int _totalQuantiteServices;
+
+    [ObservableProperty]
     private decimal _totalVentes;
 
     #endregion
@@ -115,6 +121,7 @@ public partial class RapportViewModel : ObservableObject
 
     public ObservableCollection<RapportVenteCarburantProduitDto> VentesCarburantParProduit { get; } = [];
     public ObservableCollection<RapportVenteLubArticleProduitDto> VentesLubArticlesParProduit { get; } = [];
+    public ObservableCollection<RapportVenteServiceDto> VentesServicesParService { get; } = [];
     public ObservableCollection<RapportDepenseCategorieDto> DepensesParCategorie { get; } = [];
     public ObservableCollection<RapportDepenseDetailDto> DepensesDetails { get; } = [];
     public ObservableCollection<RapportStockReservoirDto> StockCarburant { get; } = [];
@@ -329,6 +336,8 @@ public partial class RapportViewModel : ObservableObject
                 TotalQuantiteCarburant = TotalQuantiteCarburant,
                 TotalVentesLubArticles = TotalVentesLubArticles,
                 TotalQuantiteLubArticles = TotalQuantiteLubArticles,
+                TotalVentesServices = TotalVentesServices,
+                TotalQuantiteServices = TotalQuantiteServices,
                 VentesCarburantParProduit = VentesCarburantParProduit
                     .Select(v => new RapportVenteCarburantProduitPdfData
                     {
@@ -341,6 +350,15 @@ public partial class RapportViewModel : ObservableObject
                     .Select(v => new RapportVenteLubArticleProduitPdfData
                     {
                         ProduitNom = v.ProduitNom,
+                        CategorieNom = v.CategorieNom,
+                        TotalQuantite = v.TotalQuantite,
+                        TotalMontant = v.TotalMontant,
+                        NombreVentes = v.NombreVentes
+                    }).ToList(),
+                VentesServicesParService = VentesServicesParService
+                    .Select(v => new RapportVenteServicePdfData
+                    {
+                        ServiceDescription = v.ServiceDescription,
                         CategorieNom = v.CategorieNom,
                         TotalQuantite = v.TotalQuantite,
                         TotalMontant = v.TotalMontant,
@@ -433,6 +451,8 @@ public partial class RapportViewModel : ObservableObject
         TotalQuantiteCarburant = ventes.TotalQuantiteCarburant;
         TotalVentesLubArticles = ventes.TotalVentesLubArticles;
         TotalQuantiteLubArticles = ventes.TotalQuantiteLubArticles;
+        TotalVentesServices = ventes.TotalVentesServices;
+        TotalQuantiteServices = ventes.TotalQuantiteServices;
         TotalVentes = ventes.TotalVentes;
 
         VentesCarburantParProduit.Clear();
@@ -445,6 +465,12 @@ public partial class RapportViewModel : ObservableObject
         foreach (var item in ventes.VentesLubArticlesParProduit)
         {
             VentesLubArticlesParProduit.Add(item);
+        }
+
+        VentesServicesParService.Clear();
+        foreach (var item in ventes.VentesServicesParService)
+        {
+            VentesServicesParService.Add(item);
         }
     }
 

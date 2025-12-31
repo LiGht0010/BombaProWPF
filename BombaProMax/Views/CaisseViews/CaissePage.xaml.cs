@@ -56,7 +56,7 @@ public partial class CaissePage : ContentPage
         // Check if user clicked "Edit" in the details popup
         if (result is ValueTuple<string, DepotCaisseDto> tuple && tuple.Item1 == "edit")
         {
-            var editPopup = new DepotCaisseCreatePopup(tuple.Item2);
+            var editPopup = new DepotCaisseEditPopup(tuple.Item2);
             var editResult = await this.ShowPopupAsync(editPopup);
 
             if (editResult is DepotCaisseDto updatedDepot)
@@ -70,7 +70,7 @@ public partial class CaissePage : ContentPage
     {
         if (sender is Button button && button.CommandParameter is DepotCaisseDto depot)
         {
-            var popup = new DepotCaisseCreatePopup(depot);
+            var popup = new DepotCaisseEditPopup(depot);
             var result = await this.ShowPopupAsync(popup);
 
             if (result is DepotCaisseDto updatedDepot)

@@ -2,152 +2,159 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="BombaProMax.Views.EmployeViews.EmployeEditPopup">
+               x:Class="BombaProMax.Views.EmployeViews.EmployeEditPopup"
+               Color="Transparent">
 
-    <Border Style="{StaticResource EmployePopupContainer}">
-        <ScrollView>
-            <VerticalStackLayout Spacing="20">
-                <!-- Header -->
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="620" HeightRequest="680" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" BackgroundColor="#FF9800" Padding="20,18" StrokeThickness="0">
                 <Grid ColumnDefinitions="*,Auto">
-                    <Label Text="✏️ Modifier l'employé" 
-                           Style="{StaticResource EmployePopupTitle}"/>
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="✏️ Modifier l'Employé" 
+                               FontSize="20" 
+                               FontAttributes="Bold" 
+                               TextColor="White"/>
+                        <Label Text="Mettre à jour les informations de l'employé" 
+                               FontSize="12" 
+                               TextColor="#FFE0B2"/>
+                    </VerticalStackLayout>
                     <Button Grid.Column="1" 
                             Text="✕" 
-                            Style="{StaticResource EmployePopupCloseButton}"
+                            BackgroundColor="#F57C00" 
+                            TextColor="White" 
+                            FontSize="16" 
+                            WidthRequest="36" 
+                            HeightRequest="36" 
+                            CornerRadius="18" 
                             Clicked="OnCancelClicked"/>
                 </Grid>
+            </Border>
 
-                <BoxView Style="{StaticResource EmployePopupDivider}"/>
-
-                <!-- Employe Form -->
-                <VerticalStackLayout Spacing="18">
-
-                    <!-- Personal Information Section -->
-                    <Border Style="{StaticResource EmployePopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="ℹ️ Informations Personnelles" 
-                                   Style="{StaticResource EmployePopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource EmployePopupDivider}"/>
-
+            <!-- ========================================= -->
+            <!-- CONTENT                                   -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20,15">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Personal Info Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="ℹ️ INFORMATIONS PERSONNELLES" FontSize="11" FontAttributes="Bold" TextColor="#FF9800"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-                                <!-- Nom -->
-                                <VerticalStackLayout Grid.Column="0" Spacing="8">
-                                    <Label Text="Nom *" 
-                                           Style="{StaticResource EmployePopupFieldLabel}"/>
-                                    <Border Style="{StaticResource EmployePopupInputContainer}">
-                                        <Entry x:Name="NomEntry"
-                                               Placeholder="Ex: Alami"
-                                               Style="{StaticResource EmployePopupEntry}"/>
-                                    </Border>
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="👤 Nom *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="NomEntry"
+                                           Placeholder="Ex: Alami"
+                                           FontSize="14"/>
                                 </VerticalStackLayout>
-
-                                <!-- Prenom -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                    <Label Text="Prénom *" 
-                                           Style="{StaticResource EmployePopupFieldLabel}"/>
-                                    <Border Style="{StaticResource EmployePopupInputContainer}">
-                                        <Entry x:Name="PrenomEntry"
-                                               Placeholder="Ex: Mohammed"
-                                               Style="{StaticResource EmployePopupEntry}"/>
-                                    </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="👤 Prénom *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="PrenomEntry"
+                                           Placeholder="Ex: Mohammed"
+                                           FontSize="14"/>
                                 </VerticalStackLayout>
                             </Grid>
-
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-                                <!-- CIN -->
-                                <VerticalStackLayout Grid.Column="0" Spacing="8">
-                                    <Label Text="CIN *" 
-                                           Style="{StaticResource EmployePopupFieldLabel}"/>
-                                    <Border Style="{StaticResource EmployePopupInputContainer}">
-                                        <Entry x:Name="CINEntry"
-                                               Placeholder="Ex: AB123456"
-                                               Style="{StaticResource EmployePopupEntry}"/>
-                                    </Border>
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="🪪 CIN *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="CINEntry"
+                                           Placeholder="Ex: AB123456"
+                                           FontSize="14"/>
                                 </VerticalStackLayout>
-
-                                <!-- Telephone -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                    <Label Text="Téléphone" 
-                                           Style="{StaticResource EmployePopupFieldLabel}"/>
-                                    <Border Style="{StaticResource EmployePopupInputContainer}">
-                                        <Entry x:Name="TelephoneEntry"
-                                               Placeholder="Ex: 0612345678"
-                                               Keyboard="Telephone"
-                                               Style="{StaticResource EmployePopupEntry}"/>
-                                    </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="📱 Téléphone" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="TelephoneEntry"
+                                           Placeholder="Ex: 0612345678"
+                                           Keyboard="Telephone"
+                                           FontSize="14"/>
                                 </VerticalStackLayout>
                             </Grid>
-
-                            <!-- Address -->
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="Adresse *" 
-                                       Style="{StaticResource EmployePopupFieldLabel}"/>
-                                <Border Style="{StaticResource EmployePopupInputContainer}">
-                                    <Entry x:Name="AddressEntry"
-                                           Placeholder="Ex: 123 Rue Mohammed V, Casablanca"
-                                           Style="{StaticResource EmployePopupEntry}"/>
-                                </Border>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="📍 Adresse *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Entry x:Name="AddressEntry"
+                                       Placeholder="Ex: 123 Rue Mohammed V, Casablanca"
+                                       FontSize="14"/>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Employment Information Section -->
-                    <Border Style="{StaticResource EmployePopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="💼 Informations d'Emploi" 
-                                   Style="{StaticResource EmployePopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource EmployePopupDivider}"/>
-
+                    <!-- Employment Info Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="💼 INFORMATIONS D'EMPLOI" FontSize="11" FontAttributes="Bold" TextColor="#FF9800"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-                                <!-- Poste -->
-                                <VerticalStackLayout Grid.Column="0" Spacing="8">
-                                    <Label Text="Poste" 
-                                           Style="{StaticResource EmployePopupFieldLabel}"/>
-                                    <Border Style="{StaticResource EmployePopupInputContainer}">
-                                        <Picker x:Name="PostePicker"
-                                                Title="Sélectionnez un poste"
-                                                Style="{StaticResource EmployePopupPicker}"/>
-                                    </Border>
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="📋 Poste" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Picker x:Name="PostePicker"
+                                            Title="Sélectionnez un poste"
+                                            FontSize="14"/>
                                 </VerticalStackLayout>
-
-                                <!-- Salaire -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                    <Label Text="Salaire (MAD)" 
-                                           Style="{StaticResource EmployePopupFieldLabel}"/>
-                                    <Border Style="{StaticResource EmployePopupInputContainer}">
-                                        <Entry x:Name="SalaireEntry"
-                                               Placeholder="Ex: 5000.00"
-                                               Keyboard="Numeric"
-                                               Style="{StaticResource EmployePopupEntry}"/>
-                                    </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="💰 Salaire (MAD)" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="SalaireEntry"
+                                           Placeholder="Ex: 5000.00"
+                                           Keyboard="Numeric"
+                                           FontSize="14"/>
                                 </VerticalStackLayout>
                             </Grid>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Error Message -->
-                    <Label x:Name="ErrorLabel"
-                           Style="{StaticResource EmployePopupErrorLabel}"
-                           IsVisible="False"/>
-
-                    <!-- Action Buttons -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
-                        <!-- Cancel Button -->
-                        <Button Grid.Column="0"
-                                Text="Annuler"
-                                Style="{StaticResource EmployePopupCancelButton}"
-                                Clicked="OnCancelClicked"/>
-
-                        <!-- Update Button -->
-                        <Button Grid.Column="1"
-                                Text="✓ Modifier l'employé"
-                                Style="{StaticResource EmployePopupCreateButton}"
-                                Clicked="OnUpdateClicked"/>
-                    </Grid>
                 </VerticalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" BackgroundColor="White" Padding="20,15" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-2" Radius="6" Opacity="0.06"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <Label x:Name="ErrorLabel" 
+                           TextColor="#F44336" 
+                           FontSize="12" 
+                           IsVisible="False" 
+                           VerticalOptions="Center"/>
+                    <Button Grid.Column="1" 
+                            Text="Annuler" 
+                            BackgroundColor="#9E9E9E" 
+                            TextColor="White" 
+                            Padding="25,12" 
+                            CornerRadius="8" 
+                            Clicked="OnCancelClicked"/>
+                    <Button Grid.Column="2" 
+                            Text="💾 Enregistrer" 
+                            BackgroundColor="#FF9800" 
+                            TextColor="White" 
+                            Padding="25,12" 
+                            CornerRadius="8" 
+                            FontAttributes="Bold" 
+                            Clicked="OnUpdateClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>

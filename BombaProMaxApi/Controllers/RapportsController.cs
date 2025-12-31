@@ -16,7 +16,7 @@ public class RapportsController : ControllerBase
     }
 
     /// <summary>
-    /// Get sales report (Ventes Carburant + Ventes Lubrifiants/Articles).
+    /// Get sales report (Ventes Carburant + Ventes Lubrifiants/Articles + Ventes Services).
     /// Filters: date (specific), month (yyyy-MM format)
     /// For Periode: filters by DateDebut
     /// </summary>
@@ -93,6 +93,40 @@ public class RapportsController : ControllerBase
             .OrderByDescending(x => x.TotalQuantite)
             .ToList();
 
+        // === VENTES SERVICES (filter by DateVente) ===
+        var servicesQuery = _context.VenteServices
+            .Include(v => v.Service)
+                .ThenInclude(s => s!.ServiceCategorie)
+            .AsNoTracking();
+
+        if (date.HasValue)
+        {
+            var startUtcSvc = DateTime.SpecifyKind(date.Value.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            var endUtcSvc = DateTime.SpecifyKind(date.Value.ToDateTime(TimeOnly.MinValue).AddDays(1), DateTimeKind.Utc);
+            servicesQuery = servicesQuery.Where(v => v.DateVente >= startUtcSvc && v.DateVente < endUtcSvc);
+        }
+        else if (!string.IsNullOrEmpty(month) && TryParseMonth(month, out var sStart, out var sEnd))
+        {
+            var startUtcSvc = DateTime.SpecifyKind(sStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            var endUtcSvc = DateTime.SpecifyKind(sEnd.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
+            servicesQuery = servicesQuery.Where(v => v.DateVente >= startUtcSvc && v.DateVente <= endUtcSvc);
+        }
+
+        var servicesData = await servicesQuery.ToListAsync();
+        var servicesGrouped = servicesData
+            .GroupBy(v => v.ServiceID)
+            .Select(g => new
+            {
+                ServiceId = g.Key,
+                ServiceDescription = g.First().Service?.Description ?? g.First().Service?.Numero ?? "Inconnu",
+                CategorieNom = g.First().Service?.ServiceCategorie?.Nom,
+                TotalQuantite = g.Sum(x => x.Quantite),
+                TotalMontant = g.Sum(x => x.MontantTotal),
+                NombreVentes = g.Count()
+            })
+            .OrderByDescending(x => x.TotalMontant)
+            .ToList();
+
         return Ok(new
         {
             TotalVentesCarburant = carburantGrouped.Sum(x => x.TotalMontant),
@@ -100,7 +134,10 @@ public class RapportsController : ControllerBase
             VentesCarburantParProduit = carburantGrouped,
             TotalVentesLubArticles = lubGrouped.Sum(x => x.TotalMontant),
             TotalQuantiteLubArticles = lubGrouped.Sum(x => x.TotalQuantite),
-            VentesLubArticlesParProduit = lubGrouped
+            VentesLubArticlesParProduit = lubGrouped,
+            TotalVentesServices = servicesGrouped.Sum(x => x.TotalMontant),
+            TotalQuantiteServices = servicesGrouped.Sum(x => x.TotalQuantite),
+            VentesServicesParService = servicesGrouped
         });
     }
 

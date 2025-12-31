@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:sys="clr-namespace:System;assembly=netstandard"
+               x:Class="BombaProMax.Views.CaisseViews.DepotCaisseEditPopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="White" Padding="0" WidthRequest="500" HeightRequest="680">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- Header -->
+            <Border Grid.Row="0" BackgroundColor="#1976D2" Padding="20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label Text="Modifier le Depot" FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                        <Label x:Name="SubtitleLabel" Text="Modifier les informations du depot" FontSize="12" TextColor="#90CAF9"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="X" BackgroundColor="Transparent" TextColor="White" FontSize="20" Clicked="OnCancelClicked"/>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <ScrollView Grid.Row="1" Padding="20">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Montant -->
+                    <Border BackgroundColor="#E8F5E9" Padding="12" Stroke="#4CAF50">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Montant (MAD) *" FontSize="12" FontAttributes="Bold" TextColor="#2E7D32"/>
+                            <Entry x:Name="MontantEntry" Placeholder="0.00" Keyboard="Numeric" FontSize="16" FontAttributes="Bold" TextColor="#2E7D32" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Date -->
+                    <Border BackgroundColor="#F8F8F8" Padding="12" Stroke="#E0E0E0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Date du Depot *" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                            <DatePicker x:Name="DateDepotPicker" FontSize="14" MaximumDate="{x:Static sys:DateTime.Today}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Reference Bancaire -->
+                    <Border BackgroundColor="#E3F2FD" Padding="12" Stroke="#1976D2">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Reference Bancaire" FontSize="12" FontAttributes="Bold" TextColor="#1976D2"/>
+                            <Entry x:Name="ReferenceEntry" Placeholder="N de bordereau ou recu" FontSize="14"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Banque -->
+                    <Border BackgroundColor="#FFF3E0" Padding="12" Stroke="#FF9800">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Banque" FontSize="12" FontAttributes="Bold" TextColor="#E65100"/>
+                            <Entry x:Name="BanqueEntry" Placeholder="Nom de la banque ou agence" FontSize="14"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Piece Justificative Section -->
+                    <Border BackgroundColor="#F3E5F5" Padding="12" Stroke="#9C27B0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Piece Justificative" FontSize="12" FontAttributes="Bold" TextColor="#7B1FA2"/>
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                <Border BackgroundColor="White" Padding="10,8" Stroke="#E0E0E0" HorizontalOptions="Fill">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6"/>
+                                    </Border.StrokeShape>
+                                    <Label x:Name="FileNameLabel" Text="Aucun fichier selectionne" FontSize="12" TextColor="#999" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                </Border>
+                                <Button Grid.Column="1" Text="Photo" BackgroundColor="#9C27B0" TextColor="White" FontSize="12" Padding="12,8" CornerRadius="6" Clicked="OnTakePhotoClicked"/>
+                                <Button Grid.Column="2" Text="Fichier" BackgroundColor="#7B1FA2" TextColor="White" FontSize="12" Padding="12,8" CornerRadius="6" Clicked="OnPickFileClicked"/>
+                            </Grid>
+                            <!-- Image Preview -->
+                            <Border x:Name="ImagePreviewContainer" BackgroundColor="White" Padding="8" Stroke="#E0E0E0" IsVisible="False" HeightRequest="120">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6"/>
+                                </Border.StrokeShape>
+                                <Grid>
+                                    <Image x:Name="ImagePreview" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Button Text="X" BackgroundColor="#E53935" TextColor="White" FontSize="12" WidthRequest="28" HeightRequest="28" CornerRadius="14" HorizontalOptions="End" VerticalOptions="Start" Padding="0" Clicked="OnRemoveFileClicked"/>
+                                </Grid>
+                            </Border>
+                            <Label Text="Formats acceptes: JPG, PNG, PDF (max 5 Mo)" FontSize="10" TextColor="#999" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Notes -->
+                    <Border BackgroundColor="#F8F8F8" Padding="12" Stroke="#E0E0E0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Notes (optionnel)" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                            <Editor x:Name="NotesEditor" Placeholder="Notes additionnelles..." HeightRequest="60" FontSize="14"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" BackgroundColor="#F5F5F5" Padding="15">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="15">
+                    <Label x:Name="ErrorLabel" TextColor="#F44336" FontSize="12" IsVisible="False" VerticalOptions="Center"/>
+                    <Button Grid.Column="1" Text="Annuler" BackgroundColor="#9E9E9E" TextColor="White" Padding="20,10" CornerRadius="8" Clicked="OnCancelClicked"/>
+                    <Button Grid.Column="2" Text="Mettre a jour" BackgroundColor="#1976D2" TextColor="White" Padding="20,10" CornerRadius="8" FontAttributes="Bold" Clicked="OnSaveClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

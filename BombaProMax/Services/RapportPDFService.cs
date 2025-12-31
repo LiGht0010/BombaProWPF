@@ -27,6 +27,7 @@ public class RapportPdfService
     private static readonly string Gray = "#666666";
     private static readonly string LightGray = "#F5F5F5";
     private static readonly string White = "#FFFFFF";
+    private static readonly string Purple = "#7B1FA2";
 
     static RapportPdfService()
     {
@@ -133,10 +134,12 @@ public class RapportPdfService
                 innerCol.Item().Row(row =>
                 {
                     row.RelativeItem().Element(c => ComposeVentesSummaryCard(c, "Total Ventes", $"{ventes.TotalVentes:N2} MAD", Green));
-                    row.ConstantItem(10);
+                    row.ConstantItem(8);
                     row.RelativeItem().Element(c => ComposeVentesSummaryCard(c, "Carburant", $"{ventes.TotalVentesCarburant:N2} MAD", PrimaryBlue, $"{ventes.TotalQuantiteCarburant:N0} L"));
-                    row.ConstantItem(10);
+                    row.ConstantItem(8);
                     row.RelativeItem().Element(c => ComposeVentesSummaryCard(c, "Lub/Articles", $"{ventes.TotalVentesLubArticles:N2} MAD", Orange, $"{ventes.TotalQuantiteLubArticles} unites"));
+                    row.ConstantItem(8);
+                    row.RelativeItem().Element(c => ComposeVentesSummaryCard(c, "Services", $"{ventes.TotalVentesServices:N2} MAD", Purple, $"{ventes.TotalQuantiteServices} ventes"));
                 });
 
                 innerCol.Item().Height(12);
@@ -156,9 +159,18 @@ public class RapportPdfService
                     innerCol.Item().Text("Ventes Lubrifiants/Articles par Produit").FontSize(11).Bold().FontColor("#333");
                     innerCol.Item().Height(6);
                     innerCol.Item().Element(c => ComposeVentesLubArticlesTable(c, ventes.VentesLubArticlesParProduit));
+                    innerCol.Item().Height(10);
                 }
 
-                if (ventes.VentesCarburantParProduit.Count == 0 && ventes.VentesLubArticlesParProduit.Count == 0)
+                // Services Table
+                if (ventes.VentesServicesParService.Count > 0)
+                {
+                    innerCol.Item().Text("Ventes Services par Service").FontSize(11).Bold().FontColor("#333");
+                    innerCol.Item().Height(6);
+                    innerCol.Item().Element(c => ComposeVentesServicesTable(c, ventes.VentesServicesParService));
+                }
+
+                if (ventes.VentesCarburantParProduit.Count == 0 && ventes.VentesLubArticlesParProduit.Count == 0 && ventes.VentesServicesParService.Count == 0)
                 {
                     innerCol.Item().Padding(20).AlignCenter().Text("Aucune vente pour cette periode").FontSize(10).FontColor(Gray);
                 }
@@ -260,6 +272,50 @@ public class RapportPdfService
             table.Cell().Background("#FFF3E0").Padding(6).AlignRight().Text(totalQte.ToString()).FontSize(9).Bold().FontColor(Orange);
             table.Cell().Background("#FFF3E0").Padding(6).AlignRight().Text($"{totalMontant:N2}").FontSize(9).Bold().FontColor(Orange);
             table.Cell().Background("#FFF3E0").Padding(6);
+        });
+    }
+
+    private void ComposeVentesServicesTable(QContainer container, List<RapportVenteServicePdfData> items)
+    {
+        container.Table(table =>
+        {
+            table.ColumnsDefinition(columns =>
+            {
+                columns.RelativeColumn(2);      // Service
+                columns.RelativeColumn(1.5f);   // Categorie
+                columns.RelativeColumn();       // Quantite
+                columns.RelativeColumn();       // Montant
+                columns.RelativeColumn();       // Ventes
+            });
+
+            // Header
+            table.Header(header =>
+            {
+                header.Cell().Background(LightGray).Padding(6).Text("Service").FontSize(8).Bold();
+                header.Cell().Background(LightGray).Padding(6).Text("Categorie").FontSize(8).Bold();
+                header.Cell().Background(LightGray).Padding(6).AlignRight().Text("Quantite").FontSize(8).Bold();
+                header.Cell().Background(LightGray).Padding(6).AlignRight().Text("Montant").FontSize(8).Bold();
+                header.Cell().Background(LightGray).Padding(6).AlignRight().Text("Ventes").FontSize(8).Bold();
+            });
+
+            // Rows
+            foreach (var item in items)
+            {
+                table.Cell().BorderBottom(1).BorderColor("#EEE").Padding(6).Text(item.ServiceDescription).FontSize(9);
+                table.Cell().BorderBottom(1).BorderColor("#EEE").Padding(6).Text(item.CategorieNom ?? "-").FontSize(8).FontColor(Gray);
+                table.Cell().BorderBottom(1).BorderColor("#EEE").Padding(6).AlignRight().Text(item.TotalQuantite.ToString()).FontSize(9).FontColor(Purple);
+                table.Cell().BorderBottom(1).BorderColor("#EEE").Padding(6).AlignRight().Text($"{item.TotalMontant:N2}").FontSize(9).Bold();
+                table.Cell().BorderBottom(1).BorderColor("#EEE").Padding(6).AlignRight().Text(item.NombreVentes.ToString()).FontSize(9).FontColor(Gray);
+            }
+
+            // Footer total
+            var totalQte = items.Sum(i => i.TotalQuantite);
+            var totalMontant = items.Sum(i => i.TotalMontant);
+            table.Cell().Background("#F3E5F5").Padding(6).Text("TOTAL").FontSize(9).Bold().FontColor(Purple);
+            table.Cell().Background("#F3E5F5").Padding(6);
+            table.Cell().Background("#F3E5F5").Padding(6).AlignRight().Text(totalQte.ToString()).FontSize(9).Bold().FontColor(Purple);
+            table.Cell().Background("#F3E5F5").Padding(6).AlignRight().Text($"{totalMontant:N2}").FontSize(9).Bold().FontColor(Purple);
+            table.Cell().Background("#F3E5F5").Padding(6);
         });
     }
 
