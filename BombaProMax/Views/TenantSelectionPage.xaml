@@ -5,6 +5,7 @@
              xmlns:models="clr-namespace:BombaProMax.Models"
              x:Class="BombaProMax.Views.TenantSelectionPage"
              BackgroundColor="{StaticResource NeumorphicBackground}"
+             Shell.FlyoutBehavior="Disabled"
              Title="Selection du Client">
 
     <ContentPage.BindingContext>

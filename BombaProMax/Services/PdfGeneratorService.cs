@@ -2,6 +2,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using BombaProMax.Models;
+using System.Reflection;
 
 // Alias to avoid conflicts with MAUI types
 using QColors = QuestPDF.Helpers.Colors;
@@ -27,10 +28,44 @@ public class PdfGeneratorService
     private static readonly string LightGray = "#F5F5F5";
     private static readonly string White = "#FFFFFF";
 
+    // Cached logo bytes
+    private static byte[]? _cachedLogoBytes;
+
     static PdfGeneratorService()
     {
         // Configure QuestPDF license (Community license for open source)
         QuestPDF.Settings.License = LicenseType.Community;
+    }
+
+    /// <summary>
+    /// Loads the station logo from embedded resources.
+    /// </summary>
+    private static byte[]? GetLogoBytes()
+    {
+        if (_cachedLogoBytes != null)
+            return _cachedLogoBytes;
+
+        try
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using var stream = assembly.GetManifestResourceStream("BombaProMax.StationIcon.station_logo.png");
+            
+            if (stream == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Logo resource not found");
+                return null;
+            }
+
+            using var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+            _cachedLogoBytes = memoryStream.ToArray();
+            return _cachedLogoBytes;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading logo: {ex.Message}");
+            return null;
+        }
     }
 
     #region Periode PDF Generation
@@ -620,12 +655,12 @@ public class PdfGeneratorService
                 container.Page(page =>
                 {
                     page.Size(PageSizes.A4);
-                    page.Margin(30);
+                    page.Margin(25);
                     page.DefaultTextStyle(x => x.FontSize(10));
 
                     page.Header().Element(c => ComposeFactureHeader(c, data));
                     page.Content().Element(c => ComposeFactureContent(c, data));
-                    page.Footer().Element(c => ComposeFooter(c));
+                    page.Footer().Element(c => ComposeFactureFooter(c, data));
                 });
             }).GeneratePdf(filePath);
         });
@@ -635,248 +670,412 @@ public class PdfGeneratorService
 
     private void ComposeFactureHeader(QContainer container, FacturePdfData data)
     {
+        var station = data.StationInfo;
+        
         container.Column(column =>
         {
-            // Title bar
-            column.Item().Background(FactureGreen).Padding(15).Row(row =>
+            // Top row: Logo + Station Contact Info
+            column.Item().Row(row =>
             {
-                row.RelativeItem().Column(col =>
+                // Logo (left)
+                row.ConstantItem(100).Column(logoCol =>
                 {
-                    col.Item().Text("FACTURE")
-                        .FontSize(24).Bold().FontColor(White);
-                    col.Item().Text("BombaProMax - Station Service")
-                        .FontSize(11).FontColor("#C8E6C9");
+                    byte[]? logoBytes = null;
+                    if (station?.LogoBase64 != null)
+                    {
+                        try { logoBytes = Convert.FromBase64String(station.LogoBase64); } catch { }
+                    }
+                    logoBytes ??= GetLogoBytes();
+                    
+                    if (logoBytes != null)
+                    {
+                        logoCol.Item().Height(70).Image(logoBytes).FitArea();
+                    }
+                    else
+                    {
+                        logoCol.Item().Height(70).Border(1).BorderColor("#000000")
+                            .AlignCenter().AlignMiddle().Text("LOGO").FontSize(12).Bold();
+                    }
                 });
 
-                row.ConstantItem(180).AlignRight().Column(col =>
+                row.RelativeItem(); // Spacer
+
+                // Station contact info (right)
+                row.ConstantItem(200).Border(1).BorderColor("#000000").Padding(8).Column(infoCol =>
                 {
-                    col.Item().Text(data.NumeroFacture)
-                        .FontSize(16).Bold().FontColor(White).AlignRight();
-                    col.Item().Text($"Date: {data.DateFacture:dd/MM/yyyy}")
-                        .FontSize(10).FontColor("#C8E6C9").AlignRight();
-                    var isPaid = data.Statut?.ToLower().Contains("pay") == true;
-                    var statutText = isPaid ? "PAYEE" : "NON PAYEE";
-                    col.Item().Text(statutText)
-                        .FontSize(10).Bold().FontColor(isPaid ? "#C8E6C9" : "#FFCDD2").AlignRight();
+                    infoCol.Item().Text(station?.StationName ?? "Station Service")
+                        .FontSize(12).Bold().FontColor("#000000");
+                    
+                    if (!string.IsNullOrEmpty(station?.Adresse))
+                        infoCol.Item().Text(station.Adresse).FontSize(8).FontColor("#333333");
+                    if (!string.IsNullOrEmpty(station?.Ville))
+                        infoCol.Item().Text(station.Ville).FontSize(8).FontColor("#333333");
+                    if (!string.IsNullOrEmpty(station?.Tel))
+                        infoCol.Item().Text($"Tél: {station.Tel}").FontSize(8).FontColor("#333333");
+                    if (!string.IsNullOrEmpty(station?.Fax))
+                        infoCol.Item().Text($"Fax: {station.Fax}").FontSize(8).FontColor("#333333");
+                    if (!string.IsNullOrEmpty(station?.Email))
+                        infoCol.Item().Text(station.Email).FontSize(8).FontColor("#333333");
+                    if (!string.IsNullOrEmpty(station?.SiteWeb))
+                        infoCol.Item().Text(station.SiteWeb).FontSize(8).FontColor("#333333");
                 });
             });
 
+            column.Item().Height(15);
+
+            // FACTURE title centered
+            column.Item().AlignCenter().Text("FACTURE").FontSize(20).Bold().FontColor("#000000");
+            column.Item().AlignCenter().Text($"N° {data.NumeroFacture}").FontSize(12).Bold().FontColor("#000000");
+            
             column.Item().Height(10);
         });
     }
 
     private void ComposeFactureContent(QContainer container, FacturePdfData data)
     {
+        var station = data.StationInfo;
+        
         container.Column(column =>
         {
-            // Client Info Section
+            // Row 1: Client Info + Station Fiscal Info
             column.Item().Row(row =>
             {
-                row.RelativeItem().Element(c => ComposeFactureClientInfo(c, data));
-                row.ConstantItem(20);
-                row.RelativeItem().Element(c => ComposeFactureSummary(c, data));
+                // Client Info (left)
+                row.RelativeItem().Border(1).BorderColor("#000000").Padding(10).Column(clientCol =>
+                {
+                    clientCol.Item().Text("INFORMATIONS CLIENT").FontSize(10).Bold().FontColor("#000000");
+                    clientCol.Item().Height(5);
+                    clientCol.Item().LineHorizontal(0.5f).LineColor("#000000");
+                    clientCol.Item().Height(5);
+
+                    clientCol.Item().Text(text =>
+                    {
+                        text.Span("Client: ").FontColor("#333333");
+                        text.Span(data.ClientNom ?? "N/A").Bold().FontColor("#000000");
+                    });
+
+                    if (!string.IsNullOrEmpty(data.ClientAdresse))
+                    {
+                        clientCol.Item().Text(text =>
+                        {
+                            text.Span("Adresse: ").FontColor("#333333");
+                            text.Span(data.ClientAdresse).FontColor("#000000");
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(data.ClientContact))
+                    {
+                        clientCol.Item().Text(text =>
+                        {
+                            text.Span("Contact: ").FontColor("#333333");
+                            text.Span(data.ClientContact).FontColor("#000000");
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(data.ClientICE))
+                    {
+                        clientCol.Item().Text(text =>
+                        {
+                            text.Span("ICE: ").FontColor("#333333");
+                            text.Span(data.ClientICE).FontColor("#000000");
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(data.ClientIF))
+                    {
+                        clientCol.Item().Text(text =>
+                        {
+                            text.Span("IF: ").FontColor("#333333");
+                            text.Span(data.ClientIF).FontColor("#000000");
+                        });
+                    }
+
+                    clientCol.Item().Height(5);
+                    clientCol.Item().LineHorizontal(0.5f).LineColor("#E0E0E0");
+                    clientCol.Item().Height(5);
+
+                    // Facture details
+                    clientCol.Item().Text(text =>
+                    {
+                        text.Span("Date Facture: ").FontColor("#333333");
+                        text.Span(data.DateFacture.ToString("dd/MM/yyyy")).Bold().FontColor("#000000");
+                    });
+
+                    var isPaid = data.Statut?.ToLower().Contains("pay") == true;
+                    clientCol.Item().Text(text =>
+                    {
+                        text.Span("Statut: ").FontColor("#333333");
+                        text.Span(data.Statut ?? "Non Payée").Bold().FontColor("#000000");
+                    });
+
+                    // Linked BLs
+                    if (data.BonsLivraisonLies.Count > 0)
+                    {
+                        clientCol.Item().Height(3);
+                        var blNumbers = string.Join(", ", data.BonsLivraisonLies.Select(bl => bl.NumeroBL));
+                        clientCol.Item().Text(text =>
+                        {
+                            text.Span("BL(s): ").FontColor("#333333");
+                            text.Span(blNumbers).FontColor("#000000");
+                        });
+                    }
+                });
+
+                row.ConstantItem(15); // Spacing
+
+                // Station Fiscal Info (right)
+                row.RelativeItem().Border(1).BorderColor("#000000").Padding(10).Column(stationCol =>
+                {
+                    stationCol.Item().Text("INFORMATIONS STATION").FontSize(10).Bold().FontColor("#000000");
+                    stationCol.Item().Height(5);
+                    stationCol.Item().LineHorizontal(0.5f).LineColor("#000000");
+                    stationCol.Item().Height(5);
+
+                    if (!string.IsNullOrEmpty(station?.ICE))
+                    {
+                        stationCol.Item().Text(text =>
+                        {
+                            text.Span("ICE: ").FontColor("#333333");
+                            text.Span(station.ICE).Bold().FontColor("#000000");
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(station?.IF))
+                    {
+                        stationCol.Item().Text(text =>
+                        {
+                            text.Span("IF: ").FontColor("#333333");
+                            text.Span(station.IF).FontColor("#000000");
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(station?.RC))
+                    {
+                        stationCol.Item().Text(text =>
+                        {
+                            text.Span("RC: ").FontColor("#333333");
+                            text.Span(station.RC).FontColor("#000000");
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(station?.TP))
+                    {
+                        stationCol.Item().Text(text =>
+                        {
+                            text.Span("TP: ").FontColor("#333333");
+                            text.Span(station.TP).FontColor("#000000");
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(station?.CNSS))
+                    {
+                        stationCol.Item().Text(text =>
+                        {
+                            text.Span("CNSS: ").FontColor("#333333");
+                            text.Span(station.CNSS).FontColor("#000000");
+                        });
+                    }
+                });
             });
-            column.Item().Height(20);
 
-            // Linked BLs (if any)
-            if (data.BonsLivraisonLies.Count > 0)
-            {
-                column.Item().Element(c => ComposeFactureLinkedBLs(c, data));
-                column.Item().Height(15);
-            }
+            column.Item().Height(15);
 
-            // Elements Table
+            // Row 2: Elements Table
             column.Item().Element(c => ComposeFactureElementsTable(c, data));
-            column.Item().Height(20);
 
-            // Total Section
+            column.Item().Height(10);
+
+            // Row 3: Totals
             column.Item().Element(c => ComposeFactureTotalSection(c, data));
-            column.Item().Height(30);
 
-            // Signature section
-            column.Item().Element(c => ComposeFactureSignatureSection(c));
-        });
-    }
+            column.Item().Height(15);
 
-    private void ComposeFactureClientInfo(QContainer container, FacturePdfData data)
-    {
-        container.Border(1).BorderColor("#E0E0E0").Background(White).Padding(15).Column(column =>
-        {
-            column.Item().Text("INFORMATIONS CLIENT").FontSize(11).Bold().FontColor(FactureGreen);
-            column.Item().Height(8);
-            column.Item().LineHorizontal(1).LineColor("#E0E0E0");
-            column.Item().Height(8);
-
-            column.Item().Text(text =>
+            // Row 4: Conditions de Paiement + Signatures
+            column.Item().Row(row =>
             {
-                text.Span("Client: ").SemiBold().FontColor(Gray);
-                text.Span(data.ClientNom ?? "N/A").Bold();
+                // Conditions de Paiement (left)
+                row.RelativeItem().Border(1).BorderColor("#000000").Padding(10).Column(condCol =>
+                {
+                    condCol.Item().Text("CONDITIONS DE PAIEMENT").FontSize(10).Bold().FontColor("#000000");
+                    condCol.Item().Height(5);
+                    condCol.Item().LineHorizontal(0.5f).LineColor("#000000");
+                    condCol.Item().Height(5);
+
+                    if (!string.IsNullOrEmpty(data.MoyenPaiementNom))
+                    {
+                        condCol.Item().Text(text =>
+                        {
+                            text.Span("Moyen de Paiement: ").FontColor("#333333");
+                            text.Span(data.MoyenPaiementNom).Bold().FontColor("#000000");
+                        });
+                    }
+
+                    if (data.DelaiPaiementJours.HasValue)
+                    {
+                        condCol.Item().Text(text =>
+                        {
+                            text.Span("Délai: ").FontColor("#333333");
+                            text.Span($"{data.DelaiPaiementJours} jours").FontColor("#000000");
+                        });
+                    }
+
+                    if (data.DatePaiement.HasValue)
+                    {
+                        condCol.Item().Text(text =>
+                        {
+                            text.Span("Date Paiement: ").FontColor("#333333");
+                            text.Span(data.DatePaiement.Value.ToString("dd/MM/yyyy")).Bold().FontColor("#000000");
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(data.ConditionsPaiement))
+                    {
+                        condCol.Item().Height(5);
+                        condCol.Item().Text(data.ConditionsPaiement).FontSize(8).FontColor("#333333");
+                    }
+                });
+
+                row.ConstantItem(15); // Spacing
+
+                // Signatures (right)
+                row.RelativeItem().Border(1).BorderColor("#000000").Padding(10).Column(sigCol =>
+                {
+                    sigCol.Item().Text("SIGNATURES").FontSize(10).Bold().FontColor("#000000");
+                    sigCol.Item().Height(5);
+                    sigCol.Item().LineHorizontal(0.5f).LineColor("#000000");
+                    sigCol.Item().Height(10);
+
+                    sigCol.Item().Row(sigRow =>
+                    {
+                        sigRow.RelativeItem().Column(clientSig =>
+                        {
+                            clientSig.Item().Text("Signature Client:").FontSize(8).FontColor("#333333");
+                            clientSig.Item().Height(40);
+                            clientSig.Item().LineHorizontal(0.5f).LineColor("#000000");
+                        });
+
+                        sigRow.ConstantItem(20);
+
+                        sigRow.RelativeItem().Column(stationSig =>
+                        {
+                            stationSig.Item().Text("Cachet et Signature:").FontSize(8).FontColor("#333333");
+                            stationSig.Item().Height(40);
+                            stationSig.Item().LineHorizontal(0.5f).LineColor("#000000");
+                        });
+                    });
+                });
             });
-
-            if (!string.IsNullOrEmpty(data.ClientNumero))
-            {
-                column.Item().Text(text =>
-                {
-                    text.Span("N° Client: ").FontColor(Gray);
-                    text.Span(data.ClientNumero);
-                });
-            }
-
-            if (!string.IsNullOrEmpty(data.ClientContact))
-            {
-                column.Item().Text(text =>
-                {
-                    text.Span("Contact: ").FontColor(Gray);
-                    text.Span(data.ClientContact);
-                });
-            }
-
-            if (!string.IsNullOrEmpty(data.ClientAdresse))
-            {
-                column.Item().Text(text =>
-                {
-                    text.Span("Adresse: ").FontColor(Gray);
-                    text.Span(data.ClientAdresse);
-                });
-            }
-        });
-    }
-
-    private void ComposeFactureSummary(QContainer container, FacturePdfData data)
-    {
-        container.Border(1).BorderColor("#E0E0E0").Background(White).Padding(15).Column(column =>
-        {
-            column.Item().Text("RESUME").FontSize(11).Bold().FontColor(FactureGreen);
-            column.Item().Height(8);
-            column.Item().LineHorizontal(1).LineColor("#E0E0E0");
-            column.Item().Height(8);
-
-            column.Item().Text(text =>
-            {
-                text.Span("Nombre d'elements: ").FontColor(Gray);
-                text.Span($"{data.Elements.Count}").Bold();
-            });
-
-            column.Item().Text(text =>
-            {
-                text.Span("Statut: ").FontColor(Gray);
-                var isPaid = data.Statut?.ToLower().Contains("pay") == true;
-                text.Span(data.Statut ?? "N/A").Bold().FontColor(isPaid ? Green : Orange);
-            });
-
-            if (data.DatePaiement.HasValue)
-            {
-                column.Item().Text(text =>
-                {
-                    text.Span("Date Paiement: ").FontColor(Gray);
-                    text.Span(data.DatePaiement.Value.ToString("dd/MM/yyyy")).Bold().FontColor(Green);
-                });
-            }
-
-            if (!string.IsNullOrEmpty(data.MoyenPaiementNom))
-            {
-                column.Item().Text(text =>
-                {
-                    text.Span("Moyen de Paiement: ").FontColor(Gray);
-                    text.Span(data.MoyenPaiementNom);
-                });
-            }
-        });
-    }
-
-    private void ComposeFactureLinkedBLs(QContainer container, FacturePdfData data)
-    {
-        container.Border(1).BorderColor("#E0E0E0").Background(White).Padding(12).Column(column =>
-        {
-            column.Item().Text("BONS DE LIVRAISON LIES").FontSize(11).Bold().FontColor(FactureGreen);
-            column.Item().Height(8);
-
-            foreach (var bl in data.BonsLivraisonLies)
-            {
-                column.Item().Row(row =>
-                {
-                    row.RelativeItem(2).Text(bl.NumeroBL).FontSize(10).Bold().FontColor(BLBlue);
-                    row.RelativeItem().Text(bl.DateBL.ToString("dd/MM/yyyy")).FontSize(10).FontColor(Gray).AlignCenter();
-                    row.RelativeItem().Text($"{bl.MontantBL:N2} MAD").FontSize(10).Bold().AlignRight();
-                });
-                column.Item().Height(4);
-            }
         });
     }
 
     private void ComposeFactureElementsTable(QContainer container, FacturePdfData data)
     {
-        container.Border(1).BorderColor("#E0E0E0").Background(White).Column(column =>
+        container.Border(1).BorderColor("#000000").Column(column =>
         {
-            column.Item().Padding(12).Text("ELEMENTS DE LA FACTURE").FontSize(11).Bold().FontColor(FactureGreen);
-
             // Table header
-            column.Item().Background(LightGray).Padding(8).Row(row =>
+            column.Item().Background("#E0E0E0").BorderBottom(1).BorderColor("#000000").Padding(8).Row(row =>
             {
-                row.RelativeItem(3).Text("Designation").FontSize(9).Bold();
-                row.RelativeItem().Text("Quantite").FontSize(9).Bold().AlignCenter();
-                row.RelativeItem().Text("Prix Unit.").FontSize(9).Bold().AlignRight();
-                row.RelativeItem(1.5f).Text("Montant").FontSize(9).Bold().AlignRight();
+                row.ConstantItem(40).Text("N°").FontSize(9).Bold().FontColor("#000000").AlignCenter();
+                row.RelativeItem(3).Text("Désignation").FontSize(9).Bold().FontColor("#000000");
+                row.RelativeItem().Text("Qté").FontSize(9).Bold().FontColor("#000000").AlignCenter();
+                row.RelativeItem().Text("P.U. HT").FontSize(9).Bold().FontColor("#000000").AlignRight();
+                row.RelativeItem(1.2f).Text("Montant HT").FontSize(9).Bold().FontColor("#000000").AlignRight();
             });
 
             // Table rows
-            var isAlternate = false;
+            var index = 1;
             foreach (var element in data.Elements)
             {
-                var bgColor = isAlternate ? "#FAFAFA" : White;
-                isAlternate = !isAlternate;
+                var bgColor = index % 2 == 0 ? "#F5F5F5" : White;
 
-                column.Item().Background(bgColor).Padding(8).Row(row =>
+                column.Item().Background(bgColor).BorderBottom(0.5f).BorderColor("#E0E0E0").Padding(6).Row(row =>
                 {
-                    row.RelativeItem(3).Text(element.DisplayName).FontSize(10);
-                    row.RelativeItem().Text(element.Quantite.ToString()).FontSize(10).Bold().AlignCenter();
-                    row.RelativeItem().Text($"{element.PrixUnitaire:N2}").FontSize(10).AlignRight();
-                    row.RelativeItem(1.5f).Text($"{element.MontantLigne:N2} MAD").FontSize(10).Bold().FontColor(FactureGreen).AlignRight();
+                    row.ConstantItem(40).Text(index.ToString()).FontSize(9).FontColor("#000000").AlignCenter();
+                    row.RelativeItem(3).Text(element.DisplayName).FontSize(9).FontColor("#000000");
+                    row.RelativeItem().Text(element.Quantite.ToString()).FontSize(9).Bold().FontColor("#000000").AlignCenter();
+                    row.RelativeItem().Text($"{element.PrixUnitaire:N2}").FontSize(9).FontColor("#000000").AlignRight();
+                    row.RelativeItem(1.2f).Text($"{element.MontantLigne:N2}").FontSize(9).Bold().FontColor("#000000").AlignRight();
                 });
+                index++;
             }
 
             if (data.Elements.Count == 0)
             {
-                column.Item().Padding(12).Text("Aucun element").FontSize(10).FontColor(Gray);
+                column.Item().Padding(12).AlignCenter().Text("Aucun élément").FontSize(10).FontColor("#666666");
             }
         });
     }
 
     private void ComposeFactureTotalSection(QContainer container, FacturePdfData data)
     {
-        container.AlignRight().Width(250).Border(1).BorderColor("#E0E0E0").Background("#E8F5E9").Padding(15).Column(column =>
+        container.AlignRight().Width(280).Border(1).BorderColor("#000000").Column(column =>
         {
-            column.Item().Row(row =>
+            // Subtotal HT
+            column.Item().BorderBottom(0.5f).BorderColor("#E0E0E0").Padding(8).Row(row =>
             {
-                row.RelativeItem().Text("TOTAL TTC").FontSize(14).Bold().FontColor(FactureGreen);
-                row.RelativeItem().Text($"{data.MontantTotal:N2} MAD").FontSize(18).Bold().FontColor(FactureGreen).AlignRight();
+                row.RelativeItem().Text("Total HT:").FontSize(10).FontColor("#333333");
+                row.ConstantItem(100).Text($"{data.MontantHT:N2} MAD").FontSize(10).FontColor("#000000").AlignRight();
+            });
+
+            // TVA
+            if (data.MontantTVA > 0)
+            {
+                column.Item().BorderBottom(0.5f).BorderColor("#E0E0E0").Padding(8).Row(row =>
+                {
+                    row.RelativeItem().Text($"TVA ({data.TauxTVA:N0}%):").FontSize(10).FontColor("#333333");
+                    row.ConstantItem(100).Text($"{data.MontantTVA:N2} MAD").FontSize(10).FontColor("#000000").AlignRight();
+                });
+            }
+
+            // Total TTC
+            column.Item().Background("#F0F0F0").Padding(10).Row(row =>
+            {
+                row.RelativeItem().Text("TOTAL TTC:").FontSize(12).Bold().FontColor("#000000");
+                row.ConstantItem(120).Text($"{data.MontantTotal:N2} MAD").FontSize(14).Bold().FontColor("#000000").AlignRight();
             });
         });
     }
 
-    private void ComposeFactureSignatureSection(QContainer container)
+    private void ComposeFactureFooter(QContainer container, FacturePdfData data)
     {
-        container.Row(row =>
+        var station = data.StationInfo;
+        
+        container.Column(column =>
         {
-            row.RelativeItem().Column(col =>
+            column.Item().LineHorizontal(0.5f).LineColor("#000000");
+            column.Item().Height(5);
+            
+            column.Item().AlignCenter().Text(text =>
             {
-                col.Item().Text("Signature Client:").FontSize(9).FontColor(Gray);
-                col.Item().Height(5);
-                col.Item().LineHorizontal(1).LineColor(Gray);
-                col.Item().Height(30);
+                if (station != null)
+                {
+                    text.Span($"{station.StationName}").FontSize(8).FontColor("#333333");
+                    if (!string.IsNullOrEmpty(station.Adresse))
+                        text.Span($" - {station.Adresse}").FontSize(8).FontColor("#333333");
+                    if (!string.IsNullOrEmpty(station.Ville))
+                        text.Span($", {station.Ville}").FontSize(8).FontColor("#333333");
+                }
+                else
+                {
+                    text.Span("BombaProMax - Station Service").FontSize(8).FontColor("#333333");
+                }
             });
-
-            row.ConstantItem(50);
-
-            row.RelativeItem().Column(col =>
+            
+            column.Item().AlignCenter().Text(text =>
             {
-                col.Item().Text("Cachet et Signature:").FontSize(9).FontColor(Gray);
-                col.Item().Height(5);
-                col.Item().LineHorizontal(1).LineColor(Gray);
-                col.Item().Height(30);
+                text.Span("Page ").FontSize(8).FontColor(Gray);
+                text.CurrentPageNumber().FontSize(8).FontColor(Gray);
+                text.Span(" / ").FontSize(8).FontColor(Gray);
+                text.TotalPages().FontSize(8).FontColor(Gray);
             });
         });
     }
+
+    // Remove old methods that are no longer needed
+    private void ComposeFactureClientInfo(QContainer container, FacturePdfData data) { }
+    private void ComposeFactureSummary(QContainer container, FacturePdfData data) { }
+    private void ComposeFactureLinkedBLs(QContainer container, FacturePdfData data) { }
+    private void ComposeFactureSignatureSection(QContainer container) { }
 
     #endregion
 
@@ -1124,7 +1323,7 @@ public class PdfGeneratorService
 
             if (data.Details.Count == 0)
             {
-                column.Item().Padding(12).Text("Aucun detail").FontSize(10).FontColor(Gray);
+                column.Item().Padding(12).AlignCenter().Text("Aucun detail").FontSize(10).FontColor(Gray);
             }
         });
     }
@@ -1136,7 +1335,13 @@ public class PdfGeneratorService
             column.Item().Row(row =>
             {
                 row.RelativeItem().Text("TOTAL").FontSize(14).Bold().FontColor(BLBlue);
-                row.RelativeItem().Text($"{data.MontantTotal:N2} MAD").FontSize(18).Bold().FontColor(BLBlue).AlignRight();
+                row.RelativeItem();
+                row.RelativeItem();
+                row.RelativeItem();
+                row.RelativeItem();
+                row.RelativeItem();
+                row.RelativeItem();
+                row.RelativeItem().Text($"{data.MontantTotal:N2} MAD").FontSize(14).Bold().FontColor(BLBlue).AlignRight();
             });
         });
     }
@@ -1558,6 +1763,5 @@ public class PdfGeneratorService
     }
 
     #endregion
-
 }
 

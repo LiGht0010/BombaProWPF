@@ -54,6 +54,9 @@ public class AppDbContext : DbContext
     // Cash management entities
     public DbSet<DepotCaisse> DepotsCaisse { get; set; } = default!;
 
+    // Station information (business details for official documents)
+    public DbSet<StationInfo> StationInfos { get; set; } = default!;
+
 
     //seeding an admin user and super admin user
     protected override void OnModelCreating(ModelBuilder modelBuilder)

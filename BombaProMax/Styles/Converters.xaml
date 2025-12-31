@@ -23,6 +23,8 @@
     <converters:BoolToFactureStatusConverter x:Key="BoolToFactureStatusConverter"/>
     <converters:IsNotPaidConverter x:Key="IsNotPaidConverter"/>
     <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+    <converters:BoolToEditCreateTextConverter x:Key="BoolToEditCreateTextConverter"/>
+    <converters:StringToBoolConverter x:Key="StringToBoolConverter"/>
     <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
     <converters:CiterneIdToColorConverter x:Key="CiterneIdToColorConverter"/>
     <converters:EqualityToColorConverter x:Key="EqualityToColorConverter"/>

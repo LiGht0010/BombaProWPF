@@ -8,6 +8,16 @@ public static class ApiConfig
     // ===========================================
     // CONFIGURATION (can be overridden at runtime)
     // ===========================================
+
+
+    // ===========================================
+    // CHANGE THIS URL TO SWITCH ENVIRONMENTS
+    // ===========================================
+
+    // Production (Debian Server)
+    //private static string _baseUrl = "http://62.84.189.17:5000/api";
+
+    // Development (Local)
     private static string _baseUrl = "https://localhost:7100/api";
     private static string _tenantId = "sidikacem";
 

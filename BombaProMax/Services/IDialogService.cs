@@ -209,4 +209,9 @@ public interface IDialogService
     /// Shows the user details popup.
     /// </summary>
     Task ShowUserDetailsPopupAsync(UserDto user);
+
+    /// <summary>
+    /// Shows the station info edit/create popup and returns the saved station info or null.
+    /// </summary>
+    Task<StationInfoDto?> ShowStationInfoEditPopupAsync(StationInfoDto? existingStationInfo);
 }

@@ -9,12 +9,19 @@ public partial class FactureDto : ObservableObject
     public DateOnly? DateFacture { get; set; }
     public int? ClientID { get; set; }
     public decimal? MontantTotal { get; set; }
+    public decimal? MontantHT { get; set; }
+    public decimal? MontantTVA { get; set; }
     public string? Statut { get; set; }
     public int? MoyenPaiementID { get; set; }
     public DateOnly? DatePaiement { get; set; }
 
     // Display fields for related entities
     public string? ClientNom { get; set; }
+    public string? ClientNumero { get; set; }
+    public string? ClientAdresse { get; set; }
+    public string? ClientContact { get; set; }
+    public string? ClientICE { get; set; }
+    public string? ClientIF { get; set; }
     public string? MoyenPaiementNom { get; set; }
 
     // UI selection (observable for binding)

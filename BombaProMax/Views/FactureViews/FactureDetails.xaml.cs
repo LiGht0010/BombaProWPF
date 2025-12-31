@@ -10,6 +10,7 @@ public partial class FactureDetails : Popup
     private readonly List<ElementsFactureDto> _elements;
     private readonly List<BonLivraisonDto> _linkedBLs;
     private readonly FactureService _factureService;
+    private readonly StationInfoService _stationInfoService;
 
     public FactureDetails(FactureDto facture, List<ElementsFactureDto>? elements = null, List<BonLivraisonDto>? linkedBLs = null)
     {
@@ -19,6 +20,7 @@ public partial class FactureDetails : Popup
         _elements = elements ?? [];
         _linkedBLs = linkedBLs ?? [];
         _factureService = new FactureService();
+        _stationInfoService = new StationInfoService();
 
         // If data not provided, load it
         if (_elements.Count == 0)
@@ -212,8 +214,11 @@ public partial class FactureDetails : Popup
             PdfButton.IsEnabled = false;
             PdfButton.Text = "? Génération...";
 
+            // Load station info for the PDF
+            var stationInfo = await _stationInfoService.GetStationInfoAsync();
+
             // Build PDF data
-            var pdfData = BuildPdfData();
+            var pdfData = await BuildPdfDataAsync(stationInfo);
 
             // Generate PDF
             var pdfService = new PdfGeneratorService();
@@ -251,7 +256,7 @@ public partial class FactureDetails : Popup
         }
     }
 
-    private FacturePdfData BuildPdfData()
+    private async Task<FacturePdfData> BuildPdfDataAsync(StationInfoDto? stationInfo)
     {
         var pdfData = new FacturePdfData
         {
@@ -259,10 +264,19 @@ public partial class FactureDetails : Popup
             NumeroFacture = _facture.NumeroFacture ?? "",
             DateFacture = _facture.DateFacture ?? DateOnly.FromDateTime(DateTime.Now),
             ClientNom = _facture.ClientNom,
+            ClientNumero = _facture.ClientNumero,
+            ClientAdresse = _facture.ClientAdresse,
+            ClientContact = _facture.ClientContact,
+            ClientICE = _facture.ClientICE,
+            ClientIF = _facture.ClientIF,
             Statut = _facture.Statut,
             DatePaiement = _facture.DatePaiement,
             MoyenPaiementNom = _facture.MoyenPaiementNom,
-            MontantTotal = _facture.MontantTotal ?? 0
+            MontantTotal = _facture.MontantTotal ?? 0,
+            MontantHT = _facture.MontantHT ?? (_facture.MontantTotal ?? 0),
+            MontantTVA = _facture.MontantTVA ?? 0,
+            TauxTVA = 20, // Default TVA rate
+            StationInfo = stationInfo
         };
 
         // Convert elements
@@ -275,14 +289,22 @@ public partial class FactureDetails : Popup
             PrixUnitaire = e.PrixUnitaire ?? 0
         }).ToList();
 
-        // Convert linked BLs
+        // Convert linked BLs with IDs
         pdfData.BonsLivraisonLies = _linkedBLs.Select(bl => new FactureBLLinkPdfData
         {
+            BLID = bl.ID,
             NumeroBL = bl.NumeroBL,
             DateBL = bl.DateBL,
             MontantBL = bl.MontantTotal
         }).ToList();
 
         return pdfData;
+    }
+
+    // Keep old method for backward compatibility but mark as obsolete
+    [Obsolete("Use BuildPdfDataAsync instead")]
+    private FacturePdfData BuildPdfData()
+    {
+        return BuildPdfDataAsync(null).GetAwaiter().GetResult();
     }
 }

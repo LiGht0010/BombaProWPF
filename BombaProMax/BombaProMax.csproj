@@ -57,6 +57,9 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		
+		<!-- Station Logo for PDF generation -->
+		<EmbeddedResource Include="StationIcon\Screenshot 2025-12-31 213755.png" LogicalName="BombaProMax.StationIcon.station_logo.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -415,6 +418,12 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ServiceViews\ServicePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SettingsViews\StationInfoEditPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SettingsViews\StationInfoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TenantSelectionPage.xaml">

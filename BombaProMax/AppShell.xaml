@@ -24,6 +24,7 @@
     xmlns:service="clr-namespace:BombaProMax.Views.ServiceViews"
     xmlns:venteService="clr-namespace:BombaProMax.Views.VenteServiceViews"
     xmlns:caisse="clr-namespace:BombaProMax.Views.CaisseViews"
+    xmlns:settings="clr-namespace:BombaProMax.Views.SettingsViews"
     FlyoutBackgroundColor="#FFFFFF"
     BackgroundColor="#F8FAFC"
     Shell.NavBarIsVisible="False"
@@ -171,5 +172,12 @@
     <FlyoutItem Title="GESTION DES RESSOURCES" FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent x:Name="FournisseurShellContent" Title="Fournisseurs &amp; Flotte" Route="FournisseurPage"/>
         <ShellContent x:Name="EmployeShellContent" Title="Employés" Route="EmployePage"/>
+    </FlyoutItem>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- PARAMÈTRES -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <FlyoutItem Title="PARAMÈTRES" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent x:Name="StationInfoShellContent" Title="Informations Station" Route="StationInfoPage"/>
     </FlyoutItem>
 </Shell>

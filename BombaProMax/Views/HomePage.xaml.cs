@@ -190,10 +190,7 @@ public partial class HomePage : ContentPage
         await Shell.Current.GoToAsync($"//{nameof(ReservoirPage)}");
     }
 
-    private async void OnUsersTapped(object? sender, TappedEventArgs e)
-    {
-        await Shell.Current.GoToAsync($"//{nameof(User)}");
-    }
+
 
     private async void OnPompesTapped(object? sender, TappedEventArgs e)
     {

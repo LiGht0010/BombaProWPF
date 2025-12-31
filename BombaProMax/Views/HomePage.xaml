@@ -220,7 +220,7 @@
                     </Border>
                 </Grid>
 
-                <!-- Row 3: 3 buttons -->
+                <!-- Row 3: 2 buttons -->
                 <Grid Style="{StaticResource HomeActionsGrid}">
                     <!-- Gestion Stock -->
                     <Border Grid.Column="0" Style="{StaticResource HomeActionCard}">
@@ -236,22 +236,8 @@
                         </HorizontalStackLayout>
                     </Border>
 
-                    <!-- Gestion Utilisateurs -->
-                    <Border Grid.Column="1" Style="{StaticResource HomeActionCard}">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnUsersTapped"/>
-                        </Border.GestureRecognizers>
-                        <HorizontalStackLayout Style="{StaticResource HomeActionCardStack}">
-                            <Label Text="👥" Style="{StaticResource HomeActionIcon}"/>
-                            <VerticalStackLayout Style="{StaticResource HomeActionTextStack}">
-                                <Label Text="Utilisateurs" Style="{StaticResource HomeActionTitle}"/>
-                                <Label Text="Gérer accès" Style="{StaticResource HomeActionSubtitle}"/>
-                            </VerticalStackLayout>
-                        </HorizontalStackLayout>
-                    </Border>
-
                     <!-- Pompes -->
-                    <Border Grid.Column="2" Style="{StaticResource HomeActionCard}">
+                    <Border Grid.Column="1" Style="{StaticResource HomeActionCard}">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnPompesTapped"/>
                         </Border.GestureRecognizers>

@@ -22,6 +22,7 @@ using BombaProMax.Views.RapportViews;
 using BombaProMax.Views.ServiceViews;
 using BombaProMax.Views.VenteServiceViews;
 using BombaProMax.Views.CaisseViews;
+using BombaProMax.Views.SettingsViews;
 
 namespace BombaProMax
 {
@@ -79,6 +80,7 @@ namespace BombaProMax
             Routing.RegisterRoute(nameof(ServicePage), typeof(ServicePage));
             Routing.RegisterRoute(nameof(VenteServicePage), typeof(VenteServicePage));
             Routing.RegisterRoute(nameof(CaissePage), typeof(CaissePage));
+            Routing.RegisterRoute(nameof(StationInfoPage), typeof(StationInfoPage));
 
             // Set ShellContent pages from DI
             TenantSelectionShellContent.Content = serviceProvider.GetRequiredService<TenantSelectionPage>();
@@ -101,6 +103,7 @@ namespace BombaProMax
             ServiceShellContent.Content = serviceProvider.GetRequiredService<ServicePage>();
             VenteServiceShellContent.Content = serviceProvider.GetRequiredService<VenteServicePage>();
             CaisseShellContent.Content = serviceProvider.GetRequiredService<CaissePage>();
+            StationInfoShellContent.Content = serviceProvider.GetRequiredService<StationInfoPage>();
 
             // Navigate to TenantSelectionPage on startup (before login)
             Dispatcher.Dispatch(async () =>
@@ -263,6 +266,9 @@ namespace BombaProMax
                     _userInitialsLabel.Text = initials;
                     _userNameLabel.Text = currentUser.Name ?? "Utilisateur";
                     _userRoleLabel.Text = role;
+
+                    // Update menu visibility based on user permissions
+                    UpdateMenuVisibility(currentUser.IsSuperAdmin);
                 }
                 else
                 {
@@ -270,8 +276,25 @@ namespace BombaProMax
                     _userInitialsLabel.Text = "U";
                     _userNameLabel.Text = "Utilisateur";
                     _userRoleLabel.Text = "Connecté";
+
+                    // Hide super admin menus when no user is logged in
+                    UpdateMenuVisibility(false);
                 }
             });
+        }
+
+        /// <summary>
+        /// Updates the visibility of menu items based on user's IsSuperAdmin status.
+        /// Only SuperAdmin users can see: Utilisateurs, Rapports, Tableau de Bord, Informations Station.
+        /// </summary>
+        /// <param name="isSuperAdmin">Whether the current user is a super admin.</param>
+        private void UpdateMenuVisibility(bool isSuperAdmin)
+        {
+            // These menu items are only visible to SuperAdmin users
+            UsersShellContent.IsVisible = isSuperAdmin;
+            RapportShellContent.IsVisible = isSuperAdmin;
+            DashboardShellContent.IsVisible = isSuperAdmin;
+            StationInfoShellContent.IsVisible = isSuperAdmin;
         }
 
         private static string GetInitials(string? name)

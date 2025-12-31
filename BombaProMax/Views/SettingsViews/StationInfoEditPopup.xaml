@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.SettingsViews.StationInfoEditPopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="700" HeightRequest="800" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <Border Grid.Row="0" BackgroundColor="#4A8FBF" Padding="20,18" StrokeThickness="0">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label x:Name="TitleLabel" Text="Informations Station" FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                        <Label x:Name="SubtitleLabel" Text="Configurer les informations de votre station" FontSize="12" TextColor="#B3D9F2"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="X" BackgroundColor="#3A7CA5" TextColor="White" FontSize="16" WidthRequest="36" HeightRequest="36" CornerRadius="18" Clicked="OnCancelClicked"/>
+                </Grid>
+            </Border>
+
+            <ScrollView Grid.Row="1" Padding="20,15">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="INFORMATIONS DE BASE" FontSize="11" FontAttributes="Bold" TextColor="#4A8FBF"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Nom de la Station *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Entry x:Name="StationNameEntry" Placeholder="Ex: Station Service Al Amal" FontSize="14"/>
+                            </VerticalStackLayout>
+                            
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="Adresse" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="AdresseEntry" Placeholder="Rue, numero..." FontSize="14"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Ville" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="VilleEntry" Placeholder="Ex: Casablanca" FontSize="14"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="INFORMATIONS FISCALES" FontSize="11" FontAttributes="Bold" TextColor="#4A8FBF"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="5">
+                                    <Label Text="ICE" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="ICEEntry" Placeholder="15 chiffres" FontSize="14" Keyboard="Numeric"/>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
+                                    <Label Text="IF" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="IFEntry" Placeholder="Identifiant fiscal" FontSize="14"/>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="1" Spacing="5">
+                                    <Label Text="RC" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="RCEntry" Placeholder="Numero RC" FontSize="14"/>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="5">
+                                    <Label Text="TP" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="TPEntry" Placeholder="Numero TP" FontSize="14"/>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="2" Spacing="5">
+                                    <Label Text="CNSS" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="CNSSEntry" Placeholder="Numero CNSS" FontSize="14"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="COORDONNEES" FontSize="11" FontAttributes="Bold" TextColor="#4A8FBF"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15" RowDefinitions="Auto,Auto" RowSpacing="12">
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="5">
+                                    <Label Text="Telephone" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="TelEntry" Placeholder="Ex: +212 5XX XXX XXX" Keyboard="Telephone" FontSize="14"/>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
+                                    <Label Text="Fax" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="FaxEntry" Placeholder="Ex: +212 5XX XXX XXX" Keyboard="Telephone" FontSize="14"/>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="1" Spacing="5">
+                                    <Label Text="Email" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="EmailEntry" Placeholder="contact@station.ma" Keyboard="Email" FontSize="14"/>
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="5">
+                                    <Label Text="Site Web" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="SiteWebEntry" Placeholder="www.station.ma" Keyboard="Url" FontSize="14"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="#E3F2FD" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Ces informations apparaitront sur vos factures" FontAttributes="Bold" TextColor="#1976D2" FontSize="13"/>
+                            <Label Text="Assurez-vous que les informations fiscales sont correctes" TextColor="#5A6068" FontSize="11"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <Border Grid.Row="2" BackgroundColor="White" Padding="20,15" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-2" Radius="6" Opacity="0.06"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <Label x:Name="ErrorLabel" TextColor="#F44336" FontSize="12" IsVisible="False" VerticalOptions="Center"/>
+                    <Button Grid.Column="1" Text="Annuler" BackgroundColor="#9E9E9E" TextColor="White" Padding="25,12" CornerRadius="8" Clicked="OnCancelClicked"/>
+                    <Button Grid.Column="2" x:Name="SaveButton" Text="Enregistrer" BackgroundColor="#5EAA8D" TextColor="White" Padding="25,12" CornerRadius="8" FontAttributes="Bold" Clicked="OnSaveClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>
