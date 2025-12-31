@@ -2,236 +2,243 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="BombaProMax.Views.FournisseurViews.FournisseurDetailsPopup">
+               x:Class="BombaProMax.Views.FournisseurViews.FournisseurDetailsPopup"
+               Color="Transparent">
 
-    <Border Style="{StaticResource FournisseurPopupContainer}">
-        <ScrollView>
-            <VerticalStackLayout Spacing="20">
-                <!-- Header with Name and Status -->
-                <Grid ColumnDefinitions="*,Auto,Auto">
-                    <VerticalStackLayout Grid.Column="0" Spacing="5">
-                        <Label Text="📋 Détails du Fournisseur" 
-                               Style="{StaticResource FournisseurPopupTitle}"
-                               FontSize="20"
-                               TextColor="#7F8C8D"/>
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="700" HeightRequest="800" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" BackgroundColor="#607D8B" Padding="20,18" StrokeThickness="0">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="15">
+                    <Border Grid.Column="0"
+                            BackgroundColor="White"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="25"/>
+                        </Border.StrokeShape>
+                        <Label Text="🏭" 
+                               FontSize="24"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
                         <Label x:Name="FullNameLabel"
                                Text="Fournisseur" 
-                               Style="{StaticResource FournisseurPopupTitle}"/>
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                        <Label Text="Détails du fournisseur" 
+                               FontSize="12"
+                               TextColor="#CFD8DC"/>
                     </VerticalStackLayout>
-                    
                     <Border x:Name="StatutBadge"
-                            Grid.Column="1"
-                            Style="{StaticResource FournisseurStatusBadge}"
-                            Margin="0,0,10,0">
+                            Grid.Column="2"
+                            BackgroundColor="#4CAF50"
+                            Padding="10,5"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
                         <Label x:Name="StatutLabel"
                                Text="Actif"
-                               Style="{StaticResource FournisseurStatusLabel}"/>
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="White"/>
                     </Border>
-                    
-                    <Button Grid.Column="2" 
+                    <Button Grid.Column="3" 
                             Text="✕" 
-                            Style="{StaticResource FournisseurPopupCloseButton}"
+                            BackgroundColor="#546E7A" 
+                            TextColor="White" 
+                            FontSize="16" 
+                            WidthRequest="36" 
+                            HeightRequest="36" 
+                            CornerRadius="18" 
                             Clicked="OnCloseClicked"/>
                 </Grid>
+            </Border>
 
-                <BoxView Style="{StaticResource FournisseurPopupDivider}"/>
-
-                <!-- Sections -->
-                <VerticalStackLayout Spacing="18">
-
-                    <!-- Basic Information Section -->
-                    <Border Style="{StaticResource FournisseurPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="👤 Informations de Base" 
-                                   Style="{StaticResource FournisseurPopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource FournisseurPopupDivider}"/>
-
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="15" RowDefinitions="Auto,Auto">
-                                <!-- Prénom -->
-                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="5">
-                                    <Label Text="Prénom" 
-                                           Style="{StaticResource FournisseurPopupFieldLabel}"/>
-                                    <Label x:Name="PrenomLabel"
-                                           Text="N/A"
-                                           Style="{StaticResource FournisseurDetailsValueLabel}"/>
+            <!-- ========================================= -->
+            <!-- CONTENT                                   -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20,15">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Basic Info Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="👤 INFORMATIONS DE BASE" FontSize="11" FontAttributes="Bold" TextColor="#607D8B"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="12" RowDefinitions="Auto,Auto">
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="3">
+                                    <Label Text="Prénom" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="PrenomLabel" Text="N/A" FontSize="13" TextColor="#333"/>
                                 </VerticalStackLayout>
-
-                                <!-- Nom -->
-                                <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
-                                    <Label Text="Nom" 
-                                           Style="{StaticResource FournisseurPopupFieldLabel}"/>
-                                    <Label x:Name="NomLabel"
-                                           Text="N/A"
-                                           Style="{StaticResource FournisseurDetailsValueLabel}"/>
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="3">
+                                    <Label Text="Nom" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="NomLabel" Text="N/A" FontSize="13" TextColor="#333"/>
                                 </VerticalStackLayout>
-
-                                <!-- Société (full width) -->
-                                <VerticalStackLayout Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Spacing="5">
-                                    <Label Text="Société" 
-                                           Style="{StaticResource FournisseurPopupFieldLabel}"/>
-                                    <Label x:Name="SocieteLabel"
-                                           Text="N/A"
-                                           Style="{StaticResource FournisseurDetailsValueLabel}"/>
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Spacing="3">
+                                    <Label Text="Société" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="SocieteLabel" Text="N/A" FontSize="13" TextColor="#333"/>
                                 </VerticalStackLayout>
                             </Grid>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Contact Information Section -->
-                    <Border Style="{StaticResource FournisseurPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="📞 Informations de Contact" 
-                                   Style="{StaticResource FournisseurPopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource FournisseurPopupDivider}"/>
-
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="15" RowDefinitions="Auto,Auto,Auto">
-                                <!-- Adresse (full width) -->
-                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Spacing="5">
-                                    <Label Text="Adresse" 
-                                           Style="{StaticResource FournisseurPopupFieldLabel}"/>
-                                    <Label x:Name="AdresseLabel"
-                                           Text="Non renseignée"
-                                           Style="{StaticResource FournisseurDetailsValueLabel}"/>
+                    <!-- Contact Info Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="📞 INFORMATIONS DE CONTACT" FontSize="11" FontAttributes="Bold" TextColor="#607D8B"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="12" RowDefinitions="Auto,Auto,Auto">
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Spacing="3">
+                                    <Label Text="Adresse" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="AdresseLabel" Text="Non renseignée" FontSize="13" TextColor="#333"/>
                                 </VerticalStackLayout>
-
-                                <!-- Téléphone -->
-                                <VerticalStackLayout Grid.Column="0" Grid.Row="1" Spacing="5">
-                                    <Label Text="Téléphone" 
-                                           Style="{StaticResource FournisseurPopupFieldLabel}"/>
-                                    <Label x:Name="TelephoneLabel"
-                                           Text="Non renseigné"
-                                           Style="{StaticResource FournisseurDetailsValueLabel}"/>
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="1" Spacing="3">
+                                    <Label Text="Téléphone" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="TelephoneLabel" Text="Non renseigné" FontSize="13" TextColor="#333"/>
                                 </VerticalStackLayout>
-
-                                <!-- Email -->
-                                <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="5">
-                                    <Label Text="Email" 
-                                           Style="{StaticResource FournisseurPopupFieldLabel}"/>
-                                    <Label x:Name="EmailLabel"
-                                           Text="Non renseigné"
-                                           Style="{StaticResource FournisseurDetailsValueLabel}"/>
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="3">
+                                    <Label Text="Email" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="EmailLabel" Text="Non renseigné" FontSize="13" TextColor="#333"/>
                                 </VerticalStackLayout>
-
-                                <!-- Contact (full width) -->
-                                <VerticalStackLayout Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Spacing="5">
-                                    <Label Text="Personne de Contact" 
-                                           Style="{StaticResource FournisseurPopupFieldLabel}"/>
-                                    <Label x:Name="ContactLabel"
-                                           Text="Non renseigné"
-                                           Style="{StaticResource FournisseurDetailsValueLabel}"/>
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Spacing="3">
+                                    <Label Text="Personne de Contact" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="ContactLabel" Text="Non renseigné" FontSize="13" TextColor="#333"/>
                                 </VerticalStackLayout>
                             </Grid>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Financial Information Section -->
-                    <Border Style="{StaticResource FournisseurPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="💳 Informations Financières" 
-                                   Style="{StaticResource FournisseurPopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource FournisseurPopupDivider}"/>
-
-                            <VerticalStackLayout Spacing="15">
-                                <!-- RIB -->
-                                <VerticalStackLayout Spacing="5">
-                                    <Label Text="Numéro de Compte Bancaire (RIB)" 
-                                           Style="{StaticResource FournisseurPopupFieldLabel}"/>
-                                    <Label x:Name="RIBLabel"
-                                           Text="Non renseigné"
-                                           Style="{StaticResource FournisseurDetailsValueLabel}"/>
+                    <!-- Financial Info Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="💳 INFORMATIONS FINANCIÈRES" FontSize="11" FontAttributes="Bold" TextColor="#607D8B"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <VerticalStackLayout Spacing="12">
+                                <VerticalStackLayout Spacing="3">
+                                    <Label Text="Numéro de Compte Bancaire (RIB)" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="RIBLabel" Text="Non renseigné" FontSize="13" TextColor="#333"/>
                                 </VerticalStackLayout>
-
-                                <!-- Conditions de Paiement -->
-                                <VerticalStackLayout Spacing="5">
-                                    <Label Text="Conditions de Paiement" 
-                                           Style="{StaticResource FournisseurPopupFieldLabel}"/>
-                                    <Label x:Name="ConditionsPaiementLabel"
-                                           Text="Non renseignées"
-                                           Style="{StaticResource FournisseurDetailsValueLabel}"/>
+                                <VerticalStackLayout Spacing="3">
+                                    <Label Text="Conditions de Paiement" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="ConditionsPaiementLabel" Text="Non renseignées" FontSize="13" TextColor="#333"/>
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Related Records Statistics -->
-                    <Border Style="{StaticResource FournisseurPopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="📊 Enregistrements Associés" 
-                                   Style="{StaticResource FournisseurPopupSectionTitle}"/>
+                    <!-- Stats Cards Row -->
+                    <Label Text="📊 ENREGISTREMENTS ASSOCIÉS" FontSize="11" FontAttributes="Bold" TextColor="#607D8B" Margin="0,5,0,0"/>
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                        <!-- Achats -->
+                        <Border Grid.Column="0" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                                <Label Text="🛒" FontSize="22" HorizontalOptions="Center"/>
+                                <Label x:Name="AchatsCountLabel" Text="0" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#1565C0"/>
+                                <Label Text="Achats" FontSize="10" HorizontalOptions="Center" TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
 
-                            <BoxView Style="{StaticResource FournisseurPopupDivider}"/>
+                        <!-- Camions -->
+                        <Border Grid.Column="1" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                                <Label Text="🚚" FontSize="22" HorizontalOptions="Center"/>
+                                <Label x:Name="CamionsCountLabel" Text="0" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#2E7D32"/>
+                                <Label Text="Camions" FontSize="10" HorizontalOptions="Center" TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
 
-                            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
-                                <!-- Achats -->
-                                <Border Grid.Column="0" Style="{StaticResource FournisseurStatsCard}">
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="🛒" 
-                                               FontSize="24"
-                                               HorizontalTextAlignment="Center"/>
-                                        <Label x:Name="AchatsCountLabel"
-                                               Text="0"
-                                               Style="{StaticResource FournisseurStatsNumber}"/>
-                                        <Label Text="Achats" 
-                                               Style="{StaticResource FournisseurStatsLabel}"/>
-                                    </VerticalStackLayout>
-                                </Border>
+                        <!-- Citernes -->
+                        <Border Grid.Column="2" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                                <Label Text="🛢️" FontSize="22" HorizontalOptions="Center"/>
+                                <Label x:Name="CiternesCountLabel" Text="0" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#795548"/>
+                                <Label Text="Citernes" FontSize="10" HorizontalOptions="Center" TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
 
-                                <!-- Camions -->
-                                <Border Grid.Column="1" Style="{StaticResource FournisseurStatsCard}">
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="🚚" 
-                                               FontSize="24"
-                                               HorizontalTextAlignment="Center"/>
-                                        <Label x:Name="CamionsCountLabel"
-                                               Text="0"
-                                               Style="{StaticResource FournisseurStatsNumber}"/>
-                                        <Label Text="Camions" 
-                                               Style="{StaticResource FournisseurStatsLabel}"/>
-                                    </VerticalStackLayout>
-                                </Border>
-
-                                <!-- Citernes -->
-                                <Border Grid.Column="2" Style="{StaticResource FournisseurStatsCard}">
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="🛢️" 
-                                               FontSize="24"
-                                               HorizontalTextAlignment="Center"/>
-                                        <Label x:Name="CiternesCountLabel"
-                                               Text="0"
-                                               Style="{StaticResource FournisseurStatsNumber}"/>
-                                        <Label Text="Citernes" 
-                                               Style="{StaticResource FournisseurStatsLabel}"/>
-                                    </VerticalStackLayout>
-                                </Border>
-
-                                <!-- Chauffeurs -->
-                                <Border Grid.Column="3" Style="{StaticResource FournisseurStatsCard}">
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="👨‍✈️" 
-                                               FontSize="24"
-                                               HorizontalTextAlignment="Center"/>
-                                        <Label x:Name="ChauffeursCountLabel"
-                                               Text="0"
-                                               Style="{StaticResource FournisseurStatsNumber}"/>
-                                        <Label Text="Chauffeurs" 
-                                               Style="{StaticResource FournisseurStatsLabel}"/>
-                                    </VerticalStackLayout>
-                                </Border>
-                            </Grid>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Close Button -->
-                    <Button Text="Fermer"
-                            Style="{StaticResource FournisseurDetailsCloseButton}"
-                            Margin="0,10,0,0"
-                            Clicked="OnCloseClicked"/>
+                        <!-- Chauffeurs -->
+                        <Border Grid.Column="3" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                                <Label Text="👨‍✈️" FontSize="22" HorizontalOptions="Center"/>
+                                <Label x:Name="ChauffeursCountLabel" Text="0" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#E65100"/>
+                                <Label Text="Chauffeurs" FontSize="10" HorizontalOptions="Center" TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
 
                 </VerticalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" BackgroundColor="White" Padding="20,15" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-2" Radius="6" Opacity="0.06"/>
+                </Border.Shadow>
+                <Button Text="✓ Fermer" 
+                        BackgroundColor="#607D8B" 
+                        TextColor="White" 
+                        Padding="30,12" 
+                        CornerRadius="8"
+                        FontAttributes="Bold"
+                        HorizontalOptions="End"
+                        Clicked="OnCloseClicked"/>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>

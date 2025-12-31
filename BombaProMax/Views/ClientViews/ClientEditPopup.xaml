@@ -2,173 +2,191 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="BombaProMax.Views.ClientViews.ClientEditPopup">
+               x:Class="BombaProMax.Views.ClientViews.ClientEditPopup"
+               Color="Transparent">
 
-    <Border BackgroundColor="White"       
-           Padding="20"
-           WidthRequest="550">
-        <ScrollView>
-            <VerticalStackLayout Spacing="15">
-                <!-- Header -->
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="600" HeightRequest="700" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" BackgroundColor="#FF9800" Padding="20,18" StrokeThickness="0">
                 <Grid ColumnDefinitions="*,Auto">
-                    <Label Text="✏️ Modifier le client" 
-                           FontSize="20" 
-                           FontAttributes="Bold"
-                           TextColor="#2C3E50"/>
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="✏️ Modifier le Client" 
+                               FontSize="20" 
+                               FontAttributes="Bold" 
+                               TextColor="White"/>
+                        <Label Text="Mettre à jour les informations client" 
+                               FontSize="12" 
+                               TextColor="#FFE0B2"/>
+                    </VerticalStackLayout>
                     <Button Grid.Column="1" 
                             Text="✕" 
-                            BackgroundColor="Transparent"
-                            TextColor="#666"
-                            FontSize="20"
+                            BackgroundColor="#F57C00" 
+                            TextColor="White" 
+                            FontSize="16" 
+                            WidthRequest="36" 
+                            HeightRequest="36" 
+                            CornerRadius="18" 
                             Clicked="OnCancelClicked"/>
                 </Grid>
+            </Border>
 
-                <BoxView Color="#E0E0E0" HeightRequest="1"/>
-
-                <!-- Client Info Badge -->
-                <Border BackgroundColor="#E3F2FD" 
-                       Padding="12"
-                       StrokeShape="RoundRectangle 8">
-                    <Grid ColumnDefinitions="Auto,*">
-                        <Label Grid.Column="0" 
-                               Text="👤" 
-                               FontSize="24"
-                               Margin="0,0,10,0"/>
-                        <VerticalStackLayout Grid.Column="1">
-                            <Label x:Name="ClientBadgeLabel" 
-                                   FontAttributes="Bold"
-                                   TextColor="#1976D2"
-                                   FontSize="16"/>
-                            <Label x:Name="ClientNumberLabel" 
-                                   TextColor="#666"
-                                   FontSize="12"/>
-                        </VerticalStackLayout>
-                    </Grid>
-                </Border>
-
-                <!-- Edit Form -->
+            <!-- ========================================= -->
+            <!-- CONTENT                                   -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20,15">
                 <VerticalStackLayout Spacing="15">
-                    <!-- Numero Client Field (Read-only) -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Numéro Client" 
-                               FontAttributes="Bold" 
-                               TextColor="#666"
-                               FontSize="14"/>
-                        <Entry Text="{Binding NumeroClient}"
-                               IsReadOnly="True"
-                               BackgroundColor="#F0F0F0"
-                               TextColor="#666"/>
-                    </VerticalStackLayout>
-
-                    <!-- Name Field -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Nom du client *" 
-                               FontAttributes="Bold" 
-                               TextColor="#666"
-                               FontSize="14"/>
-                        <Entry Text="{Binding Nom}"
-                               Placeholder="Entrez le nom complet"
-                               BackgroundColor="#F8F8F8"
-                               TextColor="#333"
-                               PlaceholderColor="#999"/>
-                    </VerticalStackLayout>
-
-                    <!-- Contact Field -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Contact (Téléphone) *" 
-                               FontAttributes="Bold" 
-                               TextColor="#666"
-                               FontSize="14"/>
-                        <Entry Text="{Binding Contact}"
-                               Placeholder="Ex: +212 6XX XXX XXX"
-                               Keyboard="Telephone"
-                               BackgroundColor="#F8F8F8"
-                               TextColor="#333"
-                               PlaceholderColor="#999"/>
-                    </VerticalStackLayout>
-
-                    <!-- CIN Field -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="CIN *" 
-                               FontAttributes="Bold" 
-                               TextColor="#666"
-                               FontSize="14"/>
-                        <Entry Text="{Binding CIN}"
-                               Placeholder="Carte d'identité nationale"
-                               BackgroundColor="#F8F8F8"
-                               TextColor="#333"
-                               PlaceholderColor="#999"/>
-                    </VerticalStackLayout>
-
-                    <!-- Company Name Field -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Nom de la société *" 
-                               FontAttributes="Bold" 
-                               TextColor="#666"
-                               FontSize="14"/>
-                        <Entry Text="{Binding NomSociete}"
-                               Placeholder="Nom de l'entreprise"
-                               BackgroundColor="#F8F8F8"
-                               TextColor="#333"
-                               PlaceholderColor="#999"/>
-                    </VerticalStackLayout>
-
-                    <!-- Transaction Summary -->
-                    <Border BackgroundColor="#F5F5F5" 
-                           Padding="15"
-                           StrokeShape="RoundRectangle 8">
-                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="8">
-                            <Label Grid.Row="0" Grid.ColumnSpan="2" 
-                                   Text="📊 Résumé des transactions" 
-                                   FontAttributes="Bold" 
-                                   TextColor="#333"
-                                   FontSize="14"
-                                   Margin="0,0,0,8"/>
-
-                            <Label Grid.Row="1" Grid.Column="0" 
-                                   Text="Factures:" 
-                                   TextColor="#666"/>
-                            <Label Grid.Row="1" Grid.Column="1" 
-                                   Text="{Binding FacturesCount}" 
-                                   TextColor="#1976D2" 
-                                   FontAttributes="Bold"/>
-
-                            <Label Grid.Row="2" Grid.Column="0" 
-                                   Text="Crédits en cours:" 
-                                   TextColor="#666"/>
-                            <Label Grid.Row="2" Grid.Column="1" 
-                                   Text="{Binding CreditsCount}" 
-                                   TextColor="#FF9800" 
-                                   FontAttributes="Bold"/>
+                    
+                    <!-- Client Badge Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Label Text="👤" FontSize="28" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                <Label x:Name="ClientBadgeLabel" 
+                                       FontAttributes="Bold"
+                                       TextColor="#FF9800"
+                                       FontSize="16"/>
+                                <Label x:Name="ClientNumberLabel" 
+                                       TextColor="#666"
+                                       FontSize="12"/>
+                            </VerticalStackLayout>
                         </Grid>
                     </Border>
 
-                    <!-- Error Message -->
-                    <Label x:Name="ErrorLabel"
-                           TextColor="#F44336"
-                           FontSize="14"
-                           IsVisible="False"
-                           HorizontalTextAlignment="Center"/>
+                    <!-- Basic Info Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="INFORMATIONS DE BASE" FontSize="11" FontAttributes="Bold" TextColor="#FF9800"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="🔢 Numéro Client" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry Text="{Binding NumeroClient}"
+                                           IsReadOnly="True"
+                                           BackgroundColor="#EEEEEE"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="👤 Nom du client *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry Text="{Binding Nom}"
+                                           Placeholder="Entrez le nom complet"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
 
-                    <!-- Action Buttons -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
-                        <Button Grid.Column="0"
-                                Text="Annuler" 
-                                BackgroundColor="#9E9E9E"
-                                TextColor="White"
-                                CornerRadius="8"
-                                Clicked="OnCancelClicked"/>
+                    <!-- Contact Info Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="CONTACT &amp; IDENTITÉ" FontSize="11" FontAttributes="Bold" TextColor="#FF9800"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="📱 Téléphone *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry Text="{Binding Contact}"
+                                           Placeholder="Ex: +212 6XX XXX XXX"
+                                           Keyboard="Telephone"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="🪪 CIN *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry Text="{Binding CIN}"
+                                           Placeholder="Carte d'identité nationale"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="🏢 Nom de la société *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Entry Text="{Binding NomSociete}"
+                                       Placeholder="Nom de l'entreprise"
+                                       FontSize="14"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
 
-                        <Button Grid.Column="1"
-                                Text="💾 Enregistrer les modifications" 
-                                BackgroundColor="#FF9800"
-                                TextColor="White"
-                                CornerRadius="8"
-                                FontAttributes="Bold"
-                                Clicked="OnSaveClicked"/>
-                    </Grid>
+                    <!-- Transaction Summary Card -->
+                    <Border BackgroundColor="#E8F5E9" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="📊 Résumé des transactions" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#2E7D32"
+                                   FontSize="13"/>
+                            <BoxView Color="#C8E6C9" HeightRequest="1"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="📄 Factures:" FontSize="12" TextColor="#666" VerticalOptions="Center"/>
+                                    <Label Text="{Binding FacturesCount}" FontSize="14" FontAttributes="Bold" TextColor="#1976D2" VerticalOptions="Center"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="💳 Crédits:" FontSize="12" TextColor="#666" VerticalOptions="Center"/>
+                                    <Label Text="{Binding CreditsCount}" FontSize="14" FontAttributes="Bold" TextColor="#FF9800" VerticalOptions="Center"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
                 </VerticalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" BackgroundColor="White" Padding="20,15" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-2" Radius="6" Opacity="0.06"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <Label x:Name="ErrorLabel" 
+                           TextColor="#F44336" 
+                           FontSize="12" 
+                           IsVisible="False" 
+                           VerticalOptions="Center"/>
+                    <Button Grid.Column="1" 
+                            Text="Annuler" 
+                            BackgroundColor="#9E9E9E" 
+                            TextColor="White" 
+                            Padding="25,12" 
+                            CornerRadius="8" 
+                            Clicked="OnCancelClicked"/>
+                    <Button Grid.Column="2" 
+                            Text="💾 Enregistrer" 
+                            BackgroundColor="#FF9800" 
+                            TextColor="White" 
+                            Padding="25,12" 
+                            CornerRadius="8" 
+                            FontAttributes="Bold" 
+                            Clicked="OnSaveClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>

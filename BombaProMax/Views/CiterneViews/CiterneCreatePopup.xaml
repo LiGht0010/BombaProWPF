@@ -2,115 +2,137 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="BombaProMax.Views.CiterneViews.CiterneCreatePopup">
+               x:Class="BombaProMax.Views.CiterneViews.CiterneCreatePopup"
+               Color="Transparent">
 
-    <Border Style="{StaticResource CiternePopupContainer}">
-        <ScrollView>
-            <VerticalStackLayout Spacing="20">
-                <!-- Header -->
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="600" HeightRequest="580" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" BackgroundColor="#795548" Padding="20,18" StrokeThickness="0">
                 <Grid ColumnDefinitions="*,Auto">
-                    <Label Text="🛢️ Creer une nouvelle citerne" 
-                           Style="{StaticResource CiternePopupTitle}"/>
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="🛢️ Nouvelle Citerne" 
+                               FontSize="20" 
+                               FontAttributes="Bold" 
+                               TextColor="White"/>
+                        <Label Text="Créer une nouvelle citerne de transport" 
+                               FontSize="12" 
+                               TextColor="#D7CCC8"/>
+                    </VerticalStackLayout>
                     <Button Grid.Column="1" 
                             Text="✕" 
-                            Style="{StaticResource CiternePopupCloseButton}"
+                            BackgroundColor="#6D4C41" 
+                            TextColor="White" 
+                            FontSize="16" 
+                            WidthRequest="36" 
+                            HeightRequest="36" 
+                            CornerRadius="18" 
                             Clicked="OnCancelClicked"/>
                 </Grid>
+            </Border>
 
-                <BoxView Style="{StaticResource CiternePopupDivider}"/>
-
-                <!-- Citerne Form -->
-                <VerticalStackLayout Spacing="18">
-
-                    <!-- Basic Information Section -->
-                    <Border Style="{StaticResource CiternePopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="ℹ️ Informations de Base" 
-                                   Style="{StaticResource CiternePopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource CiternePopupDivider}"/>
-
+            <!-- ========================================= -->
+            <!-- CONTENT                                   -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20,15">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Basic Info Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="ℹ️ INFORMATIONS DE BASE" FontSize="11" FontAttributes="Bold" TextColor="#795548"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-                                <!-- Capacite -->
-                                <VerticalStackLayout Grid.Column="0" Spacing="8">
-                                    <Label Text="Capacite (Litres) *" 
-                                           Style="{StaticResource CiternePopupFieldLabel}"/>
-                                    <Border Style="{StaticResource CiternePopupInputContainer}">
-                                        <Entry x:Name="CapaciteEntry"
-                                               Placeholder="Ex: 5000"
-                                               Keyboard="Numeric"
-                                               Style="{StaticResource CiternePopupEntry}"/>
-                                    </Border>
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="📏 Capacité (Litres) *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="CapaciteEntry"
+                                           Placeholder="Ex: 5000"
+                                           Keyboard="Numeric"
+                                           FontSize="14"/>
                                 </VerticalStackLayout>
-
-                                <!-- Matricule -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                    <Label Text="Matricule Citerne" 
-                                           Style="{StaticResource CiternePopupFieldLabel}"/>
-                                    <Border Style="{StaticResource CiternePopupInputContainer}">
-                                        <Entry x:Name="MatriculeEntry"
-                                               Placeholder="Ex: CIT-001"
-                                               Style="{StaticResource CiternePopupEntry}"/>
-                                    </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="🔢 Matricule Citerne" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="MatriculeEntry"
+                                           Placeholder="Ex: CIT-001"
+                                           FontSize="14"/>
                                 </VerticalStackLayout>
                             </Grid>
-
-                            <!-- Nombre de Partitions -->
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="Nombre de Partitions" 
-                                       Style="{StaticResource CiternePopupFieldLabel}"/>
-                                <Border Style="{StaticResource CiternePopupInputContainer}">
-                                    <Entry x:Name="PartitionsEntry"
-                                           Placeholder="Ex: 2"
-                                           Keyboard="Numeric"
-                                           Style="{StaticResource CiternePopupEntry}"/>
-                                </Border>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="📊 Nombre de Partitions" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Entry x:Name="PartitionsEntry"
+                                       Placeholder="Ex: 2"
+                                       Keyboard="Numeric"
+                                       FontSize="14"/>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Assignment Section -->
-                    <Border Style="{StaticResource CiternePopupSectionCard}">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="🔗 Affectation" 
-                                   Style="{StaticResource CiternePopupSectionTitle}"/>
-
-                            <BoxView Style="{StaticResource CiternePopupDivider}"/>
-
-                            <!-- Fournisseur Picker -->
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="Fournisseur *" 
-                                       Style="{StaticResource CiternePopupFieldLabel}"/>
-                                <Border Style="{StaticResource CiternePopupInputContainer}">
-                                    <Picker x:Name="FournisseurPicker"
-                                            Title="Selectionnez un fournisseur"
-                                            Style="{StaticResource CiternePopupPicker}"/>
-                                </Border>
+                    <!-- Assignment Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="🔗 AFFECTATION" FontSize="11" FontAttributes="Bold" TextColor="#795548"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="🏭 Fournisseur *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Picker x:Name="FournisseurPicker"
+                                        Title="Sélectionnez un fournisseur"
+                                        FontSize="14"/>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Error Message -->
-                    <Label x:Name="ErrorLabel"
-                           Style="{StaticResource CiternePopupErrorLabel}"
-                           IsVisible="False"/>
-
-                    <!-- Action Buttons -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
-                        <!-- Cancel Button -->
-                        <Button Grid.Column="0"
-                                Text="Annuler"
-                                Style="{StaticResource CiternePopupCancelButton}"
-                                Clicked="OnCancelClicked"/>
-
-                        <!-- Create Button -->
-                        <Button Grid.Column="1"
-                                Text="✓ Creer la citerne"
-                                Style="{StaticResource CiternePopupCreateButton}"
-                                Clicked="OnCreateClicked"/>
-                    </Grid>
                 </VerticalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
+            </ScrollView>
+
+            <!-- ========================================= -->
+            <!-- FOOTER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" BackgroundColor="White" Padding="20,15" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-2" Radius="6" Opacity="0.06"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <Label x:Name="ErrorLabel" 
+                           TextColor="#F44336" 
+                           FontSize="12" 
+                           IsVisible="False" 
+                           VerticalOptions="Center"/>
+                    <Button Grid.Column="1" 
+                            Text="Annuler" 
+                            BackgroundColor="#9E9E9E" 
+                            TextColor="White" 
+                            Padding="25,12" 
+                            CornerRadius="8" 
+                            Clicked="OnCancelClicked"/>
+                    <Button Grid.Column="2" 
+                            Text="✓ Créer la citerne" 
+                            BackgroundColor="#4CAF50" 
+                            TextColor="White" 
+                            Padding="25,12" 
+                            CornerRadius="8" 
+                            FontAttributes="Bold" 
+                            Clicked="OnCreateClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>

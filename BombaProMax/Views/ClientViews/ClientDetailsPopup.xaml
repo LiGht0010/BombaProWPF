@@ -2,233 +2,244 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               x:Class="BombaProMax.Views.ClientViews.ClientDetailsPopup">
+               x:Class="BombaProMax.Views.ClientViews.ClientDetailsPopup"
+               Color="Transparent">
 
-    <Border BackgroundColor="White"       
-           Padding="20"
-           WidthRequest="700">
-        <ScrollView>
-            <VerticalStackLayout Spacing="20">
-                <!-- Header with Client Badge -->
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="750" HeightRequest="780" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- ========================================= -->
+            <!-- HEADER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="0" BackgroundColor="#00ACC1" Padding="20,18" StrokeThickness="0">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
                     <Border Grid.Column="0"
-                            BackgroundColor="#00ACC1"
+                            BackgroundColor="White"
                             WidthRequest="50"
                             HeightRequest="50"
-                            StrokeShape="RoundRectangle 25">
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="25"/>
+                        </Border.StrokeShape>
                         <Label Text="👤" 
                                FontSize="24"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
-
-                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
                         <Label x:Name="ClientNameLabel"
                                Text="{Binding Nom}" 
                                FontSize="20" 
                                FontAttributes="Bold"
-                               TextColor="#2C3E50"/>
-                        <Border BackgroundColor="#00ACC1"
-                               Padding="6,2"
-                               HorizontalOptions="Start"
-                               StrokeShape="RoundRectangle 4">
-                            <Label x:Name="ClientNumberLabel"
-                                   Text="{Binding NumeroClient}" 
-                                   FontSize="12"
-                                   TextColor="White"/>
-                        </Border>
+                               TextColor="White"/>
+                        <Label x:Name="ClientNumberLabel"
+                               Text="{Binding NumeroClient}" 
+                               FontSize="12"
+                               TextColor="#B2EBF2"/>
                     </VerticalStackLayout>
-
                     <Button Grid.Column="2" 
                             Text="✕" 
-                            BackgroundColor="Transparent"
-                            TextColor="#666"
-                            FontSize="20"
-                            Clicked="OnCloseClicked"
-                            VerticalOptions="Start"/>
+                            BackgroundColor="#0097A7" 
+                            TextColor="White" 
+                            FontSize="16" 
+                            WidthRequest="36" 
+                            HeightRequest="36" 
+                            CornerRadius="18" 
+                            Clicked="OnCloseClicked"/>
                 </Grid>
+            </Border>
 
-                <BoxView Color="#E0E0E0" HeightRequest="1"/>
+            <!-- ========================================= -->
+            <!-- CONTENT                                   -->
+            <!-- ========================================= -->
+            <ScrollView Grid.Row="1" Padding="20,15">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Statistics Cards Row -->
+                    <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="10">
+                        <!-- Total Credit Card -->
+                        <Border Grid.Column="0" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                                <Label Text="💳" FontSize="22" HorizontalOptions="Center"/>
+                                <Label x:Name="TotalCreditLabel"
+                                       Text="0,00 MAD" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#E65100"/>
+                                <Label Text="CRÉDIT" 
+                                       FontSize="9"
+                                       HorizontalOptions="Center"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
 
-                <!-- Statistics Cards -->
-                <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="10">
-                    <!-- Total Credit Card -->
-                    <Border Grid.Column="0"
-                            BackgroundColor="#FFF3E0"
-                            Padding="15"
-                            StrokeShape="RoundRectangle 8"
-                            Stroke="#FF9800"
-                            StrokeThickness="2">
-                        <VerticalStackLayout Spacing="10">
-                            <Label Text="💳" 
-                                   FontSize="24"
-                                   HorizontalOptions="Center"/>
-                            <Label x:Name="TotalCreditLabel"
-                                   Text="0,00 MAD" 
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="#333"/>
-                            <Label Text="TOTAL CRÉDIT" 
-                                   FontSize="10"
-                                   HorizontalOptions="Center"
-                                   TextColor="#666"/>
+                        <!-- Total Paid Card -->
+                        <Border Grid.Column="1" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                                <Label Text="💵" FontSize="22" HorizontalOptions="Center"/>
+                                <Label x:Name="TotalPaidLabel"
+                                       Text="0,00 MAD" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#2E7D32"/>
+                                <Label Text="PAYÉ" 
+                                       FontSize="9"
+                                       HorizontalOptions="Center"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Balance Card -->
+                        <Border Grid.Column="2" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                                <Label Text="⚖️" FontSize="22" HorizontalOptions="Center"/>
+                                <Label x:Name="BalanceLabel"
+                                       Text="0,00 MAD" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#C62828"/>
+                                <Label Text="BALANCE" 
+                                       FontSize="9"
+                                       HorizontalOptions="Center"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Credit Facture Card -->
+                        <Border Grid.Column="3" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                                <Label Text="📄" FontSize="22" HorizontalOptions="Center"/>
+                                <Label x:Name="CreditFactureLabel"
+                                       Text="0,00 MAD" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#1565C0"/>
+                                <Label Text="FACTURÉ" 
+                                       FontSize="9"
+                                       HorizontalOptions="Center"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Non Facture Card -->
+                        <Border Grid.Column="4" BackgroundColor="White" Padding="12" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                            </Border.Shadow>
+                            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                                <Label Text="🕐" FontSize="22" HorizontalOptions="Center"/>
+                                <Label x:Name="NonFactureLabel"
+                                       Text="0,00 MAD" 
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="#7B1FA2"/>
+                                <Label Text="NON FACT." 
+                                       FontSize="9"
+                                       HorizontalOptions="Center"
+                                       TextColor="#666"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Last Update Info -->
+                    <HorizontalStackLayout Spacing="5" HorizontalOptions="End">
+                        <Label Text="🔄" FontSize="11"/>
+                        <Label Text="Mise à jour:" FontSize="11" TextColor="#666"/>
+                        <Label x:Name="LastUpdateLabel"
+                               Text="{Binding _dateModification, StringFormat='{0:dd/MM/yyyy HH:mm}'}" 
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="#333"/>
+                    </HorizontalStackLayout>
+
+                    <!-- Client Details Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="📋 INFORMATIONS CLIENT" FontSize="11" FontAttributes="Bold" TextColor="#00ACC1"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" 
+                                  ColumnDefinitions="130,*"
+                                  RowSpacing="10">
+
+                                <Label Grid.Row="0" Grid.Column="0" Text="Numéro:" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding NumeroClient}" FontSize="12" TextColor="#333"/>
+
+                                <Label Grid.Row="1" Grid.Column="0" Text="Contact:" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Contact}" FontSize="12" TextColor="#333"/>
+
+                                <Label Grid.Row="2" Grid.Column="0" Text="CIN:" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                                <Label Grid.Row="2" Grid.Column="1" Text="{Binding CIN}" FontSize="12" TextColor="#333"/>
+
+                                <Label Grid.Row="3" Grid.Column="0" Text="Société:" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                                <Label Grid.Row="3" Grid.Column="1" Text="{Binding NomSociete}" FontSize="12" TextColor="#333"/>
+
+                                <Label Grid.Row="4" Grid.Column="0" Text="Créé le:" FontSize="12" FontAttributes="Bold" TextColor="#666"/>
+                                <Label Grid.Row="4" Grid.Column="1" Text="{Binding _dateCreation, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontSize="12" TextColor="#333"/>
+                            </Grid>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Total Paid Card -->
-                    <Border Grid.Column="1"
-                            BackgroundColor="#E8F5E9"
-                            Padding="15"
-                            StrokeShape="RoundRectangle 8"
-                            Stroke="#4CAF50"
-                            StrokeThickness="2">
-                        <VerticalStackLayout Spacing="10">
-                            <Label Text="💵" 
-                                   FontSize="24"
-                                   HorizontalOptions="Center"/>
-                            <Label x:Name="TotalPaidLabel"
-                                   Text="0,00 MAD" 
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="#333"/>
-                            <Label Text="TOTAL PAYÉ" 
-                                   FontSize="10"
-                                   HorizontalOptions="Center"
-                                   TextColor="#666"/>
-                        </VerticalStackLayout>
-                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
 
-                    <!-- Balance Card -->
-                    <Border Grid.Column="2"
-                            BackgroundColor="#FFEBEE"
-                            Padding="15"
-                            StrokeShape="RoundRectangle 8"
-                            Stroke="#F44336"
-                            StrokeThickness="2">
-                        <VerticalStackLayout Spacing="10">
-                            <Label Text="⚖️" 
-                                   FontSize="24"
-                                   HorizontalOptions="Center"/>
-                            <Label x:Name="BalanceLabel"
-                                   Text="0,00 MAD" 
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="#333"/>
-                            <Label Text="BALANCE" 
-                                   FontSize="10"
-                                   HorizontalOptions="Center"
-                                   TextColor="#666"/>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Credit Facture Card -->
-                    <Border Grid.Column="3"
-                            BackgroundColor="#E3F2FD"
-                            Padding="15"
-                            StrokeShape="RoundRectangle 8"
-                            Stroke="#2196F3"
-                            StrokeThickness="2">
-                        <VerticalStackLayout Spacing="10">
-                            <Label Text="📄" 
-                                   FontSize="24"
-                                   HorizontalOptions="Center"/>
-                            <Label x:Name="CreditFactureLabel"
-                                   Text="0,00 MAD" 
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="#333"/>
-                            <Label Text="CRÉDIT FACTURE" 
-                                   FontSize="10"
-                                   HorizontalOptions="Center"
-                                   TextColor="#666"/>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Non Facture Card -->
-                    <Border Grid.Column="4"
-                            BackgroundColor="#F3E5F5"
-                            Padding="15"
-                            StrokeShape="RoundRectangle 8"
-                            Stroke="#9C27B0"
-                            StrokeThickness="2">
-                        <VerticalStackLayout Spacing="10">
-                            <Label Text="🕐" 
-                                   FontSize="24"
-                                   HorizontalOptions="Center"/>
-                            <Label x:Name="NonFactureLabel"
-                                   Text="0,00 MAD" 
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="#333"/>
-                            <Label Text="NON FACTURÉ" 
-                                   FontSize="10"
-                                   HorizontalOptions="Center"
-                                   TextColor="#666"/>
-                        </VerticalStackLayout>
-                    </Border>
-                </Grid>
-
-                <!-- Last Update -->
-                <HorizontalStackLayout Spacing="5" HorizontalOptions="End">
-                    <Label Text="🔄" FontSize="12"/>
-                    <Label Text="Dernière mise à jour:" 
-                           FontSize="12"
-                           TextColor="#666"/>
-                    <Label x:Name="LastUpdateLabel"
-                           Text="{Binding _dateModification, StringFormat='{0:dd/MM/yyyy HH:mm}'}" 
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextColor="#333"/>
-                </HorizontalStackLayout>
-
-                <BoxView Color="#E0E0E0" HeightRequest="1"/>
-
-                <!-- Client Details Section -->
-                <Border BackgroundColor="#F8F8F8" 
-                       Padding="15"
-                       StrokeShape="RoundRectangle 8">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="📋 Informations client" 
-                               FontAttributes="Bold" 
-                               TextColor="#333" 
-                               FontSize="16"/>
-                        <BoxView Color="#E0E0E0" HeightRequest="1"/>
-
-                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" 
-                              ColumnDefinitions="120,*"
-                              RowSpacing="10">
-
-                            <Label Grid.Row="0" Grid.Column="0" Text="Numéro:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding NumeroClient}" TextColor="#333"/>
-
-                            <Label Grid.Row="1" Grid.Column="0" Text="Contact:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Contact}" TextColor="#333"/>
-
-                            <Label Grid.Row="2" Grid.Column="0" Text="CIN:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding CIN}" TextColor="#333"/>
-
-                            <Label Grid.Row="3" Grid.Column="0" Text="Société:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding NomSociete}" TextColor="#333"/>
-
-                            <Label Grid.Row="4" Grid.Column="0" Text="Créé le:" FontAttributes="Bold" TextColor="#666"/>
-                            <Label Grid.Row="4" Grid.Column="1" Text="{Binding _dateCreation, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="#333"/>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Close Button -->
-                <Button Text="Fermer" 
-                        BackgroundColor="#7C4DFF"
-                        TextColor="White"
+            <!-- ========================================= -->
+            <!-- FOOTER                                    -->
+            <!-- ========================================= -->
+            <Border Grid.Row="2" BackgroundColor="White" Padding="20,15" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-2" Radius="6" Opacity="0.06"/>
+                </Border.Shadow>
+                <Button Text="✓ Fermer" 
+                        BackgroundColor="#00ACC1" 
+                        TextColor="White" 
+                        Padding="30,12" 
                         CornerRadius="8"
-                        HeightRequest="45"
+                        FontAttributes="Bold"
+                        HorizontalOptions="End"
                         Clicked="OnCloseClicked"/>
-            </VerticalStackLayout>
-        </ScrollView>
+            </Border>
+        </Grid>
     </Border>
 </toolkit:Popup>
