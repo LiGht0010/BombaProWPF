@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using BombaProMax.Models;
 using BombaProMax.Services;
@@ -41,9 +42,9 @@ public partial class UserCreatePopup : Popup
             return;
         }
 
-        if (PasswordEntry.Text.Length < 8)
+        if (PasswordEntry.Text.Length < 4)
         {
-            ShowError("Le mot de passe doit contenir au moins 8 caractères");
+            ShowError("Le mot de passe doit contenir au moins 4 caractères");
             return;
         }
 
@@ -74,13 +75,18 @@ public partial class UserCreatePopup : Popup
         bool isSuperAdmin = selectedRole == "Superviseur";
 
         var currentUser = App.CurrentUser;
+        
+        // Get the password value
+        var password = PasswordEntry.Text;
+        
+        Debug.WriteLine($"[UserCreatePopup] Creating user with password length: {password.Length}");
 
         // Create user DTO with form data
         var newUser = new UserDto
         {
             Name = NameEntry.Text.Trim(),
             Email = EmailEntry.Text.Trim(),
-            Password = PasswordEntry.Text,
+            Password = password,  // Explicitly set password
             IsAdmin = isAdmin,
             IsSuperAdmin = isSuperAdmin,
             IsActive = StatusSwitch.IsToggled,
@@ -112,6 +118,8 @@ public partial class UserCreatePopup : Popup
             EditClients = ManageClientsPermission.IsChecked,
             AddBonFacturation = ManageSalesPermission.IsChecked
         };
+        
+        Debug.WriteLine($"[UserCreatePopup] UserDto Password set: {!string.IsNullOrEmpty(newUser.Password)}");
 
         try
         {
@@ -119,6 +127,7 @@ public partial class UserCreatePopup : Popup
 
             if (createdUser != null)
             {
+                Debug.WriteLine($"[UserCreatePopup] User created successfully: {createdUser.Name}");
                 await CloseAsync(createdUser);
             }
             else
@@ -128,6 +137,7 @@ public partial class UserCreatePopup : Popup
         }
         catch (Exception ex)
         {
+            Debug.WriteLine($"[UserCreatePopup] Error: {ex.Message}");
             ShowError($"Erreur: {ex.Message}");
         }
     }

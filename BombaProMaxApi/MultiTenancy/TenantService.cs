@@ -58,10 +58,17 @@ public class TenantService : ITenantService
                 // Validate that tenant exists
                 if (_settings.Tenants.Any(t => t.TenantId.Equals(tenantId, StringComparison.OrdinalIgnoreCase)))
                 {
+                    _logger.LogDebug("Tenant resolved from header: {TenantId}", tenantId);
                     return tenantId;
                 }
-                _logger.LogWarning("Invalid tenant ID '{TenantId}' in header, using default", tenantId);
+                _logger.LogWarning("Invalid tenant ID '{TenantId}' in header, using default '{DefaultTenant}'", 
+                    tenantId, _settings.DefaultTenant);
             }
+        }
+        else
+        {
+            _logger.LogDebug("No {HeaderName} header found, using default tenant: {DefaultTenant}", 
+                TenantHeaderName, _settings.DefaultTenant);
         }
 
         // Fall back to default tenant
@@ -79,11 +86,31 @@ public class TenantService : ITenantService
             throw new InvalidOperationException($"Tenant '{tenantId}' not found in configuration.");
         }
 
+        _logger.LogDebug("Using connection string for tenant '{TenantId}': Database={Database}", 
+            tenantId, ExtractDatabaseName(tenant.ConnectionString));
+        
         return tenant.ConnectionString;
     }
 
     public IEnumerable<string> GetAllTenantIds()
     {
         return _settings.Tenants.Select(t => t.TenantId);
+    }
+    
+    /// <summary>
+    /// Extracts the database name from a connection string for logging purposes.
+    /// </summary>
+    private static string ExtractDatabaseName(string connectionString)
+    {
+        try
+        {
+            var parts = connectionString.Split(';');
+            var dbPart = parts.FirstOrDefault(p => p.Trim().StartsWith("Database=", StringComparison.OrdinalIgnoreCase));
+            return dbPart?.Split('=').LastOrDefault()?.Trim() ?? "unknown";
+        }
+        catch
+        {
+            return "unknown";
+        }
     }
 }

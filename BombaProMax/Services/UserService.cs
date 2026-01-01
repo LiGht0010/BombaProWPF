@@ -77,8 +77,11 @@ public class UserService
     {
         try
         {
-            var json = JsonConvert.SerializeObject(user);
             Debug.WriteLine($"[UserService] Creating user: {user.Name}");
+            Debug.WriteLine($"[UserService] Password provided: {!string.IsNullOrEmpty(user.Password)}, Length: {user.Password?.Length ?? 0}");
+            
+            var json = JsonConvert.SerializeObject(user);
+            Debug.WriteLine($"[UserService] JSON payload: {json}");
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(BaseUrl, content);
@@ -88,6 +91,7 @@ public class UserService
             if (response.IsSuccessStatusCode)
             {
                 var responseJson = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine($"[UserService] Create response: {responseJson}");
                 return JsonConvert.DeserializeObject<UserDto>(responseJson);
             }
 
