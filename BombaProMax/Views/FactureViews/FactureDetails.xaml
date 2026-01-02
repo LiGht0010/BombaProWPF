@@ -132,22 +132,26 @@
                             <Label Text="ELEMENTS DE LA FACTURE" FontSize="12" FontAttributes="Bold" TextColor="#5EAA8D" Margin="20,15,20,10"/>
                             
                             <!-- Table Header -->
-                            <Grid ColumnDefinitions="2*,*,*,1.5*" ColumnSpacing="10" Padding="20,10" BackgroundColor="#F8F9FA">
+                            <Grid ColumnDefinitions="2*,0.8*,0.8*,0.6*,1.2*,1.5*" ColumnSpacing="8" Padding="20,10" BackgroundColor="#F8F9FA">
                                 <Label Grid.Column="0" Text="DESIGNATION" FontSize="10" FontAttributes="Bold" TextColor="#666"/>
-                                <Label Grid.Column="1" Text="QUANTITE" FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="Center"/>
-                                <Label Grid.Column="2" Text="PRIX UNIT." FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="End"/>
-                                <Label Grid.Column="3" Text="MONTANT" FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="End"/>
+                                <Label Grid.Column="1" Text="QTE" FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="Center"/>
+                                <Label Grid.Column="2" Text="P.U HT" FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="End"/>
+                                <Label Grid.Column="3" Text="TVA" FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="Center"/>
+                                <Label Grid.Column="4" Text="P.U TTC" FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="End"/>
+                                <Label Grid.Column="5" Text="TOTAL TTC" FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="End"/>
                             </Grid>
                             
                             <!-- Table Body -->
                             <VerticalStackLayout x:Name="ElementsContainer" Spacing="0"/>
                             
                             <!-- Table Footer -->
-                            <Grid ColumnDefinitions="2*,*,*,1.5*" ColumnSpacing="10" Padding="20,12" BackgroundColor="#E8F5E9">
-                                <Label Grid.Column="0" Text="TOTAL TTC" FontSize="11" FontAttributes="Bold" TextColor="#5EAA8D"/>
+                            <Grid ColumnDefinitions="2*,0.8*,0.8*,0.6*,1.2*,1.5*" ColumnSpacing="8" Padding="20,12" BackgroundColor="#E8F5E9">
+                                <Label Grid.Column="0" Text="TOTAL" FontSize="11" FontAttributes="Bold" TextColor="#5EAA8D"/>
                                 <Label Grid.Column="1" x:Name="TotalQteFooter" Text="0" FontSize="12" FontAttributes="Bold" TextColor="#5EAA8D" HorizontalTextAlignment="Center"/>
-                                <Label Grid.Column="2" Text="" FontSize="12"/>
-                                <Label Grid.Column="3" x:Name="TotalMontantFooter" Text="0.00 MAD" FontSize="12" FontAttributes="Bold" TextColor="#5EAA8D" HorizontalTextAlignment="End"/>
+                                <Label Grid.Column="2" x:Name="TotalHTFooter" Text="0.00" FontSize="11" FontAttributes="Bold" TextColor="#5EAA8D" HorizontalTextAlignment="End"/>
+                                <Label Grid.Column="3" x:Name="TotalTVAFooter" Text="0.00" FontSize="11" FontAttributes="Bold" TextColor="#5EAA8D" HorizontalTextAlignment="Center"/>
+                                <Label Grid.Column="4" Text="" FontSize="11"/>
+                                <Label Grid.Column="5" x:Name="TotalMontantFooter" Text="0.00 MAD" FontSize="12" FontAttributes="Bold" TextColor="#5EAA8D" HorizontalTextAlignment="End"/>
                             </Grid>
                         </VerticalStackLayout>
                     </Border>

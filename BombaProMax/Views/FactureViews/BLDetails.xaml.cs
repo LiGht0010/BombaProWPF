@@ -71,9 +71,8 @@ public partial class BLDetails : Popup
         // Build details rows
         BuildDetailsRows();
 
-        // Footer totals
+        // Footer totals (only quantity, no montant in simplified view)
         TotalQteFooter.Text = totalQte.ToString();
-        TotalMontantFooter.Text = $"{_bl.MontantTotal:N2} MAD";
 
         // Notes
         if (!string.IsNullOrWhiteSpace(_bl.Notes))
@@ -151,27 +150,19 @@ public partial class BLDetails : Popup
             {
                 ColumnDefinitions =
                 [
-                    new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) }
+                    new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
                 ],
                 ColumnSpacing = 10,
                 Padding = new Thickness(20, 10),
                 BackgroundColor = bgColor
             };
 
-            // Designation
+            // Produit/Designation
             row.Add(new Label { Text = detail.DisplayName, FontSize = 12, TextColor = Color.FromArgb("#333"), VerticalOptions = LayoutOptions.Center }, 0, 0);
 
             // Quantite
             row.Add(new Label { Text = detail.Quantite.ToString(), FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#333"), HorizontalTextAlignment = TextAlignment.Center, VerticalOptions = LayoutOptions.Center }, 1, 0);
-
-            // Prix Unitaire
-            row.Add(new Label { Text = $"{detail.PrixUnitaire:N2}", FontSize = 12, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 2, 0);
-
-            // Montant
-            row.Add(new Label { Text = $"{detail.MontantLigne:N2} MAD", FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#4A8FBF"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 3, 0);
 
             DetailsContainer.Add(row);
         }
@@ -194,12 +185,12 @@ public partial class BLDetails : Popup
             PdfButton.IsEnabled = false;
             PdfButton.Text = "? Génération...";
 
-            // Build PDF data
-            var pdfData = BuildPdfData();
+            // Build printing data
+            var printingData = await BuildPrintingDataAsync();
 
             // Generate PDF
             var pdfService = new PdfGeneratorService();
-            var filePath = await pdfService.GenerateBLReportAsync(pdfData);
+            var filePath = await pdfService.GenerateBLPrintAsync(printingData);
 
             PdfButton.Text = "? Généré!";
 
@@ -233,9 +224,13 @@ public partial class BLDetails : Popup
         }
     }
 
-    private BonLivraisonPdfData BuildPdfData()
+    private async Task<BlPrintingData> BuildPrintingDataAsync()
     {
-        var pdfData = new BonLivraisonPdfData
+        // Get station info
+        var stationService = new StationInfoService();
+        var stationInfo = await stationService.GetStationInfoAsync();
+
+        var printingData = new BlPrintingData
         {
             BonLivraisonID = _bl.ID,
             NumeroBL = _bl.NumeroBL,
@@ -244,32 +239,31 @@ public partial class BLDetails : Popup
             ClientNumero = _bl.ClientNumero,
             EstFacture = _bl.EstFacture,
             Notes = _bl.Notes,
-            MontantTotal = _bl.MontantTotal
+            TotalQuantite = _details.Sum(d => d.Quantite),
+            NombreElements = _details.Count,
+            StationInfo = stationInfo
         };
 
-        // Convert details
-        pdfData.Details = _details.Select(d => new BLDetailPdfData
+        // Convert details (simplified - only Produit and Quantite)
+        printingData.Elements = _details.Select(d => new BlPrintingElement
         {
-            Description = d.Description ?? "",
+            Description = d.Description,
             ProduitNom = d.ProduitNom,
             ServiceNom = d.ServiceNom,
-            Quantite = d.Quantite,
-            PrixUnitaire = d.PrixUnitaire,
-            MontantLigne = d.MontantLigne
+            Quantite = d.Quantite
         }).ToList();
 
-        // Build product totals
-        pdfData.TotauxParProduit = _details
+        // Build product totals (simplified - only Produit and Quantite)
+        printingData.TotauxParProduit = _details
             .GroupBy(d => d.DisplayName)
-            .Select(g => new BLProduitTotalPdfData
+            .Select(g => new BlPrintingProduitTotal
             {
                 ProduitNom = g.Key,
-                QuantiteTotale = g.Sum(x => x.Quantite),
-                MontantTotal = g.Sum(x => x.MontantLigne)
+                QuantiteTotale = g.Sum(x => x.Quantite)
             })
-            .OrderByDescending(x => x.MontantTotal)
+            .OrderByDescending(x => x.QuantiteTotale)
             .ToList();
 
-        return pdfData;
+        return printingData;
     }
 }

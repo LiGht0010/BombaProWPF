@@ -78,7 +78,15 @@ public partial class FactureDetails : Popup
 
         // Financial summary
         NbElementsLabel.Text = _elements.Count.ToString();
-        MontantTotalLabel.Text = $"{_facture.MontantTotal ?? 0:N2} MAD";
+        
+        // Calculate proper TTC total from elements
+        var totalHT = _elements.Sum(e => e.MontantHT);
+        var totalTVA = _elements.Sum(e => e.MontantTVA);
+        var totalTTC = _elements.Sum(e => e.MontantTTC);
+        
+        // Use calculated TTC or fallback to facture MontantTotal
+        var displayTotal = totalTTC > 0 ? totalTTC : (_facture.MontantTotal ?? 0);
+        MontantTotalLabel.Text = $"{displayTotal:N2} MAD";
 
         // Date Paiement
         if (_facture.DatePaiement.HasValue)
@@ -95,9 +103,10 @@ public partial class FactureDetails : Popup
 
         // Footer totals
         var totalQte = _elements.Sum(e => e.Quantite ?? 0);
-        var totalMontant = _elements.Sum(e => (e.Quantite ?? 0) * (e.PrixUnitaire ?? 0));
         TotalQteFooter.Text = totalQte.ToString();
-        TotalMontantFooter.Text = $"{totalMontant:N2} MAD";
+        TotalHTFooter.Text = $"{totalHT:N2}";
+        TotalTVAFooter.Text = $"{totalTVA:N2}";
+        TotalMontantFooter.Text = $"{totalTTC:N2} MAD";
     }
 
     private void BuildLinkedBLs()
@@ -161,11 +170,13 @@ public partial class FactureDetails : Popup
                 ColumnDefinitions =
                 [
                     new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(0.8, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(0.8, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(0.6, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1.2, GridUnitType.Star) },
                     new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) }
                 ],
-                ColumnSpacing = 10,
+                ColumnSpacing = 8,
                 Padding = new Thickness(20, 10),
                 BackgroundColor = bgColor
             };
@@ -179,12 +190,21 @@ public partial class FactureDetails : Popup
             // Quantite
             row.Add(new Label { Text = (element.Quantite ?? 0).ToString(), FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#333"), HorizontalTextAlignment = TextAlignment.Center, VerticalOptions = LayoutOptions.Center }, 1, 0);
 
-            // Prix Unitaire
-            row.Add(new Label { Text = $"{element.PrixUnitaire ?? 0:N2}", FontSize = 12, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 2, 0);
+            // Prix Unitaire HT
+            var prixHT = element.PrixHT ?? element.PrixUnitaire ?? 0;
+            row.Add(new Label { Text = $"{prixHT:N2}", FontSize = 11, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 2, 0);
 
-            // Montant
-            var montant = (element.Quantite ?? 0) * (element.PrixUnitaire ?? 0);
-            row.Add(new Label { Text = $"{montant:N2} MAD", FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#5EAA8D"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 3, 0);
+            // TVA %
+            var tva = element.TVA ?? 20;
+            row.Add(new Label { Text = $"{tva:N0}%", FontSize = 11, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.Center, VerticalOptions = LayoutOptions.Center }, 3, 0);
+
+            // Prix Unitaire TTC
+            var prixTTC = element.PrixTTC ?? (prixHT * (1 + tva / 100));
+            row.Add(new Label { Text = $"{prixTTC:N2}", FontSize = 11, TextColor = Color.FromArgb("#666"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 4, 0);
+
+            // Montant TTC (Quantite * PrixTTC)
+            var montantTTC = element.MontantTTC;
+            row.Add(new Label { Text = $"{montantTTC:N2} MAD", FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#5EAA8D"), HorizontalTextAlignment = TextAlignment.End, VerticalOptions = LayoutOptions.Center }, 5, 0);
 
             ElementsContainer.Add(row);
         }
@@ -258,6 +278,11 @@ public partial class FactureDetails : Popup
 
     private async Task<FacturePdfData> BuildPdfDataAsync(StationInfoDto? stationInfo)
     {
+        // Calculate totals from elements
+        var totalHT = _elements.Sum(e => e.MontantHT);
+        var totalTVA = _elements.Sum(e => e.MontantTVA);
+        var totalTTC = _elements.Sum(e => e.MontantTTC);
+        
         var pdfData = new FacturePdfData
         {
             FactureID = _facture.ID,
@@ -272,21 +297,23 @@ public partial class FactureDetails : Popup
             Statut = _facture.Statut,
             DatePaiement = _facture.DatePaiement,
             MoyenPaiementNom = _facture.MoyenPaiementNom,
-            MontantTotal = _facture.MontantTotal ?? 0,
-            MontantHT = _facture.MontantHT ?? (_facture.MontantTotal ?? 0),
-            MontantTVA = _facture.MontantTVA ?? 0,
+            MontantTotal = totalTTC > 0 ? totalTTC : (_facture.MontantTotal ?? 0),
+            MontantHT = totalHT,
+            MontantTVA = totalTVA,
             TauxTVA = 20, // Default TVA rate
             StationInfo = stationInfo
         };
 
-        // Convert elements
+        // Convert elements with HT/TVA/TTC
         pdfData.Elements = _elements.Select(e => new FactureElementPdfData
         {
             Description = "",
             ProduitNom = e.ProduitNom,
             ServiceNom = e.ServiceNom,
             Quantite = e.Quantite ?? 0,
-            PrixUnitaire = e.PrixUnitaire ?? 0
+            PrixUnitaireHT = e.PrixHT ?? e.PrixUnitaire ?? 0,
+            TVA = e.TVA ?? 20,
+            PrixUnitaireTTC = e.PrixTTC ?? ((e.PrixHT ?? e.PrixUnitaire ?? 0) * (1 + (e.TVA ?? 20) / 100))
         }).ToList();
 
         // Convert linked BLs with IDs

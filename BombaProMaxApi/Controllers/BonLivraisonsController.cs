@@ -229,125 +229,144 @@ public class BonLivraisonsController : ControllerBase
     [HttpPost("from-credit-transactions")]
     public async Task<ActionResult<CTConversionResultDto>> CreateBLFromCreditTransactions([FromBody] CreateBLFromCTsDto dto)
     {
-        using var transaction = await _context.Database.BeginTransactionAsync();
-        
+        // Use execution strategy to support retry on failure with user-initiated transactions
+        var strategy = _context.Database.CreateExecutionStrategy();
+
+        CTConversionResultDto? result = null;
+
         try
         {
-            // Validate input
-            if (dto.CreditTransactionIds == null || !dto.CreditTransactionIds.Any())
+            await strategy.ExecuteAsync(async () =>
             {
-                return BadRequest(new CTConversionResultDto
+                using var transaction = await _context.Database.BeginTransactionAsync();
+                
+                try
                 {
-                    Success = false,
-                    Message = "Aucune transaction crédit sélectionnée.",
-                    Errors = ["CreditTransactionIds est vide"]
-                });
-            }
+                    // Validate input
+                    if (dto.CreditTransactionIds == null || !dto.CreditTransactionIds.Any())
+                    {
+                        result = new CTConversionResultDto
+                        {
+                            Success = false,
+                            Message = "Aucune transaction crédit sélectionnée.",
+                            Errors = ["CreditTransactionIds est vide"]
+                        };
+                        return;
+                    }
 
-            // Load CTs
-            var creditTransactions = await _context.CreditTransactions
-                .Include(ct => ct.Client)
-                .Include(ct => ct.Produit)
-                .Include(ct => ct.Service)
-                .Where(ct => dto.CreditTransactionIds.Contains(ct.CreditID))
-                .ToListAsync();
+                    // Load CTs
+                    var creditTransactions = await _context.CreditTransactions
+                        .Include(ct => ct.Client)
+                        .Include(ct => ct.Produit)
+                        .Include(ct => ct.Service)
+                        .Where(ct => dto.CreditTransactionIds.Contains(ct.CreditID))
+                        .ToListAsync();
 
-            // Validate all CTs found
-            if (creditTransactions.Count != dto.CreditTransactionIds.Count)
-            {
-                var foundIds = creditTransactions.Select(ct => ct.CreditID).ToList();
-                var missingIds = dto.CreditTransactionIds.Except(foundIds).ToList();
-                return BadRequest(new CTConversionResultDto
+                    // Validate all CTs found
+                    if (creditTransactions.Count != dto.CreditTransactionIds.Count)
+                    {
+                        var foundIds = creditTransactions.Select(ct => ct.CreditID).ToList();
+                        var missingIds = dto.CreditTransactionIds.Except(foundIds).ToList();
+                        result = new CTConversionResultDto
+                        {
+                            Success = false,
+                            Message = "Certaines transactions crédit n'existent pas.",
+                            Errors = missingIds.Select(id => $"CT ID {id} non trouvé").ToList()
+                        };
+                        return;
+                    }
+
+                    // Validate all CTs belong to same client
+                    var clientIds = creditTransactions.Select(ct => ct.ClientID).Distinct().ToList();
+                    if (clientIds.Count > 1)
+                    {
+                        result = new CTConversionResultDto
+                        {
+                            Success = false,
+                            Message = "Toutes les transactions doivent appartenir au même client.",
+                            Errors = ["Clients multiples détectés"]
+                        };
+                        return;
+                    }
+
+                    // Validate none are already in BL or invoiced
+                    var alreadyProcessed = creditTransactions.Where(ct => ct.EstEnBL || ct.Facture).ToList();
+                    if (alreadyProcessed.Any())
+                    {
+                        result = new CTConversionResultDto
+                        {
+                            Success = false,
+                            Message = "Certaines transactions sont déjà en BL ou facturées.",
+                            Errors = alreadyProcessed.Select(ct => $"CT {ct.NumeroTransaction} déjà traité").ToList()
+                        };
+                        return;
+                    }
+
+                    // Create BL
+                    var numeroBL = await GenerateNextNumeroBLAsync();
+                    var bonLivraison = new BonLivraison
+                    {
+                        NumeroBL = numeroBL,
+                        DateBL = dto.DateBL ?? DateOnly.FromDateTime(DateTime.UtcNow),
+                        ClientID = dto.ClientID > 0 ? dto.ClientID : clientIds.First(),
+                        Notes = dto.Notes,
+                        EstFacture = false,
+                        AjoutePar = dto.CreatedByUserId,
+                        DateCreation = DateTime.UtcNow
+                    };
+
+                    // Create BL details from CTs
+                    decimal montantTotal = 0;
+                    foreach (var ct in creditTransactions)
+                    {
+                        var detail = new BonLivraisonDetails
+                        {
+                            ProduitID = ct.ProduitID,
+                            ServiceID = ct.ServiceID,
+                            Quantite = ct.Quantite,
+                            PrixUnitaire = ct.PrixTTC,
+                            MontantLigne = ct.MontantTotal,
+                            Description = ct.Produit?.Description ?? ct.Service?.Description
+                        };
+                        bonLivraison.Details.Add(detail);
+                        montantTotal += ct.MontantTotal;
+                    }
+
+                    bonLivraison.MontantTotal = montantTotal;
+
+                    _context.BonsLivraison.Add(bonLivraison);
+                    await _context.SaveChangesAsync();
+
+                    // Mark CTs as in BL
+                    foreach (var ct in creditTransactions)
+                    {
+                        ct.EstEnBL = true;
+                        ct.BonLivraisonID = bonLivraison.ID;
+                        ct.DateModification = DateTime.UtcNow;
+                    }
+
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    result = new CTConversionResultDto
+                    {
+                        Success = true,
+                        Message = $"Bon de livraison {numeroBL} créé avec succès.",
+                        BonLivraisonID = bonLivraison.ID,
+                        NumeroBL = numeroBL,
+                        MontantTotal = montantTotal,
+                        CTsConverted = creditTransactions.Count
+                    };
+                }
+                catch (Exception)
                 {
-                    Success = false,
-                    Message = "Certaines transactions crédit n'existent pas.",
-                    Errors = missingIds.Select(id => $"CT ID {id} non trouvé").ToList()
-                });
-            }
-
-            // Validate all CTs belong to same client
-            var clientIds = creditTransactions.Select(ct => ct.ClientID).Distinct().ToList();
-            if (clientIds.Count > 1)
-            {
-                return BadRequest(new CTConversionResultDto
-                {
-                    Success = false,
-                    Message = "Toutes les transactions doivent appartenir au même client.",
-                    Errors = ["Clients multiples détectés"]
-                });
-            }
-
-            // Validate none are already in BL or invoiced
-            var alreadyProcessed = creditTransactions.Where(ct => ct.EstEnBL || ct.Facture).ToList();
-            if (alreadyProcessed.Any())
-            {
-                return BadRequest(new CTConversionResultDto
-                {
-                    Success = false,
-                    Message = "Certaines transactions sont déjà en BL ou facturées.",
-                    Errors = alreadyProcessed.Select(ct => $"CT {ct.NumeroTransaction} déjà traité").ToList()
-                });
-            }
-
-            // Create BL
-            var numeroBL = await GenerateNextNumeroBLAsync();
-            var bonLivraison = new BonLivraison
-            {
-                NumeroBL = numeroBL,
-                DateBL = dto.DateBL ?? DateOnly.FromDateTime(DateTime.UtcNow),
-                ClientID = dto.ClientID > 0 ? dto.ClientID : clientIds.First(),
-                Notes = dto.Notes,
-                EstFacture = false,
-                AjoutePar = dto.CreatedByUserId,
-                DateCreation = DateTime.UtcNow
-            };
-
-            // Create BL details from CTs
-            decimal montantTotal = 0;
-            foreach (var ct in creditTransactions)
-            {
-                var detail = new BonLivraisonDetails
-                {
-                    ProduitID = ct.ProduitID,
-                    ServiceID = ct.ServiceID,
-                    Quantite = ct.Quantite,
-                    PrixUnitaire = ct.PrixTTC,
-                    MontantLigne = ct.MontantTotal,
-                    Description = ct.Produit?.Description ?? ct.Service?.Description
-                };
-                bonLivraison.Details.Add(detail);
-                montantTotal += ct.MontantTotal;
-            }
-
-            bonLivraison.MontantTotal = montantTotal;
-
-            _context.BonsLivraison.Add(bonLivraison);
-            await _context.SaveChangesAsync();
-
-            // Mark CTs as in BL
-            foreach (var ct in creditTransactions)
-            {
-                ct.EstEnBL = true;
-                ct.BonLivraisonID = bonLivraison.ID;
-                ct.DateModification = DateTime.UtcNow;
-            }
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
-            return Ok(new CTConversionResultDto
-            {
-                Success = true,
-                Message = $"Bon de livraison {numeroBL} créé avec succès.",
-                BonLivraisonID = bonLivraison.ID,
-                NumeroBL = numeroBL,
-                MontantTotal = montantTotal,
-                CTsConverted = creditTransactions.Count
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             });
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
             return StatusCode(500, new CTConversionResultDto
             {
                 Success = false,
@@ -355,149 +374,184 @@ public class BonLivraisonsController : ControllerBase
                 Errors = [ex.Message, ex.InnerException?.Message ?? ""]
             });
         }
+
+        if (result == null)
+        {
+            return StatusCode(500, new CTConversionResultDto
+            {
+                Success = false,
+                Message = "Erreur inattendue."
+            });
+        }
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
     }
 
     // POST: api/BonLivraisons/merge (? NEW - Merge multiple BLs into one)
     [HttpPost("merge")]
     public async Task<ActionResult<MergeBLsResultDto>> MergeBLs([FromBody] MergeBLsDto dto)
     {
-        using var transaction = await _context.Database.BeginTransactionAsync();
+        // Use execution strategy to support retry on failure with user-initiated transactions
+        var strategy = _context.Database.CreateExecutionStrategy();
+
+        MergeBLsResultDto? result = null;
 
         try
         {
-            // Validate input
-            if (dto.BonLivraisonIds == null || dto.BonLivraisonIds.Count < 2)
+            await strategy.ExecuteAsync(async () =>
             {
-                return BadRequest(new MergeBLsResultDto
+                using var transaction = await _context.Database.BeginTransactionAsync();
+
+                try
                 {
-                    Success = false,
-                    Message = "Veuillez sélectionner au moins 2 bons de livraison à fusionner.",
-                    Errors = ["BonLivraisonIds doit contenir au moins 2 IDs"]
-                });
-            }
-
-            // Load BLs with details
-            var bonsLivraison = await _context.BonsLivraison
-                .Include(bl => bl.Details)
-                .Include(bl => bl.CreditTransactions)
-                .Where(bl => dto.BonLivraisonIds.Contains(bl.ID))
-                .ToListAsync();
-
-            // Validate all BLs found
-            if (bonsLivraison.Count != dto.BonLivraisonIds.Count)
-            {
-                var foundIds = bonsLivraison.Select(bl => bl.ID).ToList();
-                var missingIds = dto.BonLivraisonIds.Except(foundIds).ToList();
-                return BadRequest(new MergeBLsResultDto
-                {
-                    Success = false,
-                    Message = "Certains bons de livraison n'existent pas.",
-                    Errors = missingIds.Select(id => $"BL ID {id} non trouvé").ToList()
-                });
-            }
-
-            // Validate all BLs belong to same client
-            var clientIds = bonsLivraison.Select(bl => bl.ClientID).Distinct().ToList();
-            if (clientIds.Count > 1)
-            {
-                return BadRequest(new MergeBLsResultDto
-                {
-                    Success = false,
-                    Message = "Tous les bons de livraison doivent appartenir au même client.",
-                    Errors = ["Clients multiples détectés"]
-                });
-            }
-
-            // Validate none are already invoiced
-            var alreadyInvoiced = bonsLivraison.Where(bl => bl.EstFacture).ToList();
-            if (alreadyInvoiced.Any())
-            {
-                return BadRequest(new MergeBLsResultDto
-                {
-                    Success = false,
-                    Message = "Certains bons de livraison sont déjà facturés.",
-                    Errors = alreadyInvoiced.Select(bl => $"BL {bl.NumeroBL} déjà facturé").ToList()
-                });
-            }
-
-            // Create new merged BL
-            var numeroBL = await GenerateNextNumeroBLAsync();
-            var newBL = new BonLivraison
-            {
-                NumeroBL = numeroBL,
-                DateBL = dto.DateBL ?? DateOnly.FromDateTime(DateTime.UtcNow),
-                ClientID = dto.ClientID > 0 ? dto.ClientID : clientIds.First(),
-                Notes = dto.Notes ?? $"BL consolidé à partir de: {string.Join(", ", bonsLivraison.Select(bl => bl.NumeroBL))}",
-                EstFacture = false,
-                AjoutePar = dto.CreatedByUserId,
-                DateCreation = DateTime.UtcNow
-            };
-
-            // Merge all details from source BLs
-            decimal montantTotal = 0;
-            foreach (var sourceBL in bonsLivraison)
-            {
-                foreach (var detail in sourceBL.Details)
-                {
-                    var newDetail = new BonLivraisonDetails
+                    // Validate input
+                    if (dto.BonLivraisonIds == null || dto.BonLivraisonIds.Count < 2)
                     {
-                        ProduitID = detail.ProduitID,
-                        ServiceID = detail.ServiceID,
-                        Quantite = detail.Quantite,
-                        PrixUnitaire = detail.PrixUnitaire,
-                        MontantLigne = detail.MontantLigne,
-                        Description = detail.Description
+                        result = new MergeBLsResultDto
+                        {
+                            Success = false,
+                            Message = "Veuillez sélectionner au moins 2 bons de livraison à fusionner.",
+                            Errors = ["BonLivraisonIds doit contenir au moins 2 IDs"]
+                        };
+                        return;
+                    }
+
+                    // Load BLs with details
+                    var bonsLivraison = await _context.BonsLivraison
+                        .Include(bl => bl.Details)
+                        .Include(bl => bl.CreditTransactions)
+                        .Where(bl => dto.BonLivraisonIds.Contains(bl.ID))
+                        .ToListAsync();
+
+                    // Validate all BLs found
+                    if (bonsLivraison.Count != dto.BonLivraisonIds.Count)
+                    {
+                        var foundIds = bonsLivraison.Select(bl => bl.ID).ToList();
+                        var missingIds = dto.BonLivraisonIds.Except(foundIds).ToList();
+                        result = new MergeBLsResultDto
+                        {
+                            Success = false,
+                            Message = "Certains bons de livraison n'existent pas.",
+                            Errors = missingIds.Select(id => $"BL ID {id} non trouvé").ToList()
+                        };
+                        return;
+                    }
+
+                    // Validate all BLs belong to same client
+                    var clientIds = bonsLivraison.Select(bl => bl.ClientID).Distinct().ToList();
+                    if (clientIds.Count > 1)
+                    {
+                        result = new MergeBLsResultDto
+                        {
+                            Success = false,
+                            Message = "Tous les bons de livraison doivent appartenir au même client.",
+                            Errors = ["Clients multiples détectés"]
+                        };
+                        return;
+                    }
+
+                    // Validate none are already invoiced
+                    var alreadyInvoiced = bonsLivraison.Where(bl => bl.EstFacture).ToList();
+                    if (alreadyInvoiced.Any())
+                    {
+                        result = new MergeBLsResultDto
+                        {
+                            Success = false,
+                            Message = "Certains bons de livraison sont déjà facturés.",
+                            Errors = alreadyInvoiced.Select(bl => $"BL {bl.NumeroBL} déjà facturé").ToList()
+                        };
+                        return;
+                    }
+
+                    // Create new merged BL
+                    var numeroBL = await GenerateNextNumeroBLAsync();
+                    var newBL = new BonLivraison
+                    {
+                        NumeroBL = numeroBL,
+                        DateBL = dto.DateBL ?? DateOnly.FromDateTime(DateTime.UtcNow),
+                        ClientID = dto.ClientID > 0 ? dto.ClientID : clientIds.First(),
+                        Notes = dto.Notes ?? $"BL consolidé à partir de: {string.Join(", ", bonsLivraison.Select(bl => bl.NumeroBL))}",
+                        EstFacture = false,
+                        AjoutePar = dto.CreatedByUserId,
+                        DateCreation = DateTime.UtcNow
                     };
-                    newBL.Details.Add(newDetail);
-                    montantTotal += detail.MontantLigne;
-                }
 
-                // Transfer credit transactions to new BL
-                foreach (var ct in sourceBL.CreditTransactions)
+                    // Merge all details from source BLs
+                    decimal montantTotal = 0;
+                    foreach (var sourceBL in bonsLivraison)
+                    {
+                        foreach (var detail in sourceBL.Details)
+                        {
+                            var newDetail = new BonLivraisonDetails
+                            {
+                                ProduitID = detail.ProduitID,
+                                ServiceID = detail.ServiceID,
+                                Quantite = detail.Quantite,
+                                PrixUnitaire = detail.PrixUnitaire,
+                                MontantLigne = detail.MontantLigne,
+                                Description = detail.Description
+                            };
+                            newBL.Details.Add(newDetail);
+                            montantTotal += detail.MontantLigne;
+                        }
+
+                        // Transfer credit transactions to new BL
+                        foreach (var ct in sourceBL.CreditTransactions)
+                        {
+                            ct.BonLivraisonID = null; // Will be updated after new BL is saved
+                            ct.DateModification = DateTime.UtcNow;
+                        }
+                    }
+
+                    newBL.MontantTotal = montantTotal;
+
+                    _context.BonsLivraison.Add(newBL);
+                    await _context.SaveChangesAsync();
+
+                    // Update credit transactions to point to new BL
+                    foreach (var sourceBL in bonsLivraison)
+                    {
+                        foreach (var ct in sourceBL.CreditTransactions)
+                        {
+                            ct.BonLivraisonID = newBL.ID;
+                            ct.DateModification = DateTime.UtcNow;
+                        }
+                    }
+
+                    // Delete old BLs (details will cascade delete)
+                    foreach (var oldBL in bonsLivraison)
+                    {
+                        _context.BonLivraisonDetails.RemoveRange(oldBL.Details);
+                        _context.BonsLivraison.Remove(oldBL);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    result = new MergeBLsResultDto
+                    {
+                        Success = true,
+                        Message = $"BL consolidé {numeroBL} créé avec succès.",
+                        NewBonLivraisonID = newBL.ID,
+                        NewNumeroBL = numeroBL,
+                        MontantTotal = montantTotal,
+                        BLsMerged = bonsLivraison.Count
+                    };
+                }
+                catch (Exception)
                 {
-                    ct.BonLivraisonID = null; // Will be updated after new BL is saved
-                    ct.DateModification = DateTime.UtcNow;
+                    await transaction.RollbackAsync();
+                    throw;
                 }
-            }
-
-            newBL.MontantTotal = montantTotal;
-
-            _context.BonsLivraison.Add(newBL);
-            await _context.SaveChangesAsync();
-
-            // Update credit transactions to point to new BL
-            foreach (var sourceBL in bonsLivraison)
-            {
-                foreach (var ct in sourceBL.CreditTransactions)
-                {
-                    ct.BonLivraisonID = newBL.ID;
-                    ct.DateModification = DateTime.UtcNow;
-                }
-            }
-
-            // Delete old BLs (details will cascade delete)
-            foreach (var oldBL in bonsLivraison)
-            {
-                _context.BonLivraisonDetails.RemoveRange(oldBL.Details);
-                _context.BonsLivraison.Remove(oldBL);
-            }
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
-            return Ok(new MergeBLsResultDto
-            {
-                Success = true,
-                Message = $"BL consolidé {numeroBL} créé avec succès.",
-                NewBonLivraisonID = newBL.ID,
-                NewNumeroBL = numeroBL,
-                MontantTotal = montantTotal,
-                BLsMerged = bonsLivraison.Count
             });
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
             return StatusCode(500, new MergeBLsResultDto
             {
                 Success = false,
@@ -505,6 +559,22 @@ public class BonLivraisonsController : ControllerBase
                 Errors = new List<string> { ex.Message, ex.InnerException?.Message ?? "" }
             });
         }
+
+        if (result == null)
+        {
+            return StatusCode(500, new MergeBLsResultDto
+            {
+                Success = false,
+                Message = "Erreur inattendue."
+            });
+        }
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
     }
 
     // PUT: api/BonLivraisons/5

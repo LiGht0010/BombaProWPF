@@ -52,8 +52,32 @@ public class FactureElementPdfData
     public string? ProduitNom { get; set; }
     public string? ServiceNom { get; set; }
     public int Quantite { get; set; }
-    public decimal PrixUnitaire { get; set; }
-    public decimal MontantLigne => Quantite * PrixUnitaire;
+    
+    /// <summary>
+    /// Prix Unitaire HT (Hors Taxe)
+    /// </summary>
+    public decimal PrixUnitaireHT { get; set; }
+    
+    /// <summary>
+    /// TVA percentage (e.g., 20 for 20%)
+    /// </summary>
+    public decimal TVA { get; set; } = 20;
+    
+    /// <summary>
+    /// Prix Unitaire TTC
+    /// </summary>
+    public decimal PrixUnitaireTTC { get; set; }
+    
+    // Keep PrixUnitaire for backwards compatibility (defaults to TTC)
+    public decimal PrixUnitaire { get => PrixUnitaireTTC; set => PrixUnitaireTTC = value; }
+    
+    // Calculated line totals
+    public decimal MontantHT => Quantite * PrixUnitaireHT;
+    public decimal MontantTVA => MontantHT * (TVA / 100);
+    public decimal MontantTTC => MontantHT + MontantTVA;
+    
+    // Legacy property for backwards compatibility
+    public decimal MontantLigne => MontantTTC;
 
     public string DisplayName => !string.IsNullOrEmpty(ProduitNom) ? ProduitNom :
                                  !string.IsNullOrEmpty(ServiceNom) ? ServiceNom :

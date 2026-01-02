@@ -126,22 +126,18 @@
                             <Label Text="DETAILS DU BON DE LIVRAISON" FontSize="12" FontAttributes="Bold" TextColor="#4A8FBF" Margin="20,15,20,10"/>
                             
                             <!-- Table Header -->
-                            <Grid ColumnDefinitions="2*,*,*,1.5*" ColumnSpacing="10" Padding="20,10" BackgroundColor="#F8F9FA">
-                                <Label Grid.Column="0" Text="DESIGNATION" FontSize="10" FontAttributes="Bold" TextColor="#666"/>
+                            <Grid ColumnDefinitions="3*,*" ColumnSpacing="10" Padding="20,10" BackgroundColor="#F8F9FA">
+                                <Label Grid.Column="0" Text="PRODUIT" FontSize="10" FontAttributes="Bold" TextColor="#666"/>
                                 <Label Grid.Column="1" Text="QUANTITE" FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="Center"/>
-                                <Label Grid.Column="2" Text="PRIX UNIT." FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="End"/>
-                                <Label Grid.Column="3" Text="MONTANT" FontSize="10" FontAttributes="Bold" TextColor="#666" HorizontalTextAlignment="End"/>
                             </Grid>
                             
                             <!-- Table Body -->
                             <VerticalStackLayout x:Name="DetailsContainer" Spacing="0"/>
                             
                             <!-- Table Footer -->
-                            <Grid ColumnDefinitions="2*,*,*,1.5*" ColumnSpacing="10" Padding="20,12" BackgroundColor="#E3F2FD">
+                            <Grid ColumnDefinitions="3*,*" ColumnSpacing="10" Padding="20,12" BackgroundColor="#E3F2FD">
                                 <Label Grid.Column="0" Text="TOTAL" FontSize="11" FontAttributes="Bold" TextColor="#4A8FBF"/>
                                 <Label Grid.Column="1" x:Name="TotalQteFooter" Text="0" FontSize="12" FontAttributes="Bold" TextColor="#4A8FBF" HorizontalTextAlignment="Center"/>
-                                <Label Grid.Column="2" Text="" FontSize="12"/>
-                                <Label Grid.Column="3" x:Name="TotalMontantFooter" Text="0.00 MAD" FontSize="12" FontAttributes="Bold" TextColor="#4A8FBF" HorizontalTextAlignment="End"/>
                             </Grid>
                         </VerticalStackLayout>
                     </Border>

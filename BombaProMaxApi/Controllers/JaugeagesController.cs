@@ -200,102 +200,124 @@ public class JaugeagesController : ControllerBase
         if (temoin == null)
             return BadRequest("Temoin (employee) not found");
 
-        using var transaction = await _context.Database.BeginTransactionAsync();
-        try
+        // Use execution strategy to support retry on failure with user-initiated transactions
+        var strategy = _context.Database.CreateExecutionStrategy();
+
+        Jaugeage? createdJaugeage = null;
+        string? validationError = null;
+
+        await strategy.ExecuteAsync(async () =>
         {
-            // Ensure DateJaugeage is UTC
-            var dateJaugeageUtc = dto.DateJaugeage.Kind == DateTimeKind.Utc
-                ? dto.DateJaugeage
-                : DateTime.SpecifyKind(dto.DateJaugeage, DateTimeKind.Utc);
-
-            // Auto-generate NumeroJaugeage if not provided
-            var numeroJaugeage = string.IsNullOrWhiteSpace(dto.NumeroJaugeage)
-                ? GenerateNumeroJaugeage()
-                : dto.NumeroJaugeage;
-
-            // Create the Jaugeage
-            var jaugeage = new Jaugeage
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                DateJaugeage = dateJaugeageUtc,
-                TemoinID = dto.TemoinID,
-                NumeroJaugeage = numeroJaugeage,
-                Observations = dto.Observations,
-                AjoutePar = dto.AjoutePar,
-                DateCreation = DateTime.UtcNow
-            };
+                // Ensure DateJaugeage is UTC
+                var dateJaugeageUtc = dto.DateJaugeage.Kind == DateTimeKind.Utc
+                    ? dto.DateJaugeage
+                    : DateTime.SpecifyKind(dto.DateJaugeage, DateTimeKind.Utc);
 
-            _context.Jaugeages.Add(jaugeage);
-            await _context.SaveChangesAsync();
+                // Auto-generate NumeroJaugeage if not provided
+                var numeroJaugeage = string.IsNullOrWhiteSpace(dto.NumeroJaugeage)
+                    ? GenerateNumeroJaugeage()
+                    : dto.NumeroJaugeage;
 
-            // Create the details with auto-calculated volumes
-            if (dto.Details != null && dto.Details.Count > 0)
-            {
-                foreach (var detailDto in dto.Details)
+                // Create the Jaugeage
+                var jaugeage = new Jaugeage
                 {
-                    // Validate reservoir exists
-                    var reservoir = await _context.Reservoirs.FindAsync(detailDto.ReservoirID);
-                    if (reservoir == null)
-                    {
-                        await transaction.RollbackAsync();
-                        return BadRequest($"Reservoir with ID {detailDto.ReservoirID} not found");
-                    }
+                    DateJaugeage = dateJaugeageUtc,
+                    TemoinID = dto.TemoinID,
+                    NumeroJaugeage = numeroJaugeage,
+                    Observations = dto.Observations,
+                    AjoutePar = dto.AjoutePar,
+                    DateCreation = DateTime.UtcNow
+                };
 
-                    // Auto-calculate volume if not provided
-                    if (detailDto.VolumeCalcule == 0)
+                _context.Jaugeages.Add(jaugeage);
+                await _context.SaveChangesAsync();
+
+                // Create the details with auto-calculated volumes
+                if (dto.Details != null && dto.Details.Count > 0)
+                {
+                    foreach (var detailDto in dto.Details)
                     {
-                        var calculatedVolume = await CalculateVolumeFromCalibration(
-                            detailDto.ReservoirID, detailDto.HauteurMesuree);
-                        if (calculatedVolume.HasValue)
+                        // Validate reservoir exists
+                        var reservoir = await _context.Reservoirs.FindAsync(detailDto.ReservoirID);
+                        if (reservoir == null)
                         {
-                            detailDto.VolumeCalcule = calculatedVolume.Value;
+                            validationError = $"Reservoir with ID {detailDto.ReservoirID} not found";
+                            await transaction.RollbackAsync();
+                            return;
                         }
+
+                        // Auto-calculate volume if not provided
+                        if (detailDto.VolumeCalcule == 0)
+                        {
+                            var calculatedVolume = await CalculateVolumeFromCalibration(
+                                detailDto.ReservoirID, detailDto.HauteurMesuree);
+                            if (calculatedVolume.HasValue)
+                            {
+                                detailDto.VolumeCalcule = calculatedVolume.Value;
+                            }
+                        }
+
+                        var detail = new JaugeageDetail
+                        {
+                            JaugeageID = jaugeage.ID,
+                            ReservoirID = detailDto.ReservoirID,
+                            HauteurMesuree = detailDto.HauteurMesuree,
+                            VolumeCalcule = detailDto.VolumeCalcule,
+                            Temperature = detailDto.Temperature,
+                            Notes = detailDto.Notes
+                        };
+
+                        _context.JaugeageDetails.Add(detail);
                     }
 
-                    var detail = new JaugeageDetail
-                    {
-                        JaugeageID = jaugeage.ID,
-                        ReservoirID = detailDto.ReservoirID,
-                        HauteurMesuree = detailDto.HauteurMesuree,
-                        VolumeCalcule = detailDto.VolumeCalcule,
-                        Temperature = detailDto.Temperature,
-                        Notes = detailDto.Notes
-                    };
-
-                    _context.JaugeageDetails.Add(detail);
+                    await _context.SaveChangesAsync();
                 }
 
-                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                createdJaugeage = jaugeage;
             }
-
-            await transaction.CommitAsync();
-
-            // Reload with all navigation properties
-            var result = await _context.Jaugeages
-                .Include(j => j.Temoin)
-                .Include(j => j.JaugeageDetails)
-                    .ThenInclude(d => d.Reservoir)
-                .FirstOrDefaultAsync(j => j.ID == jaugeage.ID);
-
-            var resultDto = new JaugeageWithDetailsDto
+            catch (Exception ex)
             {
-                ID = result!.ID,
-                DateJaugeage = result.DateJaugeage,
-                TemoinID = result.TemoinID,
-                NumeroJaugeage = result.NumeroJaugeage,
-                Observations = result.Observations,
-                TemoinNom = result.Temoin?.Nom,
-                AjoutePar = result.AjoutePar,
-                DateCreation = result.DateCreation,
-                Details = _mapper.Map<List<JaugeageDetailDto>>(result.JaugeageDetails)
-            };
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException($"Error creating jaugeage: {ex.Message}", ex);
+            }
+        });
 
-            return CreatedAtAction(nameof(GetJaugeageWithDetails), new { id = result.ID }, resultDto);
-        }
-        catch (Exception ex)
+        // Handle validation errors
+        if (validationError != null)
         {
-            await transaction.RollbackAsync();
-            return StatusCode(500, $"Error creating jaugeage: {ex.Message}");
+            return BadRequest(validationError);
         }
+
+        if (createdJaugeage == null)
+        {
+            return StatusCode(500, "Failed to create jaugeage");
+        }
+
+        // Reload with all navigation properties
+        var result = await _context.Jaugeages
+            .Include(j => j.Temoin)
+            .Include(j => j.JaugeageDetails)
+                .ThenInclude(d => d.Reservoir)
+            .FirstOrDefaultAsync(j => j.ID == createdJaugeage.ID);
+
+        var resultDto = new JaugeageWithDetailsDto
+        {
+            ID = result!.ID,
+            DateJaugeage = result.DateJaugeage,
+            TemoinID = result.TemoinID,
+            NumeroJaugeage = result.NumeroJaugeage,
+            Observations = result.Observations,
+            TemoinNom = result.Temoin?.Nom,
+            AjoutePar = result.AjoutePar,
+            DateCreation = result.DateCreation,
+            Details = _mapper.Map<List<JaugeageDetailDto>>(result.JaugeageDetails)
+        };
+
+        return CreatedAtAction(nameof(GetJaugeageWithDetails), new { id = result.ID }, resultDto);
     }
 
     // PUT: api/Jaugeages/5

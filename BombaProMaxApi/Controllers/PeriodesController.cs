@@ -232,145 +232,174 @@ namespace BombaProMaxApi.Controllers
         [HttpPost("with-details")]
         public async Task<ActionResult<PeriodeWithDetailsDto>> PostPeriodeWithDetails([FromBody] PeriodeWithDetailsDto dto)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            // Use execution strategy to support retry on failure with user-initiated transactions
+            var strategy = _context.Database.CreateExecutionStrategy();
             
+            Periode? createdPeriodeEntity = null;
+            string? validationError = null;
+            string? stockError = null;
+
             try
             {
-                _logger.LogInformation("Creating Periode with {DetailCount} details and {CTCount} credit transactions", 
-                    dto.Details.Count, dto.CreditTransactionIds.Count);
-
-                // Track affected entities for syncing
-                var affectedPompeIds = new HashSet<int>();
-                var affectedReservoirIds = new HashSet<int>();
-
-                // 1. Create the Periode
-                var periodeEntity = _mapper.Map<Periode>(dto.Periode);
-                periodeEntity.DateCreation = DateTime.UtcNow;
-                periodeEntity.DateDebut = DateTime.SpecifyKind(periodeEntity.DateDebut, DateTimeKind.Utc);
-                periodeEntity.DateFin = DateTime.SpecifyKind(periodeEntity.DateFin, DateTimeKind.Utc);
-
-                _context.Periodes.Add(periodeEntity);
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Created Periode {PeriodeId}", periodeEntity.PeriodeID);
-
-                // 2. Create all PeriodeDetails
-                var detailEntities = new List<PeriodeDetails>();
-                foreach (var detailDto in dto.Details)
+                await strategy.ExecuteAsync(async () =>
                 {
-                    var detailEntity = new PeriodeDetails
+                    using var transaction = await _context.Database.BeginTransactionAsync();
+            
+                    try
                     {
-                        PeriodeID = periodeEntity.PeriodeID,
-                        PompeID = detailDto.PompeID,
-                        ReservoirID = detailDto.ReservoirID,
-                        ProduitID = detailDto.ProduitID,
-                        PrixCarburant = detailDto.PrixCarburant,
-                        CompteurElectroniqueDebut = detailDto.CompteurElectroniqueDebut,
-                        CompteurElectroniqueFinal = detailDto.CompteurElectroniqueFinal,
-                        CompteurMecaniqueDebut = detailDto.CompteurMecaniqueDebut,
-                        CompteurMecaniqueFinal = detailDto.CompteurMecaniqueFinal
-                    };
-                    detailEntities.Add(detailEntity);
-                    
-                    // Track for syncing
-                    if (detailDto.PompeID.HasValue)
-                        affectedPompeIds.Add(detailDto.PompeID.Value);
-                    if (detailDto.ReservoirID.HasValue)
-                        affectedReservoirIds.Add(detailDto.ReservoirID.Value);
-                }
+                        _logger.LogInformation("Creating Periode with {DetailCount} details and {CTCount} credit transactions", 
+                            dto.Details.Count, dto.CreditTransactionIds.Count);
 
-                _context.PeriodeDetails.AddRange(detailEntities);
-                await _context.SaveChangesAsync();
+                        // Track affected entities for syncing
+                        var affectedPompeIds = new HashSet<int>();
+                        var affectedReservoirIds = new HashSet<int>();
 
-                _logger.LogInformation("Created {Count} PeriodeDetails", detailEntities.Count);
+                        // 1. Create the Periode
+                        var periodeEntity = _mapper.Map<Periode>(dto.Periode);
+                        periodeEntity.DateCreation = DateTime.UtcNow;
+                        periodeEntity.DateDebut = DateTime.SpecifyKind(periodeEntity.DateDebut, DateTimeKind.Utc);
+                        periodeEntity.DateFin = DateTime.SpecifyKind(periodeEntity.DateFin, DateTimeKind.Utc);
 
-                // 3. Link CreditTransactions to this Periode
-                if (dto.CreditTransactionIds.Count > 0)
-                {
-                    var creditTransactions = await _context.CreditTransactions
-                        .Where(ct => dto.CreditTransactionIds.Contains(ct.CreditID))
-                        .ToListAsync();
+                        _context.Periodes.Add(periodeEntity);
+                        await _context.SaveChangesAsync();
 
-                    foreach (var ct in creditTransactions)
-                    {
-                        ct.PeriodeID = periodeEntity.PeriodeID;
-                        ct.DateModification = DateTime.UtcNow;
-                    }
+                        _logger.LogInformation("Created Periode {PeriodeId}", periodeEntity.PeriodeID);
 
-                    _logger.LogInformation("Linked {Count} CreditTransactions to Periode {PeriodeId}", 
-                        creditTransactions.Count, periodeEntity.PeriodeID);
-                }
-
-                // 4. Consume stock from StockLots (FIFO) for each detail
-                foreach (var detail in detailEntities)
-                {
-                    if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
-                    {
-                        var quantiteVendue = detail.QuantiteVendue;
-                        if (quantiteVendue > 0)
+                        // 2. Create all PeriodeDetails
+                        var detailEntities = new List<PeriodeDetails>();
+                        foreach (var detailDto in dto.Details)
                         {
-                            _logger.LogInformation(
-                                "Consuming {Quantite}L from Reservoir {ReservoirId} for PeriodeDetail {DetailId}",
-                                quantiteVendue, detail.ReservoirID, detail.PeriodeDetailID);
-
-                            await _stockLotService.ConsumeAsync(
-                                detail.ProduitID.Value,
-                                detail.ReservoirID.Value,
-                                quantiteVendue,
-                                detail.PeriodeDetailID);
+                            var detailEntity = new PeriodeDetails
+                            {
+                                PeriodeID = periodeEntity.PeriodeID,
+                                PompeID = detailDto.PompeID,
+                                ReservoirID = detailDto.ReservoirID,
+                                ProduitID = detailDto.ProduitID,
+                                PrixCarburant = detailDto.PrixCarburant,
+                                CompteurElectroniqueDebut = detailDto.CompteurElectroniqueDebut,
+                                CompteurElectroniqueFinal = detailDto.CompteurElectroniqueFinal,
+                                CompteurMecaniqueDebut = detailDto.CompteurMecaniqueDebut,
+                                CompteurMecaniqueFinal = detailDto.CompteurMecaniqueFinal
+                            };
+                            detailEntities.Add(detailEntity);
+                    
+                            // Track for syncing
+                            if (detailDto.PompeID.HasValue)
+                                affectedPompeIds.Add(detailDto.PompeID.Value);
+                            if (detailDto.ReservoirID.HasValue)
+                                affectedReservoirIds.Add(detailDto.ReservoirID.Value);
                         }
+
+                        _context.PeriodeDetails.AddRange(detailEntities);
+                        await _context.SaveChangesAsync();
+
+                        _logger.LogInformation("Created {Count} PeriodeDetails", detailEntities.Count);
+
+                        // 3. Link CreditTransactions to this Periode
+                        if (dto.CreditTransactionIds.Count > 0)
+                        {
+                            var creditTransactions = await _context.CreditTransactions
+                                .Where(ct => dto.CreditTransactionIds.Contains(ct.CreditID))
+                                .ToListAsync();
+
+                            foreach (var ct in creditTransactions)
+                            {
+                                ct.PeriodeID = periodeEntity.PeriodeID;
+                                ct.DateModification = DateTime.UtcNow;
+                            }
+
+                            _logger.LogInformation("Linked {Count} CreditTransactions to Periode {PeriodeId}", 
+                                creditTransactions.Count, periodeEntity.PeriodeID);
+                        }
+
+                        // 4. Consume stock from StockLots (FIFO) for each detail
+                        foreach (var detail in detailEntities)
+                        {
+                            if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
+                            {
+                                var quantiteVendue = detail.QuantiteVendue;
+                                if (quantiteVendue > 0)
+                                {
+                                    _logger.LogInformation(
+                                        "Consuming {Quantite}L from Reservoir {ReservoirId} for PeriodeDetail {DetailId}",
+                                        quantiteVendue, detail.ReservoirID, detail.PeriodeDetailID);
+
+                                    await _stockLotService.ConsumeAsync(
+                                        detail.ProduitID.Value,
+                                        detail.ReservoirID.Value,
+                                        quantiteVendue,
+                                        detail.PeriodeDetailID);
+                                }
+                            }
+                        }
+
+                        // 5. SYNC: Recalculate reservoir levels and pump counters from source of truth
+                        await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
+                        await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
+
+                        // 6. Save all changes and commit transaction
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                        createdPeriodeEntity = periodeEntity;
+
+                        _logger.LogInformation("Successfully created Periode {PeriodeId} with stock consumption and sync", periodeEntity.PeriodeID);
                     }
-                }
-
-                // 5. SYNC: Recalculate reservoir levels and pump counters from source of truth
-                await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
-                await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
-
-                // 6. Save all changes and commit transaction
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                _logger.LogInformation("Successfully created Periode {PeriodeId} with stock consumption and sync", periodeEntity.PeriodeID);
-
-                // Reload with navigation properties for response
-                var createdPeriode = await _context.Periodes
-                    .Include(p => p.Employe)
-                    .FirstOrDefaultAsync(p => p.PeriodeID == periodeEntity.PeriodeID);
-
-                var createdDetails = await _context.PeriodeDetails
-                    .Include(d => d.Pompe)
-                    .Include(d => d.Reservoir)
-                    .Include(d => d.Produit)
-                    .Where(d => d.PeriodeID == periodeEntity.PeriodeID)
-                    .ToListAsync();
-
-                // Get linked CT IDs for response
-                var linkedCTIds = await _context.CreditTransactions
-                    .Where(ct => ct.PeriodeID == periodeEntity.PeriodeID)
-                    .Select(ct => ct.CreditID)
-                    .ToListAsync();
-
-                var result = new PeriodeWithDetailsDto
-                {
-                    Periode = _mapper.Map<PeriodeDto>(createdPeriode),
-                    Details = _mapper.Map<List<PeriodeDetailsDto>>(createdDetails),
-                    CreditTransactionIds = linkedCTIds
-                };
-
-                return CreatedAtAction(nameof(GetPeriode), new { id = periodeEntity.PeriodeID }, result);
+                    catch (InvalidOperationException ex)
+                    {
+                        await transaction.RollbackAsync();
+                        stockError = ex.Message;
+                        throw;
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                });
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
-                await transaction.RollbackAsync();
-                _logger.LogWarning("Stock consumption failed: {Message}", ex.Message);
-                return BadRequest(new { error = "Stock insuffisant", message = ex.Message });
+                _logger.LogWarning("Stock consumption failed: {Message}", stockError);
+                return BadRequest(new { error = "Stock insuffisant", message = stockError });
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error creating Periode with details");
                 return StatusCode(500, $"Internal server error: {ex.Message}\n{ex.InnerException?.Message}");
             }
+
+            if (createdPeriodeEntity == null)
+            {
+                return StatusCode(500, "Failed to create periode");
+            }
+
+            // Reload with navigation properties for response
+            var createdPeriode = await _context.Periodes
+                .Include(p => p.Employe)
+                .FirstOrDefaultAsync(p => p.PeriodeID == createdPeriodeEntity.PeriodeID);
+
+            var createdDetails = await _context.PeriodeDetails
+                .Include(d => d.Pompe)
+                .Include(d => d.Reservoir)
+                .Include(d => d.Produit)
+                .Where(d => d.PeriodeID == createdPeriodeEntity.PeriodeID)
+                .ToListAsync();
+
+            // Get linked CT IDs for response
+            var linkedCTIds = await _context.CreditTransactions
+                .Where(ct => ct.PeriodeID == createdPeriodeEntity.PeriodeID)
+                .Select(ct => ct.CreditID)
+                .ToListAsync();
+
+            var result = new PeriodeWithDetailsDto
+            {
+                Periode = _mapper.Map<PeriodeDto>(createdPeriode),
+                Details = _mapper.Map<List<PeriodeDetailsDto>>(createdDetails),
+                CreditTransactionIds = linkedCTIds
+            };
+
+            return CreatedAtAction(nameof(GetPeriode), new { id = createdPeriodeEntity.PeriodeID }, result);
         }
 
         /// <summary>
@@ -390,308 +419,365 @@ namespace BombaProMaxApi.Controllers
             if (id != dto.Periode.PeriodeID)
                 return BadRequest("ID mismatch.");
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
-            
+            // Use execution strategy to support retry on failure with user-initiated transactions
+            var strategy = _context.Database.CreateExecutionStrategy();
+    
+            bool success = false;
+            string? stockError = null;
+            int affectedPompeCount = 0;
+            int affectedResCount = 0;
+
             try
             {
-                _logger.LogInformation("Updating Periode {PeriodeId} with {DetailCount} details and {CTCount} credit transactions", 
-                    id, dto.Details.Count, dto.CreditTransactionIds.Count);
-
-                // Track affected entities for syncing
-                var affectedPompeIds = new HashSet<int>();
-                var affectedReservoirIds = new HashSet<int>();
-
-                // 1. Get existing periode with details
-                var existingPeriode = await _context.Periodes
-                    .Include(p => p.PeriodeDetails)
-                    .FirstOrDefaultAsync(p => p.PeriodeID == id);
-
-                if (existingPeriode == null)
-                    return NotFound();
-
-                // Track old details for syncing
-                foreach (var oldDetail in existingPeriode.PeriodeDetails)
+                await strategy.ExecuteAsync(async () =>
                 {
-                    if (oldDetail.PompeID.HasValue)
-                        affectedPompeIds.Add(oldDetail.PompeID.Value);
-                    if (oldDetail.ReservoirID.HasValue)
-                        affectedReservoirIds.Add(oldDetail.ReservoirID.Value);
-                }
-
-                // 2. Reverse previous stock consumptions
-                foreach (var oldDetail in existingPeriode.PeriodeDetails)
-                {
-                    if (oldDetail.ReservoirID.HasValue && oldDetail.ProduitID.HasValue)
+                    using var transaction = await _context.Database.BeginTransactionAsync();
+            
+                    try
                     {
-                        var oldQuantite = oldDetail.QuantiteVendue;
-                        if (oldQuantite > 0)
+                        _logger.LogInformation("Updating Periode {PeriodeId} with {DetailCount} details and {CTCount} credit transactions", 
+                            id, dto.Details.Count, dto.CreditTransactionIds.Count);
+
+                        // Track affected entities for syncing
+                        var affectedPompeIds = new HashSet<int>();
+                        var affectedReservoirIds = new HashSet<int>();
+
+                        // 1. Get existing periode with details
+                        var existingPeriode = await _context.Periodes
+                            .Include(p => p.PeriodeDetails)
+                            .FirstOrDefaultAsync(p => p.PeriodeID == id);
+
+                        if (existingPeriode == null)
+                            throw new KeyNotFoundException("Periode not found");
+
+                        // Track old details for syncing
+                        foreach (var oldDetail in existingPeriode.PeriodeDetails)
+                        {
+                            if (oldDetail.PompeID.HasValue)
+                                affectedPompeIds.Add(oldDetail.PompeID.Value);
+                            if (oldDetail.ReservoirID.HasValue)
+                                affectedReservoirIds.Add(oldDetail.ReservoirID.Value);
+                        }
+
+                        // 2. Reverse previous stock consumptions
+                        foreach (var oldDetail in existingPeriode.PeriodeDetails)
+                        {
+                            if (oldDetail.ReservoirID.HasValue && oldDetail.ProduitID.HasValue)
+                            {
+                                var oldQuantite = oldDetail.QuantiteVendue;
+                                if (oldQuantite > 0)
+                                {
+                                    _logger.LogInformation(
+                                        "Reversing {Quantite}L to Reservoir {ReservoirId} for old PeriodeDetail {DetailId}",
+                                        oldQuantite, oldDetail.ReservoirID, oldDetail.PeriodeDetailID);
+
+                                    await _stockLotService.ReverseConsumptionAsync(oldDetail.PeriodeDetailID);
+                                }
+                            }
+                        }
+
+                        // 3. Update the Periode entity
+                        _mapper.Map(dto.Periode, existingPeriode);
+                        existingPeriode.DateModification = DateTime.UtcNow;
+                        existingPeriode.DateDebut = DateTime.SpecifyKind(existingPeriode.DateDebut, DateTimeKind.Utc);
+                        existingPeriode.DateFin = DateTime.SpecifyKind(existingPeriode.DateFin, DateTimeKind.Utc);
+
+                        if (existingPeriode.DateCreation.HasValue)
+                        {
+                            existingPeriode.DateCreation = DateTime.SpecifyKind(existingPeriode.DateCreation.Value, DateTimeKind.Utc);
+                        }
+
+                        // 4. Delete old details
+                        _context.PeriodeDetails.RemoveRange(existingPeriode.PeriodeDetails);
+                        await _context.SaveChangesAsync();
+
+                        // 5. Create new details
+                        var newDetailEntities = new List<PeriodeDetails>();
+                        foreach (var detailDto in dto.Details)
+                        {
+                            var detailEntity = new PeriodeDetails
+                            {
+                                PeriodeID = id,
+                                PompeID = detailDto.PompeID,
+                                ReservoirID = detailDto.ReservoirID,
+                                ProduitID = detailDto.ProduitID,
+                                PrixCarburant = detailDto.PrixCarburant,
+                                CompteurElectroniqueDebut = detailDto.CompteurElectroniqueDebut,
+                                CompteurElectroniqueFinal = detailDto.CompteurElectroniqueFinal,
+                                CompteurMecaniqueDebut = detailDto.CompteurMecaniqueDebut,
+                                CompteurMecaniqueFinal = detailDto.CompteurMecaniqueFinal
+                            };
+                            newDetailEntities.Add(detailEntity);
+                            
+                            // Track for syncing
+                            if (detailDto.PompeID.HasValue)
+                                affectedPompeIds.Add(detailDto.PompeID.Value);
+                            if (detailDto.ReservoirID.HasValue)
+                                affectedReservoirIds.Add(detailDto.ReservoirID.Value);
+                        }
+
+                        _context.PeriodeDetails.AddRange(newDetailEntities);
+                        await _context.SaveChangesAsync();
+
+                        _logger.LogInformation("Created {Count} new PeriodeDetails", newDetailEntities.Count);
+
+                        // 6. Update CreditTransaction links
+                        // First, unlink all CTs currently linked to this periode
+                        var existingLinkedCTs = await _context.CreditTransactions
+                            .Where(ct => ct.PeriodeID == id)
+                            .ToListAsync();
+
+                        foreach (var ct in existingLinkedCTs)
+                        {
+                            // Only unlink if not in the new list
+                            if (!dto.CreditTransactionIds.Contains(ct.CreditID))
+                            {
+                                ct.PeriodeID = null;
+                                ct.DateModification = DateTime.UtcNow;
+                            }
+                        }
+
+                        // Then, link the new CTs
+                        if (dto.CreditTransactionIds.Count > 0)
+                        {
+                            var newCTsToLink = await _context.CreditTransactions
+                                .Where(ct => dto.CreditTransactionIds.Contains(ct.CreditID) && ct.PeriodeID != id)
+                                .ToListAsync();
+
+                            foreach (var ct in newCTsToLink)
+                            {
+                                ct.PeriodeID = id;
+                                ct.DateModification = DateTime.UtcNow;
+                            }
+
+                            _logger.LogInformation("Updated CreditTransaction links: {Unlinked} unlinked, {Linked} newly linked",
+                                existingLinkedCTs.Count(ct => !dto.CreditTransactionIds.Contains(ct.CreditID)),
+                                newCTsToLink.Count);
+                        }
+
+                        // 7. Consume stock for new details (FIFO)
+                        foreach (var detail in newDetailEntities)
+                        {
+                            if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
+                            {
+                                var quantiteVendue = detail.QuantiteVendue;
+                                if (quantiteVendue > 0)
+                                {
+                                    _logger.LogInformation(
+                                        "Consuming {Quantite}L from Reservoir {ReservoirId} for new PeriodeDetail {DetailId}",
+                                        quantiteVendue, detail.ReservoirID, detail.PeriodeDetailID);
+
+                                    await _stockLotService.ConsumeAsync(
+                                        detail.ProduitID.Value,
+                                        detail.ReservoirID.Value,
+                                        quantiteVendue,
+                                        detail.PeriodeDetailID);
+                                }
+                            }
+                        }
+
+                        // 8. Cascade counter updates to subsequent periods
+                        var cascadeResult = await _cascadeService.CascadeCounterUpdatesAsync(id, newDetailEntities);
+                        if (cascadeResult.AffectedPeriodeDetailCount > 0)
                         {
                             _logger.LogInformation(
-                                "Reversing {Quantite}L to Reservoir {ReservoirId} for old PeriodeDetail {DetailId}",
-                                oldQuantite, oldDetail.ReservoirID, oldDetail.PeriodeDetailID);
-
-                            await _stockLotService.ReverseConsumptionAsync(oldDetail.PeriodeDetailID);
-                        }
-                    }
-                }
-
-                // 3. Update the Periode entity
-                _mapper.Map(dto.Periode, existingPeriode);
-                existingPeriode.DateModification = DateTime.UtcNow;
-                existingPeriode.DateDebut = DateTime.SpecifyKind(existingPeriode.DateDebut, DateTimeKind.Utc);
-                existingPeriode.DateFin = DateTime.SpecifyKind(existingPeriode.DateFin, DateTimeKind.Utc);
-
-                if (existingPeriode.DateCreation.HasValue)
-                {
-                    existingPeriode.DateCreation = DateTime.SpecifyKind(existingPeriode.DateCreation.Value, DateTimeKind.Utc);
-                }
-
-                // 4. Delete old details
-                _context.PeriodeDetails.RemoveRange(existingPeriode.PeriodeDetails);
-                await _context.SaveChangesAsync();
-
-                // 5. Create new details
-                var newDetailEntities = new List<PeriodeDetails>();
-                foreach (var detailDto in dto.Details)
-                {
-                    var detailEntity = new PeriodeDetails
-                    {
-                        PeriodeID = id,
-                        PompeID = detailDto.PompeID,
-                        ReservoirID = detailDto.ReservoirID,
-                        ProduitID = detailDto.ProduitID,
-                        PrixCarburant = detailDto.PrixCarburant,
-                        CompteurElectroniqueDebut = detailDto.CompteurElectroniqueDebut,
-                        CompteurElectroniqueFinal = detailDto.CompteurElectroniqueFinal,
-                        CompteurMecaniqueDebut = detailDto.CompteurMecaniqueDebut,
-                        CompteurMecaniqueFinal = detailDto.CompteurMecaniqueFinal
-                    };
-                    newDetailEntities.Add(detailEntity);
+                                "Cascaded counter updates to {Count} subsequent period details",
+                                cascadeResult.AffectedPeriodeDetailCount);
                     
-                    // Track for syncing
-                    if (detailDto.PompeID.HasValue)
-                        affectedPompeIds.Add(detailDto.PompeID.Value);
-                    if (detailDto.ReservoirID.HasValue)
-                        affectedReservoirIds.Add(detailDto.ReservoirID.Value);
-                }
-
-                _context.PeriodeDetails.AddRange(newDetailEntities);
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Created {Count} new PeriodeDetails", newDetailEntities.Count);
-
-                // 6. Update CreditTransaction links
-                // First, unlink all CTs currently linked to this periode
-                var existingLinkedCTs = await _context.CreditTransactions
-                    .Where(ct => ct.PeriodeID == id)
-                    .ToListAsync();
-
-                foreach (var ct in existingLinkedCTs)
-                {
-                    // Only unlink if not in the new list
-                    if (!dto.CreditTransactionIds.Contains(ct.CreditID))
-                    {
-                        ct.PeriodeID = null;
-                        ct.DateModification = DateTime.UtcNow;
-                    }
-                }
-
-                // Then, link the new CTs
-                if (dto.CreditTransactionIds.Count > 0)
-                {
-                    var newCTsToLink = await _context.CreditTransactions
-                        .Where(ct => dto.CreditTransactionIds.Contains(ct.CreditID) && ct.PeriodeID != id)
-                        .ToListAsync();
-
-                    foreach (var ct in newCTsToLink)
-                    {
-                        ct.PeriodeID = id;
-                        ct.DateModification = DateTime.UtcNow;
-                    }
-
-                    _logger.LogInformation("Updated CreditTransaction links: {Unlinked} unlinked, {Linked} newly linked",
-                        existingLinkedCTs.Count(ct => !dto.CreditTransactionIds.Contains(ct.CreditID)),
-                        newCTsToLink.Count);
-                }
-
-                // 7. Consume stock for new details (FIFO)
-                foreach (var detail in newDetailEntities)
-                {
-                    if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
-                    {
-                        var quantiteVendue = detail.QuantiteVendue;
-                        if (quantiteVendue > 0)
-                        {
-                            _logger.LogInformation(
-                                "Consuming {Quantite}L from Reservoir {ReservoirId} for new PeriodeDetail {DetailId}",
-                                quantiteVendue, detail.ReservoirID, detail.PeriodeDetailID);
-
-                            await _stockLotService.ConsumeAsync(
-                                detail.ProduitID.Value,
-                                detail.ReservoirID.Value,
-                                quantiteVendue,
-                                detail.PeriodeDetailID);
+                            // Add cascade-affected entities to sync list
+                            foreach (var pompeId in cascadeResult.AffectedPompeIds)
+                                affectedPompeIds.Add(pompeId);
+                            foreach (var reservoirId in cascadeResult.AffectedReservoirIds)
+                                affectedReservoirIds.Add(reservoirId);
                         }
+
+                        // 9. SYNC: Recalculate reservoir levels and pump counters from source of truth
+                        await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
+                        await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
+
+                        // 10. Save and commit
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                        success = true;
+                        affectedPompeCount = affectedPompeIds.Count;
+                        affectedResCount = affectedReservoirIds.Count;
+
+                        _logger.LogInformation(
+                            "Successfully updated Periode {PeriodeId} with stock adjustments, cascade, and sync " +
+                            "(synced {PumpCount} pumps, {ResCount} reservoirs)",
+                            id, affectedPompeIds.Count, affectedReservoirIds.Count);
                     }
-                }
-
-                // 8. Cascade counter updates to subsequent periods
-                var cascadeResult = await _cascadeService.CascadeCounterUpdatesAsync(id, newDetailEntities);
-                if (cascadeResult.AffectedPeriodeDetailCount > 0)
-                {
-                    _logger.LogInformation(
-                        "Cascaded counter updates to {Count} subsequent period details",
-                        cascadeResult.AffectedPeriodeDetailCount);
-                    
-                    // Add cascade-affected entities to sync list
-                    foreach (var pompeId in cascadeResult.AffectedPompeIds)
-                        affectedPompeIds.Add(pompeId);
-                    foreach (var reservoirId in cascadeResult.AffectedReservoirIds)
-                        affectedReservoirIds.Add(reservoirId);
-                }
-
-                // 9. SYNC: Recalculate reservoir levels and pump counters from source of truth
-                await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
-                await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
-
-                // 10. Save and commit
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                _logger.LogInformation(
-                    "Successfully updated Periode {PeriodeId} with stock adjustments, cascade, and sync " +
-                    "(synced {PumpCount} pumps, {ResCount} reservoirs)",
-                    id, affectedPompeIds.Count, affectedReservoirIds.Count);
-
-                // Reload with navigation properties for response
-                var updatedPeriode = await _context.Periodes
-                    .Include(p => p.Employe)
-                    .FirstOrDefaultAsync(p => p.PeriodeID == id);
-
-                var updatedDetails = await _context.PeriodeDetails
-                    .Include(d => d.Pompe)
-                    .Include(d => d.Reservoir)
-                    .Include(d => d.Produit)
-                    .Where(d => d.PeriodeID == id)
-                    .ToListAsync();
-
-                // Get linked CT IDs for response
-                var linkedCTIds = await _context.CreditTransactions
-                    .Where(ct => ct.PeriodeID == id)
-                    .Select(ct => ct.CreditID)
-                    .ToListAsync();
-
-                var result = new PeriodeWithDetailsDto
-                {
-                    Periode = _mapper.Map<PeriodeDto>(updatedPeriode),
-                    Details = _mapper.Map<List<PeriodeDetailsDto>>(updatedDetails),
-                    CreditTransactionIds = linkedCTIds
-                };
-
-                return Ok(result);
+                    catch (InvalidOperationException ex)
+                    {
+                        await transaction.RollbackAsync();
+                        stockError = ex.Message;
+                        throw;
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                });
             }
-            catch (InvalidOperationException ex)
+            catch (KeyNotFoundException)
             {
-                await transaction.RollbackAsync();
-                _logger.LogWarning("Stock operation failed during update: {Message}", ex.Message);
-                return BadRequest(new { error = "Erreur de stock", message = ex.Message });
+                return NotFound();
+            }
+            catch (InvalidOperationException)
+            {
+                _logger.LogWarning("Stock operation failed during update: {Message}", stockError);
+                return BadRequest(new { error = "Erreur de stock", message = stockError });
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error updating Periode with details");
                 return StatusCode(500, $"Internal server error: {ex.Message}\n{ex.InnerException?.Message}");
             }
+
+            // Reload with navigation properties for response
+            var updatedPeriode = await _context.Periodes
+                .Include(p => p.Employe)
+                .FirstOrDefaultAsync(p => p.PeriodeID == id);
+
+            var updatedDetails = await _context.PeriodeDetails
+                .Include(d => d.Pompe)
+                .Include(d => d.Reservoir)
+                .Include(d => d.Produit)
+                .Where(d => d.PeriodeID == id)
+                .ToListAsync();
+
+            // Get linked CT IDs for response
+            var linkedCTIds = await _context.CreditTransactions
+                .Where(ct => ct.PeriodeID == id)
+                .Select(ct => ct.CreditID)
+                .ToListAsync();
+
+            var result = new PeriodeWithDetailsDto
+            {
+                Periode = _mapper.Map<PeriodeDto>(updatedPeriode),
+                Details = _mapper.Map<List<PeriodeDetailsDto>>(updatedDetails),
+                CreditTransactionIds = linkedCTIds
+            };
+
+            return Ok(result);
         }
 
         // DELETE: api/Periodes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePeriode(int id)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
-            
+            // Use execution strategy to support retry on failure with user-initiated transactions
+            var strategy = _context.Database.CreateExecutionStrategy();
+    
+            bool notFound = false;
+            int affectedPompeCount = 0;
+            int affectedResCount = 0;
+
             try
             {
-                var periode = await _context.Periodes
-                    .Include(p => p.PeriodeDetails)
-                    .FirstOrDefaultAsync(p => p.PeriodeID == id);
-
-                if (periode == null)
-                    return NotFound();
-
-                // Track affected entities for syncing
-                var affectedPompeIds = new HashSet<int>();
-                var affectedReservoirIds = new HashSet<int>();
-
-                // Reverse stock consumptions before deleting
-                foreach (var detail in periode.PeriodeDetails)
+                await strategy.ExecuteAsync(async () =>
                 {
-                    // Track for syncing
-                    if (detail.PompeID.HasValue)
-                        affectedPompeIds.Add(detail.PompeID.Value);
-                    if (detail.ReservoirID.HasValue)
-                        affectedReservoirIds.Add(detail.ReservoirID.Value);
-
-                    if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
+                    using var transaction = await _context.Database.BeginTransactionAsync();
+            
+                    try
                     {
-                        var quantite = detail.QuantiteVendue;
-                        if (quantite > 0)
+                        var periode = await _context.Periodes
+                            .Include(p => p.PeriodeDetails)
+                            .FirstOrDefaultAsync(p => p.PeriodeID == id);
+
+                        if (periode == null)
                         {
-                            _logger.LogInformation(
-                                "Reversing {Quantite}L to Reservoir {ReservoirId} before deleting Periode {PeriodeId}",
-                                quantite, detail.ReservoirID, id);
-
-                            await _stockLotService.ReverseConsumptionAsync(detail.PeriodeDetailID);
+                            notFound = true;
+                            return;
                         }
+
+                        // Track affected entities for syncing
+                        var affectedPompeIds = new HashSet<int>();
+                        var affectedReservoirIds = new HashSet<int>();
+
+                        // Reverse stock consumptions before deleting
+                        foreach (var detail in periode.PeriodeDetails)
+                        {
+                            // Track for syncing
+                            if (detail.PompeID.HasValue)
+                                affectedPompeIds.Add(detail.PompeID.Value);
+                            if (detail.ReservoirID.HasValue)
+                                affectedReservoirIds.Add(detail.ReservoirID.Value);
+
+                            if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
+                            {
+                                var quantite = detail.QuantiteVendue;
+                                if (quantite > 0)
+                                {
+                                    _logger.LogInformation(
+                                        "Reversing {Quantite}L to Reservoir {ReservoirId} before deleting Periode {PeriodeId}",
+                                        quantite, detail.ReservoirID, id);
+
+                                    await _stockLotService.ReverseConsumptionAsync(detail.PeriodeDetailID);
+                                }
+                            }
+                        }
+
+                        // Unlink all CreditTransactions from this periode (set PeriodeID to null)
+                        var linkedCTs = await _context.CreditTransactions
+                            .Where(ct => ct.PeriodeID == id)
+                            .ToListAsync();
+
+                        foreach (var ct in linkedCTs)
+                        {
+                            ct.PeriodeID = null;
+                            ct.DateModification = DateTime.UtcNow;
+                        }
+
+                        if (linkedCTs.Count > 0)
+                        {
+                            _logger.LogInformation("Unlinked {Count} CreditTransactions from Periode {PeriodeId}", 
+                                linkedCTs.Count, id);
+                        }
+
+                        // Delete cascade - remove details first
+                        if (periode.PeriodeDetails.Any())
+                        {
+                            _context.PeriodeDetails.RemoveRange(periode.PeriodeDetails);
+                        }
+
+                        _context.Periodes.Remove(periode);
+                        await _context.SaveChangesAsync();
+
+                        // SYNC: Recalculate reservoir levels and pump counters from source of truth
+                        await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
+                        await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
+                        await _context.SaveChangesAsync();
+
+                        await transaction.CommitAsync();
+
+                        affectedPompeCount = affectedPompeIds.Count;
+                        affectedResCount = affectedReservoirIds.Count;
+
+                        _logger.LogInformation(
+                            "Deleted Periode {PeriodeId} with stock reversal and sync " +
+                            "(synced {PumpCount} pumps, {ResCount} reservoirs)",
+                            id, affectedPompeIds.Count, affectedReservoirIds.Count);
                     }
-                }
-
-                // Unlink all CreditTransactions from this periode (set PeriodeID to null)
-                var linkedCTs = await _context.CreditTransactions
-                    .Where(ct => ct.PeriodeID == id)
-                    .ToListAsync();
-
-                foreach (var ct in linkedCTs)
-                {
-                    ct.PeriodeID = null;
-                    ct.DateModification = DateTime.UtcNow;
-                }
-
-                if (linkedCTs.Count > 0)
-                {
-                    _logger.LogInformation("Unlinked {Count} CreditTransactions from Periode {PeriodeId}", 
-                        linkedCTs.Count, id);
-                }
-
-                // Delete cascade - remove details first
-                if (periode.PeriodeDetails.Any())
-                {
-                    _context.PeriodeDetails.RemoveRange(periode.PeriodeDetails);
-                }
-
-                _context.Periodes.Remove(periode);
-                await _context.SaveChangesAsync();
-
-                // SYNC: Recalculate reservoir levels and pump counters from source of truth
-                await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
-                await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
-                await _context.SaveChangesAsync();
-
-                await transaction.CommitAsync();
-
-                _logger.LogInformation(
-                    "Deleted Periode {PeriodeId} with stock reversal and sync " +
-                    "(synced {PumpCount} pumps, {ResCount} reservoirs)",
-                    id, affectedPompeIds.Count, affectedReservoirIds.Count);
-                    
-                return NoContent();
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                });
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error deleting Periode {PeriodeId}", id);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+
+            if (notFound)
+                return NotFound();
+        
+            return NoContent();
         }
 
         private bool PeriodeExists(int id)
