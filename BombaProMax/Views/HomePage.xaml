@@ -13,9 +13,9 @@
             <Border Style="{StaticResource HomeHeaderBanner}">
                 <Border.Background>
                     <LinearGradientBrush EndPoint="1,1">
-                        <GradientStop Color="{StaticResource HomeNeuPrimary}" Offset="0.0"/>
-                        <GradientStop Color="{StaticResource HomeNeuPrimaryDark}" Offset="0.5"/>
-                        <GradientStop Color="{StaticResource HomeNeuSecondary}" Offset="1.0"/>
+                        <GradientStop Color="#1a423a" Offset="0.0"/>
+                        <GradientStop Color="#478378" Offset="0.5"/>
+                        <GradientStop Color="#1a423a" Offset="1.0"/>
                     </LinearGradientBrush>
                 </Border.Background>
                 <Border.Shadow>
@@ -23,28 +23,7 @@
                 </Border.Shadow>
                 
                 <VerticalStackLayout Style="{StaticResource HomeHeaderStack}">
-                    <!-- Tenant Badge -->
-                    <Border BackgroundColor="Transparent"
-                            StrokeThickness="0"
-                            Padding="16,8"
-                            HorizontalOptions="Center"
-                            Margin="0,0,0,12">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
-                            <Label Text="🏪" FontSize="14" VerticalOptions="Center"/>
-                            <Label x:Name="TenantNameLabel"
-                                   Text="Base de donnees" 
-                                   FontSize="25" 
-                                   FontAttributes="Bold"
-                                   TextColor="White"
-                                   VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                    </Border>
-
                     <HorizontalStackLayout Style="{StaticResource HomeHeaderTitleStack}">
-                        <Label Text="&#x1F6E1;" Style="{StaticResource HomeHeaderIcon}"/>
                         <Label Text="Espace Administration" Style="{StaticResource HomeHeaderTitle}"/>
                     </HorizontalStackLayout>
                     <Label Text="Centre de controle et gestion de votre station-service" 

@@ -1,4 +1,4 @@
-﻿using BombaProMax.Models;
+using BombaProMax.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text;

@@ -9,11 +9,6 @@ public class UserService
 {
     private readonly HttpClient _httpClient;
     private static string BaseUrl => ApiConfig.Users;
-    
-    // Cache for user names to avoid repeated API calls
-    private static readonly Dictionary<int, string> _userNameCache = new();
-    private static DateTime _cacheLastRefresh = DateTime.MinValue;
-    private static readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(10);
 
     public UserService()
     {
@@ -77,26 +72,15 @@ public class UserService
     {
         try
         {
-            Debug.WriteLine($"[UserService] Creating user: {user.Name}");
-            Debug.WriteLine($"[UserService] Password provided: {!string.IsNullOrEmpty(user.Password)}, Length: {user.Password?.Length ?? 0}");
-            
             var json = JsonConvert.SerializeObject(user);
-            Debug.WriteLine($"[UserService] JSON payload: {json}");
-
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(BaseUrl, content);
-
-            Debug.WriteLine($"[UserService] Create response status: {response.StatusCode}");
 
             if (response.IsSuccessStatusCode)
             {
                 var responseJson = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine($"[UserService] Create response: {responseJson}");
                 return JsonConvert.DeserializeObject<UserDto>(responseJson);
             }
-
-            var errorContent = await response.Content.ReadAsStringAsync();
-            Debug.WriteLine($"[UserService] Create error: {errorContent}");
             return null;
         }
         catch (Exception ex)
@@ -116,13 +100,6 @@ public class UserService
             var json = JsonConvert.SerializeObject(user);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync($"{BaseUrl}/{user.UserId}", content);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine($"[UserService] Update error: {errorContent}");
-            }
-
             return response.IsSuccessStatusCode;
         }
         catch (Exception ex)
@@ -140,13 +117,6 @@ public class UserService
         try
         {
             var response = await _httpClient.DeleteAsync($"{BaseUrl}/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine($"[UserService] Delete error: {errorContent}");
-            }
-
             return response.IsSuccessStatusCode;
         }
         catch (Exception ex)
@@ -205,69 +175,17 @@ public class UserService
     }
 
     /// <summary>
-    /// Gets users filtered by active status.
-    /// </summary>
-    public async Task<List<UserDto>> GetByStatusAsync(bool isActive)
-    {
-        try
-        {
-            var allUsers = await GetAllAsync();
-            return allUsers.Where(u => u.IsActive == isActive).ToList();
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[UserService] Error filtering users: {ex.Message}");
-            return [];
-        }
-    }
-
-    /// <summary>
-    /// Checks if an email already exists.
-    /// </summary>
-    public async Task<bool> EmailExistsAsync(string email, int? excludeUserId = null)
-    {
-        try
-        {
-            var allUsers = await GetAllAsync();
-            return allUsers.Any(u =>
-                u.Email?.Equals(email, StringComparison.OrdinalIgnoreCase) == true &&
-                u.UserId != excludeUserId);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[UserService] Error checking email: {ex.Message}");
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Gets a user's name by their ID. Uses caching for performance.
+    /// Gets a user's name by their ID.
     /// </summary>
     public async Task<string> GetUserNameByIdAsync(int? userId)
     {
         if (!userId.HasValue || userId.Value <= 0)
             return "N/A";
 
-        // Check if cache needs refresh
-        if (DateTime.Now - _cacheLastRefresh > _cacheExpiration)
-        {
-            _userNameCache.Clear();
-        }
-
-        // Check cache first
-        if (_userNameCache.TryGetValue(userId.Value, out var cachedName))
-            return cachedName;
-
         try
         {
             var user = await GetByIdAsync(userId.Value);
-            var userName = user?.Name ?? "Utilisateur inconnu";
-            
-            // Cache the result
-            _userNameCache[userId.Value] = userName;
-            _cacheLastRefresh = DateTime.Now;
-            
-            return userName;
+            return user?.Name ?? "Utilisateur inconnu";
         }
         catch (Exception ex)
         {
@@ -277,40 +195,23 @@ public class UserService
     }
 
     /// <summary>
-    /// Preloads user names into cache for multiple IDs at once.
+    /// Checks if an email already exists (for validation during create/edit).
     /// </summary>
-    public async Task PreloadUserNamesAsync(IEnumerable<int?> userIds)
+    /// <param name="email">Email to check</param>
+    /// <param name="excludeUserId">Optional user ID to exclude (for edit scenarios)</param>
+    public async Task<bool> EmailExistsAsync(string email, int? excludeUserId = null)
     {
-        var idsToLoad = userIds
-            .Where(id => id.HasValue && id.Value > 0 && !_userNameCache.ContainsKey(id.Value))
-            .Select(id => id!.Value)
-            .Distinct()
-            .ToList();
-
-        if (idsToLoad.Count == 0)
-            return;
-
         try
         {
             var allUsers = await GetAllAsync();
-            foreach (var user in allUsers.Where(u => idsToLoad.Contains(u.UserId)))
-            {
-                _userNameCache[user.UserId] = user.Name ?? "Utilisateur inconnu";
-            }
-            _cacheLastRefresh = DateTime.Now;
+            return allUsers.Any(u =>
+                u.Email.Equals(email, StringComparison.OrdinalIgnoreCase) &&
+                u.UserId != excludeUserId);
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[UserService] Error preloading user names: {ex.Message}");
+            Debug.WriteLine($"[UserService] Error checking email exists: {ex.Message}");
+            return false;
         }
-    }
-
-    /// <summary>
-    /// Clears the user name cache.
-    /// </summary>
-    public static void ClearCache()
-    {
-        _userNameCache.Clear();
-        _cacheLastRefresh = DateTime.MinValue;
     }
 }

@@ -25,8 +25,8 @@
     xmlns:venteService="clr-namespace:BombaProMax.Views.VenteServiceViews"
     xmlns:caisse="clr-namespace:BombaProMax.Views.CaisseViews"
     xmlns:settings="clr-namespace:BombaProMax.Views.SettingsViews"
-    FlyoutBackgroundColor="#FFFFFF"
-    BackgroundColor="#F8FAFC"
+    FlyoutBackgroundColor="#1F4E45"
+    BackgroundColor="#1F4E45"
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False"
     FlyoutWidth="300"
@@ -41,8 +41,8 @@
             <Grid HeightRequest="180" Padding="24,32,24,24">
                 <Grid.Background>
                     <LinearGradientBrush EndPoint="0,1">
-                        <GradientStop Color="#1F4E45" Offset="0.0" />
-                        <GradientStop Color="#2D6A5F" Offset="1.0" />
+                        <GradientStop Color="#2D6A5F" Offset="0.0" />
+                        <GradientStop Color="#1F4E45" Offset="1.0" />
                     </LinearGradientBrush>
                 </Grid.Background>
                 <VerticalStackLayout VerticalOptions="Start" Spacing="12">
@@ -83,7 +83,7 @@
         <DataTemplate>
             <Grid Padding="24,12" BackgroundColor="Transparent">
                 <Label Text="{Binding Title}" 
-                       TextColor="#334155"
+                       TextColor="white"
                        FontSize="15"
                        VerticalOptions="Center"/>
             </Grid>
@@ -94,33 +94,28 @@
         <DataTemplate>
             <Frame  Margin="12,5"
                     Padding="40,20"
-                    BackgroundColor="#F1F5F9"
-                    BorderColor="#E2E8F0"
+                    BackgroundColor="#1F4E45"
+                    BorderColor="#1F4E45"
                     CornerRadius="30"
                     HasShadow="False">
                 
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
                            Text="{Binding Text}" 
-                           TextColor="#475569"
+                           TextColor="white"
                            FontSize="15"
                            FontAttributes="Bold"
                            VerticalOptions="Center"/>
                     <Ellipse Grid.Column="1"
                              WidthRequest="10"
                              HeightRequest="10"
-                             Fill="#94A3B8"
+                             Fill="white"
                              VerticalOptions="Center"/>
                 </Grid>
 
             </Frame>
         </DataTemplate>
     </Shell.MenuItemTemplate>
-
-    <!-- Tenant Selection Page (Hidden from Flyout, shown first) -->
-    <FlyoutItem FlyoutItemIsVisible="False">
-        <ShellContent x:Name="TenantSelectionShellContent" Route="TenantSelectionPage"/>
-    </FlyoutItem>
 
     <!-- Login Page (Hidden from Flyout) -->
     <FlyoutItem FlyoutItemIsVisible="False">

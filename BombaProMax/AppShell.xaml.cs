@@ -52,7 +52,6 @@ namespace BombaProMax
             _journeeService = serviceProvider.GetRequiredService<JourneeNavigationService>();
 
             // Register routes for navigation
-            Routing.RegisterRoute(nameof(TenantSelectionPage), typeof(TenantSelectionPage));
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
             Routing.RegisterRoute(nameof(User), typeof(User));
@@ -83,7 +82,6 @@ namespace BombaProMax
             Routing.RegisterRoute(nameof(StationInfoPage), typeof(StationInfoPage));
 
             // Set ShellContent pages from DI
-            TenantSelectionShellContent.Content = serviceProvider.GetRequiredService<TenantSelectionPage>();
             LoginShellContent.Content = serviceProvider.GetRequiredService<LoginPage>();
             HomeShellContent.Content = serviceProvider.GetRequiredService<HomePage>();
             UsersShellContent.Content = serviceProvider.GetRequiredService<User>();
@@ -105,21 +103,14 @@ namespace BombaProMax
             CaisseShellContent.Content = serviceProvider.GetRequiredService<CaissePage>();
             StationInfoShellContent.Content = serviceProvider.GetRequiredService<StationInfoPage>();
 
-            // Navigate to TenantSelectionPage on startup (before login)
+            // Disable flyout on startup - will be enabled after successful login
+            FlyoutBehavior = FlyoutBehavior.Disabled;
+
+            // Navigate to LoginPage on startup
             Dispatcher.Dispatch(async () =>
             {
-                // Check if a tenant has already been selected previously
-                var savedTenantId = Preferences.Get("TenantId", string.Empty);
-                if (string.IsNullOrEmpty(savedTenantId))
-                {
-                    // No tenant selected, show tenant selection
-                    await GoToAsync("//TenantSelectionPage");
-                }
-                else
-                {
-                    // Tenant already selected, go to login
-                    await GoToAsync("//LoginPage");
-                }
+                await GoToAsync("//LoginPage");
+                System.Diagnostics.Debug.WriteLine("[AppShell] Started on LoginPage");
             });
         }
 
@@ -160,20 +151,20 @@ namespace BombaProMax
                 Content = _userInitialsLabel
             };
 
-            // User name label
+            // User name label - updated to white for green background
             _userNameLabel = new Label
             {
                 Text = "Utilisateur",
-                TextColor = Color.FromArgb("#334155"),
+                TextColor = Colors.White,
                 FontSize = 14,
                 FontAttributes = FontAttributes.Bold
             };
 
-            // User role label
+            // User role label - updated to light teal for green background
             _userRoleLabel = new Label
             {
                 Text = "Connecté",
-                TextColor = Color.FromArgb("#64748B"),
+                TextColor = Color.FromArgb("#80CBC4"),
                 FontSize = 12
             };
 
@@ -199,7 +190,7 @@ namespace BombaProMax
             userInfoGrid.Add(avatarBorder, 0);
             userInfoGrid.Add(userDetailsStack, 1);
 
-            // Logout button
+            // Logout button - updated colors for green theme
             var logoutButton = new Button
             {
                 Text = "Déconnexion",
@@ -210,32 +201,32 @@ namespace BombaProMax
             };
             logoutButton.Clicked += OnLogoutClicked;
 
-            // Logout button border
+            // Logout button border - updated for green theme
             var logoutBorder = new Border
             {
                 Padding = 0,
                 HeightRequest = 48,
-                BackgroundColor = Color.FromArgb("#FEF2F2"),
+                BackgroundColor = Color.FromArgb("#2D6A5F"),
                 StrokeThickness = 1,
-                Stroke = Color.FromArgb("#FECACA"),
+                Stroke = Color.FromArgb("#EF4444"),
                 StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(12) },
                 Content = logoutButton
             };
 
-            // Separator
+            // Separator - updated for green theme
             var separator = new BoxView
             {
-                Color = Color.FromArgb("#E2E8F0"),
+                Color = Color.FromArgb("#2D6A5F"),
                 HeightRequest = 1,
                 Margin = new Thickness(0, 0, 0, 4)
             };
 
-            // Main footer stack
+            // Main footer stack - updated to green background
             var footerStack = new VerticalStackLayout
             {
                 Padding = new Thickness(16, 20),
                 Spacing = 16,
-                BackgroundColor = Color.FromArgb("#F8FAFC"),
+                BackgroundColor = Color.FromArgb("#1F4E45"),
                 Children = { separator, userInfoGrid, logoutBorder }
             };
 
@@ -488,23 +479,30 @@ namespace BombaProMax
             bool confirm = await DisplayAlert("Déconnexion", "Voulez-vous vraiment vous déconnecter?", "Oui", "Non");
             if (confirm)
             {
+                System.Diagnostics.Debug.WriteLine("[AppShell] Logging out...");
+                
                 // Clear current user
                 App.CurrentUser = null;
+                App.user = null;
                 
-                // Clear saved tenant preference so user can select a different tenant
-                Preferences.Remove("TenantId");
-                Preferences.Remove("TenantName");
+                // Clear saved user preferences
+                if (Preferences.ContainsKey(nameof(App.user)))
+                {
+                    Preferences.Remove(nameof(App.user));
+                }
                 
-                // Clear the API tenant header
-                HttpClientFactory.ClearTenantHeader();
+                System.Diagnostics.Debug.WriteLine("[AppShell] Cleared user data");
                 
                 UpdateUserDisplay(); // Reset the user display
                 ClearNavigationHistory();
                 Shell.Current.FlyoutIsPresented = false;
+                Shell.Current.FlyoutBehavior = FlyoutBehavior.Disabled; // Disable flyout until login
                 Shell.SetNavBarIsVisible(this, false);
                 
-                // Navigate to TenantSelectionPage instead of LoginPage
-                await Shell.Current.GoToAsync("//TenantSelectionPage");
+                // Navigate to LoginPage
+                await Shell.Current.GoToAsync("//LoginPage");
+                
+                System.Diagnostics.Debug.WriteLine("[AppShell] Navigated to LoginPage");
             }
         }
 

@@ -12,9 +12,9 @@ public class BoolToEditCreateTextConverter : IValueConverter
     {
         if (value is bool hasData && hasData)
         {
-            return "?? Modifier";
+            return "Modifier";
         }
-        return "? Configurer";
+        return "Configurer";
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

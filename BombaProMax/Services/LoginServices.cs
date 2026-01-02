@@ -10,13 +10,12 @@ public class LoginServices : ILoginRepository
     {
         try
         {
-            // Use HttpClientFactory to ensure tenant header is configured
+            // Get the HttpClient
             var client = HttpClientFactory.Create();
             
             string loginUrl = $"{ApiConfig.Users}/Login/{email}/{password}";
             Debug.WriteLine($"[LoginServices] Attempting login for: {email}");
             Debug.WriteLine($"[LoginServices] Login URL: {loginUrl}");
-            Debug.WriteLine($"[LoginServices] Tenant ID: {ApiConfig.TenantId}");
             
             HttpResponseMessage response = await client.GetAsync(loginUrl);
             
@@ -45,6 +44,20 @@ public class LoginServices : ILoginRepository
                 }
                 return null;
             }
+        }
+        catch (HttpRequestException ex)
+        {
+            Debug.WriteLine($"[LoginServices] HttpRequestException: {ex.Message}");
+            await Shell.Current.DisplayAlert("Erreur réseau", 
+                $"Impossible de contacter le serveur.\n\n{ex.Message}", "OK");
+            return null;
+        }
+        catch (TaskCanceledException ex)
+        {
+            Debug.WriteLine($"[LoginServices] TaskCanceledException (timeout): {ex.Message}");
+            await Shell.Current.DisplayAlert("Délai dépassé", 
+                "Le serveur ne répond pas. Veuillez réessayer.", "OK");
+            return null;
         }
         catch (Exception ex)
         {

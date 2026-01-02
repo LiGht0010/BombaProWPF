@@ -1,8 +1,6 @@
 using BombaProMaxApi.Data;
 using BombaProMaxApi.Services;
-using BombaProMaxApi.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,41 +14,21 @@ if (builder.Environment.IsDevelopment())
 // Add services to the container
 builder.Services.AddControllers();
 
-// Configure Multi-Tenancy
-var multiTenantSettings = builder.Configuration
-    .GetSection(MultiTenantSettings.SectionName)
-    .Get<MultiTenantSettings>() ?? new MultiTenantSettings();
-
-// If no tenants configured, fall back to single-tenant mode using DefaultConnection
-if (multiTenantSettings.Tenants.Count == 0)
+// Register DbContext with connection string from configuration
+builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    if (!string.IsNullOrEmpty(defaultConnectionString))
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseNpgsql(connectionString, npgsqlOptions =>
     {
-        multiTenantSettings.DefaultTenant = "default";
-        multiTenantSettings.Tenants.Add(new TenantSettings
-        {
-            TenantId = "default",
-            Name = "Default",
-            ConnectionString = defaultConnectionString
-        });
-    }
-}
-
-builder.Services.AddSingleton(multiTenantSettings);
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ITenantService, TenantService>();
-
-// Register DbContext with tenant-aware factory
-builder.Services.AddScoped<AppDbContext>(sp =>
-{
-    var tenantService = sp.GetRequiredService<ITenantService>();
-    var connectionString = tenantService.GetConnectionString();
-    
-    var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-    optionsBuilder.UseNpgsql(connectionString);
-    
-    return new AppDbContext(optionsBuilder.Options);
+        // Enable retry on transient failures (network issues, connection drops)
+        npgsqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorCodesToAdd: null);
+        
+        // Set command timeout for slow connections
+        npgsqlOptions.CommandTimeout(60);
+    });
 });
 
 // Register application services
@@ -65,8 +43,7 @@ builder.Services.AddCors(options =>
         {
             policy.AllowAnyOrigin()
                   .AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .WithExposedHeaders(TenantService.TenantHeaderName);
+                  .AllowAnyHeader();
         });
 });
 
@@ -78,58 +55,44 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "BombaProMax API",
         Version = "v1",
-        Description = "Multi-tenant API for BombaProMax gas station management"
+        Description = "API for BombaProMax gas station management"
     });
-
-    // Add tenant header as a global parameter (not security - just a regular header)
-    c.OperationFilter<TenantHeaderOperationFilter>();
 });
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
-// Initialize databases for all tenants - create if not exists and apply migrations
+// Initialize database - create if not exists and apply migrations
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var logger = services.GetRequiredService<ILogger<Program>>();
-    var settings = services.GetRequiredService<MultiTenantSettings>();
 
-    foreach (var tenant in settings.Tenants)
+    try
     {
+        logger.LogInformation("Initializing database...");
+
+        var context = services.GetRequiredService<AppDbContext>();
+
+        // This will create the database if it doesn't exist and apply any pending migrations
+        await context.Database.MigrateAsync();
+
+        logger.LogInformation("Database initialization completed.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while initializing database.");
+
+        // Optionally fall back to EnsureCreated if migrations fail
         try
         {
-            logger.LogInformation("Initializing database for tenant '{TenantId}'...", tenant.TenantId);
-
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseNpgsql(tenant.ConnectionString);
-
-            using var context = new AppDbContext(optionsBuilder.Options);
-
-            // This will create the database if it doesn't exist and apply any pending migrations
-            await context.Database.MigrateAsync();
-
-            logger.LogInformation("Database initialization completed for tenant '{TenantId}'.", tenant.TenantId);
+            var context = services.GetRequiredService<AppDbContext>();
+            logger.LogWarning("Attempting to create database without migrations...");
+            await context.Database.EnsureCreatedAsync();
+            logger.LogInformation("Database created using EnsureCreated.");
         }
-        catch (Exception ex)
+        catch (Exception innerEx)
         {
-            logger.LogError(ex, "An error occurred while initializing database for tenant '{TenantId}'.", tenant.TenantId);
-
-            // Optionally fall back to EnsureCreated if migrations fail
-            try
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-                optionsBuilder.UseNpgsql(tenant.ConnectionString);
-
-                using var context = new AppDbContext(optionsBuilder.Options);
-                logger.LogWarning("Attempting to create database without migrations for tenant '{TenantId}'...", tenant.TenantId);
-                await context.Database.EnsureCreatedAsync();
-                logger.LogInformation("Database created using EnsureCreated for tenant '{TenantId}'.", tenant.TenantId);
-            }
-            catch (Exception innerEx)
-            {
-                logger.LogError(innerEx, "Failed to create database for tenant '{TenantId}'. Please check connection string.", tenant.TenantId);
-                // Don't throw - allow other tenants to initialize
-            }
+            logger.LogError(innerEx, "Failed to create database. Please check connection string.");
         }
     }
 }
@@ -150,12 +113,6 @@ app.UseCors("AllowMAUI");
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Add endpoint to list available tenants (useful for debugging/admin)
-app.MapGet("/api/tenants", (ITenantService tenantService) => 
-{
-    return Results.Ok(tenantService.GetAllTenantIds());
-}).WithTags("System");
 
 // Auto-launch browser only in Development (no browser on Linux server)
 if (app.Environment.IsDevelopment())

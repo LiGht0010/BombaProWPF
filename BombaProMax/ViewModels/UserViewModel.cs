@@ -119,10 +119,12 @@ public partial class UserViewModel : ObservableObject
             IsLoading = true;
             ErrorMessage = null;
 
-            var users = await _userService.GetByStatusAsync(isActive);
+            // Filter client-side from all users
+            var allUsers = await _userService.GetAllAsync();
+            var filteredUsers = allUsers.Where(u => u.IsActive == isActive).ToList();
 
             Users.Clear();
-            foreach (var user in users.OrderByDescending(u => u.CreatedAt))
+            foreach (var user in filteredUsers.OrderByDescending(u => u.CreatedAt))
             {
                 Users.Add(user);
             }

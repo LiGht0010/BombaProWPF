@@ -9,7 +9,6 @@ using AutoMapper;
 using BombaProMaxApi.Data;
 using BombaProMaxApi.Models;
 using BombaProMaxApi.DTOs;
-using BombaProMaxApi.MultiTenancy;
 
 namespace BombaProMaxApi.Controllers
 {
@@ -20,25 +19,22 @@ namespace BombaProMaxApi.Controllers
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger<UsersController> _logger;
-        private readonly ITenantService _tenantService;
 
-        public UsersController(AppDbContext context, IMapper mapper, ILogger<UsersController> logger, ITenantService tenantService)
+        public UsersController(AppDbContext context, IMapper mapper, ILogger<UsersController> logger)
         {
             _context = context;
             _mapper = mapper;
             _logger = logger;
-            _tenantService = tenantService;
         }
 
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            var tenantId = _tenantService.GetCurrentTenantId();
-            _logger.LogInformation("GetUsers called for tenant: {TenantId}", tenantId);
+            _logger.LogInformation("GetUsers called");
             
             var users = await _context.Users.AsNoTracking().ToListAsync();
-            _logger.LogInformation("Found {Count} users for tenant {TenantId}", users.Count, tenantId);
+            _logger.LogInformation("Found {Count} users", users.Count);
             
             return Ok(_mapper.Map<List<UserDto>>(users));
         }
@@ -109,13 +105,12 @@ namespace BombaProMaxApi.Controllers
         [HttpPost]
         public async Task<ActionResult<UserDto>> PostUser(UserDto userDto)
         {
-            var tenantId = _tenantService.GetCurrentTenantId();
-            _logger.LogInformation("Creating user '{Name}' for tenant: {TenantId}, Email: {Email}, Password provided: {HasPassword}", 
-                userDto.Name, tenantId, userDto.Email, !string.IsNullOrEmpty(userDto.Password));
+            _logger.LogInformation("Creating user '{Name}', Email: {Email}, Password provided: {HasPassword}", 
+                userDto.Name, userDto.Email, !string.IsNullOrEmpty(userDto.Password));
             
             if (string.IsNullOrEmpty(userDto.Password))
             {
-                _logger.LogWarning("User creation attempted without password for tenant {TenantId}!", tenantId);
+                _logger.LogWarning("User creation attempted without password!");
                 return BadRequest("Password is required");
             }
             
@@ -129,8 +124,8 @@ namespace BombaProMaxApi.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             
-            _logger.LogInformation("User created with ID: {UserId} for tenant {TenantId}, Password stored: {HasPassword}", 
-                user.UserId, tenantId, !string.IsNullOrEmpty(user.Password));
+            _logger.LogInformation("User created with ID: {UserId}, Password stored: {HasPassword}", 
+                user.UserId, !string.IsNullOrEmpty(user.Password));
 
             var resultDto = _mapper.Map<UserDto>(user);
             return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, resultDto);
@@ -161,8 +156,7 @@ namespace BombaProMaxApi.Controllers
         [HttpGet("Login/{Email}/{Password}")]
         public async Task<ActionResult<UserDto>> Login(string Email, string Password)
         {
-            var tenantId = _tenantService.GetCurrentTenantId();
-            _logger.LogInformation("Login attempt for email: {Email}, Tenant: {TenantId}", Email, tenantId);
+            _logger.LogInformation("Login attempt for email: {Email}", Email);
             
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
@@ -177,16 +171,14 @@ namespace BombaProMaxApi.Controllers
             
             if (userByEmail == null)
             {
-                // List all users in this tenant's database for debugging
+                // List all users in database for debugging
                 var allUsers = await _context.Users.Select(u => u.Email).ToListAsync();
-                _logger.LogWarning("Login failed: no user found with email {Email} in tenant {TenantId}. " +
-                    "Available emails in database: [{Emails}]", 
-                    Email, tenantId, string.Join(", ", allUsers));
+                _logger.LogWarning("Login failed: no user found with email {Email}. Available emails in database: [{Emails}]", 
+                    Email, string.Join(", ", allUsers));
                 return NotFound();
             }
             
-            _logger.LogInformation("User found in tenant {TenantId}: {Name}, StoredPassword length: {Length}, ProvidedPassword length: {ProvidedLength}", 
-                tenantId,
+            _logger.LogInformation("User found: {Name}, StoredPassword length: {Length}, ProvidedPassword length: {ProvidedLength}", 
                 userByEmail.Name, 
                 userByEmail.Password?.Length ?? 0,
                 Password.Length);
@@ -194,12 +186,12 @@ namespace BombaProMaxApi.Controllers
             // Check password match
             if (userByEmail.Password != Password)
             {
-                _logger.LogWarning("Login failed: password mismatch for user {Email} in tenant {TenantId}. Stored: '{Stored}', Provided: '{Provided}'", 
-                    Email, tenantId, userByEmail.Password, Password);
+                _logger.LogWarning("Login failed: password mismatch for user {Email}. Stored: '{Stored}', Provided: '{Provided}'", 
+                    Email, userByEmail.Password, Password);
                 return NotFound();
             }
 
-            _logger.LogInformation("Login successful for user: {Name} in tenant {TenantId}", userByEmail.Name, tenantId);
+            _logger.LogInformation("Login successful for user: {Name}", userByEmail.Name);
             return Ok(_mapper.Map<UserDto>(userByEmail));
         }
     }
