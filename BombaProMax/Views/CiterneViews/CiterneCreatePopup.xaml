@@ -95,6 +95,7 @@
                                 <Label Text="🏭 Fournisseur *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
                                 <Picker x:Name="FournisseurPicker"
                                         Title="Sélectionnez un fournisseur"
+                                        ItemDisplayBinding="{Binding Societe}"
                                         FontSize="14"/>
                             </VerticalStackLayout>
                         </VerticalStackLayout>

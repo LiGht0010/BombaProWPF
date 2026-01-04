@@ -1,9 +1,6 @@
 using BombaProMax.Models;
 using BombaProMax.Services;
 using CommunityToolkit.Maui.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BombaProMax.Views.CiterneViews
 {
@@ -29,13 +26,7 @@ namespace BombaProMax.Views.CiterneViews
             try
             {
                 _fournisseurs = await _fournisseurService.GetAllFournisseursAsync();
-
-                if (_fournisseurs.Count > 0)
-                {
-                    FournisseurPicker.ItemsSource = _fournisseurs
-                        .Select(f => $"{f.Prenom} {f.Nom} - {f.Societe}")
-                        .ToList();
-                }
+                FournisseurPicker.ItemsSource = _fournisseurs;
             }
             catch (Exception ex)
             {
@@ -69,7 +60,7 @@ namespace BombaProMax.Views.CiterneViews
                     return;
                 }
 
-                if (FournisseurPicker.SelectedIndex == -1)
+                if (FournisseurPicker.SelectedItem is not FournisseurDto selectedFournisseur)
                 {
                     ShowError("Veuillez sélectionner un fournisseur");
                     return;
@@ -86,9 +77,6 @@ namespace BombaProMax.Views.CiterneViews
                     }
                     partitions = partitionsValue;
                 }
-
-                // Get selected fournisseur
-                var selectedFournisseur = _fournisseurs[FournisseurPicker.SelectedIndex];
 
                 // Create new citerne DTO
                 var newCiterne = new CiterneDto

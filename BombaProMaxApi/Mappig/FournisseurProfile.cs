@@ -8,8 +8,15 @@ namespace BombaProMaxApi.Mappig
     {
         public FournisseurProfile()
         {
-            CreateMap<Fournisseur, FournisseurDto>()
-                .ReverseMap();
+            // Entity to DTO mapping
+            CreateMap<Fournisseur, FournisseurDto>();
+
+            // DTO to Entity mapping - ignore navigation properties to prevent creating new entities
+            CreateMap<FournisseurDto, Fournisseur>()
+                .ForMember(d => d.Achats, opt => opt.Ignore())
+                .ForMember(d => d.Camion, opt => opt.Ignore())
+                .ForMember(d => d.Citerne, opt => opt.Ignore())
+                .ForMember(d => d.Chauffeurs, opt => opt.Ignore());
         }
     }
 }

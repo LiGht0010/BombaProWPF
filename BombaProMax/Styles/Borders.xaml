@@ -23,11 +23,11 @@
     <!-- Neumorphic Card Style -->
     <Style x:Key="NeumorphicCardContainer" TargetType="Border">
         <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="BackgroundColor" Value="#f0f3f3"/>
+        <Setter Property="BackgroundColor" Value="#e0e0e0"/>
         <Setter Property="Padding" Value="40,35"/>
         <Setter Property="Shadow">
             <Setter.Value>
-                <Shadow Brush="#2e93b9"
+                <Shadow Brush="#c1b696"
                         Offset="10,10"
                         Radius="50"
                         Opacity="1"/>

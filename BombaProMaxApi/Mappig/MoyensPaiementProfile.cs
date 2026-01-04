@@ -8,8 +8,14 @@ namespace BombaProMaxApi.Mappig
     {
         public MoyensPaiementProfile()
         {
-            CreateMap<MoyensPaiement, MoyensPaiementDto>()
-                .ReverseMap();
+            // Entity to DTO mapping
+            CreateMap<MoyensPaiement, MoyensPaiementDto>();
+
+            // DTO to Entity mapping - ignore navigation properties to prevent creating new entities
+            CreateMap<MoyensPaiementDto, MoyensPaiement>()
+                .ForMember(d => d.Factures, opt => opt.Ignore())
+                .ForMember(d => d.ReglementsCredit, opt => opt.Ignore())
+                .ForMember(d => d.EmployeReglementsCredit, opt => opt.Ignore());
         }
     }
 }

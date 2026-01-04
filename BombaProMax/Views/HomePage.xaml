@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BombaProMax.Views.HomePage"
              Style="{StaticResource HomePageStyle}"
-             BackgroundColor="#619b3e">
+             BackgroundColor="#c5c5c5">
 
     <ScrollView Style="{StaticResource HomePageScrollView}">
         <VerticalStackLayout Style="{StaticResource HomePageMainStack}">

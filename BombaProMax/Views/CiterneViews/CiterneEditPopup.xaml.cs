@@ -1,9 +1,6 @@
 using BombaProMax.Models;
 using BombaProMax.Services;
 using CommunityToolkit.Maui.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BombaProMax.Views.CiterneViews
 {
@@ -31,15 +28,9 @@ namespace BombaProMax.Views.CiterneViews
             try
             {
                 _fournisseurs = await _fournisseurService.GetAllFournisseursAsync();
+                FournisseurPicker.ItemsSource = _fournisseurs;
 
-                if (_fournisseurs.Count > 0)
-                {
-                    FournisseurPicker.ItemsSource = _fournisseurs
-                        .Select(f => $"{f.Prenom} {f.Nom} - {f.Societe}")
-                        .ToList();
-                }
-
-                // Populate form with existing data
+                // Populate form with existing data after loading fournisseurs
                 PopulateForm();
             }
             catch (Exception ex)
@@ -63,13 +54,13 @@ namespace BombaProMax.Views.CiterneViews
             MatriculeEntry.Text = _citerneToEdit.MatriculeCiterne ?? string.Empty;
             PartitionsEntry.Text = _citerneToEdit.PartitionsNumber?.ToString() ?? string.Empty;
 
-            // Select the correct fournisseur
+            // Select the correct fournisseur by setting SelectedItem
             if (_citerneToEdit.FournisseurID.HasValue && _fournisseurs.Count > 0)
             {
-                var fournisseurIndex = _fournisseurs.FindIndex(f => f.ID == _citerneToEdit.FournisseurID.Value);
-                if (fournisseurIndex >= 0)
+                var selectedFournisseur = _fournisseurs.FirstOrDefault(f => f.ID == _citerneToEdit.FournisseurID.Value);
+                if (selectedFournisseur != null)
                 {
-                    FournisseurPicker.SelectedIndex = fournisseurIndex;
+                    FournisseurPicker.SelectedItem = selectedFournisseur;
                 }
             }
         }
@@ -94,7 +85,7 @@ namespace BombaProMax.Views.CiterneViews
                     return;
                 }
 
-                if (FournisseurPicker.SelectedIndex == -1)
+                if (FournisseurPicker.SelectedItem is not FournisseurDto selectedFournisseur)
                 {
                     ShowError("Veuillez sélectionner un fournisseur");
                     return;
@@ -111,9 +102,6 @@ namespace BombaProMax.Views.CiterneViews
                     }
                     partitions = partitionsValue;
                 }
-
-                // Get selected fournisseur
-                var selectedFournisseur = _fournisseurs[FournisseurPicker.SelectedIndex];
 
                 // Update citerne properties
                 _citerneToEdit.Capacite = capacite;
