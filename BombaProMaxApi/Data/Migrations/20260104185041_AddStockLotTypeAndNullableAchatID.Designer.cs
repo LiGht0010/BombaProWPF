@@ -3,6 +3,7 @@ using System;
 using BombaProMaxApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BombaProMaxApi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260104185041_AddStockLotTypeAndNullableAchatID")]
+    partial class AddStockLotTypeAndNullableAchatID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1766,14 +1769,14 @@ namespace BombaProMaxApi.Data.Migrations
 
                     b.HasIndex("ProduitID");
 
+                    b.HasIndex("ReservoirID", "DateEntree")
+                        .HasDatabaseName("IX_StockLots_ReservoirID_DateEntree");
+
                     b.HasIndex("ReservoirID", "Statut")
                         .HasDatabaseName("IX_StockLots_ReservoirID_Statut");
 
                     b.HasIndex("ReservoirID", "Type")
                         .HasDatabaseName("IX_StockLots_ReservoirID_Type");
-
-                    b.HasIndex("ReservoirID", "DateEntree", "ID")
-                        .HasDatabaseName("IX_StockLots_ReservoirID_DateEntree_ID");
 
                     b.ToTable("StockLots", null, t =>
                         {
@@ -1815,15 +1818,9 @@ namespace BombaProMaxApi.Data.Migrations
                     b.HasIndex("PeriodeDetailID")
                         .HasDatabaseName("IX_StockLotConsumptions_PeriodeDetailID");
 
-                    b.HasIndex("StockLotID")
-                        .HasDatabaseName("IX_StockLotConsumptions_StockLotID");
+                    b.HasIndex("StockLotID");
 
-                    b.ToTable("StockLotConsumptions", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_StockLotConsumptions_PrixUnitaire_NonNegative", "\"PrixUnitaire\" >= 0");
-
-                            t.HasCheckConstraint("CK_StockLotConsumptions_QuantiteConsommee_Positive", "\"QuantiteConsommee\" > 0");
-                        });
+                    b.ToTable("StockLotConsumptions", (string)null);
                 });
 
             modelBuilder.Entity("BombaProMaxApi.Models.User", b =>
@@ -1987,7 +1984,7 @@ namespace BombaProMaxApi.Data.Migrations
                             ShowDepenses = true,
                             ShowTableauDeBord = true,
                             ShowVente = true,
-                            UpdatedAt = new DateTime(2026, 1, 4, 19, 10, 17, 229, DateTimeKind.Utc).AddTicks(1943),
+                            UpdatedAt = new DateTime(2026, 1, 4, 18, 50, 40, 378, DateTimeKind.Utc).AddTicks(6701),
                             createdBy = 0,
                             updatedBy = 0
                         },
@@ -2020,7 +2017,7 @@ namespace BombaProMaxApi.Data.Migrations
                             ShowDepenses = true,
                             ShowTableauDeBord = true,
                             ShowVente = true,
-                            UpdatedAt = new DateTime(2026, 1, 4, 19, 10, 17, 229, DateTimeKind.Utc).AddTicks(1953),
+                            UpdatedAt = new DateTime(2026, 1, 4, 18, 50, 40, 378, DateTimeKind.Utc).AddTicks(6716),
                             createdBy = 0,
                             updatedBy = 0
                         });

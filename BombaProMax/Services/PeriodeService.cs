@@ -400,8 +400,21 @@ public class PeriodeService
             CreditTransactionIds = creditTransactionIds ?? []
         };
 
+        // Debug logging to trace stock consumption
+        Debug.WriteLine($"[PeriodeService] ========== CREATING PERIODE WITH DETAILS ==========");
+        Debug.WriteLine($"[PeriodeService] Periode dates: {periode.DateDebut:g} to {periode.DateFin:g}");
+        Debug.WriteLine($"[PeriodeService] Details count: {details.Count}");
+        foreach (var detail in details)
+        {
+            var qtyVendue = detail.CompteurElectroniqueFinal - detail.CompteurElectroniqueDebut;
+            Debug.WriteLine($"[PeriodeService]   Detail: Pompe={detail.PompeID}, Reservoir={detail.ReservoirID}, Produit={detail.ProduitID}");
+            Debug.WriteLine($"[PeriodeService]     CompteurElecDebut={detail.CompteurElectroniqueDebut:F2}, CompteurElecFin={detail.CompteurElectroniqueFinal:F2}");
+            Debug.WriteLine($"[PeriodeService]     QuantiteVendue (calculated)={qtyVendue:F2}L, PrixCarburant={detail.PrixCarburant:F2}");
+        }
+        Debug.WriteLine($"[PeriodeService] CreditTransactionIds count: {dto.CreditTransactionIds.Count}");
+
         var json = JsonConvert.SerializeObject(dto);
-        Debug.WriteLine($"[PeriodeService] POST {BaseUrl}/with-details: Periode + {details.Count} details + {dto.CreditTransactionIds.Count} CTs");
+        Debug.WriteLine($"[PeriodeService] POST {BaseUrl}/with-details");
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         var response = await _httpClient.PostAsync($"{BaseUrl}/with-details", content);
@@ -414,13 +427,14 @@ public class PeriodeService
             var result = JsonConvert.DeserializeObject<PeriodeWithDetailsDto>(responseBody);
             if (result != null)
             {
-                Debug.WriteLine($"[PeriodeService] Created Periode {result.Periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs (stock consumed)");
+                Debug.WriteLine($"[PeriodeService] SUCCESS: Created Periode {result.Periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs");
+                Debug.WriteLine($"[PeriodeService] ========== STOCK SHOULD BE CONSUMED ==========");
                 return (result.Periode, result.Details);
             }
         }
 
         // Log error details
-        Debug.WriteLine($"[PeriodeService] Error creating periode with details: {responseBody}");
+        Debug.WriteLine($"[PeriodeService] ERROR creating periode with details: {responseBody}");
         
         // Try to parse error response
         try

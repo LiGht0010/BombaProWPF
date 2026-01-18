@@ -354,6 +354,9 @@
 	  <MauiXaml Update="Views\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\OnboardingViews\OpeningBalancePopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\PeriodeViews\PeriodeCreatePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

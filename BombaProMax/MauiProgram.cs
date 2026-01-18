@@ -22,6 +22,7 @@ using BombaProMax.Views.ServiceViews;
 using BombaProMax.Views.VenteServiceViews;
 using BombaProMax.Views.CaisseViews;
 using BombaProMax.Views.SettingsViews;
+using BombaProMax.Views.OnboardingViews;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
@@ -173,6 +174,9 @@ namespace BombaProMax
             builder.Services.AddSingleton<StationInfoPage>();
             builder.Services.AddTransient<StationInfoEditPopup>();
 
+            //OnboardingViews
+            builder.Services.AddTransient<OpeningBalancePopup>();
+
             //ViewModels---------------------------------------------------
             builder.Services.AddSingleton<ViewModels.LoginPageViewModel>();
             builder.Services.AddSingleton<ViewModels.DashboardViewModel>();
@@ -232,6 +236,10 @@ namespace BombaProMax
             builder.Services.AddSingleton<Services.VenteServiceService>();
             builder.Services.AddSingleton<Services.CaisseService>();
             builder.Services.AddSingleton<Services.StationInfoService>();
+            
+            // Stock Lot and Opening Balance services
+            builder.Services.AddSingleton<Services.StockLotService>();
+            builder.Services.AddSingleton<Services.OpeningBalanceOnboardingService>();
 
             //Interfaces--------------------------------------------------------------------------------------------------------------------------------------
             builder.Services.AddSingleton<Services.ILoginRepository, Services.LoginServices>();

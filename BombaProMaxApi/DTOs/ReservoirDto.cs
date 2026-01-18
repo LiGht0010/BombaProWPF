@@ -26,5 +26,28 @@
         // Indicates if calibration data is available for this reservoir
         public bool HasCalibration { get; set; }
         public int CalibrationCount { get; set; }
+        
+        // ─────────────────────────────────────────────────────────────────
+        // STOCK LOT INTEGRATION
+        // ─────────────────────────────────────────────────────────────────
+        
+        /// <summary>
+        /// Indicates if the reservoir has any stock lots (from purchases or opening balance).
+        /// If false, an opening balance may need to be created before sales can occur.
+        /// </summary>
+        public bool HasStockLots { get; set; }
+        
+        /// <summary>
+        /// True if an opening balance can be created for this reservoir.
+        /// Only reservoirs without existing stock lots can have an opening balance.
+        /// </summary>
+        public bool CanCreateOpeningBalance => !HasStockLots;
+        
+        /// <summary>
+        /// Percentage of capacity filled
+        /// </summary>
+        public decimal PourcentageRempli => Capacite > 0 
+            ? Math.Round((NiveauDeCarburant / Capacite) * 100, 2) 
+            : 0;
     }
 }

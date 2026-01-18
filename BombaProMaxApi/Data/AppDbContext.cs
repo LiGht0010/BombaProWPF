@@ -301,18 +301,24 @@ public class AppDbContext : DbContext
             entity.ToTable("StockLots");
             entity.HasKey(e => e.ID);
 
-            // Index for FIFO queries (by reservoir, ordered by date)
-            entity.HasIndex(e => new { e.ReservoirID, e.DateEntree })
-                  .HasDatabaseName("IX_StockLots_ReservoirID_DateEntree");
+            // Index for FIFO queries (by reservoir, ordered by date, then by ID for tiebreaker)
+            entity.HasIndex(e => new { e.ReservoirID, e.DateEntree, e.ID })
+                  .HasDatabaseName("IX_StockLots_ReservoirID_DateEntree_ID");
 
             // Index for available stock queries
             entity.HasIndex(e => new { e.ReservoirID, e.Statut })
                   .HasDatabaseName("IX_StockLots_ReservoirID_Statut");
 
+            // Index for type-based queries
+            entity.HasIndex(e => new { e.ReservoirID, e.Type })
+                  .HasDatabaseName("IX_StockLots_ReservoirID_Type");
+
+            // FK to Achat is now optional (nullable)
             entity.HasOne(e => e.Achat)
                 .WithMany()
                 .HasForeignKey(e => e.AchatID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
             entity.HasOne(e => e.Reservoir)
                 .WithMany(r => r.StockLots)
@@ -323,6 +329,35 @@ public class AppDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(e => e.ProduitID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Store enum as integer with default value for Purchase type
+            // Use sentinel value to avoid the CLR default (OpeningBalance = 0) from being ignored
+            entity.Property(e => e.Type)
+                .HasConversion<int>()
+                .HasDefaultValue(StockLotType.Purchase)
+                .HasSentinel(StockLotType.Purchase);
+
+            // Check constraints for data integrity
+            // SL-4: QuantiteInitiale > 0
+            entity.ToTable(t => t.HasCheckConstraint(
+                "CK_StockLots_QuantiteInitiale_Positive",
+                "\"QuantiteInitiale\" > 0"));
+
+            // SL-5, SL-6: QuantiteDisponible bounds
+            entity.ToTable(t => t.HasCheckConstraint(
+                "CK_StockLots_QuantiteDisponible_Bounds",
+                "\"QuantiteDisponible\" >= 0 AND \"QuantiteDisponible\" <= \"QuantiteInitiale\""));
+
+            // SL-8: PrixAchat >= 0
+            entity.ToTable(t => t.HasCheckConstraint(
+                "CK_StockLots_PrixAchat_NonNegative",
+                "\"PrixAchat\" >= 0"));
+
+            // SL-2, SL-3: AchatID validation based on Type
+            // Type 1 = Purchase requires AchatID, Type 0 = OpeningBalance requires null AchatID
+            entity.ToTable(t => t.HasCheckConstraint(
+                "CK_StockLots_AchatID_Type_Consistency",
+                "(\"Type\" = 1 AND \"AchatID\" IS NOT NULL) OR (\"Type\" != 1 AND \"AchatID\" IS NULL)"));
         });
 
         // Configure StockLotConsumption entity for audit trail
@@ -335,6 +370,10 @@ public class AppDbContext : DbContext
             entity.HasIndex(e => e.PeriodeDetailID)
                   .HasDatabaseName("IX_StockLotConsumptions_PeriodeDetailID");
 
+            // Index for consumption queries by stock lot (for audit trail)
+            entity.HasIndex(e => e.StockLotID)
+                  .HasDatabaseName("IX_StockLotConsumptions_StockLotID");
+
             entity.HasOne(e => e.StockLot)
                 .WithMany(s => s.Consumptions)
                 .HasForeignKey(e => e.StockLotID)
@@ -344,6 +383,16 @@ public class AppDbContext : DbContext
                 .WithMany(p => p.StockLotConsumptions)
                 .HasForeignKey(e => e.PeriodeDetailID)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Check constraint: QuantiteConsommee must be positive (P-4)
+            entity.ToTable(t => t.HasCheckConstraint(
+                "CK_StockLotConsumptions_QuantiteConsommee_Positive",
+                "\"QuantiteConsommee\" > 0"));
+
+            // Check constraint: PrixUnitaire must be non-negative
+            entity.ToTable(t => t.HasCheckConstraint(
+                "CK_StockLotConsumptions_PrixUnitaire_NonNegative",
+                "\"PrixUnitaire\" >= 0"));
         });
     }
 

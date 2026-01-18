@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BombaProMaxApi.Models;
 
 /// <summary>
-/// Represents a purchase-based stock layer for FIFO inventory tracking.
-/// Created when fuel is allocated to a reservoir from a purchase (Achat).
+/// Represents a stock layer for FIFO inventory tracking.
+/// Created when fuel enters a reservoir (from purchase or opening balance).
 /// Consumed during Periode creation based on QuantiteVendue.
 /// </summary>
 public class StockLot
@@ -15,10 +15,17 @@ public class StockLot
     public int ID { get; set; }
 
     /// <summary>
-    /// Source purchase that created this stock lot
+    /// The type/source of this stock lot.
+    /// Determines validation rules for AchatID.
     /// </summary>
     [Required]
-    public int AchatID { get; set; }
+    public StockLotType Type { get; set; } = StockLotType.Purchase;
+
+    /// <summary>
+    /// Source purchase that created this stock lot.
+    /// Required for Type = Purchase, must be null for OpeningBalance.
+    /// </summary>
+    public int? AchatID { get; set; }
 
     /// <summary>
     /// Storage tank where this stock resides
@@ -49,7 +56,8 @@ public class StockLot
     public decimal QuantiteDisponible { get; set; }
 
     /// <summary>
-    /// Unit purchase price at time of purchase (for COGS/FIFO costing)
+    /// Unit purchase price at time of purchase (for COGS/FIFO costing).
+    /// Can be 0 for OpeningBalance if cost is unknown.
     /// </summary>
     [Required]
     [Column(TypeName = "decimal(10, 2)")]
@@ -64,16 +72,22 @@ public class StockLot
     public DateTime DateEntree { get; set; }
 
     /// <summary>
-    /// Status of the lot: "Disponible", "Épuisé"
+    /// Status of the lot: "Disponible", "Épuisé", "Annulé"
     /// </summary>
     [Required]
     [StringLength(20)]
     [Display(Name = "Statut")]
     public string Statut { get; set; } = "Disponible";
 
+    /// <summary>
+    /// Optional notes for the stock lot (e.g., reason for opening balance)
+    /// </summary>
+    [StringLength(500)]
+    public string? Notes { get; set; }
+
     // Navigation properties
     [ForeignKey("AchatID")]
-    public virtual Achat Achat { get; set; } = null!;
+    public virtual Achat? Achat { get; set; }
 
     [ForeignKey("ReservoirID")]
     [InverseProperty("StockLots")]
@@ -87,4 +101,64 @@ public class StockLot
     /// </summary>
     [InverseProperty("StockLot")]
     public virtual ICollection<StockLotConsumption> Consumptions { get; set; } = new List<StockLotConsumption>();
+
+    // ?????????????????????????????????????????????????????????????????
+    // DOMAIN VALIDATION
+    // ?????????????????????????????????????????????????????????????????
+
+    /// <summary>
+    /// Indicates if this is an opening balance lot (initial inventory).
+    /// </summary>
+    [NotMapped]
+    public bool IsOpeningBalance => Type == StockLotType.OpeningBalance;
+
+    /// <summary>
+    /// Indicates if the cost is known (PrixAchat > 0).
+    /// Opening balance lots may have unknown cost.
+    /// </summary>
+    [NotMapped]
+    public bool HasKnownCost => PrixAchat > 0;
+
+    /// <summary>
+    /// Validates the StockLot according to domain rules.
+    /// </summary>
+    /// <returns>List of validation errors, empty if valid.</returns>
+    public IEnumerable<string> Validate()
+    {
+        var errors = new List<string>();
+
+        // SL-2, SL-3: AchatID validation based on Type
+        if (Type == StockLotType.Purchase && !AchatID.HasValue)
+        {
+            errors.Add("AchatID is required for Purchase type stock lots.");
+        }
+        if (Type != StockLotType.Purchase && AchatID.HasValue)
+        {
+            errors.Add($"AchatID must be null for {Type} type stock lots.");
+        }
+
+        // SL-4: QuantiteInitiale > 0
+        if (QuantiteInitiale <= 0)
+        {
+            errors.Add("QuantiteInitiale must be greater than zero.");
+        }
+
+        // SL-5, SL-6: QuantiteDisponible bounds
+        if (QuantiteDisponible < 0)
+        {
+            errors.Add("QuantiteDisponible cannot be negative.");
+        }
+        if (QuantiteDisponible > QuantiteInitiale)
+        {
+            errors.Add("QuantiteDisponible cannot exceed QuantiteInitiale.");
+        }
+
+        // SL-8: PrixAchat >= 0
+        if (PrixAchat < 0)
+        {
+            errors.Add("PrixAchat cannot be negative.");
+        }
+
+        return errors;
+    }
 }

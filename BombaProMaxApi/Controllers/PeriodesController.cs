@@ -315,9 +315,19 @@ namespace BombaProMaxApi.Controllers
                         // 4. Consume stock from StockLots (FIFO) for each detail
                         foreach (var detail in detailEntities)
                         {
+                            _logger.LogDebug(
+                                "Processing detail: PompeID={PompeID}, ReservoirID={ReservoirID}, ProduitID={ProduitID}, " +
+                                "CompteurElecDebut={Debut}, CompteurElecFin={Fin}",
+                                detail.PompeID, detail.ReservoirID, detail.ProduitID,
+                                detail.CompteurElectroniqueDebut, detail.CompteurElectroniqueFinal);
+                            
                             if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
                             {
                                 var quantiteVendue = detail.QuantiteVendue;
+                                _logger.LogDebug(
+                                    "Detail has ReservoirID and ProduitID. Calculated QuantiteVendue={Quantite}",
+                                    quantiteVendue);
+                                
                                 if (quantiteVendue > 0)
                                 {
                                     _logger.LogInformation(
@@ -330,14 +340,30 @@ namespace BombaProMaxApi.Controllers
                                         quantiteVendue,
                                         detail.PeriodeDetailID);
                                 }
+                                else
+                                {
+                                    _logger.LogWarning(
+                                        "Skipping consumption for Detail {DetailId}: QuantiteVendue={Quantite} (CompteurFin={Fin} - CompteurDebut={Debut})",
+                                        detail.PeriodeDetailID, quantiteVendue, detail.CompteurElectroniqueFinal, detail.CompteurElectroniqueDebut);
+                                }
+                            }
+                            else
+                            {
+                                _logger.LogWarning(
+                                    "Skipping consumption for Detail {DetailId}: ReservoirID={Reservoir} or ProduitID={Produit} is null",
+                                    detail.PeriodeDetailID, detail.ReservoirID, detail.ProduitID);
                             }
                         }
 
-                        // 5. SYNC: Recalculate reservoir levels and pump counters from source of truth
+                        // 5. IMPORTANT: Save consumption changes BEFORE syncing
+                        // This ensures SyncReservoirLevels reads the updated QuantiteDisponible values
+                        await _context.SaveChangesAsync();
+
+                        // 6. SYNC: Recalculate reservoir levels and pump counters from source of truth
                         await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
                         await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
 
-                        // 6. Save all changes and commit transaction
+                        // 7. Save sync changes and commit transaction
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
 
@@ -558,9 +584,19 @@ namespace BombaProMaxApi.Controllers
                         // 7. Consume stock for new details (FIFO)
                         foreach (var detail in newDetailEntities)
                         {
+                            _logger.LogDebug(
+                                "Processing new detail: PompeID={PompeID}, ReservoirID={ReservoirID}, ProduitID={ProduitID}, " +
+                                "CompteurElecDebut={Debut}, CompteurElecFin={Fin}",
+                                detail.PompeID, detail.ReservoirID, detail.ProduitID,
+                                detail.CompteurElectroniqueDebut, detail.CompteurElectroniqueFinal);
+                            
                             if (detail.ReservoirID.HasValue && detail.ProduitID.HasValue)
                             {
                                 var quantiteVendue = detail.QuantiteVendue;
+                                _logger.LogDebug(
+                                    "New detail has ReservoirID and ProduitID. Calculated QuantiteVendue={Quantite}",
+                                    quantiteVendue);
+                                
                                 if (quantiteVendue > 0)
                                 {
                                     _logger.LogInformation(
@@ -573,6 +609,18 @@ namespace BombaProMaxApi.Controllers
                                         quantiteVendue,
                                         detail.PeriodeDetailID);
                                 }
+                                else
+                                {
+                                    _logger.LogWarning(
+                                        "Skipping consumption for new Detail {DetailId}: QuantiteVendue={Quantite} (CompteurFin={Fin} - CompteurDebut={Debut})",
+                                        detail.PeriodeDetailID, quantiteVendue, detail.CompteurElectroniqueFinal, detail.CompteurElectroniqueDebut);
+                                }
+                            }
+                            else
+                            {
+                                _logger.LogWarning(
+                                    "Skipping consumption for new Detail {DetailId}: ReservoirID={Reservoir} or ProduitID={Produit} is null",
+                                    detail.PeriodeDetailID, detail.ReservoirID, detail.ProduitID);
                             }
                         }
 
@@ -591,11 +639,15 @@ namespace BombaProMaxApi.Controllers
                                 affectedReservoirIds.Add(reservoirId);
                         }
 
-                        // 9. SYNC: Recalculate reservoir levels and pump counters from source of truth
+                        // 9. IMPORTANT: Save consumption changes BEFORE syncing
+                        // This ensures SyncReservoirLevels reads the updated QuantiteDisponible values
+                        await _context.SaveChangesAsync();
+
+                        // 10. SYNC: Recalculate reservoir levels and pump counters from source of truth
                         await _stockLotService.SyncMultipleReservoirLevelsAsync(affectedReservoirIds);
                         await _stockLotService.SyncMultiplePompeCountersAsync(affectedPompeIds);
 
-                        // 10. Save and commit
+                        // 11. Save sync changes and commit transaction
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
 

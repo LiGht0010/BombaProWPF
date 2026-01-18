@@ -1,5 +1,7 @@
 ﻿using BombaProMax.Models;
 using BombaProMax.Services;
+using BombaProMax.Views.OnboardingViews;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
@@ -15,9 +17,11 @@ public partial class LoginPageViewModel : ObservableObject
     private string _password = string.Empty;
 
     readonly ILoginRepository loginservice = new LoginServices();
+    private readonly OpeningBalanceOnboardingService _onboardingService;
 
-    public LoginPageViewModel()
+    public LoginPageViewModel(OpeningBalanceOnboardingService onboardingService)
     {
+        _onboardingService = onboardingService;
     }
 
     [RelayCommand]
@@ -53,6 +57,9 @@ public partial class LoginPageViewModel : ObservableObject
                     {
                         appShell.UpdateUserDisplay();
                     }
+
+                    // Check if Opening Balance onboarding is needed
+                    await CheckAndStartOnboardingAsync();
                 }
             }
             else
@@ -63,6 +70,52 @@ public partial class LoginPageViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+        }
+    }
+
+    /// <summary>
+    /// Checks if any reservoirs need Opening Balance setup and starts the onboarding flow.
+    /// </summary>
+    private async Task CheckAndStartOnboardingAsync()
+    {
+        try
+        {
+            System.Diagnostics.Debug.WriteLine("[LoginPageViewModel] Checking for Opening Balance onboarding...");
+            
+            var isOnboardingNeeded = await _onboardingService.IsOnboardingNeededAsync();
+            
+            if (isOnboardingNeeded)
+            {
+                var count = _onboardingService.TotalCount;
+                System.Diagnostics.Debug.WriteLine(
+                    $"[LoginPageViewModel] Opening Balance onboarding needed for {count} reservoir(s)");
+                
+                // Small delay to let HomePage fully load
+                await Task.Delay(300);
+                
+                // Show the onboarding popup
+                var popup = new OpeningBalancePopup(_onboardingService);
+                var result = await Shell.Current.CurrentPage.ShowPopupAsync(popup);
+                
+                if (popup.CompletedSuccessfully)
+                {
+                    System.Diagnostics.Debug.WriteLine("[LoginPageViewModel] Opening Balance onboarding completed");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("[LoginPageViewModel] Opening Balance onboarding was cancelled");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("[LoginPageViewModel] No Opening Balance onboarding needed");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Don't block login if onboarding check fails
+            System.Diagnostics.Debug.WriteLine(
+                $"[LoginPageViewModel] Error during Opening Balance onboarding check: {ex.Message}");
         }
     }
 

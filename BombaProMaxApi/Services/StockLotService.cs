@@ -37,13 +37,17 @@ public class StockLotService : IStockLotService
             "Consuming {Quantite}L from Reservoir {ReservoirId} for PeriodeDetail {PeriodeDetailId}",
             quantite, reservoirId, periodeDetailId);
 
-        // Get available stock lots ordered by DateEntree (FIFO)
+        // ?????????????????????????????????????????????????????????????????
+        // FIFO CONSUMPTION: Order by DateEntree, then by ID for deterministic tiebreaker
+        // This ensures consistent ordering even when multiple lots have the same date.
+        // ?????????????????????????????????????????????????????????????????
         var availableLots = await _context.StockLots
             .Where(s => s.ReservoirID == reservoirId 
                      && s.ProduitID == produitId
                      && s.Statut == "Disponible"
                      && s.QuantiteDisponible > 0)
             .OrderBy(s => s.DateEntree)
+            .ThenBy(s => s.ID)  // Deterministic tiebreaker for same-date lots
             .ToListAsync();
 
         if (!availableLots.Any())
@@ -68,6 +72,11 @@ public class StockLotService : IStockLotService
         var remainingToConsume = quantite;
         var consumptionDate = DateTime.UtcNow;
 
+        // ?????????????????????????????????????????????????????????????????
+        // ATOMIC CONSUMPTION: All consumptions and lot updates are tracked together.
+        // SaveChanges is called by the caller to ensure atomic transaction.
+        // If any consumption fails mid-loop, the entire batch should be rolled back.
+        // ?????????????????????????????????????????????????????????????????
         foreach (var lot in availableLots)
         {
             if (remainingToConsume <= 0)
@@ -122,11 +131,19 @@ public class StockLotService : IStockLotService
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// TRANSACTION SCOPE: This method modifies StockLots and optionally Reservoir.NiveauDeCarburant.
+    /// The caller is responsible for calling SaveChangesAsync() to commit all changes atomically.
+    /// If the caller's transaction fails after this method, all changes will be rolled back.
+    /// </remarks>
     public async Task<bool> ReverseConsumptionAsync(int periodeDetailId)
     {
         _logger.LogInformation("Reversing consumption for PeriodeDetail {PeriodeDetailId}", periodeDetailId);
 
-        // Get all consumptions for this PeriodeDetail
+        // ?????????????????????????????????????????????????????????????????
+        // ATOMIC REVERSAL: All consumption records for this PeriodeDetail 
+        // are restored together. SaveChanges is called by the caller.
+        // ?????????????????????????????????????????????????????????????????
         var consumptions = await _context.StockLotConsumptions
             .Include(c => c.StockLot)
             .Where(c => c.PeriodeDetailID == periodeDetailId)
@@ -191,6 +208,11 @@ public class StockLotService : IStockLotService
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// TRANSACTION SCOPE: This method creates a StockLot and updates Reservoir.NiveauDeCarburant.
+    /// The caller is responsible for calling SaveChangesAsync() to commit all changes atomically.
+    /// Typically called from AchatAllocation creation within the same transaction.
+    /// </remarks>
     public async Task CreateStockLotAsync(
         int achatId, 
         int reservoirId, 
@@ -202,6 +224,7 @@ public class StockLotService : IStockLotService
 
         var stockLot = new StockLot
         {
+            Type = StockLotType.Purchase,
             AchatID = achatId,
             ReservoirID = reservoirId,
             ProduitID = produitId,
@@ -211,6 +234,13 @@ public class StockLotService : IStockLotService
             DateEntree = DateTime.UtcNow,
             Statut = "Disponible"
         };
+
+        // Validate domain rules
+        var errors = stockLot.Validate().ToList();
+        if (errors.Count > 0)
+        {
+            throw new InvalidOperationException($"Invalid StockLot: {string.Join(", ", errors)}");
+        }
 
         _context.StockLots.Add(stockLot);
 
@@ -225,8 +255,155 @@ public class StockLotService : IStockLotService
         }
 
         _logger.LogInformation(
-            "Created StockLot: Achat {AchatId}, Reservoir {ReservoirId}, Quantite {Quantite}L, Prix {Prix}",
+            "Created StockLot (Purchase): Achat {AchatId}, Reservoir {ReservoirId}, Quantite {Quantite}L, Prix {Prix}",
             achatId, reservoirId, quantite, prixAchat);
+    }
+
+    // ?????????????????????????????????????????????????????????????????
+    // OPENING BALANCE OPERATIONS
+    // ?????????????????????????????????????????????????????????????????
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// TRANSACTION SCOPE: This method creates a StockLot and updates Reservoir.
+    /// Unlike CreateStockLotAsync, this method calls SaveChangesAsync() internally
+    /// because it's typically called from API endpoints as a standalone operation.
+    /// The partial unique index IX_StockLots_ReservoirID_OpeningBalance_Unique
+    /// enforces that only one OpeningBalance can exist per reservoir at the DB level.
+    /// </remarks>
+    public async Task<int> CreateOpeningBalanceAsync(
+        int reservoirId,
+        int produitId,
+        decimal quantite,
+        decimal prixAchat,
+        DateTime? dateEntree = null,
+        string? notes = null)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantite, nameof(quantite));
+        ArgumentOutOfRangeException.ThrowIfNegative(prixAchat, nameof(prixAchat));
+
+        // Validate reservoir exists
+        var reservoir = await _context.Reservoirs.FindAsync(reservoirId);
+        if (reservoir == null)
+        {
+            throw new InvalidOperationException($"Reservoir {reservoirId} not found");
+        }
+
+        // ?????????????????????????????????????????????????????????????????
+        // RACE CONDITION DEFENSE: Check for existing stock lots before creating.
+        // The partial unique index provides DB-level protection, but this 
+        // application-level check provides better error messages.
+        // In case of race condition, the DB constraint will reject the insert.
+        // ?????????????????????????????????????????????????????????????????
+        if (await HasAnyStockLotsAsync(reservoirId))
+        {
+            throw new InvalidOperationException(
+                $"Le réservoir {reservoir.Numero} possède déjà des lots de stock. " +
+                "Le stock initial ne peut être créé que pour un réservoir vide.");
+        }
+
+        // Validate capacity
+        if (quantite > reservoir.Capacite)
+        {
+            throw new InvalidOperationException(
+                $"La quantité ({quantite:N2}L) dépasse la capacité du réservoir ({reservoir.Capacite:N2}L)");
+        }
+
+        // Validate product matches reservoir (if reservoir has assigned product)
+        if (reservoir.ProduitID.HasValue && reservoir.ProduitID.Value != produitId)
+        {
+            throw new InvalidOperationException(
+                $"Le produit ne correspond pas au type de carburant assigné au réservoir");
+        }
+
+        var stockLot = new StockLot
+        {
+            Type = StockLotType.OpeningBalance,
+            AchatID = null, // No purchase for opening balance
+            ReservoirID = reservoirId,
+            ProduitID = produitId,
+            QuantiteInitiale = quantite,
+            QuantiteDisponible = quantite,
+            PrixAchat = prixAchat,
+            DateEntree = dateEntree ?? DateTime.UtcNow,
+            Statut = "Disponible",
+            Notes = notes ?? "Stock initial lors de l'installation du système"
+        };
+
+        // Validate domain rules
+        var errors = stockLot.Validate().ToList();
+        if (errors.Count > 0)
+        {
+            throw new InvalidOperationException($"Invalid StockLot: {string.Join(", ", errors)}");
+        }
+
+        _context.StockLots.Add(stockLot);
+
+        // Update reservoir level (this is the ONLY place NiveauDeCarburant is set for opening balance)
+        reservoir.NiveauDeCarburant = quantite;
+
+        // If reservoir doesn't have a product assigned, assign it now
+        if (!reservoir.ProduitID.HasValue)
+        {
+            reservoir.ProduitID = produitId;
+            _logger.LogInformation(
+                "Assigned product {ProduitId} to Reservoir {ReservoirId}",
+                produitId, reservoirId);
+        }
+
+        // ?????????????????????????????????????????????????????????????????
+        // ATOMIC COMMIT: StockLot creation + Reservoir update in single transaction.
+        // If this fails due to unique constraint violation, no changes are persisted.
+        // ?????????????????????????????????????????????????????????????????
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "Created Opening Balance StockLot: Reservoir {ReservoirId} ({Numero}), " +
+            "Quantite {Quantite}L, Prix {Prix}, ID {StockLotId}",
+            reservoirId, reservoir.Numero, quantite, prixAchat, stockLot.ID);
+
+        return stockLot.ID;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> HasOpeningBalanceAsync(int reservoirId)
+    {
+        return await _context.StockLots
+            .AnyAsync(s => s.ReservoirID == reservoirId && s.Type == StockLotType.OpeningBalance);
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> HasAnyStockLotsAsync(int reservoirId)
+    {
+        return await _context.StockLots
+            .AnyAsync(s => s.ReservoirID == reservoirId && s.Statut != "Annulé");
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ValidateCapacityAsync(int reservoirId, decimal quantiteToAdd)
+    {
+        var reservoir = await _context.Reservoirs.FindAsync(reservoirId);
+        if (reservoir == null)
+            return false;
+
+        var currentLevel = await GetAvailableStockAsync(reservoirId);
+        return (currentLevel + quantiteToAdd) <= reservoir.Capacite;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ValidateStockAvailabilityAsync(int reservoirId, int produitId, decimal quantiteRequired)
+    {
+        if (quantiteRequired <= 0)
+            return true;
+
+        var available = await _context.StockLots
+            .Where(s => s.ReservoirID == reservoirId 
+                     && s.ProduitID == produitId
+                     && s.Statut == "Disponible"
+                     && s.QuantiteDisponible > 0)
+            .SumAsync(s => s.QuantiteDisponible);
+
+        return available >= quantiteRequired;
     }
 
     /// <inheritdoc />
@@ -431,6 +608,9 @@ public class StockLotService : IStockLotService
             .ToListAsync();
 
         var lotAnalyses = stockLots.Select(BuildStockLotAnalysis).ToList();
+        
+        // Count lots with unknown cost (PrixAchat = 0)
+        var unknownCostCount = lotAnalyses.Count(l => !l.HasKnownCost && l.QuantiteVendue > 0);
 
         return new ReservoirAnalysisDto
         {
@@ -454,6 +634,9 @@ public class StockLotService : IStockLotService
             PrixVenteMoyen = lotAnalyses.Where(l => l.QuantiteVendue > 0).Any()
                 ? Math.Round(lotAnalyses.Where(l => l.QuantiteVendue > 0).Average(l => l.PrixVenteMoyen), 2)
                 : 0,
+            // Unknown cost tracking for margin accuracy warnings
+            HasUnknownCostStock = unknownCostCount > 0,
+            UnknownCostStockLotCount = unknownCostCount,
             StockLots = lotAnalyses
         };
     }
@@ -514,6 +697,10 @@ public class StockLotService : IStockLotService
             .Distinct()
             .Count();
 
+        // Check if any consumption came from a stock lot with unknown cost (PrixAchat = 0)
+        // This indicates margin calculations may be inflated
+        var hasUnknownCost = consumptions.Any(c => c.PrixUnitaire == 0);
+
         return new GlobalAnalysisSummaryDto
         {
             DateDebut = startDate,
@@ -526,6 +713,8 @@ public class StockLotService : IStockLotService
             TotalQuantiteEnStock = reservoirs.Sum(r => r.StockLots.Where(s => s.Statut == "Disponible").Sum(s => s.QuantiteDisponible)),
             TotalChiffreAffaires = consumptions.Sum(c => c.QuantiteConsommee * c.PeriodeDetail.PrixCarburant),
             TotalCoutRevient = consumptions.Sum(c => c.QuantiteConsommee * c.PrixUnitaire),
+            // Flag for margin accuracy warning
+            HasUnknownCostStock = hasUnknownCost,
             ParProduit = productGroups,
             ParReservoir = reservoirAnalyses
         };
@@ -615,9 +804,9 @@ public class StockLotService : IStockLotService
         return result;
     }
 
-    // ???????????????????????????????????????????????????????????????????????
+    // ?????????????????????????????????????????????????????????????????
     // PRIVATE HELPERS
-    // ???????????????????????????????????????????????????????????????????????
+    // ?????????????????????????????????????????????????????????????????
 
     private static StockLotAnalysisDto BuildStockLotAnalysis(StockLot stockLot)
     {
@@ -635,6 +824,7 @@ public class StockLotService : IStockLotService
             AchatID = stockLot.AchatID,
             ReservoirID = stockLot.ReservoirID,
             ProduitID = stockLot.ProduitID,
+            Type = (int)stockLot.Type,
             ReservoirNumero = stockLot.Reservoir?.Numero,
             ProduitNom = stockLot.Produit?.Description,
             Statut = stockLot.Statut,
@@ -645,7 +835,8 @@ public class StockLotService : IStockLotService
             PrixAchat = stockLot.PrixAchat,
             PrixVenteMoyen = Math.Round(prixVenteMoyen, 2),
             ChiffreAffaires = Math.Round(chiffreAffaires, 2),
-            CoutRevient = Math.Round(coutRevient, 2)
+            CoutRevient = Math.Round(coutRevient, 2),
+            Notes = stockLot.Notes
         };
     }
 }

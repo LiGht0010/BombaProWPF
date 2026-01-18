@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.OnboardingViews.OpeningBalancePopup"
+               Color="Transparent"
+               CanBeDismissedByTappingOutsideOfPopup="False">
+
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="550" HeightRequest="580" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="16"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <Border Grid.Row="0" BackgroundColor="#1F4E45" Padding="24,20" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16,16,0,0"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Configuration du Stock Initial" 
+                               FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                        <Label x:Name="ProgressLabel" Grid.Column="1" Text="1 / 1" 
+                               FontSize="14" TextColor="#80CBC4" VerticalTextAlignment="Center"/>
+                    </Grid>
+                    <Label Text="Definissez le niveau de carburant actuel dans vos reservoirs" 
+                           FontSize="13" TextColor="#A7D7C5"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <ScrollView Grid.Row="1" Padding="24,20">
+                <VerticalStackLayout Spacing="20">
+                    
+                    <Border BackgroundColor="White" Padding="18" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,3" Radius="8" Opacity="0.08"/>
+                        </Border.Shadow>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                            <Border Grid.Column="0" BackgroundColor="#E8F5E9" 
+                                    WidthRequest="56" HeightRequest="56" StrokeThickness="0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28"/>
+                                </Border.StrokeShape>
+                                <Label Text="R" FontSize="24" FontAttributes="Bold" TextColor="#1F4E45"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                <Label x:Name="ReservoirNumeroLabel" Text="Reservoir R-001" 
+                                       FontSize="18" FontAttributes="Bold" TextColor="#1F4E45"/>
+                                <Label x:Name="ProduitNomLabel" Text="Gasoil" 
+                                       FontSize="14" TextColor="#5A6068"/>
+                                <Label x:Name="CapaciteLabel" Text="Capacite: 50,000 L" 
+                                       FontSize="12" TextColor="#8B939E"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <Border BackgroundColor="White" Padding="18" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,3" Radius="8" Opacity="0.08"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="14">
+                            <Label Text="QUANTITE ACTUELLE" FontSize="11" FontAttributes="Bold" TextColor="#1F4E45"/>
+                            <BoxView Color="#E8F5E9" HeightRequest="1"/>
+                            
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Quantite en stock (Litres) *" FontSize="12" FontAttributes="Bold" TextColor="#5A6068"/>
+                                <Border BackgroundColor="#FAFAFA" Padding="4" StrokeThickness="1" Stroke="#E0E0E0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Entry x:Name="QuantiteEntry" 
+                                           Placeholder="Ex: 25000" 
+                                           Keyboard="Numeric" 
+                                           FontSize="18"
+                                           TextChanged="OnQuantiteChanged"/>
+                                </Border>
+                                <Label x:Name="QuantiteHintLabel" 
+                                       Text="Saisissez le niveau actuel de carburant dans le reservoir" 
+                                       FontSize="11" TextColor="#8B939E"/>
+                            </VerticalStackLayout>
+
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="6" Margin="0,8,0,0">
+                                <Border Grid.Row="0" BackgroundColor="#E0E0E0" HeightRequest="12" StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6"/>
+                                    </Border.StrokeShape>
+                                    <BoxView x:Name="FillProgressBar" 
+                                             Color="#2E7D32" 
+                                             HeightRequest="12" 
+                                             HorizontalOptions="Start"
+                                             CornerRadius="6"
+                                             WidthRequest="0"/>
+                                </Border>
+                                <Label x:Name="FillPercentLabel" Grid.Row="1" 
+                                       Text="0% de la capacite" 
+                                       FontSize="11" TextColor="#5A6068" HorizontalOptions="End"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" Padding="18" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,3" Radius="8" Opacity="0.08"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="14">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="PRIX ACHAT (Optionnel)" FontSize="11" FontAttributes="Bold" TextColor="#1F4E45"/>
+                                <Label Grid.Column="1" Text="Non obligatoire" FontSize="10" TextColor="#8B939E"/>
+                            </Grid>
+                            <BoxView Color="#E8F5E9" HeightRequest="1"/>
+                            
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Prix unitaire estime (DH/L)" FontSize="12" FontAttributes="Bold" TextColor="#5A6068"/>
+                                <Border BackgroundColor="#FAFAFA" Padding="4" StrokeThickness="1" Stroke="#E0E0E0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Entry x:Name="PrixAchatEntry" 
+                                           Placeholder="Ex: 10.50 (ou laisser vide)" 
+                                           Keyboard="Numeric" 
+                                           FontSize="16"/>
+                                </Border>
+                                <Label Text="Si inconnu, laissez vide. Les marges seront calculees une fois le prix connu." 
+                                       FontSize="11" TextColor="#8B939E"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="#E3F2FD" Padding="14" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="i" FontSize="16" FontAttributes="Bold" TextColor="#1565C0" VerticalOptions="Start"/>
+                            <Label Text="Cette etape permet de synchroniser le systeme avec votre stock reel. Elle n est requise qu une seule fois par reservoir." 
+                                   FontSize="12" TextColor="#1565C0" 
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <Label x:Name="ErrorLabel" 
+                           TextColor="#C62828" 
+                           FontSize="13" 
+                           IsVisible="False" 
+                           HorizontalOptions="Center"/>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <Border Grid.Row="2" BackgroundColor="White" Padding="24,16" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-3" Radius="8" Opacity="0.06"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+                    <Button x:Name="SkipAllButton" 
+                            Grid.Column="0" 
+                            Text="Passer tout" 
+                            BackgroundColor="Transparent" 
+                            TextColor="#9E9E9E" 
+                            FontSize="13"
+                            Clicked="OnSkipAllClicked"/>
+                    
+                    <BoxView Grid.Column="1"/>
+                    
+                    <Button x:Name="SkipButton" 
+                            Grid.Column="2" 
+                            Text="Passer" 
+                            BackgroundColor="#F5F5F5" 
+                            TextColor="#5A6068" 
+                            Padding="20,12" 
+                            CornerRadius="8"
+                            Clicked="OnSkipClicked"/>
+                    
+                    <Button x:Name="ConfirmButton" 
+                            Grid.Column="3" 
+                            Text="Confirmer" 
+                            BackgroundColor="#1F4E45" 
+                            TextColor="White" 
+                            Padding="24,12" 
+                            CornerRadius="8" 
+                            FontAttributes="Bold"
+                            Clicked="OnConfirmClicked"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>
