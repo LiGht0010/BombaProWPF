@@ -379,7 +379,8 @@ public class PeriodeService
     /// Creates a periode with its details in one atomic operation.
     /// Uses the /with-details endpoint which also triggers FIFO stock consumption.
     /// </summary>
-    public async Task<(PeriodeDto? Periode, List<PeriodeDetailsDto> Details)> CreatePeriodeWithDetailsAsync(
+    /// <returns>ServiceResult containing the created periode and details, or error information on failure.</returns>
+    public async Task<ServiceResult<(PeriodeDto Periode, List<PeriodeDetailsDto> Details)>> CreatePeriodeWithDetailsAsync(
         PeriodeDto periode, 
         List<PeriodeDetailsDto> details,
         List<int>? creditTransactionIds = null)
@@ -416,45 +417,48 @@ public class PeriodeService
         var json = JsonConvert.SerializeObject(dto);
         Debug.WriteLine($"[PeriodeService] POST {BaseUrl}/with-details");
 
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync($"{BaseUrl}/with-details", content);
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Debug.WriteLine($"[PeriodeService] Response: {response.StatusCode}");
-
-        if (response.IsSuccessStatusCode)
-        {
-            var result = JsonConvert.DeserializeObject<PeriodeWithDetailsDto>(responseBody);
-            if (result != null)
-            {
-                Debug.WriteLine($"[PeriodeService] SUCCESS: Created Periode {result.Periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs");
-                Debug.WriteLine($"[PeriodeService] ========== STOCK SHOULD BE CONSUMED ==========");
-                return (result.Periode, result.Details);
-            }
-        }
-
-        // Log error details
-        Debug.WriteLine($"[PeriodeService] ERROR creating periode with details: {responseBody}");
-        
-        // Try to parse error response
         try
         {
-            var errorObj = JsonConvert.DeserializeObject<dynamic>(responseBody);
-            if (errorObj?.error != null)
-            {
-                Debug.WriteLine($"[PeriodeService] API Error: {errorObj.error} - {errorObj.message}");
-            }
-        }
-        catch { }
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync($"{BaseUrl}/with-details", content);
 
-        return (null, []);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Debug.WriteLine($"[PeriodeService] Response: {response.StatusCode}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = JsonConvert.DeserializeObject<PeriodeWithDetailsDto>(responseBody);
+                if (result != null)
+                {
+                    Debug.WriteLine($"[PeriodeService] SUCCESS: Created Periode {result.Periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs");
+                    Debug.WriteLine($"[PeriodeService] ========== STOCK SHOULD BE CONSUMED ==========");
+                    return ServiceResult<(PeriodeDto, List<PeriodeDetailsDto>)>.Success((result.Periode, result.Details));
+                }
+            }
+
+            // Parse error response
+            Debug.WriteLine($"[PeriodeService] ERROR creating periode with details: {responseBody}");
+            
+            var errorResponse = ParseApiError(responseBody);
+            return ServiceResult<(PeriodeDto, List<PeriodeDetailsDto>)>.Failure(
+                errorResponse.Error,
+                errorResponse.Message ?? "Erreur lors de la création de la période");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeService] Exception creating periode: {ex.Message}");
+            return ServiceResult<(PeriodeDto, List<PeriodeDetailsDto>)>.Failure(
+                "CONNECTION_ERROR",
+                $"Erreur de connexion: {ex.Message}");
+        }
     }
 
     /// <summary>
     /// Updates a periode with its details in one atomic operation.
     /// Uses the /{id}/with-details endpoint which handles stock reversal and re-consumption.
     /// </summary>
-    public async Task<(PeriodeDto? Periode, List<PeriodeDetailsDto> Details)> UpdatePeriodeWithDetailsAsync(
+    /// <returns>ServiceResult containing the updated periode and details, or error information on failure.</returns>
+    public async Task<ServiceResult<(PeriodeDto Periode, List<PeriodeDetailsDto> Details)>> UpdatePeriodeWithDetailsAsync(
         PeriodeDto periode,
         List<PeriodeDetailsDto> details,
         List<int>? creditTransactionIds = null)
@@ -483,37 +487,65 @@ public class PeriodeService
         var json = JsonConvert.SerializeObject(dto);
         Debug.WriteLine($"[PeriodeService] PUT {BaseUrl}/{periode.PeriodeID}/with-details: Periode + {details.Count} details + {dto.CreditTransactionIds.Count} CTs");
 
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PutAsync($"{BaseUrl}/{periode.PeriodeID}/with-details", content);
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Debug.WriteLine($"[PeriodeService] Response: {response.StatusCode}");
-
-        if (response.IsSuccessStatusCode)
-        {
-            var result = JsonConvert.DeserializeObject<PeriodeWithDetailsDto>(responseBody);
-            if (result != null)
-            {
-                Debug.WriteLine($"[PeriodeService] Updated Periode {result.Periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs (stock adjusted)");
-                return (result.Periode, result.Details);
-            }
-        }
-
-        // Log error details
-        Debug.WriteLine($"[PeriodeService] Error updating periode with details: {responseBody}");
-
-        // Try to parse error response
         try
         {
-            var errorObj = JsonConvert.DeserializeObject<dynamic>(responseBody);
-            if (errorObj?.error != null)
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"{BaseUrl}/{periode.PeriodeID}/with-details", content);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Debug.WriteLine($"[PeriodeService] Response: {response.StatusCode}");
+
+            if (response.IsSuccessStatusCode)
             {
-                Debug.WriteLine($"[PeriodeService] API Error: {errorObj.error} - {errorObj.message}");
+                var result = JsonConvert.DeserializeObject<PeriodeWithDetailsDto>(responseBody);
+                if (result != null)
+                {
+                    Debug.WriteLine($"[PeriodeService] Updated Periode {result.Periode.PeriodeID} with {result.Details.Count} details and {result.CreditTransactionIds.Count} CTs (stock adjusted)");
+                    return ServiceResult<(PeriodeDto, List<PeriodeDetailsDto>)>.Success((result.Periode, result.Details));
+                }
+            }
+
+            // Parse error response
+            Debug.WriteLine($"[PeriodeService] Error updating periode with details: {responseBody}");
+
+            var errorResponse = ParseApiError(responseBody);
+            return ServiceResult<(PeriodeDto, List<PeriodeDetailsDto>)>.Failure(
+                errorResponse.Error,
+                errorResponse.Message ?? "Erreur lors de la mise à jour de la période");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[PeriodeService] Exception updating periode: {ex.Message}");
+            return ServiceResult<(PeriodeDto, List<PeriodeDetailsDto>)>.Failure(
+                "CONNECTION_ERROR",
+                $"Erreur de connexion: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Parses the API error response to extract error code and message.
+    /// </summary>
+    private static ApiErrorResponse ParseApiError(string responseBody)
+    {
+        try
+        {
+            var errorObj = JsonConvert.DeserializeObject<ApiErrorResponse>(responseBody);
+            if (errorObj != null && (!string.IsNullOrEmpty(errorObj.Error) || !string.IsNullOrEmpty(errorObj.Message)))
+            {
+                Debug.WriteLine($"[PeriodeService] Parsed API Error: {errorObj.Error} - {errorObj.Message}");
+                return errorObj;
             }
         }
-        catch { }
+        catch
+        {
+            // If parsing fails, use the raw response as message
+        }
 
-        return (null, []);
+        return new ApiErrorResponse
+        {
+            Error = "UNKNOWN_ERROR",
+            Message = responseBody
+        };
     }
 
     /// <summary>

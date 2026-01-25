@@ -31,7 +31,16 @@ public partial class PeriodePage : ContentPage
 
         if (result is PeriodeWithDetailsDto periodeWithDetails)
         {
-            await _viewModel.CreatePeriodeWithDetailsAsync(periodeWithDetails);
+            var saveResult = await _viewModel.CreatePeriodeWithDetailsAsync(periodeWithDetails);
+            
+            if (!saveResult.IsSuccess)
+            {
+                // Show error alert with API message
+                await DisplayAlert(
+                    "Erreur",
+                    saveResult.ErrorMessage ?? "Impossible de créer la période",
+                    "OK");
+            }
         }
     }
 
@@ -62,7 +71,16 @@ public partial class PeriodePage : ContentPage
 
             if (result is PeriodeWithDetailsDto periodeWithDetails)
             {
-                await _viewModel.UpdatePeriodeWithDetailsAsync(periodeWithDetails);
+                var saveResult = await _viewModel.UpdatePeriodeWithDetailsAsync(periodeWithDetails);
+                
+                if (!saveResult.IsSuccess)
+                {
+                    // Show error alert with API message
+                    await DisplayAlert(
+                        "Erreur",
+                        saveResult.ErrorMessage ?? "Impossible de mettre à jour la période",
+                        "OK");
+                }
             }
         }
         catch (Exception ex)
@@ -105,7 +123,16 @@ public partial class PeriodePage : ContentPage
 
                 if (editResult is PeriodeWithDetailsDto periodeWithDetails)
                 {
-                    await _viewModel.UpdatePeriodeWithDetailsAsync(periodeWithDetails);
+                    var saveResult = await _viewModel.UpdatePeriodeWithDetailsAsync(periodeWithDetails);
+                    
+                    if (!saveResult.IsSuccess)
+                    {
+                        // Show error alert with API message
+                        await DisplayAlert(
+                            "Erreur",
+                            saveResult.ErrorMessage ?? "Impossible de mettre à jour la période",
+                            "OK");
+                    }
                 }
             }
         }

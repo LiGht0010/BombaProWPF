@@ -98,18 +98,34 @@ public class StockLotService
     {
         try
         {
-            var response = await _httpClient.GetAsync($"{ApiConfig.Reservoirs}/needing-opening-balance");
+            var url = $"{ApiConfig.Reservoirs}/needing-opening-balance";
+            System.Diagnostics.Debug.WriteLine($"[StockLotService] GET {url}");
+            
+            var response = await _httpClient.GetAsync(url);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            
+            System.Diagnostics.Debug.WriteLine(
+                $"[StockLotService] Response: {response.StatusCode}, Body length: {responseBody.Length}");
+            
             if (response.IsSuccessStatusCode)
             {
-                var json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<ReservoirStockStatusDto>>(json) 
+                var result = JsonConvert.DeserializeObject<List<ReservoirStockStatusDto>>(responseBody) 
                     ?? new List<ReservoirStockStatusDto>();
+                    
+                System.Diagnostics.Debug.WriteLine(
+                    $"[StockLotService] Parsed {result.Count} reservoir(s) needing opening balance");
+                    
+                return result;
             }
+            
+            System.Diagnostics.Debug.WriteLine(
+                $"[StockLotService] Non-success response: {responseBody}");
             return new List<ReservoirStockStatusDto>();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error getting reservoirs needing opening balance: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine(
+                $"[StockLotService] Error getting reservoirs needing opening balance: {ex.Message}");
             return new List<ReservoirStockStatusDto>();
         }
     }

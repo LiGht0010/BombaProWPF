@@ -906,7 +906,8 @@ public partial class PeriodeViewModel : ObservableObject
     /// Creates a new periode with its details in one operation.
     /// Also updates pump meters to the final readings.
     /// </summary>
-    public async Task<(PeriodeDto? Periode, List<PeriodeDetailsDto> Details)> CreatePeriodeWithDetailsAsync(
+    /// <returns>ServiceResult with the created periode and details, or error information.</returns>
+    public async Task<ServiceResult<(PeriodeDto Periode, List<PeriodeDetailsDto> Details)>> CreatePeriodeWithDetailsAsync(
         PeriodeDto periode, 
         List<PeriodeDetailsDto> details,
         List<int>? creditTransactionIds = null)
@@ -918,22 +919,28 @@ public partial class PeriodeViewModel : ObservableObject
 
             var result = await _periodeService.CreatePeriodeWithDetailsAsync(periode, details, creditTransactionIds);
             
-            if (result.Periode != null)
+            if (result.IsSuccess && result.Data.Periode != null)
             {
-                Periodes.Insert(0, result.Periode);
-                SelectedPeriode = result.Periode;
+                Periodes.Insert(0, result.Data.Periode);
+                SelectedPeriode = result.Data.Periode;
                 
                 CurrentPeriodeDetails.Clear();
-                foreach (var detail in result.Details)
+                foreach (var detail in result.Data.Details)
                 {
                     CurrentPeriodeDetails.Add(detail);
                 }
                 NotifyTotalsChanged();
 
                 // Update pump meters to final readings
-                await UpdatePumpMetersAsync(result.Details);
+                await UpdatePumpMetersAsync(result.Data.Details);
 
-                Debug.WriteLine($"[PeriodeViewModel] Created periode {result.Periode.PeriodeID} with {result.Details.Count} details and {creditTransactionIds?.Count ?? 0} CTs");
+                Debug.WriteLine($"[PeriodeViewModel] Created periode {result.Data.Periode.PeriodeID} with {result.Data.Details.Count} details and {creditTransactionIds?.Count ?? 0} CTs");
+            }
+            else
+            {
+                // Propagate error message from service
+                ErrorMessage = result.ErrorMessage;
+                Debug.WriteLine($"[PeriodeViewModel] Failed to create periode: {result.ErrorCode} - {result.ErrorMessage}");
             }
 
             return result;
@@ -941,8 +948,8 @@ public partial class PeriodeViewModel : ObservableObject
         catch (Exception ex)
         {
             ErrorMessage = $"Erreur de création: {ex.Message}";
-            Debug.WriteLine($"[PeriodeViewModel] Error creating periode with details: {ex.Message}");
-            throw;
+            Debug.WriteLine($"[PeriodeViewModel] Exception creating periode with details: {ex.Message}");
+            return ServiceResult<(PeriodeDto, List<PeriodeDetailsDto>)>.Failure("EXCEPTION", ex.Message);
         }
         finally
         {
@@ -953,16 +960,18 @@ public partial class PeriodeViewModel : ObservableObject
     /// <summary>
     /// Creates a new periode with its details from DTO.
     /// </summary>
-    public async Task CreatePeriodeWithDetailsAsync(PeriodeWithDetailsDto dto)
+    /// <returns>ServiceResult with the created periode and details, or error information.</returns>
+    public async Task<ServiceResult<(PeriodeDto Periode, List<PeriodeDetailsDto> Details)>> CreatePeriodeWithDetailsAsync(PeriodeWithDetailsDto dto)
     {
-        await CreatePeriodeWithDetailsAsync(dto.Periode, dto.Details, dto.CreditTransactionIds);
+        return await CreatePeriodeWithDetailsAsync(dto.Periode, dto.Details, dto.CreditTransactionIds);
     }
 
     /// <summary>
     /// Updates a periode with its details from DTO.
     /// Uses the API endpoint that properly handles stock reversal and re-consumption.
     /// </summary>
-    public async Task UpdatePeriodeWithDetailsAsync(PeriodeWithDetailsDto dto)
+    /// <returns>ServiceResult with the updated periode and details, or error information.</returns>
+    public async Task<ServiceResult<(PeriodeDto Periode, List<PeriodeDetailsDto> Details)>> UpdatePeriodeWithDetailsAsync(PeriodeWithDetailsDto dto)
     {
         try
         {
@@ -972,40 +981,43 @@ public partial class PeriodeViewModel : ObservableObject
             // Use the new endpoint that handles stock properly
             var result = await _periodeService.UpdatePeriodeWithDetailsAsync(dto.Periode, dto.Details, dto.CreditTransactionIds);
 
-            if (result.Periode != null)
+            if (result.IsSuccess && result.Data.Periode != null)
             {
                 // Update in collection
                 var index = Periodes.ToList().FindIndex(p => p.PeriodeID == dto.Periode.PeriodeID);
                 if (index >= 0)
                 {
-                    Periodes[index] = result.Periode;
+                    Periodes[index] = result.Data.Periode;
                 }
 
-                SelectedPeriode = result.Periode;
+                SelectedPeriode = result.Data.Periode;
 
                 CurrentPeriodeDetails.Clear();
-                foreach (var detail in result.Details)
+                foreach (var detail in result.Data.Details)
                 {
                     CurrentPeriodeDetails.Add(detail);
                 }
                 NotifyTotalsChanged();
 
                 // Update pump meters to final readings
-                await UpdatePumpMetersAsync(result.Details);
+                await UpdatePumpMetersAsync(result.Data.Details);
 
-                Debug.WriteLine($"[PeriodeViewModel] Updated periode {dto.Periode.PeriodeID} with {result.Details.Count} details and {dto.CreditTransactionIds.Count} CTs (stock adjusted)");
+                Debug.WriteLine($"[PeriodeViewModel] Updated periode {dto.Periode.PeriodeID} with {result.Data.Details.Count} details and {dto.CreditTransactionIds.Count} CTs (stock adjusted)");
             }
             else
             {
-                ErrorMessage = "Erreur lors de la mise à jour de la période";
-                Debug.WriteLine($"[PeriodeViewModel] Failed to update periode {dto.Periode.PeriodeID}");
+                // Propagate error message from service
+                ErrorMessage = result.ErrorMessage;
+                Debug.WriteLine($"[PeriodeViewModel] Failed to update periode {dto.Periode.PeriodeID}: {result.ErrorCode} - {result.ErrorMessage}");
             }
+
+            return result;
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Erreur de mise à jour: {ex.Message}";
-            Debug.WriteLine($"[PeriodeViewModel] Error updating periode with details: {ex.Message}");
-            throw;
+            Debug.WriteLine($"[PeriodeViewModel] Exception updating periode with details: {ex.Message}");
+            return ServiceResult<(PeriodeDto, List<PeriodeDetailsDto>)>.Failure("EXCEPTION", ex.Message);
         }
         finally
         {

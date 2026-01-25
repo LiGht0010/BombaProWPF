@@ -1,5 +1,7 @@
 ﻿using BombaProMax.Models;
 using BombaProMax.Services;
+using BombaProMax.Views.OnboardingViews;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -10,6 +12,7 @@ public partial class ReservoirViewModel : ObservableObject
 {
     private readonly ReservoirService _reservoirService;
     private readonly IDialogService _dialogService;
+    private readonly OpeningBalanceOnboardingService _onboardingService;
 
     public ObservableCollection<ReservoirDto> Reservoirs { get; } = new();
 
@@ -34,10 +37,12 @@ public partial class ReservoirViewModel : ObservableObject
 
     public ReservoirViewModel(
         ReservoirService reservoirService, 
-        IDialogService dialogService)
+        IDialogService dialogService,
+        OpeningBalanceOnboardingService onboardingService)
     {
         _reservoirService = reservoirService;
         _dialogService = dialogService;
+        _onboardingService = onboardingService;
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -251,6 +256,73 @@ public partial class ReservoirViewModel : ObservableObject
         catch (Exception ex)
         {
             await _dialogService.ShowAlertAsync("Erreur", $"Erreur lors de la recherche: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Shows the Opening Balance popup for reservoirs with zero stock.
+    /// This includes both reservoirs without StockLots AND reservoirs where all stock has been consumed.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowOpeningBalanceAsync()
+    {
+        try
+        {
+            IsLoading = true;
+
+            // Get reservoirs with zero stock (NiveauDeCarburant = 0)
+            var allReservoirs = await _reservoirService.GetAllReservoirsAsync();
+            var zeroStockReservoirs = allReservoirs
+                .Where(r => r.NiveauDeCarburant == 0)
+                .ToList();
+
+            if (zeroStockReservoirs.Count == 0)
+            {
+                await _dialogService.ShowAlertAsync(
+                    "Information", 
+                    "Tous les réservoirs ont du stock. Aucun stock initial à configurer.");
+                return;
+            }
+
+            // Check if onboarding is needed (this will also populate the service's internal list)
+            var isNeeded = await _onboardingService.IsOnboardingNeededAsync();
+            
+            // If the API-based check returned empty but we have local zero-stock reservoirs,
+            // it means those reservoirs have exhausted StockLots. Show a different message.
+            if (!isNeeded)
+            {
+                // These are reservoirs where stock was consumed to zero
+                var message = $"{zeroStockReservoirs.Count} réservoir(s) avec stock à 0:\n\n";
+                foreach (var r in zeroStockReservoirs.Take(5))
+                {
+                    message += $"• {r.Numero} ({r.ProduitNom ?? "N/A"})\n";
+                }
+                if (zeroStockReservoirs.Count > 5)
+                {
+                    message += $"\n... et {zeroStockReservoirs.Count - 5} autre(s)";
+                }
+                message += "\n\nCes réservoirs ont déjà eu des lots de stock. " +
+                          "Utilisez un Achat pour les réapprovisionner.";
+                
+                await _dialogService.ShowAlertAsync("Réservoirs vides", message);
+                return;
+            }
+
+            // Show the onboarding popup
+            var popup = new OpeningBalancePopup(_onboardingService);
+            await Shell.Current.CurrentPage.ShowPopupAsync(popup);
+
+            // Reload reservoirs after popup closes
+            await LoadReservoirsAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ReservoirViewModel] Error showing opening balance: {ex.Message}");
+            await _dialogService.ShowAlertAsync("Erreur", $"Erreur: {ex.Message}");
         }
         finally
         {
