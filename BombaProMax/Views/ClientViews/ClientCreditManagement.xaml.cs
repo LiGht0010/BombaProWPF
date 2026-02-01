@@ -11,22 +11,49 @@ public partial class ClientCreditManagement : ContentPage
 
     public ClientCreditManagement()
     {
-        InitializeComponent();
-        _viewModel = new ClientCreditManagementViewModel();
-        BindingContext = _viewModel;
-        
-        // Subscribe to property changes to update filter button styles
-        _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+        try
+        {
+            App.LogMessage("ClientCreditManagement: Constructor started (parameterless)");
+            InitializeComponent();
+            App.LogMessage("ClientCreditManagement: InitializeComponent completed");
+            
+            _viewModel = new ClientCreditManagementViewModel();
+            App.LogMessage("ClientCreditManagement: ViewModel created");
+            
+            BindingContext = _viewModel;
+            App.LogMessage("ClientCreditManagement: BindingContext set");
+            
+            // Subscribe to property changes to update filter button styles
+            _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+            App.LogMessage("ClientCreditManagement: Constructor completed successfully");
+        }
+        catch (Exception ex)
+        {
+            App.LogMessage($"ClientCreditManagement: Constructor CRASHED - {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+            throw;
+        }
     }
 
     public ClientCreditManagement(ClientCreditManagementViewModel viewModel)
     {
-        InitializeComponent();
-        _viewModel = viewModel;
-        BindingContext = _viewModel;
-        
-        // Subscribe to property changes to update filter button styles
-        _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+        try
+        {
+            App.LogMessage("ClientCreditManagement: Constructor started (with viewModel)");
+            InitializeComponent();
+            App.LogMessage("ClientCreditManagement: InitializeComponent completed");
+            
+            _viewModel = viewModel;
+            BindingContext = _viewModel;
+            
+            // Subscribe to property changes to update filter button styles
+            _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+            App.LogMessage("ClientCreditManagement: Constructor completed successfully");
+        }
+        catch (Exception ex)
+        {
+            App.LogMessage($"ClientCreditManagement: Constructor CRASHED - {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+            throw;
+        }
     }
 
     /// <summary>

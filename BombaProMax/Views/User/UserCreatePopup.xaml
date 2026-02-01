@@ -72,7 +72,7 @@
                                 
                                 <VerticalStackLayout Spacing="4">
                                     <Label Text="Mot de passe *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
-                                    <Entry x:Name="PasswordEntry" Placeholder="Minimum 8 caractères" IsPassword="True" FontSize="13"/>
+                                    <Entry x:Name="PasswordEntry" Placeholder="Minimum 4 caractères" IsPassword="True" FontSize="13"/>
                                 </VerticalStackLayout>
                                 
                                 <VerticalStackLayout Spacing="4">

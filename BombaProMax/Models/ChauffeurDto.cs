@@ -16,5 +16,10 @@
 
         // Display field for related entity
         public string? FournisseurNom { get; set; }
+
+        /// <summary>
+        /// Full name for display: "Prenom Nom" or just "Nom" if Prenom is empty
+        /// </summary>
+        public string FullName => string.IsNullOrWhiteSpace(Prenom) ? Nom : $"{Prenom} {Nom}";
     }
 }

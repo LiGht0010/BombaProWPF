@@ -55,7 +55,7 @@
                                    Style="{StaticResource CreditClientSelectorLabel}"
                                    FontSize="16"
                                    FontAttributes="Bold"
-                                   TextColor="{StaticResource ClientTextPrimary}"/>
+                                   TextColor="{StaticResource GREY}"/>
                             <HorizontalStackLayout Spacing="8">
                                 <Label Text="{Binding CurrentClient.NomSociete, StringFormat='Société: {0}'}" 
                                        Style="{StaticResource CreditClientSelectorLabel}"
@@ -70,7 +70,7 @@
                             <Label Text="{Binding CurrentClient.NumeroClient, StringFormat='ID: {0}'}" 
                                    Style="{StaticResource CreditClientSelectorLabel}"
                                    FontSize="12"
-                                   TextColor="{StaticResource ClientTextMuted}"/>
+                                   TextColor="{StaticResource ClientNeuTextMuted}"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
@@ -98,7 +98,7 @@
                         <Label Text="BALANCE" 
                                FontSize="13"
                                FontAttributes="Bold"
-                               TextColor="{StaticResource ClientTextMuted}"
+                               TextColor="{StaticResource ClientNeuTextMuted}"
                                HorizontalOptions="Center"
                                CharacterSpacing="2"/>
                     </VerticalStackLayout>
@@ -166,7 +166,7 @@
                 <VerticalStackLayout Style="{StaticResource ClientTableContainer}">
                     
                     <!-- Tab Headers - 4 Columns Now -->
-                    <Grid ColumnDefinitions="*,*,*,*" BackgroundColor="{StaticResource ClientPrimary}">
+                    <Grid ColumnDefinitions="*,*,*,*" BackgroundColor="{StaticResource ClientNeuPrimary}">
                         <Button x:Name="TransactionsTabButton"
                                 Grid.Column="0"
                                 Text="📦 Transactions"
@@ -369,9 +369,9 @@
                             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12" Padding="16,12">
                                 <VerticalStackLayout>
                                     <Label Text="{Binding SelectedCTCount, StringFormat='{0} transaction(s) sélectionnée(s)'}" 
-                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource ClientTextPrimary}"/>
+                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource GREY}"/>
                                     <Label Text="{Binding SelectedCTTotal, StringFormat='Total: {0:N2} MAD'}" 
-                                           FontSize="13" TextColor="{StaticResource ClientTextMuted}"/>
+                                           FontSize="13" TextColor="{StaticResource ClientNeuTextMuted}"/>
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1"
                                         Text="🚚 Créer BL"
@@ -643,9 +643,9 @@
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Padding="16,12">
                                 <VerticalStackLayout>
                                     <Label Text="{Binding SelectedFactureCount, StringFormat='{0} facture(s) sélectionnée(s)'}" 
-                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource ClientTextPrimary}"/>
+                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource GREY}"/>
                                     <Label Text="{Binding SelectedFactureTotal, StringFormat='Total: {0:N2} MAD'}" 
-                                           FontSize="13" TextColor="{StaticResource ClientTextMuted}"/>
+                                           FontSize="13" TextColor="{StaticResource ClientNeuTextMuted}"/>
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1"
                                         Text="🧾 Fusionner Factures"
@@ -826,9 +826,9 @@
                             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12" Padding="16,12">
                                 <VerticalStackLayout>
                                     <Label Text="{Binding SelectedBLCount, StringFormat='{0} BL(s) sélectionné(s)'}" 
-                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource ClientTextPrimary}"/>
+                                           FontSize="14" FontAttributes="Bold" TextColor="{StaticResource GREY}"/>
                                     <Label Text="{Binding SelectedBLTotal, StringFormat='Total: {0:N2} MAD'}" 
-                                           FontSize="13" TextColor="{StaticResource ClientTextMuted}"/>
+                                           FontSize="13" TextColor="{StaticResource ClientNeuTextMuted}"/>
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1"
                                         Text="📄 Créer Facture"

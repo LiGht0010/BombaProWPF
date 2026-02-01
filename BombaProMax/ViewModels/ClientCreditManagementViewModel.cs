@@ -277,8 +277,8 @@ public partial class ClientCreditManagementViewModel : ObservableObject
     {
         try
         {
-            using var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync("https://localhost:7100/api/Services");
+            var httpClient = HttpClientFactory.Create();
+            var response = await httpClient.GetAsync(ApiConfig.Services);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();

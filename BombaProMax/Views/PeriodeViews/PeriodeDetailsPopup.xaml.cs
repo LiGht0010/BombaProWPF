@@ -1,4 +1,5 @@
 using BombaProMax.Models;
+using BombaProMax.Services;
 using CommunityToolkit.Maui.Views;
 using Newtonsoft.Json;
 
@@ -45,8 +46,8 @@ public partial class PeriodeDetailsPopup : Popup
     {
         try
         {
-            using var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync("https://localhost:7100/api/Pompes");
+            using var httpClient = HttpClientFactory.Create();
+            var response = await httpClient.GetAsync(ApiConfig.Pompes);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -64,8 +65,8 @@ public partial class PeriodeDetailsPopup : Popup
     {
         try
         {
-            using var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync("https://localhost:7100/api/Produits");
+            using var httpClient = HttpClientFactory.Create();
+            var response = await httpClient.GetAsync(ApiConfig.Produits);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();

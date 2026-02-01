@@ -126,7 +126,7 @@
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
                                 <VerticalStackLayout Grid.Column="0" Spacing="5">
                                     <Label Text="Chauffeur" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
-                                    <Picker x:Name="ChauffeurPicker" Title="Sélectionner..." ItemDisplayBinding="{Binding Nom}" FontSize="13"/>
+                                    <Picker x:Name="ChauffeurPicker" Title="Sélectionner..." ItemDisplayBinding="{Binding FullName}" FontSize="13"/>
                                 </VerticalStackLayout>
                                 <VerticalStackLayout Grid.Column="1" Spacing="5">
                                     <Label Text="Camion" FontSize="11" FontAttributes="Bold" TextColor="#666"/>

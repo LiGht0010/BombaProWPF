@@ -194,21 +194,29 @@ public class CreditTransactionsController : ControllerBase
     /// Get carburant credit transactions within a date range that are not yet assigned to a période.
     /// Used when creating a new période to show available credits.
     /// </summary>
-    /// <param name="start">Start date/time (inclusive)</param>
-    /// <param name="end">End date/time (inclusive)</param>
+    /// <param name="start">Start date/time (inclusive) - only the DATE portion is used</param>
+    /// <param name="end">End date/time (inclusive) - only the DATE portion is used</param>
+    /// <remarks>
+    /// Since CreditTransactions are created with only a date (time defaults to midnight),
+    /// while Periodes have specific start/end times, we compare dates only.
+    /// This ensures a CT created on 2026-01-01 is included in a Periode spanning 
+    /// 2026-01-01 10:00 to 2026-01-02 10:00.
+    /// </remarks>
     [HttpGet("carburant/date-range")]
     public async Task<ActionResult<List<CreditTransactionDto>>> GetCarburantByDateRange(
         [FromQuery] DateTime start,
         [FromQuery] DateTime end)
     {
-        var startUtc = DateTime.SpecifyKind(start, DateTimeKind.Utc);
-        var endUtc = DateTime.SpecifyKind(end, DateTimeKind.Utc);
+        // Extract just the DATE portion for comparison (ignore time)
+        // This ensures CTs with DateCredit at any time on the start/end dates are included
+        var startDate = DateTime.SpecifyKind(start.Date, DateTimeKind.Utc);
+        var endDate = DateTime.SpecifyKind(end.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc); // End of day
 
         var transactions = await _context.CreditTransactions
             .Include(t => t.Client)
             .Include(t => t.Produit)
                 .ThenInclude(p => p!.Categorie)
-            .Where(t => t.DateCredit >= startUtc && t.DateCredit <= endUtc)
+            .Where(t => t.DateCredit >= startDate && t.DateCredit <= endDate)
             .Where(t => t.PeriodeID == null) // Not yet assigned to a période
             .Where(t => t.ProduitID != null && t.Produit!.CategorieID == 1) // Carburant category (ID=1)
             .AsNoTracking()

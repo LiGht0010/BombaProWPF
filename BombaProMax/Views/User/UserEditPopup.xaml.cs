@@ -91,9 +91,9 @@ public partial class UserEditPopup : Popup
                 return;
             }
 
-            if (NewPasswordEntry.Text.Length < 8)
+            if (NewPasswordEntry.Text.Length < 4)
             {
-                ShowError("Le mot de passe doit contenir au moins 8 caractères");
+                ShowError("Le mot de passe doit contenir au moins 4 caractères");
                 return;
             }
 

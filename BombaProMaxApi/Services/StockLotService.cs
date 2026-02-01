@@ -84,6 +84,10 @@ public class StockLotService : IStockLotService
 
             var toConsumeFromLot = Math.Min(lot.QuantiteDisponible, remainingToConsume);
 
+            // Skip if nothing meaningful to consume (prevents constraint violation)
+            if (toConsumeFromLot <= 0)
+                continue;
+
             // Create consumption record (audit trail)
             var consumption = new StockLotConsumption
             {
