@@ -21,6 +21,8 @@ public partial class JaugeageEditPopup : Popup
     public JaugeageEditPopup(JaugeageDto jaugeage)
     {
         InitializeComponent();
+        CanBeDismissedByTappingOutsideOfPopup = false;
+
         _jaugeageDto = jaugeage;
         
         _jaugeageService = new JaugeageService();

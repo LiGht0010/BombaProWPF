@@ -20,6 +20,8 @@ public partial class AchatAllocationPopup : Popup
         decimal quantiteRestante)
     {
         InitializeComponent();
+        CanBeDismissedByTappingOutsideOfPopup = false;
+
 
         _allocationService = allocationService;
         _achat = achat;

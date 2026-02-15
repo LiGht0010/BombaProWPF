@@ -12,7 +12,7 @@ namespace BombaProMax.Models
         public int BonLivraisonID { get; set; }
         public int? ProduitID { get; set; }
         public int? ServiceID { get; set; }
-        public int Quantite { get; set; }
+        public decimal Quantite { get; set; }
         public decimal PrixUnitaire { get; set; }
         public decimal MontantLigne { get; set; }
         public string? Description { get; set; }
@@ -33,7 +33,7 @@ namespace BombaProMax.Models
     {
         public int? ProduitID { get; set; }
         public int? ServiceID { get; set; }
-        public int Quantite { get; set; }
+        public decimal Quantite { get; set; }
         public decimal PrixUnitaire { get; set; }
         public string? Description { get; set; }
     }

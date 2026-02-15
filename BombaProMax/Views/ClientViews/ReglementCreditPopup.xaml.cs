@@ -18,6 +18,7 @@ public partial class ReglementCreditPopup : Popup
         ReglementCreditDto? existingReglement = null)
     {
         InitializeComponent();
+        CanBeDismissedByTappingOutsideOfPopup = false;
 
         _client = client;
         _moyensPaiement = moyensPaiement;

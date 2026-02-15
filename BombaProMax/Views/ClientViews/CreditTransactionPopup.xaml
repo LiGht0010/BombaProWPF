@@ -153,10 +153,36 @@
                                         SelectedIndexChanged="OnServiceSelected"/>
                             </VerticalStackLayout>
 
+                            <!-- Calculation Mode Selection -->
+                            <Border BackgroundColor="#E3F2FD" Padding="10" StrokeThickness="0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="🧮 Mode de calcul" 
+                                           FontAttributes="Bold" 
+                                           TextColor="#1565C0"
+                                           FontSize="11"/>
+                                    <HorizontalStackLayout Spacing="20">
+                                        <RadioButton x:Name="CalculateByQuantityRadio" 
+                                                    Content="Entrer Quantité → Calculer Total" 
+                                                    IsChecked="True"
+                                                    GroupName="CalculationMode"
+                                                    CheckedChanged="OnCalculationModeChanged"
+                                                    FontSize="12"/>
+                                        <RadioButton x:Name="CalculateByTotalRadio" 
+                                                    Content="Entrer Total → Calculer Quantité" 
+                                                    GroupName="CalculationMode"
+                                                    CheckedChanged="OnCalculationModeChanged"
+                                                    FontSize="12"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Border>
+
                             <!-- Quantity and Price Row -->
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
                                 <VerticalStackLayout Grid.Column="0" Spacing="5">
-                                    <Label Text="📊 Quantité *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Label x:Name="QuantiteLabel" Text="📊 Quantité *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
                                     <Entry x:Name="QuantiteEntry"
                                            Placeholder="1"
                                            Keyboard="Numeric"
@@ -172,6 +198,17 @@
                                            TextChanged="OnQuantityOrPriceChanged"/>
                                 </VerticalStackLayout>
                             </Grid>
+
+                            <!-- Total Entry (for Calculate by Total mode) -->
+                            <VerticalStackLayout x:Name="MontantEntrySection" Spacing="5" IsVisible="False">
+                                <Label Text="💰 Montant Total (MAD) *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Entry x:Name="MontantTotalEntry"
+                                       Placeholder="0.00"
+                                       Keyboard="Numeric"
+                                       FontSize="14"
+                                       TextChanged="OnMontantTotalChanged"/>
+                            </VerticalStackLayout>
+
                         </VerticalStackLayout>
                     </Border>
 

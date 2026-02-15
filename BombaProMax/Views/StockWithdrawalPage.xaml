@@ -1,0 +1,118 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BombaProMax.Models"
+             xmlns:viewmodels="clr-namespace:BombaProMax.ViewModels"
+             x:Class="BombaProMax.Views.StockWithdrawalPage"
+             x:DataType="viewmodels:StockWithdrawalViewModel"
+             Title="Retrait de Stock"
+             BackgroundColor="#EEF1F5">
+
+    <Grid RowDefinitions="*">
+        <ScrollView Grid.Row="0" Padding="20">
+            <VerticalStackLayout Spacing="16">
+
+                <!-- HEADER with Action Button -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <VerticalStackLayout>
+                        <Label Text="Retrait de Stock" FontSize="24" FontAttributes="Bold" TextColor="#2C3E50"/>
+                        <Label Text="{Binding WithdrawalHistory.Count, StringFormat='{0} retraits enregistres'}" FontSize="14" TextColor="#7F8C8D"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="+ Nouveau Retrait" 
+                            BackgroundColor="#E74C3C" TextColor="White"
+                            Padding="20,12" CornerRadius="10" FontAttributes="Bold"
+                            Command="{Binding AddWithdrawalCommand}"
+                            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </Grid>
+
+                <!-- Loading Indicator -->
+                <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                                  HeightRequest="50" WidthRequest="50" Color="#E74C3C"/>
+
+                <!-- TABLE CARD -->
+                <Border BackgroundColor="White" Padding="0" StrokeThickness="0"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#C5CAD1" Offset="4,4" Radius="8" Opacity="0.2"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout>
+                        <!-- Table Header -->
+                        <Grid ColumnDefinitions="1.5*,*,*,*,1.5*,Auto" Padding="16,12" BackgroundColor="#F8F9FA">
+                            <Label Grid.Column="0" Text="Reservoir" FontSize="12" FontAttributes="Bold" TextColor="#5A6068"/>
+                            <Label Grid.Column="1" Text="Quantite" FontSize="12" FontAttributes="Bold" TextColor="#5A6068" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="2" Text="Date" FontSize="12" FontAttributes="Bold" TextColor="#5A6068" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="3" Text="Utilisateur" FontSize="12" FontAttributes="Bold" TextColor="#5A6068" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="4" Text="Motif" FontSize="12" FontAttributes="Bold" TextColor="#5A6068"/>
+                            <Label Grid.Column="5" Text="Actions" FontSize="12" FontAttributes="Bold" TextColor="#5A6068" HorizontalTextAlignment="Center" WidthRequest="80"/>
+                        </Grid>
+                        <BoxView Color="#E0E0E0" HeightRequest="1"/>
+
+                        <!-- Table Rows -->
+                        <CollectionView ItemsSource="{Binding WithdrawalHistory}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:StockWithdrawalHistoryDto">
+                                    <VerticalStackLayout>
+                                        <Grid ColumnDefinitions="1.5*,*,*,*,1.5*,Auto" Padding="16,12">
+                                            <!-- Reservoir -->
+                                            <VerticalStackLayout Grid.Column="0">
+                                                <Label Text="{Binding ReservoirNumero, StringFormat='Reservoir {0}'}" FontSize="14" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                                <Label Text="{Binding ProduitNom}" FontSize="12" TextColor="#7F8C8D"/>
+                                            </VerticalStackLayout>
+                                            <!-- Quantite -->
+                                            <Label Grid.Column="1" Text="{Binding QuantiteFormatted}" FontSize="14" FontAttributes="Bold" TextColor="#E74C3C" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <!-- Date -->
+                                            <Label Grid.Column="2" Text="{Binding DateRetraitFormatted}" FontSize="13" TextColor="#5A6068" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <!-- Utilisateur -->
+                                            <Label Grid.Column="3" Text="{Binding UtilisateurNom}" FontSize="13" TextColor="#5A6068" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <!-- Motif -->
+                                            <Label Grid.Column="4" Text="{Binding Motif}" FontSize="12" TextColor="#7F8C8D" LineBreakMode="TailTruncation" VerticalTextAlignment="Center"/>
+                                            <!-- Delete Button -->
+                                            <Button Grid.Column="5" Text="??" BackgroundColor="#FFEBEE" TextColor="#C62828" 
+                                                    FontSize="16" WidthRequest="44" HeightRequest="36" CornerRadius="6" Padding="0"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:StockWithdrawalViewModel}}, Path=DeleteWithdrawalCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    VerticalOptions="Center" HorizontalOptions="Center"/>
+                                        </Grid>
+                                        <BoxView Color="#F0F0F0" HeightRequest="1"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Padding="40" HorizontalOptions="Center">
+                                    <Border BackgroundColor="#EEF1F5" WidthRequest="80" HeightRequest="80" StrokeThickness="0" Margin="0,0,0,16">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="40"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="!" FontSize="36" TextColor="#E74C3C" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Text="Aucun retrait enregistre" FontSize="16" FontAttributes="Bold" TextColor="#5A6068" HorizontalOptions="Center"/>
+                                    <Label Text="Les retraits effectues apparaitront ici" FontSize="13" TextColor="#95A5A6" HorizontalOptions="Center"/>
+                                    <Button Text="+ Nouveau Retrait" BackgroundColor="#E74C3C" TextColor="White" Padding="20,12" CornerRadius="8" Margin="0,16,0,0" Command="{Binding AddWithdrawalCommand}"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Warning Card -->
+                <Border BackgroundColor="#FDF2E9" Padding="16" StrokeThickness="1" Stroke="#E59866"
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="!" FontSize="20" TextColor="#D35400" VerticalOptions="Center"/>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="Attention" FontSize="14" FontAttributes="Bold" TextColor="#D35400"/>
+                            <Label Text="Les retraits sont irreversibles et suivent l'ordre FIFO. Un audit complet est enregistre pour chaque operation." FontSize="12" TextColor="#A04000"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

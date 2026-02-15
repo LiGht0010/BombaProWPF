@@ -470,6 +470,114 @@ namespace BombaProMaxApi.Controllers
             return NoContent();
         }
 
+        // ═══════════════════════════════════════════════════════════════════
+        // ALLOCATION ADJUSTMENT ENDPOINTS
+        // ═══════════════════════════════════════════════════════════════════
+
+        // GET: api/AchatAllocations/adjustment-preview/{achatId}
+        /// <summary>
+        /// Gets current allocations for an Achat to show in adjustment popup.
+        /// Includes consumed quantities and max reducible amounts per allocation.
+        /// </summary>
+        [HttpGet("adjustment-preview/{achatId}")]
+        public async Task<ActionResult<AdjustmentPreviewDto>> GetAdjustmentPreview(int achatId)
+        {
+            var preview = await _stockLotService.GetAdjustmentPreviewAsync(achatId);
+
+            if (preview == null)
+                return NotFound(new { Error = "Achat non trouvé" });
+
+            return Ok(preview);
+        }
+
+        // POST: api/AchatAllocations/validate-adjustment
+        /// <summary>
+        /// Validates if allocation adjustments are possible without applying them.
+        /// Use this before showing confirmation to user.
+        /// </summary>
+        [HttpPost("validate-adjustment")]
+        public async Task<ActionResult<AllocationAdjustmentValidationResult>> ValidateAdjustment(
+            [FromBody] AdjustAllocationsRequestDto request)
+        {
+            var result = await _stockLotService.ValidateAllocationAdjustmentAsync(request);
+            return Ok(result);
+        }
+
+        // POST: api/AchatAllocations/adjust
+        /// <summary>
+        /// Adjusts allocations for an existing Achat.
+        /// Used when Achat quantity is modified (increase or decrease).
+        /// Handles StockLot modifications and cascades QteRestante reduction.
+        /// </summary>
+        [HttpPost("adjust")]
+        public async Task<ActionResult<AllocationAdjustmentResultDto>> AdjustAllocations(
+            [FromBody] AdjustAllocationsRequestDto request)
+        {
+            // Validate the Achat exists
+            var achat = await _context.Achats
+                .Include(a => a.Produit)
+                    .ThenInclude(p => p!.Categorie)
+                .FirstOrDefaultAsync(a => a.ID == request.AchatId);
+
+            if (achat == null)
+            {
+                return NotFound(new AllocationAdjustmentResultDto
+                {
+                    Success = false,
+                    Message = "Achat non trouvé",
+                    AchatId = request.AchatId
+                });
+            }
+
+            // Validate it's a fuel product
+            var categoryName = achat.Produit?.Categorie?.Nom?.ToLower();
+            if (categoryName != "carburant" && categoryName != "carburants")
+            {
+                return BadRequest(new AllocationAdjustmentResultDto
+                {
+                    Success = false,
+                    Message = "L'ajustement d'allocation n'est applicable qu'aux produits de type carburant",
+                    AchatId = request.AchatId
+                });
+            }
+
+            // Validate allocations sum equals new Achat quantity
+            var totalAllocations = request.Allocations.Sum(a => a.NewQuantite);
+            if (Math.Abs(totalAllocations - request.NewAchatQuantite) > 0.01m)
+            {
+                return BadRequest(new AllocationAdjustmentResultDto
+                {
+                    Success = false,
+                    Message = $"La somme des allocations ({totalAllocations:N2}L) ne correspond pas à la quantité de l'achat ({request.NewAchatQuantite:N2}L)",
+                    AchatId = request.AchatId
+                });
+            }
+
+            try
+            {
+                var result = await _stockLotService.AdjustAllocationsAsync(request);
+
+                if (result.Success)
+                {
+                    _logger.LogInformation(
+                        "Successfully adjusted allocations for Achat {AchatId}: {OldQte}L → {NewQte}L",
+                        request.AchatId, result.OldAchatQuantite, result.NewAchatQuantite);
+                }
+
+                return result.Success ? Ok(result) : BadRequest(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Failed to adjust allocations for Achat {AchatId}", request.AchatId);
+                return BadRequest(new AllocationAdjustmentResultDto
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    AchatId = request.AchatId
+                });
+            }
+        }
+
         // POST: api/AchatAllocations/cancel/5
         /// <summary>
         /// Cancels an allocation and reverses the reservoir fuel level.

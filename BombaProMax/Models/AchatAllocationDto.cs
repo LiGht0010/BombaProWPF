@@ -90,4 +90,99 @@
         public int? ProduitID { get; set; }
         public string? ProduitNom { get; set; }
     }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // ALLOCATION ADJUSTMENT DTOs
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Request DTO for adjusting allocations when an Achat quantity is modified.
+    /// </summary>
+    public class AdjustAllocationsRequestDto
+    {
+        public int AchatId { get; set; }
+        public decimal NewAchatQuantite { get; set; }
+        public string? UtilisateurAdjustment { get; set; }
+        public string? Notes { get; set; }
+        public List<AllocationAdjustmentItemDto> Allocations { get; set; } = [];
+    }
+
+    /// <summary>
+    /// Individual allocation adjustment item
+    /// </summary>
+    public class AllocationAdjustmentItemDto
+    {
+        public int AllocationId { get; set; }
+        public int ReservoirId { get; set; }
+        public decimal NewQuantite { get; set; }
+    }
+
+    /// <summary>
+    /// Result of allocation adjustment validation
+    /// </summary>
+    public class AllocationAdjustmentValidationResult
+    {
+        public bool IsValid { get; set; }
+        public string? ErrorMessage { get; set; }
+        public List<AllocationValidationDetailDto> Details { get; set; } = [];
+    }
+
+    /// <summary>
+    /// Validation detail for each allocation being adjusted
+    /// </summary>
+    public class AllocationValidationDetailDto
+    {
+        public int AllocationId { get; set; }
+        public int ReservoirId { get; set; }
+        public string? ReservoirNumero { get; set; }
+        public decimal OldQuantite { get; set; }
+        public decimal NewQuantite { get; set; }
+        public decimal Difference { get; set; }
+        public decimal MaxReducible { get; set; }
+        public bool IsValid { get; set; }
+        public string? ErrorMessage { get; set; }
+    }
+
+    /// <summary>
+    /// Preview of current allocations for adjustment popup
+    /// </summary>
+    public class AdjustmentPreviewDto
+    {
+        public int AchatId { get; set; }
+        public string? AchatNumero { get; set; }
+        public decimal CurrentAchatQuantite { get; set; }
+        public int ProduitId { get; set; }
+        public string? ProduitNom { get; set; }
+        public decimal PrixAchatUnitaire { get; set; }
+        public List<AllocationPreviewItemDto> Allocations { get; set; } = [];
+    }
+
+    /// <summary>
+    /// Preview of a single allocation for adjustment
+    /// </summary>
+    public class AllocationPreviewItemDto
+    {
+        public int AllocationId { get; set; }
+        public int ReservoirId { get; set; }
+        public string? ReservoirNumero { get; set; }
+        public decimal CurrentQuantite { get; set; }
+        public decimal ConsumedQuantite { get; set; }
+        public decimal MaxReducible { get; set; }
+        public decimal ReservoirQteRestante { get; set; }
+        public decimal ReservoirCapacite { get; set; }
+        public decimal ReservoirNiveauActuel { get; set; }
+    }
+
+    /// <summary>
+    /// Result of allocation adjustment operation
+    /// </summary>
+    public class AllocationAdjustmentResultDto
+    {
+        public bool Success { get; set; }
+        public string? Message { get; set; }
+        public int AchatId { get; set; }
+        public decimal OldAchatQuantite { get; set; }
+        public decimal NewAchatQuantite { get; set; }
+        public List<AchatAllocationDto> UpdatedAllocations { get; set; } = [];
+    }
 }

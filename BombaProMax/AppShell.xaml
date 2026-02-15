@@ -174,5 +174,6 @@
     <!-- ════════════════════════════════════════════════════════════ -->
     <FlyoutItem Title="PARAMÈTRES" FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent x:Name="StationInfoShellContent" Title="Informations Station" Route="StationInfoPage"/>
+        <ShellContent x:Name="StockWithdrawalShellContent" Title="🔒 Retrait de Stock" Route="StockWithdrawalPage"/>
     </FlyoutItem>
 </Shell>

@@ -10,7 +10,7 @@ public partial class CreditTransactionDto : ObservableObject
     public int? ProduitID { get; set; }
     public int? ServiceID { get; set; }
     public decimal PrixTTC { get; set; }
-    public int Quantite { get; set; }
+    public decimal Quantite { get; set; }
     public decimal MontantTotal { get; set; }
     public DateTime DateCredit { get; set; }
     public bool Facture { get; set; }

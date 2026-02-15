@@ -24,7 +24,7 @@ public class BlPrintingData
     public string? Notes { get; set; }
 
     // Totals (quantity only, no financial)
-    public int TotalQuantite { get; set; }
+    public decimal TotalQuantite { get; set; }
     public int NombreElements { get; set; }
 
     // Line items (simplified - only Qte and Produit)
@@ -46,7 +46,7 @@ public class BlPrintingElement
     public string? ProduitNom { get; set; }
     public string? ServiceNom { get; set; }
     public string? Description { get; set; }
-    public int Quantite { get; set; }
+    public decimal Quantite { get; set; }
 
     /// <summary>
     /// Display name prioritizing ProduitNom, then ServiceNom, then Description.
@@ -63,5 +63,5 @@ public class BlPrintingElement
 public class BlPrintingProduitTotal
 {
     public string ProduitNom { get; set; } = "";
-    public int QuantiteTotale { get; set; }
+    public decimal QuantiteTotale { get; set; }
 }

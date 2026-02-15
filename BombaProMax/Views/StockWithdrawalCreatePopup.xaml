@@ -1,0 +1,153 @@
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BombaProMax.Views.StockWithdrawalCreatePopup"
+               Color="Transparent">
+
+    <Border BackgroundColor="#F5F5F5" Padding="0" WidthRequest="550" HeightRequest="580" StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- HEADER -->
+            <Border Grid.Row="0" BackgroundColor="#E74C3C" Padding="20,18" StrokeThickness="0">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Retrait de Stock" FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                        <Label Text="Retirer du carburant d'un reservoir (FIFO)" FontSize="12" TextColor="#FFCDD2"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="X" BackgroundColor="#C0392B" TextColor="White" FontSize="16" WidthRequest="36" HeightRequest="36" CornerRadius="18" Clicked="OnCancelClicked"/>
+                </Grid>
+            </Border>
+
+            <!-- CONTENT -->
+            <ScrollView Grid.Row="1" Padding="20,15">
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Reservoir Selection Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="RESERVOIR" FontSize="11" FontAttributes="Bold" TextColor="#E74C3C"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Reservoir *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Picker x:Name="ReservoirPicker" Title="Selectionner un reservoir..." FontSize="14" SelectedIndexChanged="OnReservoirChanged"/>
+                            </VerticalStackLayout>
+                            
+                            <!-- Stock Info Display -->
+                            <Border x:Name="StockInfoBorder" BackgroundColor="#E8F6FF" Padding="12" StrokeThickness="0" IsVisible="False">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="*,*,*">
+                                    <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                                        <Label x:Name="StockDisponibleLabel" Text="0" FontSize="18" FontAttributes="Bold" TextColor="#2980B9" HorizontalOptions="Center"/>
+                                        <Label Text="Litres" FontSize="10" TextColor="#7F8C8D" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                                        <Label x:Name="NombreLotsLabel" Text="0" FontSize="18" FontAttributes="Bold" TextColor="#27AE60" HorizontalOptions="Center"/>
+                                        <Label Text="Lots FIFO" FontSize="10" TextColor="#7F8C8D" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                                        <Label x:Name="ProduitLabel" Text="-" FontSize="14" FontAttributes="Bold" TextColor="#E67E22" HorizontalOptions="Center"/>
+                                        <Label Text="Produit" FontSize="10" TextColor="#7F8C8D" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Quantity Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="QUANTITE A RETIRER" FontSize="11" FontAttributes="Bold" TextColor="#E74C3C"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="Quantite (Litres) *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                    <Entry x:Name="QuantiteEntry" Placeholder="Ex: 1000" Keyboard="Numeric" FontSize="14" TextChanged="OnQuantiteChanged"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" x:Name="MaxButton" Text="Max" BackgroundColor="#95A5A6" TextColor="White" Padding="15,10" CornerRadius="6" FontSize="12" VerticalOptions="End" Clicked="OnMaxClicked" IsEnabled="False"/>
+                            </Grid>
+                            <Label x:Name="QuantiteValidationLabel" Text="" TextColor="#E74C3C" FontSize="11" IsVisible="False"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Date Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="DATE DU RETRAIT" FontSize="11" FontAttributes="Bold" TextColor="#E74C3C"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Date *" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <DatePicker x:Name="DateRetraitPicker" FontSize="14" Format="dd/MM/yyyy" DateSelected="OnDateRetraitChanged"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Motif Card -->
+                    <Border BackgroundColor="White" Padding="15" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="MOTIF / NOTES" FontSize="11" FontAttributes="Bold" TextColor="#E74C3C"/>
+                            <BoxView Color="#E0E0E0" HeightRequest="1"/>
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Raison du retrait (optionnel)" FontSize="11" FontAttributes="Bold" TextColor="#666"/>
+                                <Editor x:Name="MotifEditor" Placeholder="Expliquer la raison du retrait..." HeightRequest="70" FontSize="13"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Warning Card -->
+                    <Border BackgroundColor="#FFEBEE" Padding="12" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="!" FontSize="18" TextColor="#C62828" VerticalOptions="Center"/>
+                            <Label Text="Cette action est irreversible. Le stock sera retire en ordre FIFO." FontSize="11" TextColor="#C62828" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- FOOTER -->
+            <Border Grid.Row="2" BackgroundColor="White" Padding="20,15" StrokeThickness="0">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,-2" Radius="6" Opacity="0.06"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <Label x:Name="ErrorLabel" TextColor="#F44336" FontSize="12" IsVisible="False" VerticalOptions="Center"/>
+                    <Button Grid.Column="1" Text="Annuler" BackgroundColor="#9E9E9E" TextColor="White" Padding="25,12" CornerRadius="8" Clicked="OnCancelClicked"/>
+                    <Button Grid.Column="2" x:Name="CreateButton" Text="Retirer le Stock" BackgroundColor="#E74C3C" TextColor="White" Padding="25,12" CornerRadius="8" FontAttributes="Bold" Clicked="OnCreateClicked" IsEnabled="False"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</toolkit:Popup>

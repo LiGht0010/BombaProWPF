@@ -19,7 +19,9 @@ public partial class JaugeageCreatePopup : Popup
     public JaugeageCreatePopup()
     {
         InitializeComponent();
-        
+        CanBeDismissedByTappingOutsideOfPopup = false;
+
+
         _jaugeageService = new JaugeageService();
         _reservoirService = new ReservoirService();
         _employeService = new EmployeService();

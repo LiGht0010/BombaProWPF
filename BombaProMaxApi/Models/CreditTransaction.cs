@@ -30,8 +30,9 @@ public partial class CreditTransaction
     public decimal PrixTTC { get; set; }
 
     [Required]
+    [Column(TypeName = "decimal(10, 2)")]
     [Display(Name = "Quantité")]
-    public int Quantite { get; set; }
+    public decimal Quantite { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
     [Display(Name = "Montant Total")]

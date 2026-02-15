@@ -476,6 +476,480 @@ public class StockLotService : IStockLotService
         return true;
     }
 
+    // ???????????????????????????????????????????????????????????????????
+    // ALLOCATION ADJUSTMENT OPERATIONS
+    // ???????????????????????????????????????????????????????????????????
+
+    /// <inheritdoc />
+    public async Task<AdjustmentPreviewDto?> GetAdjustmentPreviewAsync(int achatId)
+    {
+        _logger.LogInformation("Getting adjustment preview for Achat {AchatId}", achatId);
+
+        var achat = await _context.Achats
+            .Include(a => a.Produit)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(a => a.ID == achatId);
+
+        if (achat == null)
+        {
+            _logger.LogWarning("Achat {AchatId} not found for adjustment preview", achatId);
+            return null;
+        }
+
+        // Get existing allocations for this Achat
+        var allocations = await _context.AchatAllocations
+            .Include(a => a.Reservoir)
+            .Where(a => a.AchatID == achatId && a.Statut != "Annulée")
+            .AsNoTracking()
+            .ToListAsync();
+
+        _logger.LogInformation("Found {Count} allocations for Achat {AchatId}", allocations.Count, achatId);
+
+        var previewItems = new List<AllocationPreviewItemDto>();
+
+        foreach (var allocation in allocations)
+        {
+            // Find the StockLot for this allocation
+            var stockLot = await _context.StockLots
+                .Where(s => s.AchatID == achatId && s.ReservoirID == allocation.ReservoirID && s.Statut != "Annulé")
+                .FirstOrDefaultAsync();
+
+            // Get total QteRestante in this reservoir (all lots)
+            var reservoirQteRestante = await _context.StockLots
+                .Where(s => s.ReservoirID == allocation.ReservoirID && s.Statut == "Disponible")
+                .SumAsync(s => s.QuantiteDisponible);
+
+            var consumedQte = stockLot != null 
+                ? stockLot.QuantiteInitiale - stockLot.QuantiteDisponible 
+                : 0;
+
+            // MaxReducible is the minimum of:
+            // 1. What hasn't been consumed from this specific allocation
+            // 2. What's available in the reservoir to "give back"
+            var maxReducibleFromAllocation = allocation.QuantiteAllouee - consumedQte;
+            var maxReducible = Math.Min(maxReducibleFromAllocation, reservoirQteRestante);
+
+            _logger.LogInformation(
+                "Allocation preview for Reservoir {ReservoirId}: " +
+                "AllocQte={AllocQte}, ConsumedQte={ConsumedQte}, MaxReducibleFromAlloc={MaxReducibleFromAlloc}, " +
+                "ReservoirQteRestante={ReservoirQteRestante}, FinalMaxReducible={MaxReducible}",
+                allocation.ReservoirID, allocation.QuantiteAllouee, consumedQte, 
+                maxReducibleFromAllocation, reservoirQteRestante, maxReducible);
+
+            previewItems.Add(new AllocationPreviewItemDto
+            {
+                AllocationId = allocation.ID,
+                ReservoirId = allocation.ReservoirID,
+                ReservoirNumero = allocation.Reservoir?.Numero,
+                CurrentQuantite = allocation.QuantiteAllouee,
+                ConsumedQuantite = consumedQte,
+                MaxReducible = maxReducible,
+                ReservoirQteRestante = reservoirQteRestante,
+                ReservoirCapacite = allocation.Reservoir?.Capacite ?? 0,
+                ReservoirNiveauActuel = allocation.Reservoir?.NiveauDeCarburant ?? 0
+            });
+        }
+
+        var result = new AdjustmentPreviewDto
+        {
+            AchatId = achatId,
+            AchatNumero = achat.Numero,
+            CurrentAchatQuantite = achat.Quantite ?? 0,
+            ProduitId = achat.ProduitID ?? 0,
+            ProduitNom = achat.Produit?.Description,
+            PrixAchatUnitaire = achat.PrixAchatUnitaire ?? 0,
+            Allocations = previewItems
+        };
+
+        _logger.LogInformation(
+            "Adjustment preview for Achat {AchatId}: CurrentQte={CurrentQte}, {AllocationCount} allocations",
+            achatId, result.CurrentAchatQuantite, previewItems.Count);
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<AllocationAdjustmentValidationResult> ValidateAllocationAdjustmentAsync(AdjustAllocationsRequestDto request)
+    {
+        var result = new AllocationAdjustmentValidationResult
+        {
+            IsValid = true,
+            Details = []
+        };
+
+        // Get current allocations
+        var currentAllocations = await _context.AchatAllocations
+            .Include(a => a.Reservoir)
+            .Where(a => a.AchatID == request.AchatId && a.Statut != "Annulée")
+            .ToListAsync();
+
+        var currentAllocationsDict = currentAllocations.ToDictionary(a => a.ReservoirID);
+
+        // Validate total matches
+        var totalNewQuantite = request.Allocations.Sum(a => a.NewQuantite);
+        if (Math.Abs(totalNewQuantite - request.NewAchatQuantite) > 0.01m)
+        {
+            result.IsValid = false;
+            result.ErrorMessage = $"La somme des allocations ({totalNewQuantite:N2}L) ne correspond pas à la quantité de l'achat ({request.NewAchatQuantite:N2}L)";
+            return result;
+        }
+
+        foreach (var newAlloc in request.Allocations)
+        {
+            var detail = new AllocationValidationDetailDto
+            {
+                AllocationId = newAlloc.AllocationId,
+                ReservoirId = newAlloc.ReservoirId,
+                NewQuantite = newAlloc.NewQuantite,
+                IsValid = true
+            };
+
+            // Get reservoir info
+            var reservoir = await _context.Reservoirs.FindAsync(newAlloc.ReservoirId);
+            if (reservoir == null)
+            {
+                detail.IsValid = false;
+                detail.ErrorMessage = "Réservoir non trouvé";
+                result.Details.Add(detail);
+                result.IsValid = false;
+                continue;
+            }
+            detail.ReservoirNumero = reservoir.Numero;
+
+            // Check if this is an existing allocation or new
+            if (currentAllocationsDict.TryGetValue(newAlloc.ReservoirId, out var existingAlloc))
+            {
+                detail.OldQuantite = existingAlloc.QuantiteAllouee;
+                detail.Difference = newAlloc.NewQuantite - existingAlloc.QuantiteAllouee;
+
+                if (detail.Difference < 0)
+                {
+                    // DECREASE: Check if we can reduce
+                    var reduction = Math.Abs(detail.Difference);
+
+                    // Get total QteRestante in this reservoir
+                    var reservoirQteRestante = await _context.StockLots
+                        .Where(s => s.ReservoirID == newAlloc.ReservoirId && s.Statut == "Disponible")
+                        .SumAsync(s => s.QuantiteDisponible);
+
+                    detail.MaxReducible = reservoirQteRestante;
+
+                    if (reduction > reservoirQteRestante)
+                    {
+                        detail.IsValid = false;
+                        detail.ErrorMessage = $"Réduction impossible: {reduction:N2}L demandé, seulement {reservoirQteRestante:N2}L disponible dans le réservoir";
+                        result.IsValid = false;
+                    }
+                }
+                else if (detail.Difference > 0)
+                {
+                    // INCREASE: Check reservoir capacity
+                    var increase = detail.Difference;
+                    var espaceDisponible = reservoir.Capacite - reservoir.NiveauDeCarburant;
+
+                    if (increase > espaceDisponible)
+                    {
+                        detail.IsValid = false;
+                        detail.ErrorMessage = $"Augmentation impossible: {increase:N2}L demandé, seulement {espaceDisponible:N2}L d'espace disponible";
+                        result.IsValid = false;
+                    }
+                }
+            }
+            else
+            {
+                // NEW allocation - check capacity
+                detail.OldQuantite = 0;
+                detail.Difference = newAlloc.NewQuantite;
+
+                var espaceDisponible = reservoir.Capacite - reservoir.NiveauDeCarburant;
+                if (newAlloc.NewQuantite > espaceDisponible)
+                {
+                    detail.IsValid = false;
+                    detail.ErrorMessage = $"Capacité insuffisante: {newAlloc.NewQuantite:N2}L demandé, seulement {espaceDisponible:N2}L d'espace disponible";
+                    result.IsValid = false;
+                }
+            }
+
+            result.Details.Add(detail);
+        }
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public async Task<AllocationAdjustmentResultDto> AdjustAllocationsAsync(AdjustAllocationsRequestDto request)
+    {
+        _logger.LogInformation(
+            "Adjusting allocations for Achat {AchatId}, NewQuantite: {NewQte}L",
+            request.AchatId, request.NewAchatQuantite);
+
+        // First validate
+        var validation = await ValidateAllocationAdjustmentAsync(request);
+        if (!validation.IsValid)
+        {
+            return new AllocationAdjustmentResultDto
+            {
+                Success = false,
+                Message = validation.ErrorMessage ?? "Validation échouée",
+                AchatId = request.AchatId
+            };
+        }
+
+        // Get current allocations
+        var currentAllocations = await _context.AchatAllocations
+            .Include(a => a.Reservoir)
+            .Where(a => a.AchatID == request.AchatId && a.Statut != "Annulée")
+            .ToListAsync();
+
+        var currentAllocationsDict = currentAllocations.ToDictionary(a => a.ReservoirID);
+
+        // Get the Achat for price info
+        var achat = await _context.Achats.FindAsync(request.AchatId);
+        if (achat == null)
+        {
+            return new AllocationAdjustmentResultDto
+            {
+                Success = false,
+                Message = "Achat non trouvé",
+                AchatId = request.AchatId
+            };
+        }
+
+        var oldAchatQuantite = achat.Quantite ?? 0;
+        var prixAchat = achat.PrixAchatUnitaire ?? 0;
+
+        foreach (var newAlloc in request.Allocations)
+        {
+            if (currentAllocationsDict.TryGetValue(newAlloc.ReservoirId, out var existingAlloc))
+            {
+                // EXISTING ALLOCATION - Adjust
+                var difference = newAlloc.NewQuantite - existingAlloc.QuantiteAllouee;
+
+                if (Math.Abs(difference) < 0.001m)
+                    continue; // No change
+
+                // Find the StockLot for this allocation
+                var stockLot = await _context.StockLots
+                    .Where(s => s.AchatID == request.AchatId && s.ReservoirID == newAlloc.ReservoirId && s.Statut != "Annulé")
+                    .FirstOrDefaultAsync();
+
+                if (stockLot == null)
+                {
+                    _logger.LogWarning(
+                        "StockLot not found for Achat {AchatId}, Reservoir {ReservoirId}",
+                        request.AchatId, newAlloc.ReservoirId);
+                    continue;
+                }
+
+                var reservoir = existingAlloc.Reservoir;
+
+                if (difference > 0)
+                {
+                    // INCREASE
+                    _logger.LogInformation(
+                        "Increasing allocation for Reservoir {ReservoirId} by {Diff}L",
+                        newAlloc.ReservoirId, difference);
+
+                    existingAlloc.QuantiteAllouee = newAlloc.NewQuantite;
+                    stockLot.QuantiteInitiale += difference;
+                    stockLot.QuantiteDisponible += difference;
+                    reservoir.NiveauDeCarburant += difference;
+                }
+                else
+                {
+                    // DECREASE
+                    var reduction = Math.Abs(difference);
+                    _logger.LogInformation(
+                        "Decreasing allocation for Reservoir {ReservoirId} by {Reduction}L",
+                        newAlloc.ReservoirId, reduction);
+
+                    existingAlloc.QuantiteAllouee = newAlloc.NewQuantite;
+                    stockLot.QuantiteInitiale -= reduction;
+
+                    // Cascade reduce QteRestante through reservoir's lots
+                    await CascadeReduceQteRestanteAsync(newAlloc.ReservoirId, reduction);
+
+                    reservoir.NiveauDeCarburant -= reduction;
+                }
+
+                reservoir.DateModification = DateTime.UtcNow;
+            }
+            else if (newAlloc.NewQuantite > 0)
+            {
+                // NEW ALLOCATION
+                _logger.LogInformation(
+                    "Creating new allocation for Reservoir {ReservoirId}: {Qte}L",
+                    newAlloc.ReservoirId, newAlloc.NewQuantite);
+
+                var reservoir = await _context.Reservoirs.FindAsync(newAlloc.ReservoirId);
+                if (reservoir == null)
+                    continue;
+
+                // Create allocation
+                var newAllocation = new AchatAllocation
+                {
+                    AchatID = request.AchatId,
+                    ReservoirID = newAlloc.ReservoirId,
+                    QuantiteAllouee = newAlloc.NewQuantite,
+                    DateAllocation = DateTime.UtcNow,
+                    Statut = "Confirmée",
+                    UtilisateurAllocation = request.UtilisateurAdjustment,
+                    Notes = request.Notes
+                };
+                _context.AchatAllocations.Add(newAllocation);
+
+                // Create StockLot
+                await CreateStockLotAsync(
+                    request.AchatId,
+                    newAlloc.ReservoirId,
+                    achat.ProduitID ?? reservoir.ProduitID ?? 0,
+                    newAlloc.NewQuantite,
+                    prixAchat);
+            }
+        }
+
+        // Handle allocations that were removed (set to 0 or not in new list)
+        var newReservoirIds = request.Allocations.Where(a => a.NewQuantite > 0).Select(a => a.ReservoirId).ToHashSet();
+        foreach (var existingAlloc in currentAllocations)
+        {
+            if (!newReservoirIds.Contains(existingAlloc.ReservoirID))
+            {
+                // This allocation was removed - reduce to 0
+                var reduction = existingAlloc.QuantiteAllouee;
+
+                _logger.LogInformation(
+                    "Removing allocation for Reservoir {ReservoirId}: reducing {Reduction}L",
+                    existingAlloc.ReservoirID, reduction);
+
+                var stockLot = await _context.StockLots
+                    .Where(s => s.AchatID == request.AchatId && s.ReservoirID == existingAlloc.ReservoirID && s.Statut != "Annulé")
+                    .FirstOrDefaultAsync();
+
+                if (stockLot != null)
+                {
+                    stockLot.QuantiteInitiale -= reduction;
+                    if (stockLot.QuantiteInitiale <= 0)
+                    {
+                        stockLot.Statut = "Annulé";
+                    }
+
+                    await CascadeReduceQteRestanteAsync(existingAlloc.ReservoirID, reduction);
+                }
+
+                existingAlloc.QuantiteAllouee = 0;
+                existingAlloc.Statut = "Annulée";
+
+                var reservoir = existingAlloc.Reservoir;
+                reservoir.NiveauDeCarburant -= reduction;
+                reservoir.DateModification = DateTime.UtcNow;
+            }
+        }
+
+        await _context.SaveChangesAsync();
+
+        // Get updated allocations for response
+        var updatedAllocations = await _context.AchatAllocations
+            .Include(a => a.Reservoir)
+                .ThenInclude(r => r.Produit)
+            .Where(a => a.AchatID == request.AchatId && a.Statut != "Annulée")
+            .ToListAsync();
+
+        var mapper = new AutoMapper.Mapper(new AutoMapper.MapperConfiguration(cfg => { }));
+        // Manual mapping since we may not have automapper configured here
+        var allocDtos = updatedAllocations.Select(a => new AchatAllocationDto
+        {
+            ID = a.ID,
+            AchatID = a.AchatID,
+            ReservoirID = a.ReservoirID,
+            QuantiteAllouee = a.QuantiteAllouee,
+            DateAllocation = a.DateAllocation,
+            Notes = a.Notes,
+            Statut = a.Statut,
+            ReservoirNumero = a.Reservoir?.Numero,
+            ReservoirCapacite = a.Reservoir?.Capacite,
+            ReservoirNiveauActuel = a.Reservoir?.NiveauDeCarburant,
+            ProduitID = a.Reservoir?.ProduitID,
+            ProduitNom = a.Reservoir?.Produit?.Description
+        }).ToList();
+
+        _logger.LogInformation(
+            "Successfully adjusted allocations for Achat {AchatId}: {OldQte}L ? {NewQte}L",
+            request.AchatId, oldAchatQuantite, request.NewAchatQuantite);
+
+        return new AllocationAdjustmentResultDto
+        {
+            Success = true,
+            Message = $"Allocations ajustées avec succès: {oldAchatQuantite:N2}L ? {request.NewAchatQuantite:N2}L",
+            AchatId = request.AchatId,
+            OldAchatQuantite = oldAchatQuantite,
+            NewAchatQuantite = request.NewAchatQuantite,
+            UpdatedAllocations = allocDtos
+        };
+    }
+
+    /// <summary>
+    /// Cascades QteRestante reduction through a reservoir's StockLots following FIFO order.
+    /// Starts from the lot being modified and continues to newer lots until the reduction is absorbed.
+    /// </summary>
+    private async Task CascadeReduceQteRestanteAsync(int reservoirId, decimal amountToReduce)
+    {
+        if (amountToReduce <= 0)
+            return;
+
+        _logger.LogInformation(
+            "Cascading QteRestante reduction of {Amount}L for Reservoir {ReservoirId}",
+            amountToReduce, reservoirId);
+
+        // Get all lots for this reservoir, ordered by ID (oldest first)
+        var lots = await _context.StockLots
+            .Where(s => s.ReservoirID == reservoirId && s.Statut == "Disponible" && s.QuantiteDisponible > 0)
+            .OrderBy(s => s.ID)
+            .ToListAsync();
+
+        var remainingToReduce = amountToReduce;
+
+        foreach (var lot in lots)
+        {
+            if (remainingToReduce <= 0)
+                break;
+
+            if (lot.QuantiteDisponible >= remainingToReduce)
+            {
+                // This lot can absorb the entire remaining reduction
+                lot.QuantiteDisponible -= remainingToReduce;
+                _logger.LogDebug(
+                    "Reduced StockLot {LotId} by {Amount}L, new QteDisponible: {NewQte}L",
+                    lot.ID, remainingToReduce, lot.QuantiteDisponible);
+
+                if (lot.QuantiteDisponible <= 0)
+                {
+                    lot.Statut = "Épuisé";
+                }
+                remainingToReduce = 0;
+            }
+            else
+            {
+                // This lot is exhausted, continue to next
+                remainingToReduce -= lot.QuantiteDisponible;
+                _logger.LogDebug(
+                    "Exhausted StockLot {LotId}, reduced by {Amount}L, remaining to reduce: {Remaining}L",
+                    lot.ID, lot.QuantiteDisponible, remainingToReduce);
+
+                lot.QuantiteDisponible = 0;
+                lot.Statut = "Épuisé";
+            }
+        }
+
+        if (remainingToReduce > 0)
+        {
+            _logger.LogError(
+                "Could not fully reduce QteRestante for Reservoir {ReservoirId}. Remaining: {Remaining}L",
+                reservoirId, remainingToReduce);
+            throw new InvalidOperationException(
+                $"Stock insuffisant pour la réduction. Restant à réduire: {remainingToReduce:N2}L");
+        }
+    }
+
     // ???????????????????????????????????????????????????????????????????????
     // SYNC OPERATIONS (Option C - Always Recalculate from Source of Truth)
     // ???????????????????????????????????????????????????????????????????????

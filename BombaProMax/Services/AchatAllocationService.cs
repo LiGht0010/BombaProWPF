@@ -327,6 +327,116 @@ public class AchatAllocationService
         }
     }
 
+    // ???????????????????????????????????????????????????????????????????
+    // ALLOCATION ADJUSTMENT METHODS
+    // ???????????????????????????????????????????????????????????????????
+
+    /// <summary>
+    /// Gets a preview of current allocations for an Achat to show in adjustment popup.
+    /// Includes consumed quantities and max reducible amounts.
+    /// </summary>
+    public async Task<AdjustmentPreviewDto?> GetAdjustmentPreviewAsync(int achatId)
+    {
+        try
+        {
+            Console.WriteLine($"[AllocationService] GetAdjustmentPreviewAsync called for Achat {achatId}");
+            var response = await _httpClient.GetAsync($"{BaseUrl}/adjustment-preview/{achatId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"[AllocationService] Get adjustment preview failed ({response.StatusCode}): {error}");
+                return null;
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[AllocationService] Got preview response: {json.Substring(0, Math.Min(500, json.Length))}...");
+            
+            var result = JsonConvert.DeserializeObject<AdjustmentPreviewDto>(json);
+            Console.WriteLine($"[AllocationService] Deserialized preview: {result?.Allocations?.Count ?? 0} allocations");
+            
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[AllocationService] Get adjustment preview error: {ex.Message}");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Validates if allocation adjustments are possible without applying them.
+    /// </summary>
+    public async Task<AllocationAdjustmentValidationResult?> ValidateAdjustmentAsync(AdjustAllocationsRequestDto request)
+    {
+        try
+        {
+            var json = JsonConvert.SerializeObject(request);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync($"{BaseUrl}/validate-adjustment", content);
+            var responseJson = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<AllocationAdjustmentValidationResult>(responseJson);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Validate adjustment error: {ex.Message}");
+            return new AllocationAdjustmentValidationResult
+            {
+                IsValid = false,
+                ErrorMessage = $"Erreur: {ex.Message}"
+            };
+        }
+    }
+
+    /// <summary>
+    /// Adjusts allocations for an existing Achat when its quantity is modified.
+    /// Handles both increase and decrease cases with proper StockLot management.
+    /// </summary>
+    public async Task<AllocationAdjustmentResultDto?> AdjustAllocationsAsync(AdjustAllocationsRequestDto request)
+    {
+        try
+        {
+            request.UtilisateurAdjustment = App.CurrentUser?.Name ?? App.user?.Name;
+
+            var json = JsonConvert.SerializeObject(request);
+            Console.WriteLine($"[AllocationService] AdjustAllocationsAsync called: {json}");
+            
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync($"{BaseUrl}/adjust", content);
+            var responseJson = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[AllocationService] AdjustAllocationsAsync response ({response.StatusCode}): {responseJson.Substring(0, Math.Min(500, responseJson.Length))}...");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = JsonConvert.DeserializeObject<AllocationAdjustmentResultDto>(responseJson);
+                if (errorResult != null)
+                    return errorResult;
+
+                return new AllocationAdjustmentResultDto
+                {
+                    Success = false,
+                    Message = $"Erreur serveur: {response.StatusCode}",
+                    AchatId = request.AchatId
+                };
+            }
+
+            return JsonConvert.DeserializeObject<AllocationAdjustmentResultDto>(responseJson);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[AllocationService] Adjust allocations error: {ex.Message}");
+            return new AllocationAdjustmentResultDto
+            {
+                Success = false,
+                Message = $"Erreur: {ex.Message}",
+                AchatId = request.AchatId
+            };
+        }
+    }
+
     // ============================
     // HELPER: Get total allocated for achat
     // ============================

@@ -16,7 +16,8 @@ public class BonLivraisonDetails
     public int? ServiceID { get; set; }
 
     [Required]
-    public int Quantite { get; set; }
+    [Column(TypeName = "decimal(10, 2)")]
+    public decimal Quantite { get; set; }
 
     [Required]
     [Column(TypeName = "decimal(10, 2)")]

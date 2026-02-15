@@ -6,7 +6,7 @@
         public int? FactureID { get; set; }
         public int? ProduitID { get; set; }
         public int? ServiceID { get; set; }
-        public int? Quantite { get; set; }
+        public decimal? Quantite { get; set; }
         
         /// <summary>
         /// Prix Unitaire (stored value, typically TTC for backwards compatibility)

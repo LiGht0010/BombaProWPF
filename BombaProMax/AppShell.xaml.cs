@@ -80,6 +80,7 @@ namespace BombaProMax
             Routing.RegisterRoute(nameof(VenteServicePage), typeof(VenteServicePage));
             Routing.RegisterRoute(nameof(CaissePage), typeof(CaissePage));
             Routing.RegisterRoute(nameof(StationInfoPage), typeof(StationInfoPage));
+            Routing.RegisterRoute(nameof(StockWithdrawalPage), typeof(StockWithdrawalPage));
 
             // Set ShellContent pages from DI
             LoginShellContent.Content = serviceProvider.GetRequiredService<LoginPage>();
@@ -102,6 +103,7 @@ namespace BombaProMax
             VenteServiceShellContent.Content = serviceProvider.GetRequiredService<VenteServicePage>();
             CaisseShellContent.Content = serviceProvider.GetRequiredService<CaissePage>();
             StationInfoShellContent.Content = serviceProvider.GetRequiredService<StationInfoPage>();
+            StockWithdrawalShellContent.Content = serviceProvider.GetRequiredService<StockWithdrawalPage>();
 
             // Disable flyout on startup - will be enabled after successful login
             FlyoutBehavior = FlyoutBehavior.Disabled;
@@ -276,7 +278,7 @@ namespace BombaProMax
 
         /// <summary>
         /// Updates the visibility of menu items based on user's IsSuperAdmin status.
-        /// Only SuperAdmin users can see: Utilisateurs, Rapports, Tableau de Bord, Informations Station.
+        /// Only SuperAdmin users can see: Utilisateurs, Rapports, Tableau de Bord, Informations Station, Retrait de Stock.
         /// </summary>
         /// <param name="isSuperAdmin">Whether the current user is a super admin.</param>
         private void UpdateMenuVisibility(bool isSuperAdmin)
@@ -286,6 +288,7 @@ namespace BombaProMax
             RapportShellContent.IsVisible = isSuperAdmin;
             DashboardShellContent.IsVisible = isSuperAdmin;
             StationInfoShellContent.IsVisible = isSuperAdmin;
+            StockWithdrawalShellContent.IsVisible = isSuperAdmin;
         }
 
         private static string GetInitials(string? name)

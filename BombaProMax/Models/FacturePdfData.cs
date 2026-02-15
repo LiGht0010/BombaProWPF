@@ -51,7 +51,7 @@ public class FactureElementPdfData
     public string Description { get; set; } = "";
     public string? ProduitNom { get; set; }
     public string? ServiceNom { get; set; }
-    public int Quantite { get; set; }
+    public decimal Quantite { get; set; }
     
     /// <summary>
     /// Prix Unitaire HT (Hors Taxe)

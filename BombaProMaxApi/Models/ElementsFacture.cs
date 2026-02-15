@@ -13,7 +13,8 @@ public partial class ElementsFacture
     public int? FactureID { get; set; }
     public int? ProduitID { get; set; }
     public int? ServiceID { get; set; }
-    public int? Quantite { get; set; }
+    [Column(TypeName = "decimal(10, 2)")]
+    public decimal? Quantite { get; set; }
     [Column(TypeName = "decimal(10, 2)")]
     public decimal? PrixUnitaire { get; set; }
     [ForeignKey("FactureID")]

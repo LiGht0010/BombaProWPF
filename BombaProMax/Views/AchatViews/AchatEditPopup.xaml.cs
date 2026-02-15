@@ -28,6 +28,7 @@ public partial class AchatEditPopup : Popup
         AchatDto achat)
     {
         InitializeComponent();
+        CanBeDismissedByTappingOutsideOfPopup = false;
 
         _achatService = achatService;
         _fournisseurService = fournisseurService;

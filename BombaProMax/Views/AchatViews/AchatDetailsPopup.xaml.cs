@@ -15,6 +15,7 @@ public partial class AchatDetailsPopup : Popup
     public AchatDetailsPopup(AchatDto achat)
     {
         InitializeComponent();
+        CanBeDismissedByTappingOutsideOfPopup = false;
 
         _achat = achat;
         _allocationService = new AchatAllocationService();

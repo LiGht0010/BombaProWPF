@@ -3,6 +3,7 @@ using System;
 using BombaProMaxApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BombaProMaxApi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260203165719_ChangeQuantiteToDecimal")]
+    partial class ChangeQuantiteToDecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1826,55 +1829,6 @@ namespace BombaProMaxApi.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BombaProMaxApi.Models.StockWithdrawal", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
-
-                    b.Property<DateTime>("DateRetrait")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LotsAffectesJson")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Motif")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<decimal>("NiveauApres")
-                        .HasColumnType("decimal(12, 3)");
-
-                    b.Property<decimal>("NiveauAvant")
-                        .HasColumnType("decimal(12, 3)");
-
-                    b.Property<int>("ProduitID")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("Quantite")
-                        .HasColumnType("decimal(12, 3)");
-
-                    b.Property<int>("ReservoirID")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("UtilisateurID")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UtilisateurNom")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ProduitID");
-
-                    b.HasIndex("ReservoirID");
-
-                    b.ToTable("StockWithdrawals");
-                });
-
             modelBuilder.Entity("BombaProMaxApi.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -2036,7 +1990,7 @@ namespace BombaProMaxApi.Data.Migrations
                             ShowDepenses = true,
                             ShowTableauDeBord = true,
                             ShowVente = true,
-                            UpdatedAt = new DateTime(2026, 2, 4, 18, 5, 40, 292, DateTimeKind.Utc).AddTicks(6585),
+                            UpdatedAt = new DateTime(2026, 2, 3, 16, 57, 17, 861, DateTimeKind.Utc).AddTicks(1138),
                             createdBy = 0,
                             updatedBy = 0
                         },
@@ -2069,7 +2023,7 @@ namespace BombaProMaxApi.Data.Migrations
                             ShowDepenses = true,
                             ShowTableauDeBord = true,
                             ShowVente = true,
-                            UpdatedAt = new DateTime(2026, 2, 4, 18, 5, 40, 292, DateTimeKind.Utc).AddTicks(6598),
+                            UpdatedAt = new DateTime(2026, 2, 3, 16, 57, 17, 861, DateTimeKind.Utc).AddTicks(1149),
                             createdBy = 0,
                             updatedBy = 0
                         });
@@ -2670,25 +2624,6 @@ namespace BombaProMaxApi.Data.Migrations
                     b.Navigation("PeriodeDetail");
 
                     b.Navigation("StockLot");
-                });
-
-            modelBuilder.Entity("BombaProMaxApi.Models.StockWithdrawal", b =>
-                {
-                    b.HasOne("BombaProMaxApi.Models.Produit", "Produit")
-                        .WithMany()
-                        .HasForeignKey("ProduitID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BombaProMaxApi.Models.Reservoir", "Reservoir")
-                        .WithMany()
-                        .HasForeignKey("ReservoirID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Produit");
-
-                    b.Navigation("Reservoir");
                 });
 
             modelBuilder.Entity("BombaProMaxApi.Models.VenteLubrifiantsEtArticles", b =>

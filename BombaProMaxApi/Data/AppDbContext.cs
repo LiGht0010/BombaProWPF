@@ -50,6 +50,7 @@ public class AppDbContext : DbContext
     // Stock lot entities for FIFO inventory tracking
     public DbSet<StockLot> StockLots { get; set; } = default!;
     public DbSet<StockLotConsumption> StockLotConsumptions { get; set; } = default!;
+    public DbSet<StockWithdrawal> StockWithdrawals { get; set; } = default!;
 
     // Cash management entities
     public DbSet<DepotCaisse> DepotsCaisse { get; set; } = default!;

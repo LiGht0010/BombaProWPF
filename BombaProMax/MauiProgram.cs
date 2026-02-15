@@ -177,6 +177,10 @@ namespace BombaProMax
             //OnboardingViews
             builder.Services.AddTransient<OpeningBalancePopup>();
 
+            //StockWithdrawalViews (Super Admin only)
+            builder.Services.AddTransient<StockWithdrawalPage>();
+            builder.Services.AddTransient<StockWithdrawalCreatePopup>();
+
             //ViewModels---------------------------------------------------
             builder.Services.AddSingleton<ViewModels.LoginPageViewModel>();
             builder.Services.AddSingleton<ViewModels.DashboardViewModel>();
@@ -202,6 +206,7 @@ namespace BombaProMax
             builder.Services.AddSingleton<ViewModels.VenteServiceViewModel>();
             builder.Services.AddSingleton<ViewModels.CaisseViewModel>();
             builder.Services.AddSingleton<ViewModels.StationInfoViewModel>();
+            builder.Services.AddTransient<ViewModels.StockWithdrawalViewModel>();
 
             //Services-----------------------------------------------------
             builder.Services.AddSingleton<Services.IDialogService, Services.DialogService>();
@@ -240,6 +245,7 @@ namespace BombaProMax
             // Stock Lot and Opening Balance services
             builder.Services.AddSingleton<Services.StockLotService>();
             builder.Services.AddSingleton<Services.OpeningBalanceOnboardingService>();
+            builder.Services.AddSingleton<Services.StockWithdrawalService>();
 
             //Interfaces--------------------------------------------------------------------------------------------------------------------------------------
             builder.Services.AddSingleton<Services.ILoginRepository, Services.LoginServices>();

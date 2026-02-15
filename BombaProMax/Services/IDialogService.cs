@@ -214,4 +214,15 @@ public interface IDialogService
     /// Shows the station info edit/create popup and returns the saved station info or null.
     /// </summary>
     Task<StationInfoDto?> ShowStationInfoEditPopupAsync(StationInfoDto? existingStationInfo);
+
+    /// <summary>
+    /// Shows a password confirmation popup to verify the current user's identity.
+    /// Returns true if password was confirmed successfully, false if cancelled or failed.
+    /// </summary>
+    Task<bool> ShowPasswordConfirmationPopupAsync();
+
+    /// <summary>
+    /// Shows the stock withdrawal creation popup and returns the result or null if cancelled.
+    /// </summary>
+    Task<StockWithdrawalResponseDto?> ShowStockWithdrawalCreatePopupAsync();
 }

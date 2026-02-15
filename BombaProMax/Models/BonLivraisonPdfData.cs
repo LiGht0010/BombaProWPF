@@ -34,7 +34,7 @@ public class BLDetailPdfData
     public string Description { get; set; } = "";
     public string? ProduitNom { get; set; }
     public string? ServiceNom { get; set; }
-    public int Quantite { get; set; }
+    public decimal Quantite { get; set; }
     public decimal PrixUnitaire { get; set; }
     public decimal MontantLigne { get; set; }
 
@@ -49,6 +49,6 @@ public class BLDetailPdfData
 public class BLProduitTotalPdfData
 {
     public string ProduitNom { get; set; } = "";
-    public int QuantiteTotale { get; set; }
+    public decimal QuantiteTotale { get; set; }
     public decimal MontantTotal { get; set; }
 }

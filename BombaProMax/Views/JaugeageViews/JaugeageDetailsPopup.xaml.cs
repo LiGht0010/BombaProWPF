@@ -16,6 +16,8 @@ public partial class JaugeageDetailsPopup : Popup
     public JaugeageDetailsPopup(JaugeageDto jaugeage)
     {
         InitializeComponent();
+        CanBeDismissedByTappingOutsideOfPopup = false;
+
         _jaugeageDto = jaugeage;
         _jaugeageService = new JaugeageService();
         _userService = new UserService();
