@@ -181,11 +181,12 @@
                                         ItemsSource="{Binding PompeReadings}">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Padding="10,8"
-                                            BackgroundColor="White"
-                                            Stroke="#F0F0F0"
-                                            StrokeThickness="0,0,0,1">
-                                        <Grid ColumnDefinitions="0.8*,1.2*,0.8*,1.2*,1.2*,1.2*,1.2*,0.8*" ColumnSpacing="5">
+                                    <!-- Use VerticalStackLayout with BoxView for bottom border instead of StrokeThickness="0,0,0,1" -->
+                                    <VerticalStackLayout>
+                                        <Grid ColumnDefinitions="0.8*,1.2*,0.8*,1.2*,1.2*,1.2*,1.2*,0.8*" 
+                                              ColumnSpacing="5"
+                                              Padding="10,8"
+                                              BackgroundColor="White">
                                             <Label Text="{Binding PompeNumero}"
                                                    FontAttributes="Bold"
                                                    TextColor="#1976D2"
@@ -248,7 +249,9 @@
                                                    HorizontalOptions="Center"
                                                    FontSize="12"/>
                                         </Grid>
-                                    </Border>
+                                        <!-- Bottom border line -->
+                                        <BoxView HeightRequest="1" Color="#F0F0F0" HorizontalOptions="Fill"/>
+                                    </VerticalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
@@ -325,14 +328,15 @@
                                             ItemsSource="{Binding PeriodeCreditTransactions}">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate x:DataType="models:CreditTransactionDto">
-                                        <Border Padding="10,6"
-                                                BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToSelectionColorConverter}}"
-                                                Stroke="#F0F0F0"
-                                                StrokeThickness="0,0,0,1">
-                                            <Border.GestureRecognizers>
-                                                <TapGestureRecognizer Tapped="OnCreditTransactionTapped" CommandParameter="{Binding .}"/>
-                                            </Border.GestureRecognizers>
-                                            <Grid ColumnDefinitions="Auto,*,60,80" ColumnSpacing="12">
+                                        <!-- Use VerticalStackLayout with BoxView for bottom border -->
+                                        <VerticalStackLayout>
+                                            <Grid ColumnDefinitions="Auto,*,60,80" 
+                                                  ColumnSpacing="12"
+                                                  Padding="10,6"
+                                                  BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToSelectionColorConverter}}">
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="OnCreditTransactionTapped" CommandParameter="{Binding .}"/>
+                                                </Grid.GestureRecognizers>
                                                 <CheckBox IsChecked="{Binding IsSelected}"
                                                           CheckedChanged="OnCreditCheckBoxChanged"
                                                           VerticalOptions="Center"
@@ -362,7 +366,9 @@
                                                        VerticalOptions="Center"
                                                        HorizontalOptions="End"/>
                                             </Grid>
-                                        </Border>
+                                            <!-- Bottom border line -->
+                                            <BoxView HeightRequest="1" Color="#F0F0F0" HorizontalOptions="Fill"/>
+                                        </VerticalStackLayout>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                                 <CollectionView.EmptyView>

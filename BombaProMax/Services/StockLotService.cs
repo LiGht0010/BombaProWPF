@@ -5,12 +5,13 @@ using System.Text;
 namespace BombaProMax.Services;
 
 /// <summary>
-/// Service for StockLot operations including Opening Balance management.
+/// Service for StockLot operations including Opening Balance management and Stock Calibration.
 /// </summary>
 public class StockLotService
 {
     private readonly HttpClient _httpClient;
     private static string BaseUrl => ApiConfig.StockLots;
+    private static string CalibrationUrl => ApiConfig.StockCalibration;
 
     public StockLotService()
     {
@@ -189,6 +190,99 @@ public class StockLotService
         {
             Console.WriteLine($"Error getting available stock: {ex.Message}");
             return 0;
+        }
+    }
+
+    // ============================
+    // STOCK CALIBRATION OPERATIONS
+    // ============================
+
+    /// <summary>
+    /// Gets a preview of what calibration would do for a given jaugeage.
+    /// Shows the difference between measured volumes and system stock per reservoir.
+    /// </summary>
+    public async Task<StockCalibrationPreviewDto?> GetCalibrationPreviewAsync(int jaugeageId)
+    {
+        try
+        {
+            var url = $"{CalibrationUrl}/preview/{jaugeageId}";
+            System.Diagnostics.Debug.WriteLine($"[StockLotService] GET {url}");
+
+            var response = await _httpClient.GetAsync(url);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            System.Diagnostics.Debug.WriteLine(
+                $"[StockLotService] Response: {response.StatusCode}, Body: {responseBody}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<StockCalibrationPreviewDto>(responseBody);
+            }
+
+            System.Diagnostics.Debug.WriteLine(
+                $"[StockLotService] Calibration preview failed: {responseBody}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[StockLotService] Error getting calibration preview: {ex.Message}");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Calibrates stock levels to match a jaugeage measurement.
+    /// If measured volume > system: creates Adjustment StockLot.
+    /// If measured volume < system: FIFO reduces existing lots.
+    /// </summary>
+    public async Task<(bool Success, StockCalibrationResultDto? Result, string? ErrorMessage)> CalibrateToJaugeageAsync(
+        StockCalibrationRequestDto request)
+    {
+        try
+        {
+            var url = $"{CalibrationUrl}/calibrate";
+            System.Diagnostics.Debug.WriteLine($"[StockLotService] POST {url}");
+
+            var json = JsonConvert.SerializeObject(request);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            System.Diagnostics.Debug.WriteLine($"[StockLotService] Request: {json}");
+
+            var response = await _httpClient.PostAsync(url, content);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            System.Diagnostics.Debug.WriteLine(
+                $"[StockLotService] Response: {response.StatusCode}, Body: {responseBody}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = JsonConvert.DeserializeObject<StockCalibrationResultDto>(responseBody);
+                return (result?.Success ?? false, result, null);
+            }
+
+            // Try to extract error message
+            var errorMessage = responseBody;
+            try
+            {
+                var errorResult = JsonConvert.DeserializeObject<StockCalibrationResultDto>(responseBody);
+                if (errorResult != null)
+                {
+                    return (false, errorResult, errorResult.Message);
+                }
+            }
+            catch
+            {
+                // Keep original response as error message
+            }
+
+            return (false, null, errorMessage);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[StockLotService] Error calibrating to jaugeage: {ex.Message}");
+            return (false, null, $"Erreur de connexion: {ex.Message}");
         }
     }
 }

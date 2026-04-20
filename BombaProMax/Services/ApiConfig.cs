@@ -10,10 +10,10 @@ public static class ApiConfig
     // ===========================================
 
     // Production (Debian Server)
-    //private static string _baseUrl = "http://62.84.189.17:5002/api";
+    private static string _baseUrl = "http://62.84.189.17:5002/api";
 
     // Development (Local) - Matches Kestrel config in appsettings.json
-    private static string _baseUrl = "http://localhost:5003/api";
+    //private static string _baseUrl = "http://localhost:5003/api";
 
     /// <summary>
     /// Gets or sets the API base URL. Set this at app startup based on client configuration.
@@ -87,4 +87,5 @@ public static class ApiConfig
     public static string Home => $"{BaseUrl}";
     public static string DepotCaisses => $"{BaseUrl}/DepotCaisses";
     public static string StockLots => $"{BaseUrl}/StockLots";
+    public static string StockCalibration => $"{BaseUrl}/StockCalibration";
 }

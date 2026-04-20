@@ -23,8 +23,8 @@ namespace BombaProMax
             // Initialize API configuration from saved preferences
             ApiConfig.Initialize();
 
-            // Force light theme
-            //Application.Current!.UserAppTheme = AppTheme.Light;
+            // Force light theme at MAUI level
+            Application.Current!.UserAppTheme = AppTheme.Light;
 
             // Keep AppShell as MainPage, pass serviceProvider for DI
             MainPage = new AppShell(serviceProvider);

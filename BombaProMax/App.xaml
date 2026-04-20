@@ -14,6 +14,35 @@
             <converters:CiterneStatusTextConverter x:Key="CiterneStatusTextConverter"/>
             <converters:CamionCountColorConverter x:Key="CamionCountColorConverter"/>
 
+            <!-- ========================================= -->
+            <!-- GLOBAL IMPLICIT STYLES FOR RELEASE FIX   -->
+            <!-- Forces consistent font rendering on all platforms -->
+            <!-- ========================================= -->
+            
+            <!-- Global Label style to fix Windows Release font rendering -->
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="OpenSansRegular"/>
+                <Setter Property="FontAutoScalingEnabled" Value="False"/>
+            </Style>
+            
+            <!-- Global Entry style for consistent sizing -->
+            <Style TargetType="Entry">
+                <Setter Property="FontFamily" Value="OpenSansRegular"/>
+                <Setter Property="FontAutoScalingEnabled" Value="False"/>
+            </Style>
+            
+            <!-- Global Button style -->
+            <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="OpenSansSemibold"/>
+                <Setter Property="FontAutoScalingEnabled" Value="False"/>
+            </Style>
+            
+            <!-- Global Picker style -->
+            <Style TargetType="Picker">
+                <Setter Property="FontFamily" Value="OpenSansRegular"/>
+                <Setter Property="FontAutoScalingEnabled" Value="False"/>
+            </Style>
+
             <!-- Then merge dictionaries -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/Converters.xaml" />

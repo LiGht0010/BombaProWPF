@@ -40,6 +40,25 @@ public interface IStockLotService
         string? notes = null);
 
     /// <summary>
+    /// Creates an Adjustment StockLot for stock calibration/reconciliation.
+    /// Used when jaugeage reveals more stock than system records.
+    /// </summary>
+    /// <param name="reservoirId">The reservoir ID</param>
+    /// <param name="produitId">The product/fuel type ID</param>
+    /// <param name="quantite">Adjustment quantity in liters (positive only)</param>
+    /// <param name="prixAchat">Estimated unit price (can be 0 if unknown)</param>
+    /// <param name="jaugeageId">Optional reference to the jaugeage that triggered this adjustment</param>
+    /// <param name="notes">Optional notes explaining the adjustment reason</param>
+    /// <returns>The created StockLot ID</returns>
+    Task<int> CreateAdjustmentAsync(
+        int reservoirId,
+        int produitId,
+        decimal quantite,
+        decimal prixAchat,
+        int? jaugeageId = null,
+        string? notes = null);
+
+    /// <summary>
     /// Checks if a reservoir already has an Opening Balance StockLot.
     /// </summary>
     /// <param name="reservoirId">The reservoir ID to check</param>
@@ -177,4 +196,25 @@ public interface IStockLotService
     /// <param name="periodeId">The Periode ID to analyze</param>
     /// <returns>Detailed margin breakdown with FIFO cost tracking</returns>
     Task<PeriodeMargeAnalysisDto?> GetPeriodeMargeAnalysisAsync(int periodeId);
+
+    // ?????????????????????????????????????????????????????????????????
+    // CALIBRATION OPERATIONS (Jaugeage Reconciliation)
+    // ?????????????????????????????????????????????????????????????????
+
+    /// <summary>
+    /// Calibrates a reservoir's stock to match a jaugeage measurement.
+    /// If jaugeage volume > system stock: creates an Adjustment StockLot to add the difference.
+    /// If jaugeage volume < system stock: FIFO consumes existing lots to reduce to match.
+    /// </summary>
+    /// <param name="request">The calibration request with jaugeage details</param>
+    /// <returns>Result with details of adjustments made per reservoir</returns>
+    Task<StockCalibrationResultDto> CalibrateToJaugeageAsync(StockCalibrationRequestDto request);
+
+    /// <summary>
+    /// Gets a preview of what calibration would do without applying changes.
+    /// Shows the difference between jaugeage volumes and system stock per reservoir.
+    /// </summary>
+    /// <param name="jaugeageId">The jaugeage ID to preview calibration for</param>
+    /// <returns>Preview with differences and proposed actions</returns>
+    Task<StockCalibrationPreviewDto> GetCalibrationPreviewAsync(int jaugeageId);
 }

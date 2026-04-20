@@ -102,26 +102,26 @@ public class DashboardController : ControllerBase
         // Apply filters (priority: specific date > date range > month > year)
         if (date.HasValue)
         {
-            var dateTime = date.Value.ToDateTime(TimeOnly.MinValue);
+            var dateTime = DateTime.SpecifyKind(date.Value.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
             var nextDay = dateTime.AddDays(1);
             query = query.Where(v => v.DateVente >= dateTime && v.DateVente < nextDay);
         }
         else if (startDate.HasValue && endDate.HasValue)
         {
-            var startDateTime = startDate.Value.ToDateTime(TimeOnly.MinValue);
-            var endDateTime = endDate.Value.ToDateTime(TimeOnly.MaxValue);
+            var startDateTime = DateTime.SpecifyKind(startDate.Value.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            var endDateTime = DateTime.SpecifyKind(endDate.Value.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
             query = query.Where(v => v.DateVente >= startDateTime && v.DateVente <= endDateTime);
         }
         else if (!string.IsNullOrEmpty(month) && TryParseMonth(month, out var monthStart, out var monthEnd))
         {
-            var startDateTime = monthStart.ToDateTime(TimeOnly.MinValue);
-            var endDateTime = monthEnd.ToDateTime(TimeOnly.MaxValue);
+            var startDateTime = DateTime.SpecifyKind(monthStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            var endDateTime = DateTime.SpecifyKind(monthEnd.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
             query = query.Where(v => v.DateVente >= startDateTime && v.DateVente <= endDateTime);
         }
         else if (year.HasValue)
         {
-            var yearStart = new DateTime(year.Value, 1, 1);
-            var yearEnd = new DateTime(year.Value, 12, 31, 23, 59, 59);
+            var yearStart = DateTime.SpecifyKind(new DateTime(year.Value, 1, 1), DateTimeKind.Utc);
+            var yearEnd = DateTime.SpecifyKind(new DateTime(year.Value, 12, 31, 23, 59, 59), DateTimeKind.Utc);
             query = query.Where(v => v.DateVente >= yearStart && v.DateVente <= yearEnd);
         }
 
@@ -167,26 +167,26 @@ public class DashboardController : ControllerBase
         // Apply filters based on Periode.DateDebut
         if (date.HasValue)
         {
-            var dateTime = date.Value.ToDateTime(TimeOnly.MinValue);
+            var dateTime = DateTime.SpecifyKind(date.Value.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
             var nextDay = dateTime.AddDays(1);
             query = query.Where(pd => pd.Periode!.DateDebut >= dateTime && pd.Periode.DateDebut < nextDay);
         }
         else if (startDate.HasValue && endDate.HasValue)
         {
-            var startDateTime = startDate.Value.ToDateTime(TimeOnly.MinValue);
-            var endDateTime = endDate.Value.ToDateTime(TimeOnly.MaxValue);
+            var startDateTime = DateTime.SpecifyKind(startDate.Value.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            var endDateTime = DateTime.SpecifyKind(endDate.Value.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
             query = query.Where(pd => pd.Periode!.DateDebut >= startDateTime && pd.Periode.DateDebut <= endDateTime);
         }
         else if (!string.IsNullOrEmpty(month) && TryParseMonth(month, out var monthStart, out var monthEnd))
         {
-            var startDateTime = monthStart.ToDateTime(TimeOnly.MinValue);
-            var endDateTime = monthEnd.ToDateTime(TimeOnly.MaxValue);
+            var startDateTime = DateTime.SpecifyKind(monthStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            var endDateTime = DateTime.SpecifyKind(monthEnd.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
             query = query.Where(pd => pd.Periode!.DateDebut >= startDateTime && pd.Periode.DateDebut <= endDateTime);
         }
         else if (year.HasValue)
         {
-            var yearStart = new DateTime(year.Value, 1, 1);
-            var yearEnd = new DateTime(year.Value, 12, 31, 23, 59, 59);
+            var yearStart = DateTime.SpecifyKind(new DateTime(year.Value, 1, 1), DateTimeKind.Utc);
+            var yearEnd = DateTime.SpecifyKind(new DateTime(year.Value, 12, 31, 23, 59, 59), DateTimeKind.Utc);
             query = query.Where(pd => pd.Periode!.DateDebut >= yearStart && pd.Periode.DateDebut <= yearEnd);
         }
 

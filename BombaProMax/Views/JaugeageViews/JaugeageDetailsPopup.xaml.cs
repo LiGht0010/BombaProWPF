@@ -11,6 +11,7 @@ public partial class JaugeageDetailsPopup : Popup
     private readonly JaugeageDto _jaugeageDto;
     private readonly JaugeageService _jaugeageService;
     private readonly UserService _userService;
+    private readonly StockLotService _stockLotService;
     private JaugeageWithDetailsDto? _jaugeageWithDetails;
 
     public JaugeageDetailsPopup(JaugeageDto jaugeage)
@@ -21,6 +22,7 @@ public partial class JaugeageDetailsPopup : Popup
         _jaugeageDto = jaugeage;
         _jaugeageService = new JaugeageService();
         _userService = new UserService();
+        _stockLotService = new StockLotService();
 
         // Set initial header info
         NumeroLabel.Text = jaugeage.NumeroJaugeage ?? "-";
@@ -206,6 +208,163 @@ public partial class JaugeageDetailsPopup : Popup
         });
 
         return container;
+    }
+
+    private async void OnCalibrateClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            CalibrateButton.IsEnabled = false;
+            CalibrateButton.Text = "? Chargement...";
+
+            // Get calibration preview first
+            var preview = await _stockLotService.GetCalibrationPreviewAsync(_jaugeageDto.ID);
+            
+            if (preview == null)
+            {
+                await Application.Current!.MainPage!.DisplayAlert(
+                    "Erreur",
+                    "Impossible de charger la prévisualisation de calibration.",
+                    "OK");
+                return;
+            }
+
+            // Check if any adjustments needed
+            if (preview.ReservoirsNeedingAdjustment == 0)
+            {
+                await Application.Current!.MainPage!.DisplayAlert(
+                    "Stock déjà calibré",
+                    "Tous les réservoirs sont déjà alignés avec ce jaugeage. Aucun ajustement nécessaire.",
+                    "OK");
+                return;
+            }
+
+            // Build preview message
+            var previewMessage = BuildCalibrationPreviewMessage(preview);
+
+            // Confirm with user
+            var confirmed = await Application.Current!.MainPage!.DisplayAlert(
+                "Confirmer la calibration",
+                previewMessage,
+                "Oui, calibrer",
+                "Annuler");
+
+            if (!confirmed)
+                return;
+
+            CalibrateButton.Text = "? Calibration...";
+
+            // Perform calibration
+            var request = new StockCalibrationRequestDto
+            {
+                JaugeageId = _jaugeageDto.ID,
+                UtilisateurCalibration = App.CurrentUser?.Name ?? App.user?.Name,
+                Notes = $"Calibration manuelle depuis le détail du jaugeage {_jaugeageDto.NumeroJaugeage}"
+            };
+
+            var (success, result, errorMessage) = await _stockLotService.CalibrateToJaugeageAsync(request);
+
+            if (success && result != null)
+            {
+                // Build success message with details
+                var successMessage = BuildCalibrationResultMessage(result);
+
+                await Application.Current!.MainPage!.DisplayAlert(
+                    "? Calibration réussie",
+                    successMessage,
+                    "OK");
+
+                // Close popup and signal refresh needed
+                Close(new { Action = "Calibrated", JaugeageId = _jaugeageDto.ID, Result = result });
+            }
+            else
+            {
+                await Application.Current!.MainPage!.DisplayAlert(
+                    "Erreur de calibration",
+                    errorMessage ?? result?.Message ?? "Une erreur s'est produite lors de la calibration.",
+                    "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[JaugeageDetailsPopup] Calibration error: {ex.Message}");
+            await Application.Current!.MainPage!.DisplayAlert(
+                "Erreur",
+                $"Erreur lors de la calibration: {ex.Message}",
+                "OK");
+        }
+        finally
+        {
+            CalibrateButton.IsEnabled = true;
+            CalibrateButton.Text = "?? Calibrer à ce jaugeage";
+        }
+    }
+
+    /// <summary>
+    /// Builds a user-friendly preview message for calibration confirmation.
+    /// </summary>
+    private static string BuildCalibrationPreviewMessage(StockCalibrationPreviewDto preview)
+    {
+        var lines = new List<string>
+        {
+            $"Jaugeage: {preview.JaugeageNumero}",
+            $"Date: {preview.DateJaugeage:dd/MM/yyyy}",
+            "",
+            $"?? {preview.ReservoirsNeedingAdjustment} réservoir(s) nécessite(nt) un ajustement:",
+            ""
+        };
+
+        foreach (var res in preview.Reservoirs.Where(r => Math.Abs(r.Difference) > 0.01m))
+        {
+            var icon = res.Difference > 0 ? "?" : "?";
+            var action = res.Difference > 0 ? "Ajouter" : "Réduire";
+            lines.Add($"{icon} {res.ReservoirNumero}: {action} {Math.Abs(res.Difference):N0}L");
+            lines.Add($"   (Jaugeage: {res.VolumeJaugeage:N0}L, Système: {res.StockSysteme:N0}L)");
+            
+            if (!res.CanReduce && res.Difference < 0)
+            {
+                lines.Add($"   ?? {res.WarningMessage}");
+            }
+        }
+
+        lines.Add("");
+        lines.Add("Voulez-vous appliquer ces ajustements?");
+
+        return string.Join("\n", lines);
+    }
+
+    /// <summary>
+    /// Builds a user-friendly result message after calibration.
+    /// </summary>
+    private static string BuildCalibrationResultMessage(StockCalibrationResultDto result)
+    {
+        var lines = new List<string>
+        {
+            "La calibration a été effectuée avec succès!",
+            ""
+        };
+
+        if (result.TotalStockAdded > 0)
+        {
+            lines.Add($"? Stock ajouté: {result.TotalStockAdded:N0}L");
+            lines.Add($"   ({result.AdjustmentLotsCreated} lot(s) d'ajustement créé(s))");
+        }
+
+        if (result.TotalStockReduced > 0)
+        {
+            lines.Add($"? Stock réduit: {result.TotalStockReduced:N0}L");
+        }
+
+        lines.Add("");
+        lines.Add("Détails par réservoir:");
+
+        foreach (var res in result.Reservoirs.Where(r => r.ActionPerformed != "Aucun"))
+        {
+            var icon = res.ActionPerformed == "Ajout" ? "?" : "??";
+            lines.Add($"{icon} {res.ReservoirNumero}: {res.StockBefore:N0}L ? {res.StockAfter:N0}L");
+        }
+
+        return string.Join("\n", lines);
     }
 
     private void OnEditClicked(object sender, EventArgs e)

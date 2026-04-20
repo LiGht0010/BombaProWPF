@@ -369,6 +369,446 @@ public class StockLotService : IStockLotService
         return stockLot.ID;
     }
 
+    // ?????????????????????????????????????????????????????????????????
+    // ADJUSTMENT OPERATIONS (Stock Calibration)
+    // ????????????????????????????????????????????????????????????????
+
+    /// <inheritdoc />
+    public async Task<int> CreateAdjustmentAsync(
+        int reservoirId,
+        int produitId,
+        decimal quantite,
+        decimal prixAchat,
+        int? jaugeageId = null,
+        string? notes = null)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantite, nameof(quantite));
+        ArgumentOutOfRangeException.ThrowIfNegative(prixAchat, nameof(prixAchat));
+
+        // Validate reservoir exists
+        var reservoir = await _context.Reservoirs.FindAsync(reservoirId);
+        if (reservoir == null)
+        {
+            throw new InvalidOperationException($"Reservoir {reservoirId} not found");
+        }
+
+        // Validate capacity
+        var currentStock = await GetAvailableStockAsync(reservoirId);
+        if (currentStock + quantite > reservoir.Capacite)
+        {
+            throw new InvalidOperationException(
+                $"L'ajustement ({quantite:N2}L) dépasserait la capacité du réservoir. " +
+                $"Stock actuel: {currentStock:N2}L, Capacité: {reservoir.Capacite:N2}L");
+        }
+
+        // Build notes with jaugeage reference
+        var adjustmentNotes = notes ?? "Ajustement de stock suite à jaugeage";
+        if (jaugeageId.HasValue)
+        {
+            adjustmentNotes = $"Calibration Jaugeage #{jaugeageId}. {adjustmentNotes}";
+        }
+
+        var stockLot = new StockLot
+        {
+            Type = StockLotType.Adjustment,
+            AchatID = null, // No purchase for adjustment
+            ReservoirID = reservoirId,
+            ProduitID = produitId,
+            QuantiteInitiale = quantite,
+            QuantiteDisponible = quantite,
+            PrixAchat = prixAchat,
+            DateEntree = DateTime.UtcNow,
+            Statut = "Disponible",
+            Notes = adjustmentNotes
+        };
+
+        // Validate domain rules
+        var errors = stockLot.Validate().ToList();
+        if (errors.Count > 0)
+        {
+            throw new InvalidOperationException($"Invalid StockLot: {string.Join(", ", errors)}");
+        }
+
+        _context.StockLots.Add(stockLot);
+
+        // Update reservoir level
+        reservoir.NiveauDeCarburant += quantite;
+        reservoir.DateModification = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "Created Adjustment StockLot: Reservoir {ReservoirId} ({Numero}), " +
+            "Quantite +{Quantite}L, JaugeageRef={JaugeageId}, ID {StockLotId}",
+            reservoirId, reservoir.Numero, quantite, jaugeageId, stockLot.ID);
+
+        return stockLot.ID;
+    }
+
+    // ?????????????????????????????????????????????????????????????????
+    // CALIBRATION OPERATIONS (Jaugeage Reconciliation)
+    // ?????????????????????????????????????????????????????????????????
+
+    /// <inheritdoc />
+    public async Task<StockCalibrationPreviewDto> GetCalibrationPreviewAsync(int jaugeageId)
+    {
+        _logger.LogInformation("Getting calibration preview for Jaugeage {JaugeageId}", jaugeageId);
+
+        var jaugeage = await _context.Jaugeages
+            .Include(j => j.Temoin)
+            .Include(j => j.JaugeageDetails)
+                .ThenInclude(d => d.Reservoir)
+                    .ThenInclude(r => r.Produit)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(j => j.ID == jaugeageId);
+
+        if (jaugeage == null)
+        {
+            throw new InvalidOperationException($"Jaugeage {jaugeageId} not found");
+        }
+
+        var preview = new StockCalibrationPreviewDto
+        {
+            JaugeageId = jaugeage.ID,
+            JaugeageNumero = jaugeage.NumeroJaugeage,
+            DateJaugeage = jaugeage.DateJaugeage,
+            TemoinNom = jaugeage.Temoin?.Nom,
+            Reservoirs = []
+        };
+
+        foreach (var detail in jaugeage.JaugeageDetails)
+        {
+            var reservoir = detail.Reservoir;
+            if (reservoir == null) continue;
+
+            // Get current system stock for this reservoir
+            var systemStock = await GetAvailableStockAsync(detail.ReservoirID);
+
+            // Jaugeage volume is the measured reality
+            var jaugeageVolume = detail.VolumeCalcule;
+
+            // Calculate difference
+            var difference = jaugeageVolume - systemStock;
+
+            var reservoirPreview = new ReservoirCalibrationPreviewDto
+            {
+                ReservoirId = detail.ReservoirID,
+                ReservoirNumero = reservoir.Numero,
+                ProduitId = reservoir.ProduitID ?? 0,
+                ProduitNom = reservoir.Produit?.Description,
+                VolumeJaugeage = jaugeageVolume,
+                HauteurMesuree = detail.HauteurMesuree,
+                StockSysteme = systemStock,
+                Difference = difference,
+                CanReduce = true
+            };
+
+            // If reduction needed, check if we can reduce
+            if (difference < -0.01m)
+            {
+                var reductionNeeded = Math.Abs(difference);
+                if (reductionNeeded > systemStock)
+                {
+                    reservoirPreview.CanReduce = false;
+                    reservoirPreview.WarningMessage = 
+                        $"Stock insuffisant pour réduire de {reductionNeeded:N2}L. " +
+                        $"Disponible: {systemStock:N2}L";
+                }
+            }
+
+            preview.Reservoirs.Add(reservoirPreview);
+
+            _logger.LogDebug(
+                "Calibration preview for Reservoir {ReservoirId}: " +
+                "Jaugeage={JaugeageVol}L, System={SystemStock}L, Diff={Diff}L ({Action})",
+                detail.ReservoirID, jaugeageVolume, systemStock, difference, reservoirPreview.Action);
+        }
+
+        return preview;
+    }
+
+    /// <inheritdoc />
+    public async Task<StockCalibrationResultDto> CalibrateToJaugeageAsync(StockCalibrationRequestDto request)
+    {
+        _logger.LogInformation(
+            "Calibrating stock to Jaugeage {JaugeageId}, User: {User}",
+            request.JaugeageId, request.UtilisateurCalibration);
+
+        // Get preview first to know what needs to be done
+        var preview = await GetCalibrationPreviewAsync(request.JaugeageId);
+
+        var result = new StockCalibrationResultDto
+        {
+            JaugeageId = request.JaugeageId,
+            DateCalibration = DateTime.UtcNow,
+            Reservoirs = []
+        };
+
+        // Filter reservoirs if specific ones requested
+        var reservoirsToProcess = preview.Reservoirs;
+        if (request.ReservoirIds?.Any() == true)
+        {
+            reservoirsToProcess = preview.Reservoirs
+                .Where(r => request.ReservoirIds.Contains(r.ReservoirId))
+                .ToList();
+        }
+
+        // Process each reservoir
+        foreach (var reservoirPreview in reservoirsToProcess)
+        {
+            var reservoirResult = new ReservoirCalibrationResultDto
+            {
+                ReservoirId = reservoirPreview.ReservoirId,
+                ReservoirNumero = reservoirPreview.ReservoirNumero,
+                ProduitId = reservoirPreview.ProduitId,
+                ProduitNom = reservoirPreview.ProduitNom,
+                StockBefore = reservoirPreview.StockSysteme
+            };
+
+            try
+            {
+                if (Math.Abs(reservoirPreview.Difference) < 0.01m)
+                {
+                    // No adjustment needed
+                    reservoirResult.StockAfter = reservoirPreview.StockSysteme;
+                    reservoirResult.ActionPerformed = "Aucun";
+                    reservoirResult.Message = "Stock déjà calibré";
+                }
+                else if (reservoirPreview.Difference > 0)
+                {
+                    // POSITIVE: Need to ADD stock - create Adjustment lot
+                    // CreateAdjustmentAsync calls SaveChangesAsync internally, so sync works correctly after
+                    await ProcessPositiveAdjustmentAsync(
+                        reservoirPreview, request, reservoirResult);
+                    // Sync reservoir level after the adjustment was saved
+                    reservoirResult.StockAfter = await SyncReservoirLevelAsync(reservoirPreview.ReservoirId);
+                }
+                else
+                {
+                    // NEGATIVE: Need to REDUCE stock - FIFO consume
+                    // CascadeReduceForCalibrationAsync updates StockLots AND Reservoir.NiveauDeCarburant
+                    // but doesn't call SaveChangesAsync - changes are tracked but not persisted yet
+                    await ProcessNegativeAdjustmentAsync(
+                        reservoirPreview, request, reservoirResult);
+                    // For negative adjustments, the expected StockAfter is the jaugeage volume
+                    // Don't call SyncReservoirLevelAsync here as changes aren't saved yet!
+                    reservoirResult.StockAfter = reservoirPreview.VolumeJaugeage;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "Error calibrating Reservoir {ReservoirId}: {Message}",
+                    reservoirPreview.ReservoirId, ex.Message);
+
+                reservoirResult.ActionPerformed = "Erreur";
+                reservoirResult.Message = ex.Message;
+                reservoirResult.StockAfter = reservoirPreview.StockSysteme;
+            }
+
+            result.Reservoirs.Add(reservoirResult);
+        }
+
+        // Save all pending changes (negative adjustments that haven't been saved yet)
+        await _context.SaveChangesAsync();
+
+        // After save, sync and verify reservoir levels for negative adjustments
+        foreach (var reservoirResult in result.Reservoirs.Where(r => r.ActionPerformed == "Réduction"))
+        {
+            reservoirResult.StockAfter = await SyncReservoirLevelAsync(reservoirResult.ReservoirId);
+        }
+        await _context.SaveChangesAsync();
+
+        result.Success = result.Reservoirs.All(r => r.ActionPerformed != "Erreur");
+        result.Message = result.Success
+            ? $"Calibration réussie: {result.AdjustmentLotsCreated} lot(s) d'ajustement créé(s), " +
+              $"+{result.TotalStockAdded:N2}L ajouté, -{result.TotalStockReduced:N2}L réduit"
+            : "Calibration partielle avec erreurs";
+
+        _logger.LogInformation(
+            "Calibration completed for Jaugeage {JaugeageId}: {Message}",
+            request.JaugeageId, result.Message);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Processes a positive adjustment (jaugeage > system) by creating an Adjustment StockLot.
+    /// </summary>
+    private async Task ProcessPositiveAdjustmentAsync(
+        ReservoirCalibrationPreviewDto preview,
+        StockCalibrationRequestDto request,
+        ReservoirCalibrationResultDto result)
+    {
+        var quantiteToAdd = preview.Difference;
+
+        // Determine price: use provided estimate, or average from existing lots
+        var prixAchat = request.PrixAchatEstime ?? await GetAveragePrixAchatAsync(preview.ReservoirId);
+
+        var notes = string.IsNullOrWhiteSpace(request.Notes)
+            ? $"Ajustement positif suite à calibration jaugeage. Écart: +{quantiteToAdd:N2}L"
+            : request.Notes;
+
+        // Create adjustment lot (this calls SaveChangesAsync internally)
+        var lotId = await CreateAdjustmentAsync(
+            preview.ReservoirId,
+            preview.ProduitId,
+            quantiteToAdd,
+            prixAchat,
+            request.JaugeageId,
+            notes);
+
+        result.AdjustmentLotId = lotId;
+        result.StockAdded = quantiteToAdd;
+        result.ActionPerformed = "Ajout";
+        result.Message = $"Lot d'ajustement créé: +{quantiteToAdd:N2}L";
+
+        _logger.LogInformation(
+            "Created positive adjustment for Reservoir {ReservoirId}: +{Quantite}L, LotId={LotId}",
+            preview.ReservoirId, quantiteToAdd, lotId);
+    }
+
+    /// <summary>
+    /// Processes a negative adjustment (jaugeage < system) by FIFO consuming existing lots.
+    /// </summary>
+    private async Task ProcessNegativeAdjustmentAsync(
+        ReservoirCalibrationPreviewDto preview,
+        StockCalibrationRequestDto request,
+        ReservoirCalibrationResultDto result)
+    {
+        var quantiteToReduce = Math.Abs(preview.Difference);
+
+        if (!preview.CanReduce)
+        {
+            throw new InvalidOperationException(preview.WarningMessage ?? "Cannot reduce stock");
+        }
+
+        // Use cascade reduce (FIFO order)
+        var lotsAffected = await CascadeReduceForCalibrationAsync(
+            preview.ReservoirId, 
+            quantiteToReduce,
+            request.JaugeageId,
+            request.Notes);
+
+        result.StockReduced = quantiteToReduce;
+        result.LotsConsumed = lotsAffected;
+        result.ActionPerformed = "Réduction";
+        result.Message = $"Stock réduit de {quantiteToReduce:N2}L via {lotsAffected} lot(s)";
+
+        _logger.LogInformation(
+            "Reduced stock for Reservoir {ReservoirId}: -{Quantite}L, {LotsAffected} lots affected",
+            preview.ReservoirId, quantiteToReduce, lotsAffected);
+    }
+
+    /// <summary>
+    /// Gets the average PrixAchat from available lots in a reservoir.
+    /// Used when no price is specified for adjustment lots.
+    /// </summary>
+    private async Task<decimal> GetAveragePrixAchatAsync(int reservoirId)
+    {
+        var avgPrice = await _context.StockLots
+            .Where(s => s.ReservoirID == reservoirId 
+                     && s.Statut == "Disponible" 
+                     && s.PrixAchat > 0)
+            .Select(s => (decimal?)s.PrixAchat)
+            .AverageAsync();
+
+        return avgPrice ?? 0;
+    }
+
+    /// <summary>
+    /// FIFO reduces stock for calibration purposes (without creating consumption records).
+    /// This is different from ConsumeAsync which creates PeriodeDetail-linked consumptions.
+    /// Returns the number of lots affected.
+    /// </summary>
+    private async Task<int> CascadeReduceForCalibrationAsync(
+        int reservoirId, 
+        decimal amountToReduce,
+        int? jaugeageId,
+        string? notes)
+    {
+        if (amountToReduce <= 0)
+            return 0;
+
+        _logger.LogInformation(
+            "Calibration reduction of {Amount}L for Reservoir {ReservoirId}",
+            amountToReduce, reservoirId);
+
+        // Get all lots for this reservoir, FIFO order (oldest first)
+        var lots = await _context.StockLots
+            .Where(s => s.ReservoirID == reservoirId 
+                     && s.Statut == "Disponible" 
+                     && s.QuantiteDisponible > 0)
+            .OrderBy(s => s.DateEntree)
+            .ThenBy(s => s.ID)
+            .ToListAsync();
+
+        var remainingToReduce = amountToReduce;
+        var lotsAffected = 0;
+        var calibrationNote = $"Réduction calibration Jaugeage #{jaugeageId}. {notes ?? ""}".Trim();
+
+        foreach (var lot in lots)
+        {
+            if (remainingToReduce <= 0)
+                break;
+
+            lotsAffected++;
+
+            if (lot.QuantiteDisponible >= remainingToReduce)
+            {
+                // This lot can absorb the entire remaining reduction
+                lot.QuantiteDisponible -= remainingToReduce;
+                lot.Notes = string.IsNullOrWhiteSpace(lot.Notes)
+                    ? calibrationNote
+                    : $"{lot.Notes} | {calibrationNote}";
+
+                _logger.LogDebug(
+                    "Reduced StockLot {LotId} by {Amount}L, new QteDisponible: {NewQte}L",
+                    lot.ID, remainingToReduce, lot.QuantiteDisponible);
+
+                if (lot.QuantiteDisponible <= 0)
+                {
+                    lot.Statut = "Épuisé";
+                }
+                remainingToReduce = 0;
+            }
+            else
+            {
+                // This lot is exhausted, continue to next
+                remainingToReduce -= lot.QuantiteDisponible;
+                
+                _logger.LogDebug(
+                    "Exhausted StockLot {LotId}, reduced by {Amount}L, remaining to reduce: {Remaining}L",
+                    lot.ID, lot.QuantiteDisponible, remainingToReduce);
+
+                lot.Notes = string.IsNullOrWhiteSpace(lot.Notes)
+                    ? calibrationNote
+                    : $"{lot.Notes} | {calibrationNote}";
+                lot.QuantiteDisponible = 0;
+                lot.Statut = "Épuisé";
+            }
+        }
+
+        if (remainingToReduce > 0.01m)
+        {
+            _logger.LogError(
+                "Could not fully reduce stock for Reservoir {ReservoirId}. Remaining: {Remaining}L",
+                reservoirId, remainingToReduce);
+            throw new InvalidOperationException(
+                $"Stock insuffisant pour la calibration. Restant à réduire: {remainingToReduce:N2}L");
+        }
+
+        // Update reservoir level
+        var reservoir = await _context.Reservoirs.FindAsync(reservoirId);
+        if (reservoir != null)
+        {
+            reservoir.NiveauDeCarburant -= amountToReduce;
+            reservoir.DateModification = DateTime.UtcNow;
+        }
+
+        return lotsAffected;
+    }
+
     /// <inheritdoc />
     public async Task<bool> HasOpeningBalanceAsync(int reservoirId)
     {
@@ -1252,8 +1692,8 @@ public class StockLotService : IStockLotService
                 ProduitID = g.Key.ProduitID,
                 ProduitNom = g.Key.ProduitNom,
                 TotalQuantite = g.Sum(c => c.QuantiteConsommee),
-                TotalCoutAchat = g.Sum(c => c.CoutAchat),
-                TotalVente = g.Sum(c => c.Vente),
+                TotalCoutAchat = g.Sum(c => c.QuantiteConsommee * c.PrixAchat),
+                TotalVente = g.Sum(c => c.QuantiteConsommee * c.PrixVente),
                 PrixAchatMoyen = g.Sum(c => c.QuantiteConsommee) > 0
                     ? Math.Round(g.Sum(c => c.CoutAchat) / g.Sum(c => c.QuantiteConsommee), 2)
                     : 0,
