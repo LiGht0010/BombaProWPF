@@ -1,4 +1,5 @@
 ﻿using BombaProMaxWPF.Models;
+using BombaProMaxWPF.Resources;
 using BombaProMaxWPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -15,6 +16,16 @@ public partial class LoginPageViewModel : ObservableObject
     [ObservableProperty]
     private string _password = string.Empty;
 
+    [ObservableProperty]
+    private bool _isBusy;
+
+    [ObservableProperty]
+    private string? _errorMessage;
+
+    partial void OnEmailChanged(string value) => SignInCommand.NotifyCanExecuteChanged();
+    partial void OnPasswordChanged(string value) => SignInCommand.NotifyCanExecuteChanged();
+    partial void OnIsBusyChanged(bool value) => SignInCommand.NotifyCanExecuteChanged();
+
     readonly ILoginRepository loginservice = new LoginServices();
     private readonly OpeningBalanceOnboardingService _onboardingService;
 
@@ -28,32 +39,39 @@ public partial class LoginPageViewModel : ObservableObject
         _onboardingService = onboardingService;
     }
 
-    [RelayCommand]
+    /// <summary>
+    /// Enables the sign-in button only when both fields are populated and no request is in flight.
+    /// </summary>
+    private bool CanSignIn() =>
+        !IsBusy &&
+        !string.IsNullOrWhiteSpace(Email) &&
+        !string.IsNullOrWhiteSpace(Password);
+
+    [RelayCommand(CanExecute = nameof(CanSignIn))]
     public async Task SignIn()
     {
+        ErrorMessage = null;
+        IsBusy = true;
         try
         {
-            if (!string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(Password))
+            var user = await loginservice.Login(Email, Password);
+            if (user is null)
             {
-                var user = await loginservice.Login(Email, Password);
-                if (user != null)
-                {
-                    // Set BOTH user properties
-                    App.user = user;
-                    App.CurrentUser = user;
+                ErrorMessage = Strings.InvalidCredentials;
+                return;
+            }
 
-                    // Notify host to navigate
-                    LoginSucceeded?.Invoke();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Please enter both email and password.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            App.user = user;
+            App.CurrentUser = user;
+            LoginSucceeded?.Invoke();
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 

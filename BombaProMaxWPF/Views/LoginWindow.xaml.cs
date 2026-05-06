@@ -1,0 +1,92 @@
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using BombaProMaxWPF.Localization;
+using BombaProMaxWPF.Services;
+using BombaProMaxWPF.Theme;
+using BombaProMaxWPF.ViewModels;
+using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
+
+namespace BombaProMaxWPF.Views;
+
+/// <summary>
+/// Interaction logic for LoginWindow.xaml
+/// </summary>
+public partial class LoginWindow : FluentWindow
+{
+    private readonly LoginPageViewModel _viewModel;
+
+    public LoginWindow()
+    {
+        InitializeComponent();
+
+        // TODO: replace with DI once a container is wired up.
+        var stockLotService = new StockLotService();
+        var reservoirService = new ReservoirService();
+        var produitService = new ProduitService();
+        var onboarding = new OpeningBalanceOnboardingService(stockLotService, reservoirService, produitService);
+        _viewModel = new LoginPageViewModel(onboarding);
+        _viewModel.LoginSucceeded += OnLoginSucceeded;
+        DataContext = _viewModel;
+
+        ThemePalette.Apply(dark: false);
+        ApplicationThemeManager.Apply(ApplicationTheme.Light);
+        this.SetResourceReference(BackgroundProperty, "NeuBackgroundBrush");
+        this.SetResourceReference(ForegroundProperty, "NeuTextPrimaryBrush");
+        ThemeToggle.IsChecked = false;
+
+        LanguageManager.Instance.SetLanguage("fr");
+    }
+
+    private void OnLoginSucceeded()
+    {
+        var main = new MainWindow();
+        Application.Current.MainWindow = main;
+        main.Show();
+        Close();
+    }
+
+    private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+    {
+        // PasswordBox.Password is non-bindable for security; push manually into the VM.
+        if (sender is System.Windows.Controls.PasswordBox pb && DataContext is LoginPageViewModel vm)
+        {
+            vm.Password = pb.Password;
+        }
+    }
+
+    private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (LanguageComboBox.SelectedItem is not ComboBoxItem { Tag: string code })
+        {
+            return;
+        }
+
+        LanguageManager.Instance.SetLanguage(code);
+    }
+
+    private void ThemeToggle_Checked(object sender, RoutedEventArgs e)
+    {
+        ThemePalette.Apply(dark: true);
+        ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+        this.SetResourceReference(BackgroundProperty, "NeuBackgroundBrush");
+        this.SetResourceReference(ForegroundProperty, "NeuTextPrimaryBrush");
+        if (ThemeIcon is not null)
+        {
+            ThemeIcon.Symbol = SymbolRegular.WeatherMoon24;
+        }
+    }
+
+    private void ThemeToggle_Unchecked(object sender, RoutedEventArgs e)
+    {
+        ThemePalette.Apply(dark: false);
+        ApplicationThemeManager.Apply(ApplicationTheme.Light);
+        this.SetResourceReference(BackgroundProperty, "NeuBackgroundBrush");
+        this.SetResourceReference(ForegroundProperty, "NeuTextPrimaryBrush");
+        if (ThemeIcon is not null)
+        {
+            ThemeIcon.Symbol = SymbolRegular.WeatherSunny24;
+        }
+    }
+}

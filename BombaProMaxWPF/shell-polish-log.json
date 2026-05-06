@@ -1,0 +1,175 @@
+{
+  "title": "BombaProMax WPF — Shell Polish Log",
+  "purpose": "Machine-readable companion to docs/plans/shell-polish-recap.md. Lists every shell-polish issue (chronological), its root cause, and the exact fix that landed.",
+  "workflow": "Diagnose -> wait for user 'GO' -> apply minimal fix -> build -> mark done.",
+  "issues": [
+    {
+      "id": 1,
+      "title": "Remove placeholder pages",
+      "status": "done",
+      "symptom": "9 stub *Page.xaml files generated under BombaProMaxWPF/Views/Pages/ — wrong scope and wrong folder convention (project rule: Views/[Name]Pages/[Name]View.xaml).",
+      "rootCause": "First scaffolding pass preemptively created 9 nav pages.",
+      "fix": [
+        "Deleted 18 files (xaml + xaml.cs) under BombaProMaxWPF/Views/Pages/ and removed the folder.",
+        "Removed PageType from Models/NavItem.cs.",
+        "Cleaned ViewModels/ShellViewModel.BuildItems (no typeof(...) args, no using BombaProMaxWPF.Views.Pages;).",
+        "MainWindow.OnNavigationRequested reduced to TODO no-op stub."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/Views/Pages/ (deleted)",
+        "BombaProMaxWPF/Models/NavItem.cs",
+        "BombaProMaxWPF/ViewModels/ShellViewModel.cs",
+        "BombaProMaxWPF/MainWindow.xaml.cs"
+      ],
+      "partialPlan": "docs/plans/issue-01-remove-pages.md"
+    },
+    {
+      "id": 2,
+      "title": "Outer grid frame around content",
+      "status": "done",
+      "symptom": "Visible decorative frame surrounded the content area.",
+      "rootCause": "Body Grid carried Margin=\"16,8,16,16\" painted by an outer container.",
+      "fix": [
+        "MainWindow.xaml body Grid Margin '16,8,16,16' -> '0'.",
+        "Pushed margins onto children: sidebar Margin='16,8,8,16', content grid Margin='8,8,16,16'."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/MainWindow.xaml"
+      ],
+      "partialPlan": "docs/plans/issue-02-outer-grid.md"
+    },
+    {
+      "id": 3,
+      "title": "Language switch flips the whole layout",
+      "status": "done",
+      "symptom": "Picking Arabic mirrored the entire UI (sidebar moves to right, icons reverse).",
+      "rootCause": "LanguageComboBox_SelectionChanged set FlowDirection=RightToLeft for 'ar'. FlowDirection cascades through every child by inheritance.",
+      "fix": [
+        "Removed FlowDirection assignment from LanguageComboBox_SelectionChanged; only LanguageManager.Instance.SetLanguage(code) runs.",
+        "Localized hard-coded strings: tooltips (TogglePaneTooltip, LogoutTooltip), CTA (StartDay), and 9 nav titles.",
+        "Added 12 keys to Resources/Strings.resx and Strings.ar.resx: TogglePaneTooltip, StartDay, LogoutTooltip, NavDashboard, NavVentes, NavAchats, NavCaisse, NavClients, NavInfrastructure, NavRessources, NavRapports, NavParametres.",
+        "Models/NavItem now implements INotifyPropertyChanged and re-raises Title on LanguageManager.LanguageChanged."
+      ],
+      "rule": "Language switch never flips FlowDirection; only translates strings via LanguageManager resource indexer.",
+      "filesTouched": [
+        "BombaProMaxWPF/MainWindow.xaml",
+        "BombaProMaxWPF/MainWindow.xaml.cs",
+        "BombaProMaxWPF/Models/NavItem.cs",
+        "BombaProMaxWPF/ViewModels/ShellViewModel.cs",
+        "BombaProMaxWPF/Resources/Strings.resx",
+        "BombaProMaxWPF/Resources/Strings.ar.resx"
+      ],
+      "partialPlan": "docs/plans/issue-03-language-only.md"
+    },
+    {
+      "id": 4,
+      "title": "Theme toggle background glitch (redo)",
+      "status": "done",
+      "symptom": "Toggle Dark -> only window background paints dark; cards/sidebar/toolbar stay Light. Toggle back -> window background stuck Black.",
+      "rootCause": [
+        "WPF auto-freezes SolidColorBrush instances when consumed by Style.Setter; the Color DP becomes immutable, so swapping Neu*Color keys at runtime is silently ignored.",
+        "Wpf.Ui.ApplicationThemeManager.Apply writes FluentWindow.Background as a local DP value, which beats DynamicResource markup."
+      ],
+      "fix": [
+        "Theme/ThemePalette.cs Apply(bool dark) now writes 6 fresh frozen SolidColorBrush instances into Application.Current.Resources: NeuBackgroundBrush, NeuAccentBrush, NeuAccentHoverBrush, NeuTextPrimaryBrush, NeuTextSecondaryBrush, NeuInputFillBrush. Replacing the brush instance defeats the freeze.",
+        "After every ApplicationThemeManager.Apply(...) call (3 sites in MainWindow.xaml.cs + 3 sites in Views/LoginWindow.xaml.cs), call:\n  this.SetResourceReference(BackgroundProperty, \"NeuBackgroundBrush\");\n  this.SetResourceReference(ForegroundProperty, \"NeuTextPrimaryBrush\");\nThis re-installs the DynamicResource and erases the local-value write."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/Theme/ThemePalette.cs",
+        "BombaProMaxWPF/MainWindow.xaml.cs",
+        "BombaProMaxWPF/Views/LoginWindow.xaml.cs",
+        "BombaProMaxWPF/Styles/Neumorphic.Light.xaml (StaticResource Neu*Color -> DynamicResource)"
+      ],
+      "partialPlan": "docs/plans/issue-04-theme-glitch-redo.md",
+      "encodingGotcha": "PowerShell Get-Content -Raw | -replace | Set-Content corrupts non-ASCII (e.g. '\u25CF' U+25CF in PasswordChar). Use [System.IO.File]::ReadAllText/WriteAllText with explicit UTF-8 BOM, or replace literal with XML entity '&#x25CF;'."
+    },
+    {
+      "id": 5,
+      "title": "Collapsed sidebar must hide labels",
+      "status": "done",
+      "symptom": "Collapse toggle didn't hide brand text, CTA label, nav labels, footer text/role.",
+      "rootCause": "UpdateCollapsedVisuals only narrowed the column; inner labels and icons kept their expanded layout.",
+      "fix": [
+        "Added x:Names in MainWindow.xaml: PaneToggleButton, StartDayIcon, NavIcon (in DataTemplate), UserAvatar, LogoutButton.",
+        "Rewrote MainWindow.xaml.cs.UpdateCollapsedVisuals to (collapsed): hide SidebarBrand/UserText/StartDayLabel/LogoutButton/every NavLabel; center PaneToggleButton; zero StartDayIcon.Margin; zero UserAvatar.Margin and center it; zero each NavIcon.Margin and center it; nav RadioButton.HorizontalContentAlignment=Center. All restored on expand."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/MainWindow.xaml",
+        "BombaProMaxWPF/MainWindow.xaml.cs"
+      ],
+      "partialPlan": "docs/plans/issue-05-collapsed-sidebar.md"
+    },
+    {
+      "id": 6,
+      "title": "Collapsed sidebar over-clipped (icons invisible)",
+      "status": "done",
+      "symptom": "First collapsed pass at 64 px showed only thin vertical accent strips; no icons visible.",
+      "rootCause": "Compounding horizontal padding ate 60 px before any icon: outer ContentControl Margin '16,8,8,16' (24 px) + NeuSidebarStyle.Padding=12 (24 px) + inner header/CTA/footer Margin '6,...,6,...' (12 px). Plus inner button styles: NeuStartDayButtonStyle.Padding='16,10' and NeuNavItemStyle.Padding='14,10'.",
+      "paddingMath": {
+        "columnWidth": 64,
+        "outerOverhead": 60,
+        "availableForIcon": 4
+      },
+      "fix": [
+        "SidebarCollapsedWidth: 64 -> 88 px.",
+        "UpdateCollapsedVisuals (collapsed): StartDayButton.Padding='0,10,0,10' (was '16,10' from style); each nav RadioButton.Padding='0,10,0,10' (was '14,10'). Both restored on expand."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/MainWindow.xaml.cs"
+      ],
+      "partialPlan": "docs/plans/issue-06-collapsed-clipped.md"
+    },
+    {
+      "id": 7,
+      "title": "Selected nav: indicator butts icon, HoverFill offset",
+      "status": "done",
+      "symptom": "Collapsed sidebar shows icons but selected row's 3 px indicator butts the icon with no spacing, and the rounded HoverFill highlight is offset to the right of the icon.",
+      "rootCause": [
+        "NeuNavItemStyle template hard-coded ContentPresenter HorizontalAlignment='Stretch' which overrode RadioButton.HorizontalContentAlignment=Center set in code-behind, so inner DataTemplate Grid (Auto/*) kept icon glued to col 0.",
+        "HoverFill Margin '8,0,2,0' is asymmetric; visual center is 3 px right of true row center."
+      ],
+      "fix": [
+        "Styles/Neumorphic.Light.xaml NeuNavItemStyle template: HoverFill.Margin '8,0,2,0' -> '6,0,6,0'.",
+        "Same template: ContentPresenter.HorizontalAlignment 'Stretch' -> '{TemplateBinding HorizontalContentAlignment}'."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/Styles/Neumorphic.Light.xaml"
+      ],
+      "partialPlan": "docs/plans/issue-07-nav-template-offsets.md"
+    },
+    {
+      "id": 8,
+      "title": "Burger placement clipped + focus halo, footer avatar clipped",
+      "status": "done",
+      "symptom": "Burger has dashed focus halo and looks clipped/off-center; footer pill shows only a thin blue arc — avatar clipped to a sliver.",
+      "rootCause": [
+        "Burger sits in col 1 (Auto) of a 2-col header Grid '*/Auto'. With 88 px sidebar, header has ~28 px — less than button Width=36 -> overflows/clips on the left. HorizontalAlignment=Center only centers within col 1 (= button width, no-op).",
+        "WPF default Button.FocusVisualStyle (dashed rect) was never overridden in NeuPaneToggleStyle.",
+        "Footer pill: sidebar inner = 40 px, UserPill.Margin '6,12,6,4' eats 12, NeuUserPillStyle.Padding '10,8' eats 20 -> 8 px content for 32 px avatar. Inner Grid Auto/*/Auto with col 1 (*) absorbing leftover space -> avatar pulled left."
+      ],
+      "fix": [
+        "NeuPaneToggleStyle: added <Setter Property='FocusVisualStyle' Value='{x:Null}' /> to kill dashed halo.",
+        "UpdateCollapsedVisuals (collapsed): Grid.SetColumn(PaneToggleButton,0) + Grid.SetColumnSpan(PaneToggleButton,2) + HorizontalAlignment=Center; restored to Column=1, ColumnSpan=1, HorizontalAlignment=Right on expand.",
+        "UserPill.Padding '10,8,10,8' -> '0,8,0,8' collapsed.",
+        "UserAvatar (collapsed): Grid.SetColumnSpan=3, Width=Height=24, Margin=0, HorizontalAlignment=Center. Expanded restored: ColumnSpan=1, 32x32, Margin '0,0,10,0', HorizontalAlignment=Left."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/Styles/Neumorphic.Light.xaml",
+        "BombaProMaxWPF/MainWindow.xaml.cs"
+      ],
+      "partialPlan": "docs/plans/issue-08-burger-and-footer.md"
+    }
+  ],
+  "lessonsLearned": [
+    "WPF SolidColorBrush instances auto-freeze when used in style setters. Color-key swaps don't repaint — you must replace the brush instance itself.",
+    "Wpf.Ui.ApplicationThemeManager.Apply writes FluentWindow.Background as a local DP value. Use SetResourceReference after every Apply to re-attach the DynamicResource.",
+    "Hard-coded HorizontalAlignment='Stretch' on a ContentPresenter swallows HorizontalContentAlignment setters. Always bind via {TemplateBinding HorizontalContentAlignment} in custom templates.",
+    "Compounding padding layers (outer Margin -> style Padding -> inner Margin -> button Padding) can eat 60+ px before any icon. Never just widen the column — also strip inner padding when collapsed.",
+    "Inner Grid layouts with '*' columns trap children at the left edge regardless of HorizontalAlignment on the child. Use Grid.ColumnSpan to span all cols when you need genuine centering.",
+    "WPF default Button.FocusVisualStyle (dashed rect) is active unless explicitly overridden. Set FocusVisualStyle='{x:Null}' on icon-only buttons in custom styles.",
+    "Project localization rule: language switch never flips FlowDirection; LanguageManager indexer binding must be present on every view.",
+    "Encoding gotcha: PowerShell Get-Content -Raw with -replace corrupts non-ASCII characters. Use [System.IO.File]::ReadAllText/WriteAllText with explicit UTF-8 BOM, or use XML entities like &#x25CF; for literal special chars."
+  ],
+  "globalTracker": "docs/plans/shell-polish.md",
+  "humanReadableRecap": "docs/plans/shell-polish-recap.md"
+}

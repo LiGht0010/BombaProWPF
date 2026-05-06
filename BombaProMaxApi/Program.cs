@@ -5,6 +5,9 @@ using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Enable running as a Windows Service. No-op when launched as a console app or on non-Windows.
+builder.Host.UseWindowsService();
+
 // Only use hardcoded URL in Development - Production uses ASPNETCORE_URLS env variable
 if (builder.Environment.IsDevelopment())
 {

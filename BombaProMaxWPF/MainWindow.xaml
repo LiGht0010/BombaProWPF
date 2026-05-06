@@ -6,19 +6,18 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:local="clr-namespace:BombaProMaxWPF"
         xmlns:loc="clr-namespace:BombaProMaxWPF.Localization"
+        xmlns:models="clr-namespace:BombaProMaxWPF.Models"
         mc:Ignorable="d"
         Title="{Binding [AppName], Source={x:Static loc:LanguageManager.Instance}}"
-        Height="650" Width="1000"
-        MinHeight="500" MinWidth="800"
+        Height="780" Width="1280"
+        MinHeight="600" MinWidth="1024"
         WindowStartupLocation="CenterScreen"
-        WindowBackdropType="Mica"
-        ExtendsContentIntoTitleBar="True"
-        Background="{DynamicResource ApplicationBackgroundBrush}"
-        Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+        WindowBackdropType="None"
+        Background="{DynamicResource NeuBackgroundBrush}"
+        Foreground="{DynamicResource NeuTextPrimaryBrush}">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -26,109 +25,230 @@
         <!-- Title bar -->
         <ui:TitleBar Grid.Row="0"
                      Title="{Binding [AppName], Source={x:Static loc:LanguageManager.Instance}}"
+                     Background="{DynamicResource NeuBackgroundBrush}"
+                     Foreground="{DynamicResource NeuTextPrimaryBrush}"
                      ShowMaximize="True"
                      ShowMinimize="True"
                      ShowClose="True" />
 
-        <!-- Top toolbar: theme + language -->
-        <Border Grid.Row="1"
-                Padding="24,12"
-                BorderThickness="0,0,0,1"
-                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
-            <Grid>
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center">
+        <!-- Shell body: sidebar | content -->
+        <Grid Grid.Row="1" Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="SidebarColumn" Width="260" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-                    <!-- Language picker -->
-                    <ui:SymbolIcon Symbol="Globe24"
-                                   FontSize="18"
+            <!-- ============ SIDEBAR ============ -->
+            <ContentControl Grid.Column="0"
+                            Style="{DynamicResource NeuSidebarStyle}"
+                            Margin="16,8,8,16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />  <!-- header / collapse -->
+                        <RowDefinition Height="Auto" />  <!-- start day CTA -->
+                        <RowDefinition Height="*" />     <!-- nav items -->
+                        <RowDefinition Height="Auto" />  <!-- footer -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Header: logo + collapse toggle -->
+                    <Grid Grid.Row="0" Margin="6,4,6,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0"
+                                    x:Name="SidebarBrand"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                            <Border Width="36" Height="36"
+                                    CornerRadius="18"
+                                    Background="{DynamicResource NeuBackgroundBrush}"
+                                    Margin="6,0,10,0">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="{DynamicResource NeuDarkShadowColor}"
+                                                      BlurRadius="10" ShadowDepth="3"
+                                                      Direction="315" Opacity="0.55" />
+                                </Border.Effect>
+                                <Image Source="/Logos/BPM.png" Stretch="Uniform" Margin="4" />
+                            </Border>
+                            <TextBlock Text="{Binding [AppName], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1"
+                                x:Name="PaneToggleButton"
+                                Style="{DynamicResource NeuPaneToggleStyle}"
+                                Command="{Binding TogglePaneCommand}"
+                                ToolTip="{Binding [TogglePaneTooltip], Source={x:Static loc:LanguageManager.Instance}}">
+                            <ui:SymbolIcon Symbol="Navigation24" FontSize="18" />
+                        </Button>
+                    </Grid>
+
+                    <!-- Sticky CTA: Démarrer la journée -->
+                    <Button Grid.Row="1"
+                            x:Name="StartDayButton"
+                            Style="{DynamicResource NeuStartDayButtonStyle}"
+                            Command="{Binding StartDayCommand}"
+                            Margin="6,0,6,16"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel x:Name="StartDayContent" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <ui:SymbolIcon x:Name="StartDayIcon" Symbol="Play24" FontSize="16" Margin="0,0,8,0" />
+                            <TextBlock x:Name="StartDayLabel"
+                                       Text="{Binding [StartDay], Source={x:Static loc:LanguageManager.Instance}}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Nav items -->
+                    <ScrollViewer Grid.Row="2"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding Items}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:NavItem}">
+                                    <RadioButton Style="{DynamicResource NeuNavItemStyle}"
+                                                 GroupName="ShellNav"
+                                                 Checked="NavItem_Checked"
+                                                 Tag="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <ui:SymbolIcon Grid.Column="0"
+                                                           x:Name="NavIcon"
+                                                           Symbol="{Binding Icon}"
+                                                           FontSize="18"
+                                                           VerticalAlignment="Center"
+                                                           Margin="0,0,12,0" />
+                                            <TextBlock Grid.Column="1"
+                                                       x:Name="NavLabel"
+                                                       Text="{Binding Title}"
+                                                       VerticalAlignment="Center"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </Grid>
+                                    </RadioButton>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Footer: user pill + logout -->
+                    <Border Grid.Row="3"
+                            x:Name="UserPill"
+                            Style="{DynamicResource NeuUserPillStyle}"
+                            Margin="6,12,6,4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0"
+                                    x:Name="UserAvatar"
+                                    Width="32" Height="32"
+                                    CornerRadius="16"
+                                    Background="{DynamicResource NeuAccentBrush}"
+                                    Margin="0,0,10,0">
+                                <ui:SymbolIcon Symbol="Person24"
+                                               Foreground="White"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                            </Border>
+
+                            <StackPanel Grid.Column="1"
+                                        x:Name="UserText"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{Binding UserDisplayName}"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                                <TextBlock Text="{Binding UserRole}"
+                                           FontSize="11"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                            </StackPanel>
+
+                            <Button Grid.Column="2"
+                                    x:Name="LogoutButton"
+                                    Style="{DynamicResource NeuPaneToggleStyle}"
+                                    Command="{Binding LogoutCommand}"
+                                    ToolTip="{Binding [LogoutTooltip], Source={x:Static loc:LanguageManager.Instance}}">
+                                <ui:SymbolIcon Symbol="SignOut24" FontSize="16" />
+                            </Button>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </ContentControl>
+
+            <!-- ============ CONTENT PANE ============ -->
+            <Grid Grid.Column="1" Margin="8,8,16,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Top toolbar: theme + language (neumorphic raised pill) -->
+                <ContentControl Grid.Row="0"
+                                Style="{DynamicResource NeuToolbarStyle}"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0,0,0,12">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="Globe24"
+                                       FontSize="18"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                       Margin="4,0,8,0" />
+                        <TextBlock Text="{Binding [LanguageLabel], Source={x:Static loc:LanguageManager.Instance}}"
                                    VerticalAlignment="Center"
-                                   Margin="0,0,8,0" />
-                    <TextBlock Text="{Binding [LanguageLabel], Source={x:Static loc:LanguageManager.Instance}}"
-                               VerticalAlignment="Center"
-                               Margin="0,0,8,0"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="LanguageComboBox"
-                              Width="140"
-                              SelectedIndex="0"
-                              SelectionChanged="LanguageComboBox_SelectionChanged"
-                              VerticalContentAlignment="Center">
-                        <ComboBoxItem Content="Français" Tag="fr" />
-                        <ComboBoxItem Content="العربية" Tag="ar" />
-                    </ComboBox>
+                                   Margin="0,0,8,0"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                        <ComboBox x:Name="LanguageComboBox"
+                                  Style="{DynamicResource NeuComboBoxStyle}"
+                                  Width="140"
+                                  SelectedIndex="0"
+                                  SelectionChanged="LanguageComboBox_SelectionChanged">
+                            <ComboBoxItem Content="Français" Tag="fr" />
+                            <ComboBoxItem Content="العربية" Tag="ar" />
+                        </ComboBox>
 
-                    <Border Width="1"
-                            Margin="16,4"
-                            Background="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                        <Border Width="1" Margin="16,6"
+                                Background="{DynamicResource NeuTextSecondaryBrush}"
+                                Opacity="0.3" />
 
-                    <!-- Theme toggle -->
-                    <ui:SymbolIcon x:Name="ThemeIcon"
-                                   Symbol="WeatherSunny24"
-                                   FontSize="18"
+                        <ui:SymbolIcon x:Name="ThemeIcon"
+                                       Symbol="WeatherSunny24"
+                                       FontSize="18"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                       Margin="0,0,8,0" />
+                        <TextBlock Text="{Binding [ThemeLabel], Source={x:Static loc:LanguageManager.Instance}}"
                                    VerticalAlignment="Center"
-                                   Margin="0,0,8,0" />
-                    <TextBlock Text="{Binding [ThemeLabel], Source={x:Static loc:LanguageManager.Instance}}"
-                               VerticalAlignment="Center"
-                               Margin="0,0,8,0"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ui:ToggleSwitch x:Name="ThemeToggle"
-                                     Checked="ThemeToggle_Checked"
-                                     Unchecked="ThemeToggle_Unchecked"
-                                     VerticalAlignment="Center" />
-                </StackPanel>
+                                   Margin="0,0,8,0"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                        <ToggleButton x:Name="ThemeToggle"
+                                      Style="{DynamicResource NeuToggleSwitchStyle}"
+                                      Checked="ThemeToggle_Checked"
+                                      Unchecked="ThemeToggle_Unchecked"
+                                      VerticalAlignment="Center"
+                                      Margin="0,0,4,0" />
+                    </StackPanel>
+                </ContentControl>
+
+                <!-- Hosted page surface -->
+                <Frame Grid.Row="1"
+                       x:Name="ContentFrame"
+                       NavigationUIVisibility="Hidden"
+                       Background="Transparent"
+                       Focusable="False" />
             </Grid>
-        </Border>
-
-        <!-- Main content: welcome card -->
-        <Grid Grid.Row="2">
-            <ui:Card MaxWidth="640"
-                     Padding="40"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Center"
-                     Margin="24">
-                <StackPanel HorizontalAlignment="Center">
-
-                    <!-- Logo -->
-                    <Image Source="pack://application:,,,/Logos/BPM.png"
-                           Width="180" Height="180"
-                           Stretch="Uniform"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,24" />
-
-                    <!-- App name -->
-                    <TextBlock Text="{Binding [AppName], Source={x:Static loc:LanguageManager.Instance}}"
-                               FontSize="36"
-                               FontWeight="Bold"
-                               HorizontalAlignment="Center"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-
-                    <!-- Welcome -->
-                    <TextBlock Text="{Binding [Welcome], Source={x:Static loc:LanguageManager.Instance}}"
-                               FontSize="20"
-                               FontWeight="SemiBold"
-                               HorizontalAlignment="Center"
-                               Margin="0,12,0,0"
-                               Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
-
-                    <!-- Tagline -->
-                    <TextBlock Text="{Binding [Tagline], Source={x:Static loc:LanguageManager.Instance}}"
-                               FontSize="14"
-                               HorizontalAlignment="Center"
-                               TextAlignment="Center"
-                               TextWrapping="Wrap"
-                               Margin="0,8,0,24"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-
-                    <!-- CTA -->
-                    <ui:Button Content="{Binding [GetStarted], Source={x:Static loc:LanguageManager.Instance}}"
-                               Icon="{ui:SymbolIcon ArrowRight24}"
-                               Appearance="Primary"
-                               HorizontalAlignment="Center"
-                               Padding="24,10"
-                               FontSize="14" />
-                </StackPanel>
-            </ui:Card>
         </Grid>
     </Grid>
 </ui:FluentWindow>

@@ -59,4 +59,25 @@
   <data name="LanguageLabel" xml:space="preserve"><value>اللغة</value></data>
   <data name="Light" xml:space="preserve"><value>فاتح</value></data>
   <data name="Dark" xml:space="preserve"><value>داكن</value></data>
+  <data name="SignInTitle" xml:space="preserve"><value>تسجيل الدخول إلى حسابك</value></data>
+  <data name="EmailLabel" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="PasswordLabel" xml:space="preserve"><value>كلمة المرور</value></data>
+  <data name="SignInButton" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="ForgotPassword" xml:space="preserve"><value>هل نسيت كلمة المرور؟</value></data>
+  <data name="Connecting" xml:space="preserve"><value>جارٍ الاتصال…</value></data>
+  <data name="InvalidCredentials" xml:space="preserve"><value>البريد الإلكتروني أو كلمة المرور غير صحيحة.</value></data>
+
+  <data name="TogglePaneTooltip" xml:space="preserve"><value>طي / توسيع</value></data>
+  <data name="StartDay" xml:space="preserve"><value>بدء اليوم</value></data>
+  <data name="LogoutTooltip" xml:space="preserve"><value>تسجيل الخروج</value></data>
+
+  <data name="NavDashboard" xml:space="preserve"><value>لوحة التحكم</value></data>
+  <data name="NavVentes" xml:space="preserve"><value>المبيعات</value></data>
+  <data name="NavAchats" xml:space="preserve"><value>المشتريات</value></data>
+  <data name="NavCaisse" xml:space="preserve"><value>الصندوق</value></data>
+  <data name="NavClients" xml:space="preserve"><value>العملاء</value></data>
+  <data name="NavInfrastructure" xml:space="preserve"><value>البنية التحتية</value></data>
+  <data name="NavRessources" xml:space="preserve"><value>الموارد</value></data>
+  <data name="NavRapports" xml:space="preserve"><value>التقارير</value></data>
+  <data name="NavParametres" xml:space="preserve"><value>الإعدادات</value></data>
 </root>

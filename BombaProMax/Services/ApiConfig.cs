@@ -1,4 +1,4 @@
-namespace BombaProMax.Services;
+﻿namespace BombaProMax.Services;
 
 /// <summary>
 /// Centralized API configuration. BaseUrl can be configured per client installation.
@@ -10,10 +10,10 @@ public static class ApiConfig
     // ===========================================
 
     // Production (Debian Server)
-    private static string _baseUrl = "http://62.84.189.17:5002/api";
+    //private static string _baseUrl = "http://62.84.189.17:5002/api";
 
     // Development (Local) - Matches Kestrel config in appsettings.json
-    //private static string _baseUrl = "http://localhost:5003/api";
+    private static string _baseUrl = "http://localhost:5001/api";
 
     /// <summary>
     /// Gets or sets the API base URL. Set this at app startup based on client configuration.

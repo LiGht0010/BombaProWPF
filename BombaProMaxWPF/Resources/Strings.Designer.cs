@@ -48,5 +48,12 @@ namespace BombaProMaxWPF.Resources
         public static string LanguageLabel => ResourceManager.GetString(nameof(LanguageLabel), _resourceCulture) ?? string.Empty;
         public static string Light         => ResourceManager.GetString(nameof(Light), _resourceCulture) ?? string.Empty;
         public static string Dark          => ResourceManager.GetString(nameof(Dark), _resourceCulture) ?? string.Empty;
+        public static string SignInTitle        => ResourceManager.GetString(nameof(SignInTitle), _resourceCulture) ?? string.Empty;
+        public static string EmailLabel         => ResourceManager.GetString(nameof(EmailLabel), _resourceCulture) ?? string.Empty;
+        public static string PasswordLabel      => ResourceManager.GetString(nameof(PasswordLabel), _resourceCulture) ?? string.Empty;
+        public static string SignInButton       => ResourceManager.GetString(nameof(SignInButton), _resourceCulture) ?? string.Empty;
+        public static string ForgotPassword     => ResourceManager.GetString(nameof(ForgotPassword), _resourceCulture) ?? string.Empty;
+        public static string Connecting         => ResourceManager.GetString(nameof(Connecting), _resourceCulture) ?? string.Empty;
+        public static string InvalidCredentials => ResourceManager.GetString(nameof(InvalidCredentials), _resourceCulture) ?? string.Empty;
     }
 }
