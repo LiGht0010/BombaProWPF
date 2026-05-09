@@ -201,23 +201,44 @@
                                 VerticalAlignment="Center"
                                 Margin="0,0,0,12">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <ui:SymbolIcon Symbol="Globe24"
-                                       FontSize="18"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource NeuTextPrimaryBrush}"
-                                       Margin="4,0,8,0" />
-                        <TextBlock Text="{Binding [LanguageLabel], Source={x:Static loc:LanguageManager.Instance}}"
-                                   VerticalAlignment="Center"
-                                   Margin="0,0,8,0"
-                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
-                        <ComboBox x:Name="LanguageComboBox"
-                                  Style="{DynamicResource NeuComboBoxStyle}"
-                                  Width="140"
-                                  SelectedIndex="0"
-                                  SelectionChanged="LanguageComboBox_SelectionChanged">
-                            <ComboBoxItem Content="Français" Tag="fr" />
-                            <ComboBoxItem Content="العربية" Tag="ar" />
-                        </ComboBox>
+                        <Border x:Name="LanguagePickerHost"
+                                Background="{DynamicResource NeuInputFillBrush}"
+                                BorderBrush="{DynamicResource NeuTextSecondaryBrush}"
+                                BorderThickness="0"
+                                CornerRadius="20"
+                                Padding="0,0"
+                                Cursor="Hand"
+                                MouseLeftButtonUp="LanguagePickerHost_MouseLeftButtonUp">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="BorderBrush" Value="{DynamicResource NeuTextSecondaryBrush}" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="BorderBrush" Value="{DynamicResource NeuAccentBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Globe24"
+                                               FontSize="18"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                               Margin="4,0,8,0" />
+                                <TextBlock Text="{Binding [LanguageLabel], Source={x:Static loc:LanguageManager.Instance}}"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"
+                                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                <ComboBox x:Name="LanguageComboBox"
+                                          Style="{DynamicResource NeuComboBoxStyle}"
+                                          Width="140"
+                                          SelectedIndex="0"
+                                          SelectionChanged="LanguageComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Français" Tag="fr" />
+                                    <ComboBoxItem Content="العربية" Tag="ar" />
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
 
                         <Border Width="1" Margin="16,6"
                                 Background="{DynamicResource NeuTextSecondaryBrush}"

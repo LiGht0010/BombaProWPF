@@ -14,6 +14,7 @@ Status legend: ⏳ pending · 🔍 diagnosing · ⚙️ fixing · ✅ done
 | 6  | Collapsed sidebar over-clipped: icons invisible, only thin accent strips remain        | `docs/plans/issue-06-collapsed-clipped.md`| ✅     |
 | 7  | Collapsed nav: selected indicator butts the icon, HoverFill highlight offset right     | `docs/plans/issue-07-nav-template-offsets.md`| ✅  |
 | 8  | Burger placement clipped + focus halo, footer avatar clipped/off-center                | `docs/plans/issue-08-burger-and-footer.md`| ✅     |
+| 9  | Neon-Navy dark palette + Forecourt Overview demo dashboard (`Tableau de bord` page)    | `docs/plans/issue-09-neon-dashboard.md`   | ✅     |
 
 ## Workflow per issue
 1. Diagnose: cause + exact location (no edits).

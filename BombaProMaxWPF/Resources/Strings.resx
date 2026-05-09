@@ -80,4 +80,25 @@
   <data name="NavRessources" xml:space="preserve"><value>Ressources</value></data>
   <data name="NavRapports" xml:space="preserve"><value>Rapports</value></data>
   <data name="NavParametres" xml:space="preserve"><value>Paramètres</value></data>
+
+  <data name="DashTitle" xml:space="preserve"><value>Vue d'ensemble du parc</value></data>
+  <data name="DashSubtitle" xml:space="preserve"><value>Station #442 — Terminal Nord</value></data>
+  <data name="DashLiveTankInventory" xml:space="preserve"><value>Inventaire des cuves en direct</value></data>
+  <data name="DashSyncingLive" xml:space="preserve"><value>SYNCHRO LIVE</value></data>
+  <data name="DashMarketPricing" xml:space="preserve"><value>Tarification marché</value></data>
+  <data name="DashUpdateDisplays" xml:space="preserve"><value>Mettre à jour les afficheurs</value></data>
+  <data name="DashActivePumps" xml:space="preserve"><value>Surveillance des pompes actives</value></data>
+  <data name="DashSpatialView" xml:space="preserve"><value>Vue spatiale</value></data>
+  <data name="DashSpatialSub" xml:space="preserve"><value>Suivi d'occupation en temps réel activé</value></data>
+  <data name="DashUnleaded" xml:space="preserve"><value>SANS PLOMB</value></data>
+  <data name="DashDiesel" xml:space="preserve"><value>DIESEL</value></data>
+  <data name="DashPremium" xml:space="preserve"><value>PREMIUM</value></data>
+  <data name="DashInUse" xml:space="preserve"><value>EN USAGE</value></data>
+  <data name="DashIdle" xml:space="preserve"><value>INACTIF</value></data>
+  <data name="DashCheck" xml:space="preserve"><value>À VÉRIFIER</value></data>
+  <data name="DashLowStockAlert" xml:space="preserve"><value>Alerte stock bas</value></data>
+  <data name="DashCap" xml:space="preserve"><value>Cap.: {0} L</value></data>
+  <data name="DashStable" xml:space="preserve"><value>Stable</value></data>
+  <data name="DashMarketDelta" xml:space="preserve"><value>{0} Marché</value></data>
+  <data name="DashTargetDelta" xml:space="preserve"><value>{0} Cible</value></data>
 </root>

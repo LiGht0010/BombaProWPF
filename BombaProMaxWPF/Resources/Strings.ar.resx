@@ -80,4 +80,25 @@
   <data name="NavRessources" xml:space="preserve"><value>الموارد</value></data>
   <data name="NavRapports" xml:space="preserve"><value>التقارير</value></data>
   <data name="NavParametres" xml:space="preserve"><value>الإعدادات</value></data>
+
+  <data name="DashTitle" xml:space="preserve"><value>نظرة عامة على المحطة</value></data>
+  <data name="DashSubtitle" xml:space="preserve"><value>المحطة رقم 442 — الطرف الشمالي</value></data>
+  <data name="DashLiveTankInventory" xml:space="preserve"><value>المخزون الحي للخزانات</value></data>
+  <data name="DashSyncingLive" xml:space="preserve"><value>مزامنة حية</value></data>
+  <data name="DashMarketPricing" xml:space="preserve"><value>تسعير السوق</value></data>
+  <data name="DashUpdateDisplays" xml:space="preserve"><value>تحديث جميع الشاشات</value></data>
+  <data name="DashActivePumps" xml:space="preserve"><value>مراقبة المضخات النشطة</value></data>
+  <data name="DashSpatialView" xml:space="preserve"><value>العرض المكاني</value></data>
+  <data name="DashSpatialSub" xml:space="preserve"><value>تتبع الإشغال في الوقت الحقيقي مفعّل</value></data>
+  <data name="DashUnleaded" xml:space="preserve"><value>بدون رصاص</value></data>
+  <data name="DashDiesel" xml:space="preserve"><value>ديزل</value></data>
+  <data name="DashPremium" xml:space="preserve"><value>بريميوم</value></data>
+  <data name="DashInUse" xml:space="preserve"><value>قيد الاستخدام</value></data>
+  <data name="DashIdle" xml:space="preserve"><value>متوقف</value></data>
+  <data name="DashCheck" xml:space="preserve"><value>يتطلب فحص</value></data>
+  <data name="DashLowStockAlert" xml:space="preserve"><value>تنبيه مخزون منخفض</value></data>
+  <data name="DashCap" xml:space="preserve"><value>السعة: {0} لتر</value></data>
+  <data name="DashStable" xml:space="preserve"><value>مستقر</value></data>
+  <data name="DashMarketDelta" xml:space="preserve"><value>{0} السوق</value></data>
+  <data name="DashTargetDelta" xml:space="preserve"><value>{0} الهدف</value></data>
 </root>

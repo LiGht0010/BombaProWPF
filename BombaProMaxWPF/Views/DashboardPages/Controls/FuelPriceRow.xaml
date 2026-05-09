@@ -1,0 +1,50 @@
+<UserControl x:Class="BombaProMaxWPF.Views.DashboardPages.Controls.FuelPriceRow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fc="clr-namespace:BombaProMaxWPF.Models.Forecourt"
+             x:Name="RowRoot">
+    <Border CornerRadius="12"
+            Background="{DynamicResource NeuInputFillBrush}"
+            Padding="14,10"
+            Margin="0,0,0,8">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                <TextBlock FontSize="10" FontWeight="SemiBold"
+                           Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                           Text="{Binding ElementName=RowRoot, Path=Label}" />
+                <TextBlock Margin="0,2,0,0"
+                           FontSize="20" FontWeight="Bold"
+                           Foreground="{DynamicResource NeuTextPrimaryBrush}">
+                    <Run Text="$" />
+                    <Run Text="{Binding ElementName=RowRoot, Path=Price, StringFormat={}{0:0.00}}" />
+                </TextBlock>
+            </StackPanel>
+
+            <TextBlock Grid.Column="1"
+                       VerticalAlignment="Center"
+                       FontSize="11" FontWeight="SemiBold"
+                       Text="{Binding ElementName=RowRoot, Path=Delta}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=RowRoot, Path=DeltaTone}"
+                                         Value="{x:Static fc:DeltaTone.Up}">
+                                <Setter Property="Foreground" Value="{DynamicResource NeuAccentBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=RowRoot, Path=DeltaTone}"
+                                         Value="{x:Static fc:DeltaTone.Down}">
+                                <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+    </Border>
+</UserControl>

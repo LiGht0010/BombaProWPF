@@ -1,0 +1,223 @@
+<UserControl x:Class="BombaProMaxWPF.Views.DashboardPages.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctrl="clr-namespace:BombaProMaxWPF.Views.DashboardPages.Controls"
+             xmlns:loc="clr-namespace:BombaProMaxWPF.Localization"
+             xmlns:fc="clr-namespace:BombaProMaxWPF.Models.Forecourt"
+             Background="Transparent">
+    <UserControl.Resources>
+        <!-- Card surface used by every dashboard panel. -->
+        <Style x:Key="DashCardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource NeuAccentBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="20" />
+        </Style>
+
+        <Style x:Key="CardTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" MinHeight="220" />
+            </Grid.RowDefinitions>
+
+            <!-- 1. Hero title block -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                <TextBlock FontSize="30" FontWeight="SemiBold"
+                           Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                           Text="{Binding [DashTitle], Source={x:Static loc:LanguageManager.Instance}}" />
+                <TextBlock Margin="0,4,0,0"
+                           FontSize="13"
+                           Foreground="{DynamicResource NeuTextSecondaryBrush}">
+                    <Run Text="📍 " />
+                    <Run Text="{Binding [DashSubtitle], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
+                </TextBlock>
+            </StackPanel>
+
+            <!-- 2. Inventory + Pricing row -->
+            <Grid Grid.Row="1" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="320" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Live Tank Inventory -->
+                <ContentControl Grid.Column="0" Style="{StaticResource NeuDashCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Style="{StaticResource CardTitleStyle}"
+                                       Text="{Binding [DashLiveTankInventory], Source={x:Static loc:LanguageManager.Instance}}" />
+                            <Border Grid.Column="1" CornerRadius="10" Padding="10,4"
+                                    Background="{DynamicResource NeuAccentGradientBrush}">
+                                <TextBlock FontSize="9" FontWeight="Bold" Foreground="White"
+                                           Text="{Binding [DashSyncingLive], Source={x:Static loc:LanguageManager.Instance}}" />
+                            </Border>
+                        </Grid>
+
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Tanks}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="1" Columns="3" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type fc:TankModel}">
+                                    <StackPanel HorizontalAlignment="Center" Margin="6,0">
+                                        <ctrl:RingProgress
+                                            Percent="{Binding FillPercent}"
+                                            Label="{Binding Name}"
+                                            IsLow="{Binding IsLow}" />
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   Margin="0,10,0,0"
+                                                   FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource NeuTextPrimaryBrush}">
+                                            <Run Text="{Binding Liters, StringFormat={}{0:N0}}" />
+                                            <Run Text=" L" />
+                                        </TextBlock>
+                                        <TextBlock HorizontalAlignment="Center" Margin="0,2,0,0"
+                                                   FontSize="11">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+                                                    <Setter Property="Text">
+                                                        <Setter.Value>
+                                                            <MultiBinding StringFormat="Cap: {0:N0} L">
+                                                                <Binding Path="CapacityLiters" />
+                                                            </MultiBinding>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsLow}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}" />
+                                                            <Setter Property="Text" Value="{Binding [DashLowStockAlert], Source={x:Static loc:LanguageManager.Instance}}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </ContentControl>
+
+                <!-- Market Pricing -->
+                <ContentControl Grid.Column="2" Style="{StaticResource NeuDashCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Margin="0,0,0,12"
+                                   Style="{StaticResource CardTitleStyle}"
+                                   Text="{Binding [DashMarketPricing], Source={x:Static loc:LanguageManager.Instance}}" />
+
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Prices}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type fc:FuelPriceModel}">
+                                    <ctrl:FuelPriceRow
+                                        Label="{Binding Label}"
+                                        Price="{Binding Price}"
+                                        Delta="{Binding Delta}"
+                                        DeltaTone="{Binding DeltaTone}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Button Grid.Row="2" Margin="0,8,0,0"
+                                Height="44"
+                                Foreground="White" FontWeight="SemiBold"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Background="{DynamicResource NeuAccentGradientBrush}"
+                                Content="{Binding [DashUpdateDisplays], Source={x:Static loc:LanguageManager.Instance}}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border CornerRadius="12"
+                                            Background="{TemplateBinding Background}"
+                                            Padding="14,8">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </ContentControl>
+            </Grid>
+
+            <!-- 3. Active Pump Monitor -->
+            <ContentControl Grid.Row="2" Style="{StaticResource NeuDashCardStyle}" Margin="0,0,0,20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Margin="0,0,0,12"
+                               Style="{StaticResource CardTitleStyle}"
+                               Text="{Binding [DashActivePumps], Source={x:Static loc:LanguageManager.Instance}}" />
+
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Pumps}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="1" Columns="8" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type fc:PumpModel}">
+                                <ctrl:PumpStatusTile Margin="6,0"
+                                                     PumpName="{Binding Name}"
+                                                     Status="{Binding Status}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </ContentControl>
+
+            <!-- 4. Spatial View hero -->
+            <Border Grid.Row="3" CornerRadius="16">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#0E1428" Offset="0" />
+                        <GradientStop Color="#050810" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid Margin="24">
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                        <TextBlock FontSize="18" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                   Text="{Binding [DashSpatialView], Source={x:Static loc:LanguageManager.Instance}}" />
+                        <TextBlock Margin="0,4,0,0"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                   Text="{Binding [DashSpatialSub], Source={x:Static loc:LanguageManager.Instance}}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -66,6 +66,27 @@ public partial class LoginWindow : FluentWindow
         LanguageManager.Instance.SetLanguage(code);
     }
 
+    private void LanguagePickerHost_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        // Clicks that originate inside the ComboBox itself are handled by its own template.
+        if (e.OriginalSource is DependencyObject src && IsDescendantOf(src, LanguageComboBox))
+        {
+            return;
+        }
+
+        LanguageComboBox.IsDropDownOpen = !LanguageComboBox.IsDropDownOpen;
+        e.Handled = true;
+    }
+
+    private static bool IsDescendantOf(DependencyObject node, DependencyObject ancestor)
+    {
+        for (var current = node; current is not null; current = System.Windows.Media.VisualTreeHelper.GetParent(current) ?? System.Windows.LogicalTreeHelper.GetParent(current))
+        {
+            if (ReferenceEquals(current, ancestor)) return true;
+        }
+        return false;
+    }
+
     private void ThemeToggle_Checked(object sender, RoutedEventArgs e)
     {
         ThemePalette.Apply(dark: true);

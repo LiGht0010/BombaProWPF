@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Sidebar views — port & build plan",
+  "description": "Build order and per-view contracts for each shell sidebar destination. Nav keys match BombaProMaxWPF/ViewModels/ShellViewModel.cs BuildItems(). Source pages live under BombaProMax/Views/* (the MAUI app). Target views land under BombaProMaxWPF/Views/<area>/.",
+  "version": "0.1",
+  "status": "draft (awaiting review)",
+  "conventions": {
+    "shell": {
+      "navKeys": "dashboard | ventes | achats | caisse | clients | infrastructure | ressources | rapports | parametres",
+      "host": "MainWindow.ContentFrame (WPF Frame)",
+      "viewBase": "UserControl with Background=Transparent, root ScrollViewer when content can overflow",
+      "tabbedLayoutPattern": "Top-level UserControl hosting a TabControl with the sub-section names below; each tab content is its own UserControl in the same folder",
+      "stickyHeaderButton": "Démarrer la journée — already wired via ShellViewModel.StartDayCommand; NOT a routed view"
+    },
+    "styling": {
+      "cards": "{StaticResource NeuDashCardStyle} (twin-shadow ContentControl)",
+      "inputs": "NeuTextBoxStyle / NeuComboBoxStyle / NeuPasswordBoxStyle",
+      "buttons": "NeuButtonStyle (primary), NeuLinkButtonStyle (link)",
+      "accent": "NeuAccentBrush (#3FA89F light / #FF8A3D dark) and NeuAccentGradientBrush for hero CTAs",
+      "text": "NeuTextPrimaryBrush / NeuTextSecondaryBrush"
+    },
+    "localization": "All user-facing strings go through LanguageManager.Instance[\"Key\"]; add new resx keys before binding."
+  },
+  "items": [
+    {
+      "id": 1,
+      "navKey": "dashboard",
+      "title": "Tableau de bord",
+      "status": "done",
+      "targetView": "BombaProMaxWPF/Views/DashboardPages/DashboardView.xaml",
+      "subTabs": [],
+      "replaces": ["BombaProMax/Views/Accueil*", "BombaProMax/Views/DashboardViews/DashboardPage.xaml"],
+      "scope": "Forecourt overview demo — KPI ring tanks, market pricing, active pumps, spatial hero. Already shipped.",
+      "dependsOn": []
+    },
+    {
+      "id": 2,
+      "navKey": "ventes",
+      "title": "Ventes",
+      "status": "pending",
+      "targetView": "BombaProMaxWPF/Views/VentesPages/VentesView.xaml",
+      "subTabs": [
+        {
+          "key": "lub-articles",
+          "title": "Lubrifiants & Articles",
+          "replaces": ["BombaProMax/Views/VenteLubEtArticles/VenteLubrifiantsEtArticlesPage.xaml"],
+          "viewModel": "VenteLubrifiantsEtArticlesViewModel (already exists in WPF project — reuse)"
+        },
+        {
+          "key": "services",
+          "title": "Services",
+          "replaces": ["BombaProMax/Views/VenteService*"],
+          "viewModel": "TBD — port from MAUI"
+        },
+        {
+          "key": "periodes",
+          "title": "Périodes",
+          "replaces": ["BombaProMax/Views/Periodes*"],
+          "viewModel": "TBD — port from MAUI"
+        }
+      ],
+      "scope": "Three sub-tabs hosting a list + detail/popup. Each tab is its own UserControl.",
+      "dependsOn": [],
+      "openQuestions": [
+        "Sub-tabs as TabControl, NavigationView pivot, or segmented pill at top of page?"
+      ]
+    },
+    {
+      "id": 3,
+      "navKey": "achats",
+      "title": "Achats",
+      "status": "pending",
+      "targetView": "BombaProMaxWPF/Views/AchatsPages/AchatsView.xaml",
+      "subTabs": [],
+      "replaces": ["BombaProMax/Views/AchatViews/AchatPage.xaml"],
+      "scope": "Single page: list + create/edit/details/allocation popups. Popups become Wpf.Ui ContentDialog or windowed dialogs.",
+      "dependsOn": []
+    },
+    {
+      "id": 4,
+      "navKey": "caisse",
+      "title": "Caisse",
+      "status": "pending",
+      "targetView": "BombaProMaxWPF/Views/CaissePages/CaisseView.xaml",
+      "subTabs": [
+        {
+          "key": "caisse",
+          "title": "Caisse",
+          "replaces": ["BombaProMax/Views/CaisseViews/CaissePage.xaml"]
+        },
+        {
+          "key": "depenses",
+          "title": "Dépenses",
+          "replaces": ["BombaProMax/Views/DepenseViews/DepensePage.xaml"]
+        }
+      ],
+      "scope": "Two sibling tabs (cashflow + expenses).",
+      "dependsOn": []
+    },
+    {
+      "id": 5,
+      "navKey": "clients",
+      "title": "Clients",
+      "status": "pending",
+      "targetView": "BombaProMaxWPF/Views/ClientsPages/ClientsView.xaml",
+      "subTabs": [],
+      "replaces": ["BombaProMax/Views/ClientViews/ClientPage.xaml"],
+      "scope": "Single page: searchable client list + edit drawer/popup.",
+      "dependsOn": []
+    },
+    {
+      "id": 6,
+      "navKey": "infrastructure",
+      "title": "Infrastructure",
+      "status": "pending",
+      "targetView": "BombaProMaxWPF/Views/InfrastructurePages/InfrastructureView.xaml",
+      "subTabs": [
+        { "key": "produits",   "title": "Produits",   "replaces": ["BombaProMax/Views/ProduitViews/*"] },
+        { "key": "reservoirs", "title": "Réservoirs", "replaces": ["BombaProMax/Views/ReservoirViews/*"] },
+        { "key": "pompes",     "title": "Pompes",     "replaces": ["BombaProMax/Views/PompeViews/*"] },
+        { "key": "jaugeage",   "title": "Jaugeage",   "replaces": ["BombaProMax/Views/JaugeageViews/*"] },
+        { "key": "services",   "title": "Services",   "replaces": ["BombaProMax/Views/ServiceViews/*"] }
+      ],
+      "scope": "Five-tab page consolidating physical-asset configuration. Each tab is a separate UserControl.",
+      "dependsOn": [],
+      "openQuestions": [
+        "5 tabs is dense — collapse Jaugeage under Réservoirs?"
+      ]
+    },
+    {
+      "id": 7,
+      "navKey": "ressources",
+      "title": "Ressources",
+      "status": "pending",
+      "targetView": "BombaProMaxWPF/Views/RessourcesPages/RessourcesView.xaml",
+      "subTabs": [
+        {
+          "key": "fournisseurs-flotte",
+          "title": "Fournisseurs & Flotte",
+          "replaces": ["BombaProMax/Views/FournisseurViews/*", "BombaProMax/Views/FlotteViews/*"]
+        },
+        {
+          "key": "employes",
+          "title": "Employés",
+          "replaces": ["BombaProMax/Views/EmployeViews/*"]
+        }
+      ],
+      "scope": "Two tabs. First tab is itself a split view of two related lists.",
+      "dependsOn": []
+    },
+    {
+      "id": 8,
+      "navKey": "rapports",
+      "title": "Rapports",
+      "status": "pending",
+      "targetView": "BombaProMaxWPF/Views/RapportsPages/RapportsView.xaml",
+      "subTabs": [],
+      "replaces": ["BombaProMax/Views/RapportViews/RapportPage.xaml"],
+      "scope": "Single page: report selector + filters + preview/export.",
+      "dependsOn": []
+    },
+    {
+      "id": 9,
+      "navKey": "parametres",
+      "title": "Paramètres",
+      "status": "pending",
+      "targetView": "BombaProMaxWPF/Views/ParametresPages/ParametresView.xaml",
+      "subTabs": [
+        { "key": "station",       "title": "Station",            "replaces": ["BombaProMax/Views/StationInfoViews/*"] },
+        { "key": "utilisateurs",  "title": "Utilisateurs",       "replaces": ["BombaProMax/Views/UserViews/*"] },
+        {
+          "key": "stock-withdrawal",
+          "title": "Retrait de stock",
+          "locked": true,
+          "lockReason": "Super admin only — gated by App.CurrentUser.IsSuperAdmin",
+          "replaces": ["BombaProMax/Views/StockWithdrawalViews/*"]
+        }
+      ],
+      "scope": "Three tabs. Last tab visibility/enabled bound to IsSuperAdmin.",
+      "dependsOn": []
+    }
+  ],
+  "buildOrder": [
+    "ventes",
+    "achats",
+    "caisse",
+    "clients",
+    "infrastructure",
+    "ressources",
+    "rapports",
+    "parametres"
+  ],
+  "perViewWorkflow": [
+    "1. Author docs/plans/issue-NN-<navKey>-view.md describing layout, tabs, popups → wait for GO.",
+    "2. Add LanguageManager keys (fr + ar) for tab titles, column headers, button labels.",
+    "3. Create UserControl shell at targetView (Background=Transparent, ScrollViewer if needed, neumorphic chassis).",
+    "4. For multi-tab views: TabControl skinned with NeuTabItemStyle (to be authored once, reused).",
+    "5. Port the ViewModel(s) from BombaProMax/ViewModels/* — keep service interfaces, swap MAUI Shell.Current.GoToAsync calls for in-shell navigation or popups.",
+    "6. Wire in MainWindow.NavItem_Checked → instantiate the UserControl and host it in ContentFrame.",
+    "7. dotnet build green; user runtime-validates; append entry to shell-polish-log.json."
+  ],
+  "openQuestionsGlobal": [
+    "Sub-tab UI: WPF TabControl, segmented pill bar at top, or a left mini-rail inside each multi-section view? Recommendation: segmented pill bar — matches the pill aesthetic already used in toolbar.",
+    "Popups: Wpf.Ui ContentDialog inline, or floating FluentWindow children? Recommendation: ContentDialog for simple forms, FluentWindow for heavy editors with multiple steps.",
+    "Routing: instantiate views per-navigation (cheap, current pattern) vs. cache (faster nav, holds state). Recommendation: cache after first build.",
+    "Authoring NeuTabItemStyle — required before Ventes (id 2) since it's the first multi-tab view."
+  ]
+}

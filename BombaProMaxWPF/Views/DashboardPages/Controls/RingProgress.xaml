@@ -1,0 +1,63 @@
+<UserControl x:Class="BombaProMaxWPF.Views.DashboardPages.Controls.RingProgress"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BombaProMaxWPF.Views.DashboardPages.Controls"
+             x:Name="RingRoot"
+             Width="120" Height="120">
+    <Grid>
+        <!-- Background ring (full circle) -->
+        <Path StrokeThickness="8" Opacity="0.2"
+              Stroke="{DynamicResource NeuTextSecondaryBrush}">
+            <Path.Data>
+                <PathGeometry>
+                    <PathFigure StartPoint="60,4" IsClosed="False">
+                        <ArcSegment Point="60,116" Size="56,56" SweepDirection="Clockwise" IsLargeArc="True" />
+                        <ArcSegment Point="60,4"   Size="56,56" SweepDirection="Clockwise" IsLargeArc="True" />
+                    </PathFigure>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+
+        <!-- Foreground arc -->
+        <Path StrokeThickness="8" StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+            <Path.Style>
+                <Style TargetType="Path">
+                    <Setter Property="Stroke" Value="{Binding ElementName=RingRoot, Path=RingBrush}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=RingRoot, Path=IsLow}" Value="True">
+                            <Setter Property="Stroke" Value="{DynamicResource NeuDangerBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=RingRoot, Path=RingBrush}" Value="{x:Null}">
+                            <Setter Property="Stroke" Value="{DynamicResource NeuAccentGradientBrush}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Path.Style>
+            <Path.Data>
+                <PathGeometry>
+                    <PathFigure StartPoint="60,4" IsClosed="False">
+                        <ArcSegment Size="56,56"
+                                    SweepDirection="Clockwise"
+                                    Point="{Binding ElementName=RingRoot, Path=ArcEndPoint}"
+                                    IsLargeArc="{Binding ElementName=RingRoot, Path=IsLargeArc}" />
+                    </PathFigure>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+
+        <!-- Center label -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock HorizontalAlignment="Center"
+                       FontSize="22" FontWeight="SemiBold"
+                       Foreground="{DynamicResource NeuTextPrimaryBrush}">
+                <Run Text="{Binding ElementName=RingRoot, Path=Percent, StringFormat={}{0:0}}" />
+                <Run Text=" %" />
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Center"
+                       Margin="0,2,0,0"
+                       FontSize="10" FontWeight="SemiBold"
+                       Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                       Text="{Binding ElementName=RingRoot, Path=Label}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

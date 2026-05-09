@@ -59,8 +59,11 @@ namespace BombaProMaxWPF
 
         private void OnNavigationRequested(NavItem item)
         {
-            // TODO: route to real view once Views/[Name]Pages/[Name]View.xaml is ported.
-            ContentFrame.Content = null;
+            ContentFrame.Content = item.Key switch
+            {
+                "dashboard" => new Views.DashboardPages.DashboardView(),
+                _ => null,
+            };
         }
 
         private void OnLogoutRequested()
@@ -234,6 +237,27 @@ namespace BombaProMaxWPF
             }
 
             LanguageManager.Instance.SetLanguage(code);
+        }
+
+        private void LanguagePickerHost_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Clicks that originate inside the ComboBox itself are handled by its own template.
+            if (e.OriginalSource is DependencyObject src && IsDescendantOf(src, LanguageComboBox))
+            {
+                return;
+            }
+
+            LanguageComboBox.IsDropDownOpen = !LanguageComboBox.IsDropDownOpen;
+            e.Handled = true;
+        }
+
+        private static bool IsDescendantOf(DependencyObject node, DependencyObject ancestor)
+        {
+            for (var current = node; current is not null; current = System.Windows.Media.VisualTreeHelper.GetParent(current) ?? System.Windows.LogicalTreeHelper.GetParent(current))
+            {
+                if (ReferenceEquals(current, ancestor)) return true;
+            }
+            return false;
         }
 
         private static System.Collections.Generic.IEnumerable<T> FindVisualChildren<T>(DependencyObject root)

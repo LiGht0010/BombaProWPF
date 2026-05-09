@@ -11,18 +11,72 @@
     <Color  x:Key="NeuAccentHoverColor">#5AA0D0</Color>
     <Color  x:Key="NeuTextPrimaryColor">#2D3748</Color>
     <Color  x:Key="NeuTextSecondaryColor">#6B7A8F</Color>
+    <Color  x:Key="NeuAccentSecondaryColor">#7B5BD3</Color>
+    <Color  x:Key="NeuWarnColor">#D8A23A</Color>
+    <Color  x:Key="NeuDangerColor">#D86070</Color>
+    <Color  x:Key="NeuAccentGradientStart">#5AA0D0</Color>
+    <Color  x:Key="NeuAccentGradientEnd">#7B5BD3</Color>
 
-    <SolidColorBrush x:Key="NeuBackgroundBrush"     Color="{DynamicResource NeuBackgroundColor}" />
-    <SolidColorBrush x:Key="NeuAccentBrush"         Color="{DynamicResource NeuAccentColor}" />
-    <SolidColorBrush x:Key="NeuAccentHoverBrush"    Color="{DynamicResource NeuAccentHoverColor}" />
-    <SolidColorBrush x:Key="NeuTextPrimaryBrush"    Color="{DynamicResource NeuTextPrimaryColor}" />
-    <SolidColorBrush x:Key="NeuTextSecondaryBrush"  Color="{DynamicResource NeuTextSecondaryColor}" />
+    <SolidColorBrush x:Key="NeuBackgroundBrush"        Color="{DynamicResource NeuBackgroundColor}" />
+    <SolidColorBrush x:Key="NeuAccentBrush"            Color="{DynamicResource NeuAccentColor}" />
+    <SolidColorBrush x:Key="NeuAccentHoverBrush"       Color="{DynamicResource NeuAccentHoverColor}" />
+    <SolidColorBrush x:Key="NeuTextPrimaryBrush"       Color="{DynamicResource NeuTextPrimaryColor}" />
+    <SolidColorBrush x:Key="NeuTextSecondaryBrush"     Color="{DynamicResource NeuTextSecondaryColor}" />
+    <SolidColorBrush x:Key="NeuAccentSecondaryBrush"   Color="{DynamicResource NeuAccentSecondaryColor}" />
+    <SolidColorBrush x:Key="NeuWarnBrush"              Color="{DynamicResource NeuWarnColor}" />
+    <SolidColorBrush x:Key="NeuDangerBrush"            Color="{DynamicResource NeuDangerColor}" />
+
+    <!-- Cyan→violet hero gradient (rebuilt + frozen on each ThemePalette.Apply). -->
+    <LinearGradientBrush x:Key="NeuAccentGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+        <GradientStop Color="{DynamicResource NeuAccentGradientStart}" Offset="0" />
+        <GradientStop Color="{DynamicResource NeuAccentGradientEnd}"   Offset="1" />
+    </LinearGradientBrush>
 
     <!-- =========================================================
          Raised card template â€” two stacked borders produce the
          classic twin-shadow neumorphic look.
          Usage: wrap your content in a ContentControl with Style=NeuCardStyle
          ========================================================= -->
+    <Style x:Key="NeuDashCardStyle" TargetType="ContentControl">
+        <Setter Property="Background" Value="{DynamicResource NeuBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <Grid RenderOptions.EdgeMode="Aliased">
+                        <Grid.CacheMode>
+                            <BitmapCache EnableClearType="False" SnapsToDevicePixels="True" />
+                        </Grid.CacheMode>
+                        <Border Background="{TemplateBinding Background}" CornerRadius="16">
+                            <Border.Effect>
+                                <DropShadowEffect Color="{DynamicResource NeuDarkShadowColor}"
+                                                  BlurRadius="20"
+                                                  ShadowDepth="6"
+                                                  Direction="315"
+                                                  Opacity="0.55" />
+                            </Border.Effect>
+                        </Border>
+                        <Border Background="{TemplateBinding Background}" CornerRadius="16">
+                            <Border.Effect>
+                                <DropShadowEffect Color="{DynamicResource NeuLightShadowColor}"
+                                                  BlurRadius="20"
+                                                  ShadowDepth="6"
+                                                  Direction="135"
+                                                  Opacity="0.95" />
+                            </Border.Effect>
+                            <ContentPresenter Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="NeuCardStyle" TargetType="ContentControl">
         <Setter Property="Background" Value="{DynamicResource NeuBackgroundBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
@@ -358,15 +412,12 @@
                                       IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="ToggleButton">
-                                    <Border x:Name="OuterRing" CornerRadius="20" BorderThickness="1.2">
-                                        <Border.BorderBrush>
-                                            <LinearGradientBrush StartPoint="0.2,0" EndPoint="0.8,1">
-                                                <GradientStop Color="{DynamicResource NeuDarkShadowColor}" Offset="0" />
-                                                <GradientStop Color="{DynamicResource NeuLightShadowColor}" Offset="1" />
-                                            </LinearGradientBrush>
-                                        </Border.BorderBrush>
+                                    <Border x:Name="OuterRing"
+                                            CornerRadius="20"
+                                            BorderThickness="0"
+                                            Background="Transparent">
                                         <Border x:Name="InnerFill"
-                                                Background="{Binding Background, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                                                Background="Transparent"
                                                 CornerRadius="19">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -375,9 +426,10 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Path x:Name="Chevron"
                                                       Grid.Column="1"
-                                                      Margin="0,0,14,0"
-                                                      Width="10" Height="6"
+                                                      Margin="0,0,16,0"
+                                                      Width="12" Height="7"
                                                       VerticalAlignment="Center"
+                                                      Stretch="Fill"
                                                       Data="M 0 0 L 5 5 L 10 0 Z"
                                                       Fill="{DynamicResource NeuTextSecondaryBrush}" />
                                             </Grid>
@@ -386,7 +438,6 @@
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
                                             <Setter TargetName="Chevron" Property="Fill" Value="{DynamicResource NeuAccentBrush}" />
-                                            <Setter TargetName="OuterRing" Property="Opacity" Value="0.92" />
                                         </Trigger>
                                         <Trigger Property="IsChecked" Value="True">
                                             <Setter TargetName="Chevron" Property="Fill" Value="{DynamicResource NeuAccentBrush}" />

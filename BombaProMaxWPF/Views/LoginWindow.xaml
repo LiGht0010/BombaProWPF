@@ -16,7 +16,7 @@
                  Background="{DynamicResource NeuBackgroundBrush}"
                  Foreground="{DynamicResource NeuTextPrimaryBrush}">
 
-    <Grid>
+    <Grid Background="{DynamicResource NeuBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -32,45 +32,74 @@
                      ShowMinimize="True"
                      ShowClose="True" />
 
-        <!-- Top toolbar: theme + language -->
-        <Border Grid.Row="1"
-                Padding="16,8"
-                Background="{DynamicResource NeuBackgroundBrush}">
-            <StackPanel Orientation="Horizontal"
+        <!-- Top toolbar: theme + language (neumorphic raised pill) -->
+        <ContentControl Grid.Row="1"
+                        Style="{DynamicResource NeuToolbarStyle}"
                         HorizontalAlignment="Right"
-                        VerticalAlignment="Center">
+                        VerticalAlignment="Center"
+                        Margin="16,8,16,8">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Border x:Name="LanguagePickerHost"
+                        Background="{DynamicResource NeuInputFillBrush}"
+                        BorderBrush="{DynamicResource NeuTextSecondaryBrush}"
+                        BorderThickness="0"
+                        CornerRadius="20"
+                        Padding="0,0"
+                        Cursor="Hand"
+                        MouseLeftButtonUp="LanguagePickerHost_MouseLeftButtonUp">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="BorderBrush" Value="{DynamicResource NeuTextSecondaryBrush}" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="BorderBrush" Value="{DynamicResource NeuAccentBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="Globe24"
+                                       FontSize="18"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                       Margin="4,0,8,0" />
+                        <TextBlock Text="{Binding [LanguageLabel], Source={x:Static loc:LanguageManager.Instance}}"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                        <ComboBox x:Name="LanguageComboBox"
+                                  Style="{DynamicResource NeuComboBoxStyle}"
+                                  Width="140"
+                                  SelectedIndex="0"
+                                  SelectionChanged="LanguageComboBox_SelectionChanged">
+                            <ComboBoxItem Content="Français" Tag="fr" />
+                            <ComboBoxItem Content="العربية" Tag="ar" />
+                        </ComboBox>
+                    </StackPanel>
+                </Border>
 
-                <ui:SymbolIcon Symbol="Globe24"
-                               FontSize="16"
-                               VerticalAlignment="Center"
-                               Foreground="{DynamicResource NeuTextPrimaryBrush}"
-                               Margin="0,0,6,0" />
-                <ComboBox x:Name="LanguageComboBox"
-                          Width="120"
-                          SelectedIndex="0"
-                          SelectionChanged="LanguageComboBox_SelectionChanged"
-                          Background="{DynamicResource NeuBackgroundBrush}"
-                          Foreground="{DynamicResource NeuTextPrimaryBrush}">
-                    <ComboBoxItem Content="Français" Tag="fr" />
-                    <ComboBoxItem Content="العربية" Tag="ar" />
-                </ComboBox>
-
-                <Border Width="1" Margin="12,4"
+                <Border Width="1" Margin="16,6"
                         Background="{DynamicResource NeuTextSecondaryBrush}"
                         Opacity="0.3" />
 
                 <ui:SymbolIcon x:Name="ThemeIcon"
                                Symbol="WeatherSunny24"
-                               FontSize="16"
+                               FontSize="18"
                                VerticalAlignment="Center"
                                Foreground="{DynamicResource NeuTextPrimaryBrush}"
-                               Margin="0,0,6,0" />
-                <ui:ToggleSwitch x:Name="ThemeToggle"
-                                 Checked="ThemeToggle_Checked"
-                                 Unchecked="ThemeToggle_Unchecked"
-                                 VerticalAlignment="Center" />
+                               Margin="0,0,8,0" />
+                <TextBlock Text="{Binding [ThemeLabel], Source={x:Static loc:LanguageManager.Instance}}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,0"
+                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                <ToggleButton x:Name="ThemeToggle"
+                              Style="{DynamicResource NeuToggleSwitchStyle}"
+                              Checked="ThemeToggle_Checked"
+                              Unchecked="ThemeToggle_Unchecked"
+                              VerticalAlignment="Center"
+                              Margin="0,0,4,0" />
             </StackPanel>
-        </Border>
+        </ContentControl>
 
         <!-- Login card -->
         <Grid Grid.Row="2" Background="{DynamicResource NeuBackgroundBrush}">

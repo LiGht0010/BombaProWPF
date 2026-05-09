@@ -158,6 +158,72 @@
         "BombaProMaxWPF/MainWindow.xaml.cs"
       ],
       "partialPlan": "docs/plans/issue-08-burger-and-footer.md"
+    },
+    {
+      "id": 9,
+      "title": "Forecourt Overview neon dashboard + neumorphic cards + orange dark accent",
+      "status": "done",
+      "symptom": "Sidebar 'dashboard' nav item routed to a placeholder. User asked for a neon-navy demo dashboard (Forecourt Overview) + (later) neumorphic card surfaces instead of glass, and the sidebar/main-view selection accent in dark mode to be orange instead of the light-mode blue.",
+      "rootCause": "Original ShellViewModel had no DashboardView wired; dashboard cards started as gradient/glass borders; Dark palette NeuAccentColor mirrored Light blue, so dark mode looked cold.",
+      "fix": [
+        "Theme/ThemePalette.cs: added 5 dashboard-only color keys per palette (NeuAccentSecondaryColor, NeuWarnColor, NeuDangerColor, NeuAccentGradientStart/End) + 3 new BrushBindings (NeuAccentSecondaryBrush, NeuWarnBrush, NeuDangerBrush) + frozen LinearGradientBrush 'NeuAccentGradientBrush' (cyan -> violet) built/frozen at end of Apply.",
+        "Models/Forecourt/{TankModel,PumpModel,FuelPriceModel}.cs created with PumpStatus + DeltaTone enums (own 'Forecourt' namespace to avoid collision with the legacy MAUI-port Models/Dashboard/).",
+        "ViewModels/ForecourtDashboardViewModel.cs (renamed away from 'DashboardViewModel' since a legacy MAUI-port file already owned that name).",
+        "Views/DashboardPages/Controls/{RingProgress,PumpStatusTile,FuelPriceRow}.xaml + Views/DashboardPages/DashboardView.xaml (4-row layout: hero title, inventory+pricing row, pumps grid, spatial hero).",
+        "RingProgress: dropped IMultiValueConverter approach; uses XAML DataTrigger on Path.Style (RingBrush default, NeuDangerBrush when IsLow=true, NeuAccentGradientBrush when RingBrush==null).",
+        "MainWindow.OnNavigationRequested switches on item.Key == 'dashboard' and sets ContentFrame.Content = new DashboardView().",
+        "Resources/Strings.resx + Strings.ar.resx: appended 20 Dash* keys (FR + AR).",
+        "Phase 17 follow-up: added NeuDashCardStyle (slimmer ContentControl variant of NeuCardStyle: CornerRadius=16, Padding=20, BlurRadius=20, ShadowDepth=6); 3 of 4 dashboard panels migrated from gradient Border 'DashCardStyle' to ContentControl Style=NeuDashCardStyle; Spatial View hero kept its custom dark gradient.",
+        "Phase 17 follow-up: Dark palette NeuAccentColor #6BA5D3 -> #FF8A3D (orange); NeuAccentHoverColor #85B8E0 -> #FFA464. Light palette untouched. Cyan->violet gradient brush untouched."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/Theme/ThemePalette.cs",
+        "BombaProMaxWPF/Styles/Neumorphic.Light.xaml",
+        "BombaProMaxWPF/Models/Forecourt/TankModel.cs",
+        "BombaProMaxWPF/Models/Forecourt/PumpModel.cs",
+        "BombaProMaxWPF/Models/Forecourt/FuelPriceModel.cs",
+        "BombaProMaxWPF/ViewModels/ForecourtDashboardViewModel.cs",
+        "BombaProMaxWPF/Views/DashboardPages/DashboardView.xaml(.cs)",
+        "BombaProMaxWPF/Views/DashboardPages/Controls/RingProgress.xaml(.cs)",
+        "BombaProMaxWPF/Views/DashboardPages/Controls/PumpStatusTile.xaml(.cs)",
+        "BombaProMaxWPF/Views/DashboardPages/Controls/FuelPriceRow.xaml(.cs)",
+        "BombaProMaxWPF/MainWindow.xaml.cs",
+        "BombaProMaxWPF/Resources/Strings.resx",
+        "BombaProMaxWPF/Resources/Strings.ar.resx"
+      ],
+      "partialPlan": "docs/plans/issue-09-neon-dashboard.md",
+      "encodingGotcha": "Some palette/style edits were silently reverted between sessions (KeyNotFoundException 'NeuAccentSecondaryColor' at LoginWindow ctor + XamlParseException 'IsLowToBrushConverter' on RingProgress). Always re-verify and re-apply before moving on."
+    },
+    {
+      "id": 10,
+      "title": "Dashboard scroll lag + language picker click area",
+      "status": "done",
+      "symptom": [
+        "Forecourt Overview ScrollViewer noticeably lagged on scroll.",
+        "Language ComboBox: only the small (10x6 px) chevron was clickable; the surrounding 'Langue' label/icon weren't, and in dark mode the pill chrome was nearly invisible (NeuInputFillBrush #26282B vs toolbar NeuBackgroundBrush #2E3033 differ by ~3 shades; gradient border used shadow colors that blended in)."
+      ],
+      "rootCause": [
+        "NeuDashCardStyle template renders two stacked Borders, each with a DropShadowEffect (BlurRadius=20, ShadowDepth=6). DashboardView uses the style 3x = 6 shadow-bearing surfaces; every ScrollViewer offset change re-rasterises all of them.",
+        "Default WPF ComboBox click target = the chevron ToggleButton only; users perceive the SelectionBox text region as non-interactive.",
+        "Original NeuComboBoxStyle pill chrome (gradient using NeuDarkShadowColor -> NeuLightShadowColor + 1.2 px BorderThickness) blended into the dark toolbar, so the picker looked like just floating text/chevron."
+      ],
+      "fix": [
+        "Scroll perf: Styles/Neumorphic.Light.xaml NeuDashCardStyle template root <Grid> got CacheMode=BitmapCache (EnableClearType=False, SnapsToDevicePixels=True) and RenderOptions.EdgeMode=Aliased. Caches the rasterised twin-shadow composite; only invalidated on size/brush change.",
+        "Chevron enlarged 10x6 -> 12x7, Margin '0,0,14,0' -> '0,0,16,0', added Stretch=Fill so the path scales cleanly.",
+        "MainWindow.xaml: wrapped Globe + 'Langue' TextBlock + LanguageComboBox in a single Border x:Name=LanguagePickerHost (CornerRadius=20, Background=NeuInputFillBrush, Cursor=Hand) with MouseLeftButtonUp handler. Border.Style trigger swaps BorderBrush -> NeuAccentBrush on IsMouseOver. The whole strip is now one click target / one visual pill.",
+        "MainWindow.xaml.cs: added LanguagePickerHost_MouseLeftButtonUp (toggles LanguageComboBox.IsDropDownOpen) + IsDescendantOf helper that suppresses the toggle when the click originated inside the ComboBox itself (so the ComboBox's own ToggleButton/selection still works).",
+        "NeuComboBoxStyle template: removed the inner pill chrome — OuterRing BorderThickness 0, Background Transparent; InnerFill Background Transparent — so the wrapper Border is the single visible pill (no double outline). Hover/checked triggers reduced to chevron-tint only.",
+        "Final tuning: per user iteration, BorderThickness on LanguagePickerHost set to 0 and Padding to 0,0 so the pill reads as a filled background only (no outline), with hover-tint kept via the Border.Style trigger.",
+        "LoginWindow.xaml: replaced the ad-hoc top toolbar Border with the same NeuToolbarStyle ContentControl + LanguagePickerHost pattern as MainWindow (Globe + Langue + NeuComboBoxStyle ComboBox + separator + ThemeIcon + ThemeLabel + NeuToggleSwitchStyle ToggleButton). LoginWindow.xaml.cs got the same LanguagePickerHost_MouseLeftButtonUp handler and IsDescendantOf helper."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/Styles/Neumorphic.Light.xaml",
+        "BombaProMaxWPF/MainWindow.xaml",
+        "BombaProMaxWPF/MainWindow.xaml.cs",
+        "BombaProMaxWPF/Views/LoginWindow.xaml",
+        "BombaProMaxWPF/Views/LoginWindow.xaml.cs"
+      ],
+      "partialPlan": "docs/plans/issue-10-dash-perf-and-language-click.md"
     }
   ],
   "lessonsLearned": [
@@ -168,7 +234,10 @@
     "Inner Grid layouts with '*' columns trap children at the left edge regardless of HorizontalAlignment on the child. Use Grid.ColumnSpan to span all cols when you need genuine centering.",
     "WPF default Button.FocusVisualStyle (dashed rect) is active unless explicitly overridden. Set FocusVisualStyle='{x:Null}' on icon-only buttons in custom styles.",
     "Project localization rule: language switch never flips FlowDirection; LanguageManager indexer binding must be present on every view.",
-    "Encoding gotcha: PowerShell Get-Content -Raw with -replace corrupts non-ASCII characters. Use [System.IO.File]::ReadAllText/WriteAllText with explicit UTF-8 BOM, or use XML entities like &#x25CF; for literal special chars."
+    "Encoding gotcha: PowerShell Get-Content -Raw with -replace corrupts non-ASCII characters. Use [System.IO.File]::ReadAllText/WriteAllText with explicit UTF-8 BOM, or use XML entities like &#x25CF; for literal special chars.",
+    "Stacked DropShadowEffect surfaces inside a ScrollViewer cause re-rasterisation thrash on scroll. Apply CacheMode=BitmapCache (and optionally RenderOptions.EdgeMode=Aliased) to the template's root container so the rasterised composite is cached and only translated.",
+    "The default WPF ComboBox click target is just the chevron ToggleButton. To enlarge the click area, wrap the surrounding label group in a Border with a MouseLeftButtonUp handler that toggles ComboBox.IsDropDownOpen; guard with an IsDescendantOf check on e.OriginalSource so the ComboBox's own selection logic is untouched.",
+    "When pill chrome lives inside a custom ComboBox template AND on a wrapper Border, the two outlines double up and the inner one looks 'small'. Pick one source of truth — usually the wrapper, since users expect the click target and visual pill to be the same shape."
   ],
   "globalTracker": "docs/plans/shell-polish.md",
   "humanReadableRecap": "docs/plans/shell-polish-recap.md"
