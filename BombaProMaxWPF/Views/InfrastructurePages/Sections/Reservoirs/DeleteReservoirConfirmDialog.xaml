@@ -1,0 +1,99 @@
+<ui:FluentWindow x:Class="BombaProMaxWPF.Views.InfrastructurePages.Sections.Reservoirs.DeleteReservoirConfirmDialog"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:loc="clr-namespace:BombaProMaxWPF.Localization"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 mc:Ignorable="d"
+                 Width="420" Height="220"
+                 WindowStartupLocation="CenterOwner"
+                 ResizeMode="NoResize"
+                 ShowInTaskbar="False"
+                 WindowBackdropType="None"
+                 ExtendsContentIntoTitleBar="True"
+                 Background="{DynamicResource NeuBackgroundBrush}">
+
+    <Border CornerRadius="14"
+            Background="{DynamicResource NeuBackgroundBrush}"
+            BorderBrush="{DynamicResource NeuInputFillBrush}"
+            BorderThickness="1"
+            SnapsToDevicePixels="True">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" Opacity="0.18" BlurRadius="24" ShadowDepth="0" />
+        </Border.Effect>
+
+        <Grid Margin="24,20,24,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Icon + Title -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,14">
+                <Border Width="36" Height="36" CornerRadius="18"
+                        Background="#22E53935"
+                        VerticalAlignment="Center" Margin="0,0,12,0">
+                    <ui:SymbolIcon Symbol="Delete24" FontSize="18"
+                                   Foreground="{DynamicResource NeuDangerBrush}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <TextBlock x:Name="TitleText"
+                           FontSize="16" FontWeight="SemiBold"
+                           Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Message -->
+            <TextBlock Grid.Row="1"
+                       x:Name="MessageText"
+                       FontSize="13"
+                       Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center" />
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <Button x:Name="CancelButton"
+                        Padding="16,9" Margin="0,0,10,0"
+                        Background="{DynamicResource NeuInputFillBrush}"
+                        Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                        BorderThickness="0" FontSize="13" FontWeight="SemiBold" Cursor="Hand"
+                        Click="OnCancelClick">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="bd" Property="Opacity" Value="0.8" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button x:Name="ConfirmButton"
+                        Padding="16,9"
+                        Background="{DynamicResource NeuDangerBrush}"
+                        Foreground="White"
+                        BorderThickness="0" FontSize="13" FontWeight="SemiBold" Cursor="Hand"
+                        Click="OnConfirmClick">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="bd" Property="Opacity" Value="0.85" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</ui:FluentWindow>

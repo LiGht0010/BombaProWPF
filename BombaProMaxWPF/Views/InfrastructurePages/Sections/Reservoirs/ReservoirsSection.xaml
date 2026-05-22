@@ -1,0 +1,641 @@
+<UserControl x:Class="BombaProMaxWPF.Views.InfrastructurePages.Sections.Reservoirs.ReservoirsSection"
+             x:Name="ReservoirsSectionRoot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:BombaProMaxWPF.Localization"
+             xmlns:vm="clr-namespace:BombaProMaxWPF.ViewModels"
+             xmlns:models="clr-namespace:BombaProMaxWPF.Models"
+             d:DataContext="{d:DesignInstance Type=vm:ReservoirsSectionViewModel}"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="Transparent">
+
+    <UserControl.Resources>
+
+        <!-- ─── Tank card (top row) ─────────────────────────────────────── -->
+        <Style x:Key="ResTankCardStyle" TargetType="ContentControl" BasedOn="{StaticResource NeuDashCardStyle}">
+            <Setter Property="Padding" Value="18,16" />
+            <Setter Property="Margin" Value="8,8,8,8" />
+        </Style>
+
+        <Style x:Key="ResIdBadgeStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="8,3" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <Style x:Key="ResIdBadgeTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="9" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuAccentBrush}" />
+        </Style>
+
+        <Style x:Key="ResCardTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <Style x:Key="ResCardCaptionStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+        </Style>
+
+        <Style x:Key="ResCardValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        </Style>
+
+        <Style x:Key="ResIconButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Tank-fill card template: vertical liquid block grows from bottom -->
+        <DataTemplate x:Key="ReservoirTankCardTemplate" DataType="{x:Type vm:ReservoirCardItem}">
+            <ContentControl Style="{StaticResource ResTankCardStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- HEADER: id badge + title + action icons -->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <Border Style="{StaticResource ResIdBadgeStyle}">
+                                <TextBlock Text="{Binding IdBadge}" Style="{StaticResource ResIdBadgeTextStyle}" />
+                            </Border>
+                            <TextBlock Text="{Binding DisplayName}" Style="{StaticResource ResCardTitleStyle}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+                            <Button Style="{StaticResource ResIconButtonStyle}"
+                                    ToolTip="{Binding [ResEditTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                    Command="{Binding DataContext.EditReservoirCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}">
+                                <ui:SymbolIcon Symbol="Edit24" FontSize="14" />
+                            </Button>
+                            <Button Style="{StaticResource ResIconButtonStyle}"
+                                    ToolTip="{Binding [ResDetailsTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                    Margin="4,0,0,0"
+                                    Command="{Binding DataContext.ViewReservoirDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}">
+                                <ui:SymbolIcon Symbol="Info24" FontSize="14" />
+                            </Button>
+                            <Button Style="{StaticResource ResIconButtonStyle}"
+                                    ToolTip="{Binding [ResDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                    Margin="4,0,0,0"
+                                    Command="{Binding DataContext.DeleteReservoirCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}">
+                                <ui:SymbolIcon Symbol="Delete24" FontSize="14"
+                                               Foreground="{DynamicResource NeuDangerBrush}" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- TANK VISUAL: container with vertical fill block -->
+                    <Border Grid.Row="1"
+                            Margin="0,14,0,12"
+                            MinHeight="130"
+                            Background="{DynamicResource NeuInputFillBrush}"
+                            CornerRadius="10"
+                            ClipToBounds="True">
+                        <Grid>
+                            <!-- Liquid block: bottom-anchored, height proportional to fill % -->
+                            <Grid VerticalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="{Binding RemainderColumnWidth}" />
+                                    <RowDefinition Height="{Binding FillColumnWidth}" />
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" Background="Transparent" />
+                                <Border Grid.Row="1" CornerRadius="0,0,10,10">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="{DynamicResource NeuLevelMoyenBrush}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding LevelState}" Value="Plein">
+                                                    <Setter Property="Background" Value="{DynamicResource NeuLevelPleinBrush}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding LevelState}" Value="Bas">
+                                                    <Setter Property="Background" Value="{DynamicResource NeuLevelBasBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                </Border>
+                            </Grid>
+
+                            <!-- Centered percent overlay -->
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding PercentDisplay}"
+                                           FontSize="42"
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding [ResLevelLabel], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10"
+                                           FontWeight="SemiBold"
+                                           Foreground="White"
+                                           Opacity="0.9"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,-4,0,0" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- FOOTER: Volume (left) + Status (right) -->
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding [ResVolumeLabel], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource ResCardCaptionStyle}" />
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                <TextBlock Text="{Binding CurrentVolumeText}"
+                                           Style="{StaticResource ResCardValueStyle}"
+                                           FontSize="14" />
+                                <TextBlock Text="{Binding CapacityVolumeText}"
+                                           Style="{StaticResource ResCardCaptionStyle}"
+                                           VerticalAlignment="Bottom"
+                                           Margin="4,0,0,1" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Right">
+                            <TextBlock Text="{Binding [ResStatusLabel], Source={x:Static loc:LanguageManager.Instance}}"
+                                       Style="{StaticResource ResCardCaptionStyle}"
+                                       HorizontalAlignment="Right" />
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                <Ellipse Width="6" Height="6" VerticalAlignment="Center">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="{DynamicResource NeuLevelMoyenBrush}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding LevelState}" Value="Plein">
+                                                    <Setter Property="Fill" Value="{DynamicResource NeuLevelPleinBrush}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding LevelState}" Value="Bas">
+                                                    <Setter Property="Fill" Value="{DynamicResource NeuLevelBasBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                                <ContentControl Margin="6,0,0,0" VerticalAlignment="Center">
+                                    <ContentControl.Style>
+                                        <Style TargetType="ContentControl">
+                                            <Setter Property="Content" Value="{Binding [ResStatusMoyen], Source={x:Static loc:LanguageManager.Instance}}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource NeuLevelMoyenBrush}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding LevelState}" Value="Plein">
+                                                    <Setter Property="Content" Value="{Binding [ResStatusPlein], Source={x:Static loc:LanguageManager.Instance}}" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource NeuLevelPleinBrush}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding LevelState}" Value="Bas">
+                                                    <Setter Property="Content" Value="{Binding [ResStatusBas], Source={x:Static loc:LanguageManager.Instance}}" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource NeuLevelBasBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                    <ContentControl.ContentTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" FontSize="13" FontWeight="SemiBold"
+                                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ContentControl}}" />
+                                        </DataTemplate>
+                                    </ContentControl.ContentTemplate>
+                                </ContentControl>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </ContentControl>
+        </DataTemplate>
+
+        <!-- ─── Recent Jaugeage row (bottom table) ──────────────────────── -->
+        <Style x:Key="RecentColHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="RecentCellTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <DataTemplate x:Key="RecentJaugeageRowTemplate" DataType="{x:Type vm:RecentJaugeageRow}">
+            <Border Padding="0,14,0,14"
+                    BorderBrush="{DynamicResource NeuInputFillBrush}"
+                    BorderThickness="0,0,0,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="110" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Numero}"
+                               FontWeight="SemiBold"
+                               Style="{StaticResource RecentCellTextStyle}" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding DateTimeDisplay}"
+                               Style="{StaticResource RecentCellTextStyle}" />
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding VolumeDisplay}"
+                               Style="{StaticResource RecentCellTextStyle}" />
+
+                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="26" Height="26"
+                                CornerRadius="13"
+                                Background="{DynamicResource NeuAccentGradientBrush}">
+                            <TextBlock Text="{Binding TemoinInitials}"
+                                       FontSize="10"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Text="{Binding TemoinNom}"
+                                   Margin="10,0,0,0"
+                                   Style="{StaticResource RecentCellTextStyle}" />
+                    </StackPanel>
+
+                    <Border Grid.Column="4"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            CornerRadius="10"
+                            Padding="10,4">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#1F3FD46A" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsPending}" Value="True">
+                                        <Setter Property="Background" Value="#1FE0B341" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="{Binding StatusText}"
+                                   FontSize="10"
+                                   FontWeight="SemiBold">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#3FD46A" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPending}" Value="True">
+                                            <Setter Property="Foreground" Value="#E0B341" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Border>
+
+                    <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Style="{StaticResource ResIconButtonStyle}"
+                                ToolTip="{Binding [ResDetailsTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.ViewJaugeageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Eye24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource ResIconButtonStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [JaugMenuEdit], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.EditJaugeageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Edit24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource ResIconButtonStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [JaugMenuDelete], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DeleteJaugeageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}"
+                                Foreground="{DynamicResource NeuDangerBrush}">
+                            <ui:SymbolIcon Symbol="Delete24" FontSize="14" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- ─── Footer info pill ────────────────────────────────────────── -->
+        <Style x:Key="ResInfoPillStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="16,12" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- ─── Header row: breadcrumb + Saisir Jaugeage Global CTA ────── -->
+        <Grid Grid.Row="0" Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding [ResBreadcrumbInfra], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                    <TextBlock Text=" › " FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    <TextBlock Text="{Binding [ResBreadcrumbReservoirs], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                </StackPanel>
+                <TextBlock Text="{Binding [ResPageSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                           FontSize="13"
+                           Margin="0,4,0,0"
+                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    Style="{StaticResource NeuButtonStyle}"
+                    Background="{DynamicResource NeuAccentBrush}"
+                    Foreground="White"
+                    Padding="16,10"
+                    FontWeight="SemiBold"
+                    Command="{Binding AjouterReservoirCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="AddCircle24" FontSize="16" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding [ResAddReservoir], Source={x:Static loc:LanguageManager.Instance}}"
+                               Margin="8,0,0,0"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- ─── Top: tank cards row (UniformGrid spreads them evenly) ──── -->
+        <Grid Grid.Row="1" Margin="0,0,0,18">
+            <ItemsControl ItemsSource="{Binding Reservoirs}"
+                          ItemTemplate="{StaticResource ReservoirTankCardTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="1" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- Loading overlay -->
+            <Border Background="#33000000"
+                    CornerRadius="12"
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                <ui:ProgressRing IsIndeterminate="True"
+                                 Width="40" Height="40"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Foreground="{DynamicResource NeuAccentBrush}" />
+            </Border>
+
+            <!-- Empty state -->
+            <TextBlock Text="{Binding [ResEmpty], Source={x:Static loc:LanguageManager.Instance}}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="13"
+                       Foreground="{DynamicResource NeuTextSecondaryBrush}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsLoading}" Value="False" />
+                                    <Condition Binding="{Binding Reservoirs.Count}" Value="0" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible" />
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+
+        <!-- ─── Bottom: Derniers Jaugeages table ───────────────────────── -->
+        <ContentControl Grid.Row="2"
+                        Style="{StaticResource NeuDashCardStyle}"
+                        Margin="8,0,8,18">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Section title + filter/export -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding [ResRecentTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                        <TextBlock Text="{Binding [ResRecentSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11"
+                                   Margin="0,2,0,0"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Style="{StaticResource NeuButtonStyle}"
+                                Background="{DynamicResource NeuAccentBrush}"
+                                Foreground="White"
+                                Padding="12,8"
+                                Margin="0,0,8,0"
+                                FontWeight="SemiBold"
+                                Command="{Binding SaisirJaugeageGlobalCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="AddCircle24" FontSize="14" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding [ResSaisirGlobal], Source={x:Static loc:LanguageManager.Instance}}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource NeuButtonStyle}"
+                                Background="{DynamicResource NeuInputFillBrush}"
+                                Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                Padding="12,8">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Filter24" FontSize="14" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding [ResFilter], Source={x:Static loc:LanguageManager.Instance}}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource NeuButtonStyle}"
+                                Background="{DynamicResource NeuInputFillBrush}"
+                                Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                Padding="12,8"
+                                Margin="8,0,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="ArrowDownload24" FontSize="14" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding [ResExport], Source={x:Static loc:LanguageManager.Instance}}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Column headers -->
+                <Grid Grid.Row="1" Margin="0,18,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="110" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding [ResColNumero],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource RecentColHeaderStyle}" />
+                    <TextBlock Grid.Column="1" Text="{Binding [ResColDateHeure],    Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource RecentColHeaderStyle}" />
+                    <TextBlock Grid.Column="2" Text="{Binding [ResColVolumeTotal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource RecentColHeaderStyle}" />
+                    <TextBlock Grid.Column="3" Text="{Binding [ResColOperateur],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource RecentColHeaderStyle}" />
+                    <TextBlock Grid.Column="4" Text="{Binding [ResColStatus],      Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource RecentColHeaderStyle}" />
+                    <TextBlock Grid.Column="5" Text="{Binding [ResColActions],     Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource RecentColHeaderStyle}"
+                               HorizontalAlignment="Center" />
+                </Grid>
+
+                <!-- Rows -->
+                <ItemsControl Grid.Row="2"
+                              ItemsSource="{Binding RecentJaugeageRows}"
+                              ItemTemplate="{StaticResource RecentJaugeageRowTemplate}" />
+
+                <!-- Voir tout -->
+                <Button Grid.Row="3"
+                        Style="{StaticResource NeuButtonStyle}"
+                        Background="Transparent"
+                        Foreground="{DynamicResource NeuAccentBrush}"
+                        HorizontalAlignment="Center"
+                        Margin="0,14,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding [ResViewAll], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center" />
+                        <ui:SymbolIcon Symbol="ArrowRight24"
+                                       FontSize="14"
+                                       Margin="6,0,0,0"
+                                       VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </ContentControl>
+
+        <!-- ─── Footer: 3 info pills ───────────────────────────────────── -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource ResInfoPillStyle}" Margin="8,0,8,8">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="36" Height="36" CornerRadius="18"
+                            Background="{DynamicResource NeuAccentGradientBrush}">
+                        <ui:SymbolIcon Symbol="CheckmarkCircle24"
+                                       Foreground="White" FontSize="18"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding [ResFooterCalibration], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="9" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                        <TextBlock Text="Décembre 2023 — 3 Réservoirs"
+                                   FontSize="13" FontWeight="SemiBold"
+                                   Margin="0,2,0,0"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource ResInfoPillStyle}" Margin="8,0,8,8">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="36" Height="36" CornerRadius="18"
+                            Background="#332B5EE0">
+                        <ui:SymbolIcon Symbol="DeviceMeetingRoom24"
+                                       Foreground="#6F8EFF" FontSize="18"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding [ResFooterTerminal], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="9" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                        <TextBlock Text="FT-8890-XP2024"
+                                   FontSize="13" FontWeight="SemiBold"
+                                   Margin="0,2,0,0"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource ResInfoPillStyle}" Margin="8,0,8,8">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="36" Height="36" CornerRadius="18"
+                            Background="#33A56EFF">
+                        <ui:SymbolIcon Symbol="Timer24"
+                                       Foreground="#B98AFF" FontSize="18"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding [ResFooterFrequence], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="9" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                        <TextBlock Text="Toutes les 12 heures"
+                                   FontSize="13" FontWeight="SemiBold"
+                                   Margin="0,2,0,0"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

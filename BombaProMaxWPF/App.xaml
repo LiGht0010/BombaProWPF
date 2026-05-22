@@ -11,10 +11,13 @@
                 <ui:ThemesDictionary Theme="Light" />
                 <ui:ControlsDictionary />
                 <ResourceDictionary Source="Styles/Neumorphic.Light.xaml" />
+                <ResourceDictionary Source="Styles/SegmentedPill.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+            <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

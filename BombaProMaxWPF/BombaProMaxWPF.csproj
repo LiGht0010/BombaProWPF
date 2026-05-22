@@ -25,7 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Pages\" />
+    <Compile Remove="Views\Pages\**" />
+    <EmbeddedResource Remove="Views\Pages\**" />
+    <None Remove="Views\Pages\**" />
+    <Page Remove="Views\Pages\**" />
   </ItemGroup>
 
 </Project>

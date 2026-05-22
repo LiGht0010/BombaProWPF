@@ -16,6 +16,9 @@
     <Color  x:Key="NeuDangerColor">#D86070</Color>
     <Color  x:Key="NeuAccentGradientStart">#5AA0D0</Color>
     <Color  x:Key="NeuAccentGradientEnd">#7B5BD3</Color>
+    <!-- Jaugeage dialog accent (green, theme-reactive via ThemePalette). -->
+    <Color  x:Key="NeuJaugAccentColor">#1F8C5F</Color>
+    <Color  x:Key="NeuJaugAccentHoverColor">#176E4A</Color>
 
     <SolidColorBrush x:Key="NeuBackgroundBrush"        Color="{DynamicResource NeuBackgroundColor}" />
     <SolidColorBrush x:Key="NeuAccentBrush"            Color="{DynamicResource NeuAccentColor}" />
@@ -25,11 +28,37 @@
     <SolidColorBrush x:Key="NeuAccentSecondaryBrush"   Color="{DynamicResource NeuAccentSecondaryColor}" />
     <SolidColorBrush x:Key="NeuWarnBrush"              Color="{DynamicResource NeuWarnColor}" />
     <SolidColorBrush x:Key="NeuDangerBrush"            Color="{DynamicResource NeuDangerColor}" />
+    <SolidColorBrush x:Key="NeuJaugAccentBrush"        Color="{DynamicResource NeuJaugAccentColor}" />
+    <SolidColorBrush x:Key="NeuJaugAccentHoverBrush"   Color="{DynamicResource NeuJaugAccentHoverColor}" />
 
     <!-- Cyan→violet hero gradient (rebuilt + frozen on each ThemePalette.Apply). -->
     <LinearGradientBrush x:Key="NeuAccentGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Color="{DynamicResource NeuAccentGradientStart}" Offset="0" />
         <GradientStop Color="{DynamicResource NeuAccentGradientEnd}"   Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- =========================================================
+         Reservoir liquid-level fills (vertical bottom→top gradients)
+         · Plein  : green light → green deep
+         · Moyen  : yellow → orange
+         · Bas    : solid red (#A30A0A)
+         ========================================================= -->
+    <LinearGradientBrush x:Key="NeuLevelPleinBrush" StartPoint="0.5,1" EndPoint="0.5,0">
+        <GradientStop Color="#2E8F5C" Offset="0" />
+        <GradientStop Color="#56C68A" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="NeuLevelMoyenBrush" StartPoint="0.5,1" EndPoint="0.5,0">
+        <GradientStop Color="#E07A1A" Offset="0" />
+        <GradientStop Color="#F5C24B" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="NeuLevelBasBrush" Color="#A30A0A" />
+
+    <!-- Soft shell backdrop — mirrors the login page palette but blends a hint
+         of the accent / secondary hues so the surface no longer feels flat. -->
+    <LinearGradientBrush x:Key="NeuShellBackdropBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#EEF1F6" Offset="0" />
+        <GradientStop Color="#E8EAF4" Offset="0.5" />
+        <GradientStop Color="#EDEAF6" Offset="1" />
     </LinearGradientBrush>
 
     <!-- =========================================================
@@ -46,15 +75,22 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ContentControl">
-                    <Grid RenderOptions.EdgeMode="Aliased">
+                    <!-- BitmapCache rasterizes once per layout pass; during a
+                         scroll, the cached bitmap is just translated (cheap)
+                         instead of re-running both DropShadowEffects each
+                         frame. The cache surface honors the effect's visual
+                         extent as long as we don't force EdgeMode=Aliased.
+                         Tighter blur (14 vs 20) cuts effect cost ~50% and
+                         keeps shadow bleed within the card's outer margin. -->
+                    <Grid>
                         <Grid.CacheMode>
-                            <BitmapCache EnableClearType="False" SnapsToDevicePixels="True" />
+                            <BitmapCache SnapsToDevicePixels="True" />
                         </Grid.CacheMode>
                         <Border Background="{TemplateBinding Background}" CornerRadius="16">
                             <Border.Effect>
                                 <DropShadowEffect Color="{DynamicResource NeuDarkShadowColor}"
-                                                  BlurRadius="20"
-                                                  ShadowDepth="6"
+                                                  BlurRadius="14"
+                                                  ShadowDepth="4"
                                                   Direction="315"
                                                   Opacity="0.55" />
                             </Border.Effect>
@@ -62,8 +98,8 @@
                         <Border Background="{TemplateBinding Background}" CornerRadius="16">
                             <Border.Effect>
                                 <DropShadowEffect Color="{DynamicResource NeuLightShadowColor}"
-                                                  BlurRadius="20"
-                                                  ShadowDepth="6"
+                                                  BlurRadius="14"
+                                                  ShadowDepth="4"
                                                   Direction="135"
                                                   Opacity="0.95" />
                             </Border.Effect>
@@ -399,6 +435,9 @@
         <Setter Property="FontSize" Value="13" />
         <Setter Property="Padding" Value="14,0" />
         <Setter Property="MinHeight" Value="40" />
+        <Setter Property="MinWidth" Value="180" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource NeuComboBoxItemStyle}" />
@@ -406,34 +445,49 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
                     <Grid>
+                        <!-- Full-width clickable surface: the ToggleButton hosts both
+                             the selection display and the chevron, so the entire pill
+                             is one hit target (click anywhere to open the dropdown). -->
                         <ToggleButton x:Name="DropDownToggle"
                                       Focusable="False"
                                       ClickMode="Press"
+                                      HorizontalAlignment="Stretch"
+                                      HorizontalContentAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      Background="Transparent"
+                                      BorderThickness="0"
                                       IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="ToggleButton">
                                     <Border x:Name="OuterRing"
                                             CornerRadius="20"
                                             BorderThickness="0"
-                                            Background="Transparent">
-                                        <Border x:Name="InnerFill"
-                                                Background="Transparent"
-                                                CornerRadius="19">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-                                                <Path x:Name="Chevron"
-                                                      Grid.Column="1"
-                                                      Margin="0,0,16,0"
-                                                      Width="12" Height="7"
-                                                      VerticalAlignment="Center"
-                                                      Stretch="Fill"
-                                                      Data="M 0 0 L 5 5 L 10 0 Z"
-                                                      Fill="{DynamicResource NeuTextSecondaryBrush}" />
-                                            </Grid>
-                                        </Border>
+                                            Background="{DynamicResource NeuInputFillBrush}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <ContentPresenter x:Name="SelectionDisplay"
+                                                              Grid.Column="0"
+                                                              Margin="14,0,8,0"
+                                                              VerticalAlignment="Center"
+                                                              HorizontalAlignment="Left"
+                                                              Content="{Binding SelectionBoxItem, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}, Mode=OneWay}"
+                                                              ContentTemplate="{Binding SelectionBoxItemTemplate, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}, Mode=OneWay}"
+                                                              ContentStringFormat="{Binding SelectionBoxItemStringFormat, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}, Mode=OneWay}"
+                                                              TextElement.Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                                              TextElement.FontSize="13"
+                                                              IsHitTestVisible="False" />
+                                            <Path x:Name="Chevron"
+                                                  Grid.Column="1"
+                                                  Margin="0,0,16,0"
+                                                  Width="12" Height="7"
+                                                  VerticalAlignment="Center"
+                                                  Stretch="Fill"
+                                                  Data="M 0 0 L 5 5 L 10 0 Z"
+                                                  Fill="{DynamicResource NeuTextSecondaryBrush}" />
+                                        </Grid>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
@@ -446,14 +500,6 @@
                                 </ControlTemplate>
                             </ToggleButton.Template>
                         </ToggleButton>
-
-                        <ContentPresenter Margin="14,0,32,0"
-                                          VerticalAlignment="Center"
-                                          HorizontalAlignment="Left"
-                                          Content="{TemplateBinding SelectionBoxItem}"
-                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                          ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
-                                          IsHitTestVisible="False" />
 
                         <Popup x:Name="PART_Popup"
                                Placement="Bottom"
@@ -479,6 +525,404 @@
                             </Border>
                         </Popup>
                     </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =========================================================
+         Inset neumorphic DatePicker — matches NeuComboBoxStyle look.
+         Wraps the default DatePicker chrome in an inset pill so the
+         control no longer falls back to the bare OS visuals.
+         ========================================================= -->
+
+    <!-- Themed Calendar (used by NeuDatePickerStyle.CalendarStyle). Keeps the
+         default Calendar template structure (header + day/month grids) but paints
+         the chrome with neumorphic brushes so the popup matches the app. -->
+    <Style x:Key="NeuCalendarDayButtonStyle" TargetType="CalendarDayButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="MinWidth" Value="28" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CalendarDayButton">
+                    <Border x:Name="bd"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="14"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuAccentBrush}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsToday" Value="True">
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="Foreground" Value="{DynamicResource NeuAccentBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsInactive" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.35" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeuCalendarButtonStyle" TargetType="CalendarButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="MinWidth" Value="44" />
+        <Setter Property="MinHeight" Value="38" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CalendarButton">
+                    <Border x:Name="bd"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="12"
+                            Padding="6,4">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeuCalendarItemStyle" TargetType="CalendarItem">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Background" Value="{DynamicResource NeuBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CalendarItem">
+                    <ControlTemplate.Resources>
+                        <DataTemplate x:Key="{x:Static CalendarItem.DayTitleTemplateResourceKey}">
+                            <TextBlock Text="{Binding}"
+                                       FontSize="10"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Margin="0,4,0,4" />
+                        </DataTemplate>
+                    </ControlTemplate.Resources>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="12"
+                            Padding="8">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Header: prev / header button / next -->
+                            <Grid Grid.Row="0" Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button x:Name="PART_PreviousButton"
+                                        Grid.Column="0"
+                                        Width="28" Height="28"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Focusable="False"
+                                        Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="pbd" Background="Transparent" CornerRadius="14">
+                                                <Path Width="8" Height="10"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Stretch="Fill"
+                                                      Data="M 8 0 L 0 5 L 8 10 Z"
+                                                      Fill="{DynamicResource NeuTextSecondaryBrush}" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="pbd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <Button x:Name="PART_HeaderButton"
+                                        Grid.Column="1"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                        FontSize="13"
+                                        FontWeight="SemiBold"
+                                        Focusable="False"
+                                        Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="hbd"
+                                                    Background="Transparent"
+                                                    CornerRadius="10"
+                                                    Padding="8,4">
+                                                <ContentPresenter HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"
+                                                                  TextElement.Foreground="{TemplateBinding Foreground}" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="hbd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <Button x:Name="PART_NextButton"
+                                        Grid.Column="2"
+                                        Width="28" Height="28"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Focusable="False"
+                                        Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="nbd" Background="Transparent" CornerRadius="14">
+                                                <Path Width="8" Height="10"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Stretch="Fill"
+                                                      Data="M 0 0 L 8 5 L 0 10 Z"
+                                                      Fill="{DynamicResource NeuTextSecondaryBrush}" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="nbd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </Grid>
+
+                            <!-- Day grid (month view) — populated by Calendar from code-behind -->
+                            <Grid x:Name="PART_MonthView"
+                                  Grid.Row="1"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  Visibility="Visible">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                            </Grid>
+
+                            <!-- Year / decade grid -->
+                            <Grid x:Name="PART_YearView"
+                                  Grid.Row="1"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  Visibility="Hidden">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                            </Grid>
+
+                            <Rectangle x:Name="PART_DisabledVisual"
+                                       Grid.RowSpan="2"
+                                       Fill="{DynamicResource NeuBackgroundBrush}"
+                                       Opacity="0.6"
+                                       Visibility="Collapsed" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource AncestorType={x:Type Calendar}}}" Value="Year">
+                            <Setter TargetName="PART_MonthView" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_YearView" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource AncestorType={x:Type Calendar}}}" Value="Decade">
+                            <Setter TargetName="PART_MonthView" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_YearView" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="PART_DisabledVisual" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeuCalendarStyle" TargetType="Calendar">
+        <Setter Property="Background" Value="{DynamicResource NeuBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CalendarDayButtonStyle" Value="{StaticResource NeuCalendarDayButtonStyle}" />
+        <Setter Property="CalendarButtonStyle" Value="{StaticResource NeuCalendarButtonStyle}" />
+        <Setter Property="CalendarItemStyle" Value="{StaticResource NeuCalendarItemStyle}" />
+    </Style>
+
+    <Style x:Key="NeuDatePickerTextBoxStyle" TargetType="DatePickerTextBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="CaretBrush" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource NeuAccentBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DatePickerTextBox">
+                    <Grid TextElement.Foreground="{TemplateBinding Foreground}"
+                          TextElement.FontSize="{TemplateBinding FontSize}"
+                          TextElement.FontFamily="{TemplateBinding FontFamily}">
+                        <Grid.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                        </Grid.Resources>
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Margin="0"
+                                      VerticalAlignment="Center"
+                                      Focusable="False"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden" />
+                        <ContentControl x:Name="PART_Watermark"
+                                        Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                        Focusable="False"
+                                        IsHitTestVisible="False"
+                                        VerticalAlignment="Center"
+                                        Visibility="Collapsed" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NeuDatePickerStyle" TargetType="DatePicker">
+        <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource NeuInputFillBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="CalendarStyle" Value="{StaticResource NeuCalendarStyle}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DatePicker">
+                    <Border x:Name="OuterBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="20"
+                            Padding="14,0"
+                            SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <DatePickerTextBox x:Name="PART_TextBox"
+                                               Grid.Column="0"
+                                               Style="{StaticResource NeuDatePickerTextBoxStyle}"
+                                               Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                               FontSize="13"
+                                               FontFamily="Segoe UI" />
+
+                            <Button x:Name="PART_Button"
+                                    Grid.Column="1"
+                                    Width="28" Height="28"
+                                    Margin="6,0,0,0"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Focusable="False"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="bd"
+                                                Background="Transparent"
+                                                CornerRadius="14">
+                                            <Path x:Name="CalIcon"
+                                                  Width="14" Height="14"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Stretch="Uniform"
+                                                  Fill="{DynamicResource NeuTextSecondaryBrush}"
+                                                  Data="M3,2 L13,2 L13,4 L3,4 Z M2,5 L14,5 L14,14 L2,14 Z M4,7 L6,7 L6,9 L4,9 Z M7,7 L9,7 L9,9 L7,9 Z M10,7 L12,7 L12,9 L10,9 Z M4,10 L6,10 L6,12 L4,12 Z M7,10 L9,10 L9,12 L7,12 Z" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="CalIcon" Property="Fill" Value="{DynamicResource NeuAccentBrush}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <Popup x:Name="PART_Popup"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Placement="Bottom"
+                                   PlacementTarget="{Binding ElementName=OuterBorder}"
+                                   StaysOpen="False"
+                                   AllowsTransparency="True" />
+                        </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

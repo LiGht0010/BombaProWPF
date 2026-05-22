@@ -32,3 +32,27 @@ public sealed class BoolToVisibilityConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => value is Visibility v && v == Visibility.Visible;
 }
+
+/// <summary>
+/// Returns Collapsed when the bound bool is true, otherwise Visible (inverse of BoolToVisibilityConverter).
+/// </summary>
+public sealed class InverseBoolToVisibilityConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is true ? Visibility.Collapsed : Visibility.Visible;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is Visibility v && v == Visibility.Collapsed;
+}
+
+/// <summary>
+/// Inverts a boolean value.
+/// </summary>
+public sealed class InverseBoolConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is not true;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is not true;
+}

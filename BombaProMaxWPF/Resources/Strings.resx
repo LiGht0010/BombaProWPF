@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -101,4 +101,247 @@
   <data name="DashStable" xml:space="preserve"><value>Stable</value></data>
   <data name="DashMarketDelta" xml:space="preserve"><value>{0} Marché</value></data>
   <data name="DashTargetDelta" xml:space="preserve"><value>{0} Cible</value></data>
+
+  <data name="InfraTitle" xml:space="preserve"><value>Infrastructure</value></data>
+  <data name="InfraSubtitle" xml:space="preserve"><value>Configuration des actifs physiques de la station</value></data>
+  <data name="InfraProduits" xml:space="preserve"><value>Produits</value></data>
+  <data name="InfraReservoirs" xml:space="preserve"><value>Réservoirs</value></data>
+  <data name="InfraPompes" xml:space="preserve"><value>Pompes</value></data>
+  <data name="InfraServices" xml:space="preserve"><value>Services</value></data>
+  <data name="InfraRefresh" xml:space="preserve"><value>Actualiser</value></data>
+  <data name="InfraComingSoon" xml:space="preserve"><value>Section en cours de portage — disponible bientôt.</value></data>
+
+  <data name="ProdBreadcrumbInfra" xml:space="preserve"><value>Infrastructure</value></data>
+  <data name="ProdBreadcrumbProduits" xml:space="preserve"><value>Produits</value></data>
+  <data name="ProdPageSubtitle" xml:space="preserve"><value>Gestion des carburants et produits pétroliers</value></data>
+  <data name="ProdAddButton" xml:space="preserve"><value>Nouveau produit</value></data>
+  <data name="ProdTableTitle" xml:space="preserve"><value>Catalogue des produits</value></data>
+  <data name="ProdTableSubtitle" xml:space="preserve"><value>Liste complète des produits enregistrés</value></data>
+  <data name="ProdColNumero" xml:space="preserve"><value>NUMÉRO</value></data>
+  <data name="ProdColDescription" xml:space="preserve"><value>DESCRIPTION</value></data>
+  <data name="ProdColCategorie" xml:space="preserve"><value>CATÉGORIE</value></data>
+  <data name="ProdColPrixAchat" xml:space="preserve"><value>PRIX ACHAT</value></data>
+  <data name="ProdColPrixTTC" xml:space="preserve"><value>PRIX TTC</value></data>
+  <data name="ProdColMarge" xml:space="preserve"><value>MARGE</value></data>
+  <data name="ProdColStock" xml:space="preserve"><value>STOCK</value></data>
+  <data name="ProdColActions" xml:space="preserve"><value>ACTIONS</value></data>
+  <data name="ProdEmpty" xml:space="preserve"><value>Aucun produit enregistré.</value></data>
+  <data name="ProdEditTooltip" xml:space="preserve"><value>Modifier</value></data>
+  <data name="ProdDeleteTooltip" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="ProdDetailsTooltip" xml:space="preserve"><value>Détails</value></data>
+  <data name="ProdBadgeStockOk" xml:space="preserve"><value>En stock</value></data>
+  <data name="ProdBadgeStockBas" xml:space="preserve"><value>Stock bas</value></data>
+  <data name="ProdBadgeRupture" xml:space="preserve"><value>Rupture</value></data>
+  <data name="ProdDeleteConfirmTitle" xml:space="preserve"><value>Supprimer le produit</value></data>
+  <data name="ProdDeleteConfirmMsg" xml:space="preserve"><value>Êtes-vous sûr de vouloir supprimer ce produit ?</value></data>
+  <data name="ProdDeleteSuccess" xml:space="preserve"><value>Produit supprimé avec succès.</value></data>
+  <data name="ProdDeleteError" xml:space="preserve"><value>Impossible de supprimer le produit.</value></data>
+  <data name="ProdCountBadge" xml:space="preserve"><value>produits</value></data>
+
+  <data name="ResOnline" xml:space="preserve"><value>EN LIGNE</value></data>
+  <data name="ResIdLabel" xml:space="preserve"><value>ID: {0}</value></data>
+  <data name="ResTotalCapacity" xml:space="preserve"><value>Capacité Totale: {0} L</value></data>
+  <data name="ResCurrentLevel" xml:space="preserve"><value>Niveau Actuel: {0} L</value></data>
+  <data name="ResHistoryButton" xml:space="preserve"><value>Historique</value></data>
+  <data name="ResRecordReadingButton" xml:space="preserve"><value>Saisir Jaugeage</value></data>
+  <data name="ResLastReadingHeader" xml:space="preserve"><value>DERNIER JAUGEAGE (MANUEL)</value></data>
+  <data name="ResHoursAgo" xml:space="preserve"><value>il y a {0} heures — {1}</value></data>
+  <data name="ResHeightLabel" xml:space="preserve"><value>HAUTEUR</value></data>
+  <data name="ResTempLabel" xml:space="preserve"><value>TEMPÉRATURE</value></data>
+  <data name="ResWaterLabel" xml:space="preserve"><value>EAU</value></data>
+  <data name="ResAlertLow" xml:space="preserve"><value>ALERTE: Niveau bas</value></data>
+  <data name="ResNewReadingTitle" xml:space="preserve"><value>Nouveau Jaugeage</value></data>
+  <data name="ResSelectReservoir" xml:space="preserve"><value>SÉLECTIONNER RÉSERVOIR</value></data>
+  <data name="ResProductHeight" xml:space="preserve"><value>HAUTEUR DU PRODUIT (MM)</value></data>
+  <data name="ResTempField" xml:space="preserve"><value>TEMPÉRATURE (°C)</value></data>
+  <data name="ResWaterHeight" xml:space="preserve"><value>HAUTEUR D'EAU (MM)</value></data>
+  <data name="ResSaveButton" xml:space="preserve"><value>ENREGISTRER LE RELEVÉ</value></data>
+  <data name="ResSaveHint" xml:space="preserve"><value>L'inventaire sera recalculé automatiquement après validation.</value></data>
+  <data name="ResRecentReadings" xml:space="preserve"><value>RELEVÉS RÉCENTS</value></data>
+  <data name="ResValidated" xml:space="preserve"><value>Validé</value></data>
+  <data name="ResToday" xml:space="preserve"><value>Aujourd'hui, {0}</value></data>
+  <data name="ResYesterday" xml:space="preserve"><value>Hier, {0}</value></data>
+  <data name="ResBreadcrumbInfra" xml:space="preserve"><value>Infrastructure</value></data>
+  <data name="ResBreadcrumbReservoirs" xml:space="preserve"><value>Réservoirs</value></data>
+  <data name="ResPageSubtitle" xml:space="preserve"><value>Gestion des Réservoirs</value></data>
+  <data name="ResSaisirGlobal" xml:space="preserve"><value>Saisir Jaugeage Global</value></data>
+  <data name="ResAddReservoir" xml:space="preserve"><value>Ajouter Réservoir</value></data>
+  <!-- ── NouveauReservoirDialog ── -->
+  <data name="NResTitle" xml:space="preserve"><value>Nouveau Réservoir</value></data>
+  <data name="NResInfoSection" xml:space="preserve"><value>Informations Générales</value></data>
+  <data name="NResCalibSection" xml:space="preserve"><value>Table de Calibration</value></data>
+  <data name="NResLabelNumero" xml:space="preserve"><value>Numéro du Réservoir</value></data>
+  <data name="NResPlaceholderNumero" xml:space="preserve"><value>ex: Tank A-01</value></data>
+  <data name="NResLabelProduit" xml:space="preserve"><value>Type de Produit</value></data>
+  <data name="NResLabelCapacite" xml:space="preserve"><value>Capacité (L)</value></data>
+  <data name="NResPlaceholderCapacite" xml:space="preserve"><value>10000</value></data>
+  <data name="NResLabelFabricant" xml:space="preserve"><value>Fabricant</value></data>
+  <data name="NResPlaceholderFabricant" xml:space="preserve"><value>ex: TerraSteel Corp</value></data>
+  <data name="NResLabelNumSerie" xml:space="preserve"><value>Numéro de Série</value></data>
+  <data name="NResPlaceholderNumSerie" xml:space="preserve"><value>SN-8829-X</value></data>
+  <data name="NResLabelDiametre" xml:space="preserve"><value>Diamètre (cm)</value></data>
+  <data name="NResPlaceholderDiametre" xml:space="preserve"><value>250</value></data>
+  <data name="NResTabManuel" xml:space="preserve"><value>Saisie Manuelle</value></data>
+  <data name="NResTabCSV" xml:space="preserve"><value>Importation CSV</value></data>
+  <data name="NResCalibColHauteur" xml:space="preserve"><value>HAUTEUR (CM)</value></data>
+  <data name="NResCalibColVolume" xml:space="preserve"><value>VOLUME (L)</value></data>
+  <data name="NResAddLine" xml:space="preserve"><value>Ajouter une ligne</value></data>
+  <data name="NResCsvDrop" xml:space="preserve"><value>Glissez votre fichier ici</value></data>
+  <data name="NResCsvFormat" xml:space="preserve"><value>Format supporté : .CSV (max 5Mo)</value></data>
+  <data name="NResCsvChoose" xml:space="preserve"><value>Choisir un fichier</value></data>
+  <data name="NResCsvDownload" xml:space="preserve"><value>Télécharger le modèle de calibration</value></data>
+  <data name="NResCancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="NResSave" xml:space="preserve"><value>Enregistrer le Réservoir</value></data>
+  <data name="NResValidationNumero" xml:space="preserve"><value>Le numéro du réservoir est requis.</value></data>
+  <data name="NResValidationCapacite" xml:space="preserve"><value>La capacité doit être supérieure à zéro.</value></data>
+  <data name="NResNumeroExists" xml:space="preserve"><value>Ce numéro est déjà utilisé par un autre réservoir.</value></data>
+  <data name="NResSaveError" xml:space="preserve"><value>Erreur lors de l'enregistrement du réservoir.</value></data>
+  <data name="ResIdBadgeFormat" xml:space="preserve"><value>RÉSERVOIR #{0}</value></data>
+  <data name="ResLevelLabel" xml:space="preserve"><value>NIVEAU ACTUEL</value></data>
+  <data name="ResVolumeLabel" xml:space="preserve"><value>VOLUME</value></data>
+  <data name="ResStatusLabel" xml:space="preserve"><value>STATUS</value></data>
+  <data name="ResStatusPlein" xml:space="preserve"><value>Plein</value></data>
+  <data name="ResStatusMoyen" xml:space="preserve"><value>Moyen</value></data>
+  <data name="ResStatusBas" xml:space="preserve"><value>Bas</value></data>
+  <data name="ResEditTooltip" xml:space="preserve"><value>Modifier</value></data>
+  <data name="ResDetailsTooltip" xml:space="preserve"><value>Détails</value></data>
+  <data name="ResDeleteTooltip" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="ResDeleteConfirmTitle" xml:space="preserve"><value>Supprimer le réservoir</value></data>
+  <data name="ResDeleteConfirmMessage" xml:space="preserve"><value>Êtes-vous sûr de vouloir supprimer le réservoir {0} ? Cette action est irréversible.</value></data>
+  <data name="ResDeleteSuccess" xml:space="preserve"><value>Réservoir supprimé avec succès.</value></data>
+  <data name="ResDeleteError" xml:space="preserve"><value>Erreur lors de la suppression du réservoir.</value></data>
+  <data name="ResDeleteConfirmYes" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="ResDeleteConfirmNo" xml:space="preserve"><value>Annuler</value></data>
+  <data name="EditResTitle" xml:space="preserve"><value>Modifier le Réservoir</value></data>
+  <data name="EditResInfoSection" xml:space="preserve"><value>Informations Générales</value></data>
+  <data name="EditResCalibSection" xml:space="preserve"><value>Table de Calibration</value></data>
+  <data name="EditResLabelNumero" xml:space="preserve"><value>NUMÉRO DU RÉSERVOIR *</value></data>
+  <data name="EditResLabelProduit" xml:space="preserve"><value>TYPE DE PRODUIT</value></data>
+  <data name="EditResLabelCapacite" xml:space="preserve"><value>CAPACITÉ (L) *</value></data>
+  <data name="EditResLabelFabricant" xml:space="preserve"><value>FABRICANT</value></data>
+  <data name="EditResLabelNumSerie" xml:space="preserve"><value>NUMÉRO DE SÉRIE</value></data>
+  <data name="EditResLabelDiametre" xml:space="preserve"><value>DIAMÈTRE (CM)</value></data>
+  <data name="EditResTabManuel" xml:space="preserve"><value>Saisie Manuelle</value></data>
+  <data name="EditResTabCSV" xml:space="preserve"><value>Importation CSV</value></data>
+  <data name="EditResCalibColHauteur" xml:space="preserve"><value>HAUTEUR (CM)</value></data>
+  <data name="EditResCalibColVolume" xml:space="preserve"><value>VOLUME (L)</value></data>
+  <data name="EditResAddLine" xml:space="preserve"><value>Ajouter une ligne</value></data>
+  <data name="EditResCsvDrop" xml:space="preserve"><value>Glissez votre fichier ici</value></data>
+  <data name="EditResCsvFormat" xml:space="preserve"><value>Format supporté : .CSV (max 5Mo)</value></data>
+  <data name="EditResCsvChoose" xml:space="preserve"><value>Choisir un fichier</value></data>
+  <data name="EditResCsvDownload" xml:space="preserve"><value>Télécharger le modèle de calibration</value></data>
+  <data name="EditResCancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="EditResSave" xml:space="preserve"><value>Enregistrer les modifications</value></data>
+  <data name="DetailsResTitle" xml:space="preserve"><value>Détails du Réservoir</value></data>
+  <data name="DetailsResInfoSection" xml:space="preserve"><value>Informations générales</value></data>
+  <data name="DetailsResCalibSection" xml:space="preserve"><value>Table de calibration</value></data>
+  <data name="DetailsResJaugeagesSection" xml:space="preserve"><value>Jaugeages récents</value></data>
+  <data name="DetailsResLabelNumero" xml:space="preserve"><value>Numéro</value></data>
+  <data name="DetailsResLabelProduit" xml:space="preserve"><value>Type de produit</value></data>
+  <data name="DetailsResLabelCapacite" xml:space="preserve"><value>Capacité</value></data>
+  <data name="DetailsResLabelNiveau" xml:space="preserve"><value>Niveau actuel</value></data>
+  <data name="DetailsResLabelFabricant" xml:space="preserve"><value>Fabricant</value></data>
+  <data name="DetailsResLabelNumSerie" xml:space="preserve"><value>Numéro de série</value></data>
+  <data name="DetailsResLabelDiametre" xml:space="preserve"><value>Diamètre</value></data>
+  <data name="DetailsResLabelDateCreation" xml:space="preserve"><value>Date de création</value></data>
+  <data name="DetailsResEmptyCalib" xml:space="preserve"><value>Aucune donnée de calibration enregistrée.</value></data>
+  <data name="DetailsResEmptyJaugeages" xml:space="preserve"><value>Aucun jaugeage enregistré pour ce réservoir.</value></data>
+  <data name="DetailsResVoirCalib" xml:space="preserve"><value>Voir toutes les calibrations</value></data>
+  <data name="DetailsResColNumero" xml:space="preserve"><value>N° JAUGEAGE</value></data>
+  <data name="DetailsResColDate" xml:space="preserve"><value>DATE</value></data>
+  <data name="DetailsResColVolume" xml:space="preserve"><value>VOLUME (L)</value></data>
+  <data name="DetailsResLoading" xml:space="preserve"><value>Chargement…</value></data>
+  <data name="DetailsResClose" xml:space="preserve"><value>Fermer</value></data>
+  <data name="DetailsResCalibLines" xml:space="preserve"><value>lignes</value></data>
+  <data name="CalibTableTitle" xml:space="preserve"><value>Table de calibration</value></data>
+  <data name="CalibTableReservoir" xml:space="preserve"><value>Réservoir</value></data>
+  <data name="CalibTableLines" xml:space="preserve"><value>lignes</value></data>
+  <data name="CalibTableColHash" xml:space="preserve"><value>#</value></data>
+  <data name="CalibTableColHauteur" xml:space="preserve"><value>HAUTEUR (cm)</value></data>
+  <data name="CalibTableColVolume" xml:space="preserve"><value>VOLUME (L)</value></data>
+  <data name="CalibTableClose" xml:space="preserve"><value>Fermer</value></data>
+  <data name="ResRecentTitle" xml:space="preserve"><value>Derniers Jaugeages</value></data>
+  <data name="ResRecentSubtitle" xml:space="preserve"><value>Historique des mesures de stock manuel et électronique</value></data>
+  <data name="ResFilter" xml:space="preserve"><value>Filtrer</value></data>
+  <data name="ResExport" xml:space="preserve"><value>Exporter</value></data>
+  <data name="ResColNumero" xml:space="preserve"><value>NUMÉRO</value></data>
+  <data name="ResColDateHeure" xml:space="preserve"><value>DATE &amp; HEURE</value></data>
+  <data name="ResColVolumeTotal" xml:space="preserve"><value>VOLUME TOTAL (L)</value></data>
+  <data name="ResColOperateur" xml:space="preserve"><value>OPÉRATEUR / TÉMOIN</value></data>
+  <data name="ResColStatus" xml:space="preserve"><value>STATUS</value></data>
+  <data name="ResColActions" xml:space="preserve"><value>ACTIONS</value></data>
+  <data name="ResViewAll" xml:space="preserve"><value>Voir tout l'historique</value></data>
+  <data name="ResEmpty" xml:space="preserve"><value>Aucun réservoir disponible.</value></data>
+  <data name="ResFooterCalibration" xml:space="preserve"><value>DERNIÈRE CALIBRATION</value></data>
+  <data name="ResFooterTerminal" xml:space="preserve"><value>NUMÉRO DE SÉRIE TERMINAL</value></data>
+  <data name="ResFooterFrequence" xml:space="preserve"><value>FRÉQUENCE JAUGEAGE</value></data>
+  <data name="JaugDlgTitle" xml:space="preserve"><value>Saisir Jaugeage Global</value></data>
+  <data name="JaugDlgSubtitle" xml:space="preserve"><value>Enregistrement simultané des mesures pour tous les réservoirs actifs.</value></data>
+  <data name="JaugDlgDateLabel" xml:space="preserve"><value>DATE DU JAUGEAGE</value></data>
+  <data name="JaugDlgTemoinLabel" xml:space="preserve"><value>TÉMOIN (VALIDATEUR)</value></data>
+  <data name="JaugDlgColReservoir" xml:space="preserve"><value>RÉSERVOIR</value></data>
+  <data name="JaugDlgColHauteur" xml:space="preserve"><value>HAUTEUR MESURÉE (MM)</value></data>
+  <data name="JaugDlgColVolume" xml:space="preserve"><value>VOLUME CALCULÉ (L)</value></data>
+  <data name="JaugDlgColTemp" xml:space="preserve"><value>TEMPÉRATURE (°C)</value></data>
+  <data name="JaugDlgColNotes" xml:space="preserve"><value>NOTES / OBSERVATIONS</value></data>
+  <data name="JaugDlgInfoCaption" xml:space="preserve"><value>Les volumes sont calculés automatiquement selon les abaques de chaque réservoir.</value></data>
+  <data name="JaugDlgCancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="JaugDlgSave" xml:space="preserve"><value>Enregistrer Jaugeage Global</value></data>
+  <data name="JaugDlgGeneralInfo" xml:space="preserve"><value>Informations Générales</value></data>
+  <data name="JaugDlgNumeroLabel" xml:space="preserve"><value>Numéro de Jaugeage</value></data>
+  <data name="JaugDlgObservationsLabel" xml:space="preserve"><value>Observations</value></data>
+  <data name="JaugDlgObservationsPlaceholder" xml:space="preserve"><value>Notes générales sur l'état des cuves ou conditions météorologiques...</value></data>
+  <data name="JaugDlgDetailsCard" xml:space="preserve"><value>Détails du Réservoir</value></data>
+  <data name="JaugDlgSelectReservoir" xml:space="preserve"><value>Sélectionner un réservoir</value></data>
+  <data name="JaugDlgHauteurCm" xml:space="preserve"><value>Hauteur Mesurée (cm)</value></data>
+  <data name="JaugDlgVolumeLitres" xml:space="preserve"><value>Volume Calculé (L)</value></data>
+  <data name="JaugDlgVolumeAutoPlaceholder" xml:space="preserve"><value>Calcul auto...</value></data>
+  <data name="JaugDlgNotesSpecLabel" xml:space="preserve"><value>Notes spécifiques</value></data>
+  <data name="JaugDlgNotesSpecPlaceholder" xml:space="preserve"><value>Précisez si anomalie...</value></data>
+  <data name="JaugDlgAddToJaugeage" xml:space="preserve"><value>Ajouter au jaugeage</value></data>
+  <data name="JaugDlgItemsAdded" xml:space="preserve"><value>ÉLÉMENTS AJOUTÉS</value></data>
+  <data name="JaugDlgResCountBadge" xml:space="preserve"><value>{0} RÉSERVOIRS SAISIS</value></data>
+  <data name="JaugDlgColProduit" xml:space="preserve"><value>PRODUIT</value></data>
+  <data name="JaugDlgColAction" xml:space="preserve"><value>ACTION</value></data>
+  <data name="JaugDlgFooterBrand" xml:space="preserve"><value>Système de Gestion de Carburant</value></data>
+  <data name="JaugDlgEmptyState" xml:space="preserve"><value>Aucun réservoir ajouté. Utilisez le formulaire ci-dessus pour ajouter une mesure.</value></data>
+  <data name="JaugDlgSaveShort" xml:space="preserve"><value>Enregistrer</value></data>
+  <!-- ── JaugeageDetailsDialog ── -->
+  <data name="JaugDetTitle" xml:space="preserve"><value>Détails du Jaugeage</value></data>
+  <data name="JaugDetModifier" xml:space="preserve"><value>Modifier</value></data>
+  <data name="JaugDetImprimer" xml:space="preserve"><value>Imprimer</value></data>
+  <data name="JaugDetLabelNumero" xml:space="preserve"><value>NUMÉRO</value></data>
+  <data name="JaugDetLabelDate" xml:space="preserve"><value>DATE D'OPÉRATION</value></data>
+  <data name="JaugDetLabelTemoin" xml:space="preserve"><value>TÉMOIN / EMPLOYÉ</value></data>
+  <data name="JaugDetLabelStatut" xml:space="preserve"><value>STATUT</value></data>
+  <data name="JaugDetLabelObservations" xml:space="preserve"><value>OBSERVATIONS</value></data>
+  <data name="JaugDetDetailTitle" xml:space="preserve"><value>Détails par Réservoir</value></data>
+  <data name="JaugDetColReservoir" xml:space="preserve"><value>RÉSERVOIR</value></data>
+  <data name="JaugDetColProduit" xml:space="preserve"><value>PRODUIT</value></data>
+  <data name="JaugDetColHauteur" xml:space="preserve"><value>HAUTEUR (CM)</value></data>
+  <data name="JaugDetColVolume" xml:space="preserve"><value>VOLUME (L)</value></data>
+  <data name="JaugDetColNotes" xml:space="preserve"><value>NOTES</value></data>
+  <data name="JaugDetStatutValide" xml:space="preserve"><value>Validé</value></data>
+  <data name="JaugDetStatutPending" xml:space="preserve"><value>En attente</value></data>
+  <data name="JaugDetAnnuler" xml:space="preserve"><value>Annuler</value></data>
+  <data name="JaugDetFermer" xml:space="preserve"><value>Fermer</value></data>
+  <data name="JaugDetBrand" xml:space="preserve"><value>SYSTÈME TERRA</value></data>
+  <data name="JaugDetLoading" xml:space="preserve"><value>Chargement des détails…</value></data>
+  <data name="JaugDetNoObs" xml:space="preserve"><value>Aucune observation enregistrée.</value></data>
+  <data name="JaugMenuEdit" xml:space="preserve"><value>Modifier</value></data>
+  <data name="JaugMenuDelete" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="JaugDeleteConfirmTitle" xml:space="preserve"><value>Supprimer le jaugeage</value></data>
+  <data name="JaugDeleteConfirmMessage" xml:space="preserve"><value>Êtes-vous sûr de vouloir supprimer le jaugeage {0} ? Cette action est irréversible.</value></data>
+  <data name="JaugDeleteConfirmYes" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="JaugDeleteConfirmNo" xml:space="preserve"><value>Annuler</value></data>
+  <data name="JaugDeleteSuccess" xml:space="preserve"><value>Jaugeage supprimé avec succès.</value></data>
+  <data name="JaugDeleteError" xml:space="preserve"><value>Une erreur est survenue lors de la suppression.</value></data>
+  <data name="JaugEditTitle" xml:space="preserve"><value>Modifier le Jaugeage</value></data>
+  <data name="JaugEditSaveButton" xml:space="preserve"><value>Enregistrer les modifications</value></data>
+  <data name="JaugEditSaveError" xml:space="preserve"><value>Une erreur est survenue lors de la sauvegarde.</value></data>
+  <data name="JaugEditSaveSuccess" xml:space="preserve"><value>Jaugeage modifié avec succès.</value></data>
+  <data name="JaugEditColHauteur" xml:space="preserve"><value>Hauteur (cm)</value></data>
+  <data name="JaugEditColVolume" xml:space="preserve"><value>Volume (L)</value></data>
+  <data name="JaugEditColTemp" xml:space="preserve"><value>Temp. (°C)</value></data>
+  <data name="JaugEditColNotes" xml:space="preserve"><value>Notes</value></data>
 </root>

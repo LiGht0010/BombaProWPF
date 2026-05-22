@@ -13,5 +13,7 @@
         // Display fields for related entities
         public string? JaugeageNumero { get; set; }
         public string? ReservoirNumero { get; set; }
+        public string? ReservoirNom { get; set; }
+        public string? ProduitNom { get; set; }
     }
 }

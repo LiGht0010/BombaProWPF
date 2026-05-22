@@ -1,0 +1,465 @@
+<ui:FluentWindow x:Class="BombaProMaxWPF.Views.InfrastructurePages.Sections.Reservoirs.JaugeageDetailsDialog"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:loc="clr-namespace:BombaProMaxWPF.Localization"
+                 xmlns:vm="clr-namespace:BombaProMaxWPF.ViewModels"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 mc:Ignorable="d"
+                 d:DataContext="{d:DesignInstance Type=vm:JaugeageDetailsViewModel}"
+                 Title="{Binding [JaugDetTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                 Width="860" Height="680"
+                 WindowStartupLocation="CenterOwner"
+                 ResizeMode="NoResize"
+                 ShowInTaskbar="False"
+                 WindowBackdropType="None"
+                 ExtendsContentIntoTitleBar="True"
+                 Background="{DynamicResource NeuBackgroundBrush}">
+
+    <ui:FluentWindow.Resources>
+
+        <!-- ── Local styles ── -->
+        <Style x:Key="DetCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource NeuBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="22,18" />
+        </Style>
+
+        <Style x:Key="DetFieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+
+        <Style x:Key="DetFieldValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+        </Style>
+
+        <Style x:Key="DetColHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+        </Style>
+
+        <Style x:Key="DetCellTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="DetCloseButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="Transparent" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DetHeaderActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuJaugAccentBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="Transparent" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DetPrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource NeuJaugAccentBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="24,10" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuJaugAccentHoverBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Detail row DataTemplate -->
+        <DataTemplate x:Key="DetailRowTemplate">
+            <Border Margin="0,1"
+                    Padding="0,14"
+                    BorderBrush="{DynamicResource NeuInputFillBrush}"
+                    BorderThickness="0,0,0,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="1.2*" />
+                        <ColumnDefinition Width="1.2*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding ReservoirDisplay}"
+                               FontWeight="SemiBold"
+                               Style="{StaticResource DetCellTextStyle}" />
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Width="8" Height="8" Fill="{DynamicResource NeuJaugAccentBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding ProduitDisplay}" Style="{StaticResource DetCellTextStyle}" />
+                    </StackPanel>
+
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding HauteurDisplay}"
+                               HorizontalAlignment="Center"
+                               Style="{StaticResource DetCellTextStyle}" />
+
+                    <TextBlock Grid.Column="3"
+                               Text="{Binding VolumeDisplay}"
+                               HorizontalAlignment="Right"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuJaugAccentBrush}"
+                               FontSize="13"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Column="4"
+                               Text="{Binding NotesDisplay}"
+                               Margin="16,0,0,0"
+                               FontStyle="Italic"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                               Style="{StaticResource DetCellTextStyle}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </ui:FluentWindow.Resources>
+
+    <!-- Outer shell -->
+    <Border CornerRadius="14"
+            Background="{DynamicResource NeuBackgroundBrush}"
+            BorderBrush="{DynamicResource NeuInputFillBrush}"
+            BorderThickness="1"
+            SnapsToDevicePixels="True">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" Opacity="0.18" BlurRadius="24" ShadowDepth="0" />
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />  <!-- title bar -->
+                <RowDefinition Height="*" />      <!-- content -->
+                <RowDefinition Height="Auto" />   <!-- footer -->
+            </Grid.RowDefinitions>
+
+            <!-- ── Title bar ── -->
+            <Grid Grid.Row="0" Margin="20,16,20,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Style="{StaticResource DetCloseButtonStyle}"
+                        Click="OnCloseClick"
+                        ToolTip="{Binding [JaugDetFermer], Source={x:Static loc:LanguageManager.Instance}}">
+                    <ui:SymbolIcon Symbol="Dismiss24" FontSize="14" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                </Button>
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding [JaugDetTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource NeuJaugAccentBrush}"
+                           VerticalAlignment="Center"
+                           Margin="8,0,0,0" />
+
+                <!-- Modifier -->
+                <Button Grid.Column="2"
+                        Style="{StaticResource DetHeaderActionButtonStyle}"
+                        Margin="0,0,6,0">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Edit24" FontSize="13" Margin="0,0,5,0" />
+                        <TextBlock Text="{Binding [JaugDetModifier], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="13" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- Imprimer -->
+                <Button Grid.Column="3"
+                        Style="{StaticResource DetHeaderActionButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Print24" FontSize="13" Margin="0,0,5,0" />
+                        <TextBlock Text="{Binding [JaugDetImprimer], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="13" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Separator -->
+            <Border Grid.Row="0" Height="1" Background="{DynamicResource NeuInputFillBrush}"
+                    VerticalAlignment="Bottom" Margin="0,0,0,-1" />
+
+            <!-- ── Content ── -->
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="20,18,20,4">
+                <StackPanel>
+
+                    <!-- Loading overlay -->
+                    <TextBlock Text="{Binding [JaugDetLoading], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="13"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                               HorizontalAlignment="Center"
+                               Margin="0,24">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!-- Main content — hidden while loading -->
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <!-- ── Info card ── -->
+                        <Border Style="{StaticResource DetCardStyle}" Margin="0,0,0,10">
+                            <StackPanel>
+                                <!-- Row 1: 4 meta fields -->
+                                <Grid Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Numéro -->
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding [JaugDetLabelNumero], Source={x:Static loc:LanguageManager.Instance}}"
+                                                   Style="{StaticResource DetFieldLabelStyle}" />
+                                        <TextBlock Text="{Binding Numero}" Style="{StaticResource DetFieldValueStyle}" />
+                                    </StackPanel>
+
+                                    <!-- Date -->
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="{Binding [JaugDetLabelDate], Source={x:Static loc:LanguageManager.Instance}}"
+                                                   Style="{StaticResource DetFieldLabelStyle}" />
+                                        <TextBlock Text="{Binding DateDisplay}" Style="{StaticResource DetFieldValueStyle}" />
+                                    </StackPanel>
+
+                                    <!-- Témoin -->
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="{Binding [JaugDetLabelTemoin], Source={x:Static loc:LanguageManager.Instance}}"
+                                                   Style="{StaticResource DetFieldLabelStyle}" />
+                                        <TextBlock Text="{Binding TemoinNom}" Style="{StaticResource DetFieldValueStyle}" />
+                                    </StackPanel>
+
+                                    <!-- Statut pill -->
+                                    <StackPanel Grid.Column="3">
+                                        <TextBlock Text="{Binding [JaugDetLabelStatut], Source={x:Static loc:LanguageManager.Instance}}"
+                                                   Style="{StaticResource DetFieldLabelStyle}" />
+                                        <Border HorizontalAlignment="Left"
+                                                CornerRadius="10"
+                                                Padding="10,4">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#1F3FD46A" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsPending}" Value="True">
+                                                            <Setter Property="Background" Value="#1FE0B341" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="7" Height="7" Margin="0,0,5,0" VerticalAlignment="Center">
+                                                    <Ellipse.Style>
+                                                        <Style TargetType="Ellipse">
+                                                            <Setter Property="Fill" Value="#3FD46A" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsPending}" Value="True">
+                                                                    <Setter Property="Fill" Value="#E0B341" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Ellipse.Style>
+                                                </Ellipse>
+                                                <TextBlock Text="{Binding StatutText}" FontSize="12" FontWeight="SemiBold">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="#3FD46A" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsPending}" Value="True">
+                                                                    <Setter Property="Foreground" Value="#E0B341" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Row 2: Observations -->
+                                <StackPanel>
+                                    <TextBlock Text="{Binding [JaugDetLabelObservations], Source={x:Static loc:LanguageManager.Instance}}"
+                                               Style="{StaticResource DetFieldLabelStyle}" />
+                                    <!-- Has observations -->
+                                    <TextBlock Text="{Binding Observations}"
+                                               FontSize="13"
+                                               TextWrapping="Wrap"
+                                               Foreground="{DynamicResource NeuTextPrimaryBrush}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasObservations}" Value="False">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <!-- No observations fallback -->
+                                    <TextBlock Text="{Binding [JaugDetNoObs], Source={x:Static loc:LanguageManager.Instance}}"
+                                               FontSize="13"
+                                               FontStyle="Italic"
+                                               Foreground="{DynamicResource NeuTextSecondaryBrush}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasObservations}" Value="False">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- ── Detail table ── -->
+                        <TextBlock Text="{Binding [JaugDetDetailTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                   Margin="0,8,0,12" />
+
+                        <Border Style="{StaticResource DetCardStyle}" Padding="22,14">
+                            <StackPanel>
+                                <!-- Column headers -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1.5*" />
+                                        <ColumnDefinition Width="1.2*" />
+                                        <ColumnDefinition Width="1.2*" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding [JaugDetColReservoir], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DetColHeaderStyle}" />
+                                    <TextBlock Grid.Column="1" Text="{Binding [JaugDetColProduit], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DetColHeaderStyle}" />
+                                    <TextBlock Grid.Column="2" Text="{Binding [JaugDetColHauteur], Source={x:Static loc:LanguageManager.Instance}}" HorizontalAlignment="Center" Style="{StaticResource DetColHeaderStyle}" />
+                                    <TextBlock Grid.Column="3" Text="{Binding [JaugDetColVolume], Source={x:Static loc:LanguageManager.Instance}}" HorizontalAlignment="Right" Style="{StaticResource DetColHeaderStyle}" />
+                                    <TextBlock Grid.Column="4" Text="{Binding [JaugDetColNotes], Source={x:Static loc:LanguageManager.Instance}}" Margin="16,0,0,0" Style="{StaticResource DetColHeaderStyle}" />
+                                </Grid>
+
+                                <ItemsControl ItemsSource="{Binding DetailRows}"
+                                              ItemTemplate="{StaticResource DetailRowTemplate}" />
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ── Footer ── -->
+            <Border Grid.Row="2"
+                    BorderBrush="{DynamicResource NeuInputFillBrush}"
+                    BorderThickness="0,1,0,0"
+                    Padding="20,14">
+                <Grid>
+                    <TextBlock Text="{Binding [JaugDetBrand], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                               VerticalAlignment="Center" />
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="{Binding [JaugDetAnnuler], Source={x:Static loc:LanguageManager.Instance}}"
+                                Style="{StaticResource DetHeaderActionButtonStyle}"
+                                Padding="14,10"
+                                FontSize="13"
+                                Margin="0,0,10,0"
+                                Click="OnCloseClick" />
+                        <Button Content="{Binding [JaugDetFermer], Source={x:Static loc:LanguageManager.Instance}}"
+                                Style="{StaticResource DetPrimaryButtonStyle}"
+                                Click="OnCloseClick" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Border>
+</ui:FluentWindow>

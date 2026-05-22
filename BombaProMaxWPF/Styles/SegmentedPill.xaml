@@ -1,0 +1,80 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        NeuSegmentedPillStyle — RadioButton skin used to render a "segmented
+        pill bar" of sub-sections at the top of multi-section views (the
+        Infrastructure / Ventes / Caisse / Ressources / Paramètres pages).
+
+        Visual contract:
+          - Unchecked: transparent fill, NeuTextSecondaryBrush label.
+          - IsMouseOver (unchecked): subtle NeuInputFillBrush wash.
+          - IsChecked: NeuAccentBrush filled pill, white label, soft glow shadow.
+        The bar wrapping these pills should set TextElement.FontSize=13 and
+        sit inside a Border with NeuInputFillBrush background and corner-radius
+        ~22 so the pills nest cleanly.
+    -->
+    <Style x:Key="NeuSegmentedPillStyle" TargetType="RadioButton">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="18,8" />
+        <Setter Property="MinWidth" Value="110" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid SnapsToDevicePixels="True">
+                        <Border x:Name="Pill"
+                                CornerRadius="18"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              TextElement.FontSize="{TemplateBinding FontSize}"
+                                              TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                              TextElement.Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Pill" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Pill" Property="Background" Value="{DynamicResource NeuAccentBrush}" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter TargetName="Pill" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="10"
+                                                      ShadowDepth="2"
+                                                      Direction="270"
+                                                      Opacity="0.18" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--
+        NeuSegmentedPillBarStyle — wrapper Border for the pill row. Apply this
+        to a Border that contains a horizontal StackPanel of pills so the
+        whole bar reads as one neumorphic surface.
+    -->
+    <Style x:Key="NeuSegmentedPillBarStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+        <Setter Property="CornerRadius" Value="22" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
+</ResourceDictionary>

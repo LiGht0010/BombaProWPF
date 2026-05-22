@@ -13,7 +13,7 @@
         MinHeight="600" MinWidth="1024"
         WindowStartupLocation="CenterScreen"
         WindowBackdropType="None"
-        Background="{DynamicResource NeuBackgroundBrush}"
+        Background="{DynamicResource NeuShellBackdropBrush}"
         Foreground="{DynamicResource NeuTextPrimaryBrush}">
 
     <Grid>

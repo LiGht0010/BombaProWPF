@@ -1,0 +1,36 @@
+using BombaProMaxWPF.Models;
+using BombaProMaxWPF.ViewModels;
+using System.Windows;
+using Wpf.Ui.Controls;
+
+namespace BombaProMaxWPF.Views.InfrastructurePages.Sections.Reservoirs;
+
+public partial class EditReservoirDialog : FluentWindow
+{
+    public EditReservoirViewModel ViewModel { get; }
+
+    public EditReservoirDialog(ReservoirDto reservoir)
+    {
+        InitializeComponent();
+        ViewModel = new EditReservoirViewModel(reservoir);
+        DataContext = ViewModel;
+    }
+
+    private void OnCancelClick(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
+        Close();
+    }
+
+    private async void OnSaveClick(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SaveCommand.CanExecute(null))
+            await ViewModel.SaveCommand.ExecuteAsync(null);
+
+        if (ViewModel.Result is not null)
+        {
+            DialogResult = true;
+            Close();
+        }
+    }
+}

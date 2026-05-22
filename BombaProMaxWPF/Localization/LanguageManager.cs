@@ -21,6 +21,16 @@ namespace BombaProMaxWPF.Localization
         public CultureInfo CurrentCulture => _culture;
 
         /// <summary>
+        /// RTL for Arabic (and any other RTL culture), LTR otherwise.
+        /// Bind <c>FlowDirection</c> on top-level views to this to flip the
+        /// shell automatically on language switch.
+        /// </summary>
+        public System.Windows.FlowDirection FlowDirection =>
+            _culture.TextInfo.IsRightToLeft
+                ? System.Windows.FlowDirection.RightToLeft
+                : System.Windows.FlowDirection.LeftToRight;
+
+        /// <summary>
         /// XAML-friendly indexer used by <see cref="TrExtension"/> to fetch a
         /// localized string for the current culture.
         /// </summary>
@@ -54,6 +64,8 @@ namespace BombaProMaxWPF.Localization
 
             // "Item[]" is the WPF convention to invalidate all indexer bindings.
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FlowDirection)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentCulture)));
             LanguageChanged?.Invoke(this, EventArgs.Empty);
         }
 

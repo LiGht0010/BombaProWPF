@@ -23,9 +23,17 @@ namespace BombaProMaxWPF
         private const double SidebarCollapsedWidth = 88;
 
         private readonly ShellViewModel _viewModel;
+        private bool _isInitializing;
+
+        // Top-level view cache: navigation never disposes a built view, so
+        // switching back to a previously-visited section is instant and
+        // preserves scroll position, sub-tab selection, and any loaded data.
+        // Keyed by NavItem.Key (the same key used by ShellViewModel.BuildItems).
+        private readonly Dictionary<string, UserControl> _viewCache = new(StringComparer.OrdinalIgnoreCase);
 
         public MainWindow()
         {
+            _isInitializing = true;
             InitializeComponent();
 
             _viewModel = new ShellViewModel();
@@ -36,15 +44,38 @@ namespace BombaProMaxWPF
 
             DataContext = _viewModel;
 
-            ThemePalette.Apply(dark: false);
-            ApplicationThemeManager.Apply(ApplicationTheme.Light);
+            // Theme + language were applied centrally in App.OnStartup from the
+            // persisted AppSettingsService. Here we only sync the toolbar controls
+            // and reassert our window brushes (Wpf.Ui's theme manager overwrites
+            // the local Background otherwise — see Issue #4 lesson).
+            var settings = Services.AppSettingsService.Instance;
             this.SetResourceReference(BackgroundProperty, "NeuBackgroundBrush");
             this.SetResourceReference(ForegroundProperty, "NeuTextPrimaryBrush");
-            ThemeToggle.IsChecked = false;
+            ThemeToggle.IsChecked = settings.IsDarkTheme;
+            if (ThemeIcon is not null)
+            {
+                ThemeIcon.Symbol = settings.IsDarkTheme
+                    ? SymbolRegular.WeatherMoon24
+                    : SymbolRegular.WeatherSunny24;
+            }
+            SyncLanguageComboFromSettings(settings.LanguageCode);
 
-            LanguageManager.Instance.SetLanguage("fr");
+            _isInitializing = false;
 
             Loaded += OnLoaded;
+        }
+
+        private void SyncLanguageComboFromSettings(string code)
+        {
+            foreach (var item in LanguageComboBox.Items)
+            {
+                if (item is ComboBoxItem cbi && cbi.Tag is string tag &&
+                    string.Equals(tag, code, StringComparison.OrdinalIgnoreCase))
+                {
+                    LanguageComboBox.SelectedItem = cbi;
+                    return;
+                }
+            }
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -59,11 +90,27 @@ namespace BombaProMaxWPF
 
         private void OnNavigationRequested(NavItem item)
         {
-            ContentFrame.Content = item.Key switch
+            if (item is null) return;
+
+            if (!_viewCache.TryGetValue(item.Key, out var view))
             {
-                "dashboard" => new Views.DashboardPages.DashboardView(),
-                _ => null,
-            };
+                view = item.Key switch
+                {
+                    "dashboard"      => new Views.DashboardPages.DashboardView(),
+                    "infrastructure" => new Views.InfrastructurePages.InfrastructureView(),
+                    _ => null!,
+                };
+
+                if (view is null)
+                {
+                    ContentFrame.Content = null;
+                    return;
+                }
+
+                _viewCache[item.Key] = view;
+            }
+
+            ContentFrame.Content = view;
         }
 
         private void OnLogoutRequested()
@@ -215,6 +262,10 @@ namespace BombaProMaxWPF
             {
                 ThemeIcon.Symbol = SymbolRegular.WeatherMoon24;
             }
+
+            if (_isInitializing) return;
+            Services.AppSettingsService.Instance.IsDarkTheme = true;
+            Services.AppSettingsService.Instance.Save();
         }
 
         private void ThemeToggle_Unchecked(object sender, RoutedEventArgs e)
@@ -227,6 +278,10 @@ namespace BombaProMaxWPF
             {
                 ThemeIcon.Symbol = SymbolRegular.WeatherSunny24;
             }
+
+            if (_isInitializing) return;
+            Services.AppSettingsService.Instance.IsDarkTheme = false;
+            Services.AppSettingsService.Instance.Save();
         }
 
         private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -237,6 +292,10 @@ namespace BombaProMaxWPF
             }
 
             LanguageManager.Instance.SetLanguage(code);
+
+            if (_isInitializing) return;
+            Services.AppSettingsService.Instance.LanguageCode = code;
+            Services.AppSettingsService.Instance.Save();
         }
 
         private void LanguagePickerHost_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)

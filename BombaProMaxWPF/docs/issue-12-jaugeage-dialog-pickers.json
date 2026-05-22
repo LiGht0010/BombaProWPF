@@ -1,0 +1,148 @@
+{
+  "title": "BombaProMax WPF — SaisirJaugeageGlobalDialog picker styling",
+  "purpose": "Detailed record of the picker (ComboBox + DatePicker + Calendar) theming pass on the redesigned Saisir Jaugeage dialog. Companion to shell-polish-log.json issue #12.",
+  "phase": 28,
+  "scope": "BombaProMaxWPF/Views/InfrastructurePages/Sections/Reservoirs/SaisirJaugeageGlobalDialog.xaml + BombaProMaxWPF/Styles/Neumorphic.Light.xaml",
+  "issues": [
+    {
+      "id": "12.a",
+      "title": "Reservoir picker empty + outer dialog chrome leaks",
+      "symptom": [
+        "Reservoir ComboBox dropdown was empty when the dialog opened.",
+        "FluentWindow showed a default OS chrome frame around the redesigned card."
+      ],
+      "rootCause": [
+        "ItemsSource was bound to Draft.AvailableReservoirs (POCO property with no change notification).",
+        "FluentWindow renders default WindowChrome unless titlebar extension is requested."
+      ],
+      "fix": [
+        "Rebound ItemsSource to the root VM's Reservoirs ObservableCollection.",
+        "Added ExtendsContentIntoTitleBar=\"True\" on the FluentWindow."
+      ]
+    },
+    {
+      "id": "12.b",
+      "title": "Popup never appeared after first chrome attempt",
+      "symptom": "Clicking 'Saisir Jaugeage' did nothing; runtime exception.",
+      "rootCause": "Combined WindowStyle=None + AllowsTransparency=True is incompatible with FluentWindow's built-in WindowChrome and throws at construction.",
+      "fix": [
+        "Removed WindowStyle and AllowsTransparency.",
+        "Kept only ExtendsContentIntoTitleBar=\"True\" + Background=NeuBackgroundBrush.",
+        "Dropped the outer Margin=12 on the shell Border."
+      ],
+      "rule": "Never combine WindowStyle=None + AllowsTransparency=True on a FluentWindow."
+    },
+    {
+      "id": "12.c",
+      "title": "Pickers rendered with bare OS visuals",
+      "symptom": "DatePicker, témoin ComboBox, and réservoir ComboBox all showed default WPF chrome instead of the neumorphic theme.",
+      "rootCause": [
+        "Wpf.Ui v4.2.0 does not ship implicit styles for stock ComboBox / DatePicker / Calendar. The Controls/ComboBox/ComboBox.baml, Controls/DatePicker/DatePicker.baml, and Controls/CalendarDatePicker/CalendarDatePicker.baml resources are keyed only.",
+        "There are no ui:ComboBox or ui:DatePicker types — first attempt to substitute them failed to compile."
+      ],
+      "fix": [
+        "Applied Style=\"{DynamicResource NeuComboBoxStyle}\" to both ComboBoxes and Style=\"{DynamicResource NeuDatePickerStyle}\" to the DatePicker.",
+        "Added NeuDatePickerStyle + NeuDatePickerTextBoxStyle in Styles/Neumorphic.Light.xaml."
+      ]
+    },
+    {
+      "id": "12.d",
+      "title": "ComboBox click area limited to the chevron",
+      "symptom": "Only the small chevron opened the dropdown; clicking on the displayed selection text did nothing — user had to mirror the LanguagePickerHost wrapper hack.",
+      "rootCause": "Original NeuComboBoxStyle template placed the selection-display ContentPresenter outside the dropdown ToggleButton, and the ToggleButton's Border used Background=Transparent so hit testing only registered on the chevron.",
+      "fix": [
+        "Rewrote NeuComboBoxStyle: moved the selection ContentPresenter inside the dropdown ToggleButton's template.",
+        "Set Background=\"{DynamicResource NeuInputFillBrush}\" on the OuterRing Border so the entire pill registers hit-tests.",
+        "Forced HorizontalAlignment=Stretch + MinWidth=180 on the ComboBox AND on the inner ToggleButton so the pill fills its column."
+      ],
+      "rule": "The selection-display ContentPresenter must live INSIDE the dropdown ToggleButton template, and the ToggleButton's root Border must have a non-Transparent Background for the full pill to be a single hit target."
+    },
+    {
+      "id": "12.e",
+      "title": "ComboBox pill shrank to chevron-only (no selected text)",
+      "symptom": "Both dialog ComboBoxes rendered as a thin pill containing only the chevron — selected items were never displayed. Live Visual Tree reported 6 binding failures: 'SelectionBoxItemTemplate property not found on object of type ToggleButton', 'SelectionBoxItemStringFormat …', 'SelectionBoxItem …'.",
+      "rootCause": "After moving the ContentPresenter inside the ToggleButton, the {RelativeSource TemplatedParent} bindings now resolved to the inner ToggleButton (which has none of those properties) instead of the outer ComboBox.",
+      "fix": [
+        "Changed all three bindings on SelectionDisplay to RelativeSource={RelativeSource AncestorType={x:Type ComboBox}} so they climb past the ToggleButton up to the actual ComboBox.",
+        "Added TextElement.FontSize=13 so the selection text consistently picks up the app font size."
+      ],
+      "rule": "Inside nested templates, RelativeSource TemplatedParent resolves to the IMMEDIATE templated owner. To reach properties of an outer templated control from inside a nested template, use RelativeSource AncestorType={x:Type Foo}."
+    },
+    {
+      "id": "12.f",
+      "title": "DatePicker still rendered with bare OS chrome",
+      "symptom": "After NeuDatePickerStyle was applied, the DatePicker still fell back to default WPF visuals.",
+      "rootCause": [
+        "Initial NeuDatePickerStyle Template was incomplete: PART_Popup had no Calendar content wiring, PART_TextBox used a NeuDatePickerTextBoxStyle whose template lacked required parts (PART_Root, PART_DisabledVisual).",
+        "PART_Popup was missing PlacementTarget so the Calendar positioning fell back."
+      ],
+      "fix": [
+        "Rewrote NeuDatePickerTextBoxStyle: added CaretBrush, SelectionBrush, full ScrollViewer settings (Focusable=False, hidden scrollbars), proper Foreground propagation, and a hidden Watermark ContentControl.",
+        "Rewrote NeuDatePickerStyle Template: added BorderBrush, HorizontalContentAlignment=Stretch, Cursor=IBeam, SnapsToDevicePixels on OuterBorder.",
+        "Wired PART_Popup with PlacementTarget=\"{Binding ElementName=OuterBorder}\" and Grid.ColumnSpan=2 so the Calendar anchors to the pill."
+      ],
+      "templatePartsRequired": ["PART_Root (Grid)", "PART_TextBox (DatePickerTextBox)", "PART_Button (calendar icon toggle)", "PART_Popup (Calendar host)"]
+    },
+    {
+      "id": "12.g",
+      "title": "DatePicker font basic + theme-switch glitch",
+      "symptom": "After the pill was themed the displayed date still rendered in WPF's default font and recolored incorrectly when toggling theme.",
+      "rootCause": [
+        "Inner DatePickerTextBox template's ScrollViewer had no Foreground (fell back to a frozen system color that ignored theme swap).",
+        "No FontFamily / FontSize setters were applied to the DatePickerTextBox so it used the WPF default 12 px Segoe UI fallback."
+      ],
+      "fix": [
+        "Added FontSize=13 + FontFamily=Segoe UI setters on NeuDatePickerTextBoxStyle.",
+        "Propagated font + foreground via TextElement.Foreground / TextElement.FontSize / TextElement.FontFamily on the template root Grid.",
+        "Bound PART_ContentHost.Foreground to the templated Foreground so theme changes propagate live.",
+        "Hard-coded FontSize=13 + FontFamily=Segoe UI on the inner DatePickerTextBox in NeuDatePickerStyle (replaced unreliable TemplateBinding FontSize)."
+      ]
+    },
+    {
+      "id": "12.h",
+      "title": "Calendar popup header / arrows / weekday strip unreadable on theme switch",
+      "symptom": "Calendar popup day cells were themed but the month/year header button, prev/next arrows, and the 'S M T W T F S' weekday titles used hard-coded system brushes — invisible in dark mode.",
+      "rootCause": "Only CalendarDayButtonStyle was overridden. CalendarItem still used the default WPF template whose internal parts use SystemColors-based brushes that don't follow our theme.",
+      "fix": [
+        "Added NeuCalendarDayButtonStyle (CalendarDayButton): hover, selected, today, inactive triggers with neumorphic brushes.",
+        "Added NeuCalendarButtonStyle (CalendarButton): pill chrome for month/year cells in the year/decade views.",
+        "Added NeuCalendarItemStyle (CalendarItem) with a full custom Template: themed PART_PreviousButton / PART_HeaderButton / PART_NextButton, NeuTextSecondaryBrush DayTitleTemplateResourceKey, neumorphic PART_MonthView / PART_YearView grids, NeuBackgroundBrush PART_DisabledVisual. DataTriggers on Calendar.DisplayMode swap month-view ↔ year-view visibility.",
+        "Added NeuCalendarStyle (Calendar) that composes the three above.",
+        "Wired NeuDatePickerStyle to set CalendarStyle=\"{StaticResource NeuCalendarStyle}\" so the DatePicker's auto-created Calendar picks it up."
+      ],
+      "rule": "Theming the day cells alone is not enough. The CalendarItem template owns the header chrome (prev/next/header button) and the weekday title row — override its Template (and DayTitleTemplateResourceKey inside ControlTemplate.Resources) to fully theme the popup."
+    }
+  ],
+  "newKeyedStyles": [
+    "NeuCalendarDayButtonStyle (CalendarDayButton)",
+    "NeuCalendarButtonStyle (CalendarButton)",
+    "NeuCalendarItemStyle (CalendarItem)",
+    "NeuCalendarStyle (Calendar)",
+    "NeuDatePickerTextBoxStyle (DatePickerTextBox)",
+    "NeuDatePickerStyle (DatePicker)"
+  ],
+  "modifiedKeyedStyles": [
+    "NeuComboBoxStyle (ComboBox) — full rewrite: full-pill hit area + stretchable layout + ancestor-typed SelectionBox bindings"
+  ],
+  "filesTouched": [
+    "BombaProMaxWPF/Styles/Neumorphic.Light.xaml",
+    "BombaProMaxWPF/Views/InfrastructurePages/Sections/Reservoirs/SaisirJaugeageGlobalDialog.xaml",
+    "BombaProMaxWPF/Views/InfrastructurePages/Sections/Reservoirs/SaisirJaugeageGlobalDialog.xaml.cs",
+    "BombaProMaxWPF/ViewModels/SaisirJaugeageGlobalViewModel.cs",
+    "BombaProMaxWPF/Theme/ThemePalette.cs (NeuJaugAccent palette additions, prior turn)",
+    "BombaProMaxWPF/Resources/Strings.resx (JaugDlg* keys, prior turn)",
+    "BombaProMaxWPF/Resources/Strings.ar.resx (JaugDlg* keys, prior turn)"
+  ],
+  "lessonsLearned": [
+    "Wpf.Ui v4.2.0 has NO implicit styles for stock ComboBox/DatePicker/Calendar and NO ui:ComboBox / ui:DatePicker types. Custom keyed styles are mandatory.",
+    "FluentWindow forbids the WindowStyle=None + AllowsTransparency=True combination. Use ExtendsContentIntoTitleBar=True alone to drop chrome.",
+    "For a ComboBox to be clickable across its full surface, the selection-display ContentPresenter must live INSIDE the dropdown ToggleButton's template, AND the ToggleButton's outer Border must have a non-Transparent Background.",
+    "Inside a nested template, {RelativeSource TemplatedParent} resolves to the IMMEDIATE templated owner. Use RelativeSource AncestorType={x:Type Foo} to read properties of an outer templated control (e.g. ComboBox.SelectionBoxItem from inside the inner ToggleButton template).",
+    "Stock WPF DatePicker requires PART_Root, PART_TextBox (DatePickerTextBox), PART_Button (calendar toggle), and PART_Popup. Override Template only if you re-provide all parts AND wire PART_Popup.PlacementTarget for correct popup positioning.",
+    "DatePickerTextBox template must propagate Foreground/Font via TextElement.* on the template root so child text inherits theme brushes and re-paints on theme switch.",
+    "Theming Calendar day cells (CalendarDayButton) alone is insufficient — the Calendar popup's header chrome (prev/next/header button), the weekday title row (DayTitleTemplateResourceKey), and the year/decade grid live inside CalendarItem's template. Re-template CalendarItem and set DayTitleTemplateResourceKey inside ControlTemplate.Resources to fully theme the popup.",
+    "Trigger Property='IsSelected' does NOT exist on CalendarButton — only on CalendarDayButton. Build will fail with MC4109 if used."
+  ],
+  "buildOutcome": "successful",
+  "relatedShellPolishLogEntry": "shell-polish-log.json issue id=12 (theme + language persistence) is separate; this file documents the picker-styling sub-phase."
+}

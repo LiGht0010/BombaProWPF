@@ -55,5 +55,9 @@ namespace BombaProMaxWPF.Resources
         public static string ForgotPassword     => ResourceManager.GetString(nameof(ForgotPassword), _resourceCulture) ?? string.Empty;
         public static string Connecting         => ResourceManager.GetString(nameof(Connecting), _resourceCulture) ?? string.Empty;
         public static string InvalidCredentials => ResourceManager.GetString(nameof(InvalidCredentials), _resourceCulture) ?? string.Empty;
+        public static string NResValidationNumero   => ResourceManager.GetString(nameof(NResValidationNumero),   _resourceCulture) ?? string.Empty;
+        public static string NResValidationCapacite => ResourceManager.GetString(nameof(NResValidationCapacite), _resourceCulture) ?? string.Empty;
+        public static string NResNumeroExists       => ResourceManager.GetString(nameof(NResNumeroExists),       _resourceCulture) ?? string.Empty;
+        public static string NResSaveError          => ResourceManager.GetString(nameof(NResSaveError),          _resourceCulture) ?? string.Empty;
     }
 }

@@ -224,6 +224,30 @@
         "BombaProMaxWPF/Views/LoginWindow.xaml.cs"
       ],
       "partialPlan": "docs/plans/issue-10-dash-perf-and-language-click.md"
+    },
+    {
+      "id": 11,
+      "title": "Theme + language don't persist across windows or restarts",
+      "status": "done",
+      "symptom": "Choice made on LoginWindow (e.g. dark theme, Arabic) was reset to light/French the moment MainWindow opened. App restart also reset to defaults — there was no persistence at all.",
+      "rootCause": [
+        "Both LoginWindow.xaml.cs (ctor lines 33-39) and MainWindow.xaml.cs (ctor lines 39-45) hardcoded ThemePalette.Apply(dark: false) + ApplicationThemeManager.Apply(Light) + ThemeToggle.IsChecked=false + LanguageManager.SetLanguage('fr'). Each ctor unconditionally rewrote whatever the previous window had set.",
+        "ThemeToggle_Checked/Unchecked + LanguageComboBox_SelectionChanged in both windows updated in-memory state only — no disk write.",
+        "App.xaml.cs OnStartup only called ApiConfig.Initialize() — no central place to load persisted preferences."
+      ],
+      "fix": [
+        "Created BombaProMaxWPF/Services/AppSettingsService.cs — singleton (mirrors LanguageManager.Instance pattern) with IsDarkTheme:bool + LanguageCode:string + Load() + Save(). JSON-backed at %APPDATA%/BombaProMax/settings.json via System.Text.Json (case-insensitive, indented). Missing/corrupt file falls back silently to defaults (dark=false, code='fr'); Save() failures swallowed (non-critical preference store).",
+        "App.xaml.cs OnStartup now calls AppSettingsService.Instance.Load(), then applies ThemePalette.Apply + ApplicationThemeManager.Apply + LanguageManager.SetLanguage from the persisted values ONCE before any window is shown. This is the new single source of truth for initial theme/language state.",
+        "LoginWindow.xaml.cs + MainWindow.xaml.cs: removed hardcoded init from ctors. Replaced with: read AppSettingsService.Instance, sync ThemeToggle.IsChecked + ThemeIcon.Symbol + LanguageComboBox.SelectedItem (via SyncLanguageComboFromSettings helper iterating ComboBoxItems by Tag). Added _isInitializing guard flag set true around ctor so the IsChecked/SelectedItem assignments fire their handlers (which still apply the theme/language defensively) without writing to disk.",
+        "ThemeToggle_Checked/Unchecked + LanguageComboBox_SelectionChanged in BOTH windows: after applying, write IsDarkTheme/LanguageCode back to AppSettingsService.Instance and call Save(). Guarded by `if (_isInitializing) return;` to skip the redundant write during construction."
+      ],
+      "filesTouched": [
+        "BombaProMaxWPF/Services/AppSettingsService.cs (new)",
+        "BombaProMaxWPF/App.xaml.cs",
+        "BombaProMaxWPF/Views/LoginWindow.xaml.cs",
+        "BombaProMaxWPF/MainWindow.xaml.cs"
+      ],
+      "partialPlan": "docs/plans/issue-12-theme-lang-persistence.md"
     }
   ],
   "lessonsLearned": [
@@ -237,7 +261,9 @@
     "Encoding gotcha: PowerShell Get-Content -Raw with -replace corrupts non-ASCII characters. Use [System.IO.File]::ReadAllText/WriteAllText with explicit UTF-8 BOM, or use XML entities like &#x25CF; for literal special chars.",
     "Stacked DropShadowEffect surfaces inside a ScrollViewer cause re-rasterisation thrash on scroll. Apply CacheMode=BitmapCache (and optionally RenderOptions.EdgeMode=Aliased) to the template's root container so the rasterised composite is cached and only translated.",
     "The default WPF ComboBox click target is just the chevron ToggleButton. To enlarge the click area, wrap the surrounding label group in a Border with a MouseLeftButtonUp handler that toggles ComboBox.IsDropDownOpen; guard with an IsDescendantOf check on e.OriginalSource so the ComboBox's own selection logic is untouched.",
-    "When pill chrome lives inside a custom ComboBox template AND on a wrapper Border, the two outlines double up and the inner one looks 'small'. Pick one source of truth — usually the wrapper, since users expect the click target and visual pill to be the same shape."
+    "When pill chrome lives inside a custom ComboBox template AND on a wrapper Border, the two outlines double up and the inner one looks 'small'. Pick one source of truth — usually the wrapper, since users expect the click target and visual pill to be the same shape.",
+    "Per-window ctor initialization for global state (theme, language, culture) is an anti-pattern: each window will silently overwrite the previous one's choices on handoff. Apply global state ONCE in App.OnStartup from a persisted settings service, then have window ctors only sync their UI controls to the already-applied state.",
+    "When syncing UI controls (ToggleButton.IsChecked, ComboBox.SelectedItem) from a persisted settings store inside a ctor, the assignments will fire Checked/SelectionChanged handlers. If those handlers also write to disk, you get a redundant Save() on every window construction. Use an `_isInitializing` guard flag set true around the ctor and `if (_isInitializing) return;` early-out in the persistence branch of each handler."
   ],
   "globalTracker": "docs/plans/shell-polish.md",
   "humanReadableRecap": "docs/plans/shell-polish-recap.md"

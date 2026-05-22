@@ -29,6 +29,8 @@ internal static class ThemePalette
         ["NeuDangerColor"]           = (Color)ColorConverter.ConvertFromString("#D86070")!,
         ["NeuAccentGradientStart"]   = (Color)ColorConverter.ConvertFromString("#52BCB3")!,
         ["NeuAccentGradientEnd"]     = (Color)ColorConverter.ConvertFromString("#7B5BD3")!,
+        ["NeuJaugAccentColor"]       = (Color)ColorConverter.ConvertFromString("#1F8C5F")!,
+        ["NeuJaugAccentHoverColor"]  = (Color)ColorConverter.ConvertFromString("#176E4A")!,
     };
 
     private static readonly Dictionary<string, Color> Dark = new()
@@ -47,6 +49,8 @@ internal static class ThemePalette
         ["NeuDangerColor"]           = (Color)ColorConverter.ConvertFromString("#FF7A85")!,
         ["NeuAccentGradientStart"]   = (Color)ColorConverter.ConvertFromString("#21D4FD")!,
         ["NeuAccentGradientEnd"]     = (Color)ColorConverter.ConvertFromString("#B721FF")!,
+        ["NeuJaugAccentColor"]       = (Color)ColorConverter.ConvertFromString("#2BA876")!,
+        ["NeuJaugAccentHoverColor"]  = (Color)ColorConverter.ConvertFromString("#34C68C")!,
     };
 
     /// <summary>
@@ -64,6 +68,8 @@ internal static class ThemePalette
         ("NeuAccentSecondaryBrush", "NeuAccentSecondaryColor"),
         ("NeuWarnBrush",            "NeuWarnColor"),
         ("NeuDangerBrush",          "NeuDangerColor"),
+        ("NeuJaugAccentBrush",      "NeuJaugAccentColor"),
+        ("NeuJaugAccentHoverBrush", "NeuJaugAccentHoverColor"),
     };
 
     public static void Apply(bool dark)
