@@ -1,20 +1,322 @@
 <UserControl x:Class="BombaProMaxWPF.Views.InfrastructurePages.Sections.Services.ServicesSection"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:loc="clr-namespace:BombaProMaxWPF.Localization"
+             xmlns:vm="clr-namespace:BombaProMaxWPF.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:ServicesSectionViewModel}"
              Background="Transparent">
 
-    <ContentControl Style="{StaticResource NeuDashCardStyle}">
-        <StackPanel>
-            <TextBlock Text="{Binding [InfraServices], Source={x:Static loc:LanguageManager.Instance}}"
-                       FontSize="18"
-                       FontWeight="SemiBold"
-                       Foreground="{DynamicResource NeuTextPrimaryBrush}" />
-            <TextBlock Text="{Binding [InfraComingSoon], Source={x:Static loc:LanguageManager.Instance}}"
-                       FontSize="13"
-                       Margin="0,8,0,0"
-                       Foreground="{DynamicResource NeuTextSecondaryBrush}"
-                       TextWrapping="Wrap" />
-        </StackPanel>
-    </ContentControl>
+    <UserControl.Resources>
+
+        <Style x:Key="SrvIconButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SrvColHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="SrvCellTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <DataTemplate x:Key="ServiceRowTemplate" DataType="{x:Type vm:ServiceCardItem}">
+            <Border Padding="0,12,0,12"
+                    BorderBrush="{DynamicResource NeuInputFillBrush}"
+                    BorderThickness="0,0,0,1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="130" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Numéro badge -->
+                    <Border Grid.Column="0"
+                            Background="{DynamicResource NeuInputFillBrush}"
+                            CornerRadius="6" Padding="8,3"
+                            HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Numero}"
+                                   FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuAccentBrush}" />
+                    </Border>
+
+                    <!-- Description -->
+                    <TextBlock Grid.Column="1" Text="{Binding Description}"
+                               Style="{StaticResource SrvCellTextStyle}"
+                               Margin="16,0,8,0" />
+
+                    <!-- Catégorie -->
+                    <TextBlock Grid.Column="2" Text="{Binding Categorie}"
+                               Style="{StaticResource SrvCellTextStyle}" />
+
+                    <!-- Prix -->
+                    <TextBlock Grid.Column="3" Text="{Binding PrixDisplay}"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}"
+                               Style="{StaticResource SrvCellTextStyle}" />
+
+                    <!-- Actions -->
+                    <StackPanel Grid.Column="4" Orientation="Horizontal"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Style="{StaticResource SrvIconButtonStyle}"
+                                ToolTip="{Binding [SrvDetailTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DetailServiceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Info24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource SrvIconButtonStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [SrvEditTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.EditServiceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Edit24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource SrvIconButtonStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [SrvDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DeleteServiceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}"
+                                Foreground="{DynamicResource NeuDangerBrush}">
+                            <ui:SymbolIcon Symbol="Delete24" FontSize="14" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header: breadcrumb + buttons -->
+        <Grid Grid.Row="0" Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding [SrvBreadcrumbInfra], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                    <TextBlock Text=" › " FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    <TextBlock Text="{Binding [SrvBreadcrumbServices], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                </StackPanel>
+                <TextBlock Text="{Binding [SrvPageSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                           FontSize="13" Margin="0,4,0,0"
+                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Style="{StaticResource NeuButtonStyle}"
+                        Padding="16,10" FontWeight="SemiBold"
+                        Margin="0,0,10,0"
+                        Command="{Binding ManageCategoriesCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Tag24" FontSize="16" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding [SrvManageCategoriesButton], Source={x:Static loc:LanguageManager.Instance}}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource NeuButtonStyle}"
+                        Background="{DynamicResource NeuAccentBrush}"
+                        Foreground="White"
+                        Padding="16,10" FontWeight="SemiBold"
+                        Command="{Binding AddServiceCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="AddCircle24" FontSize="16" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding [SrvAddButton], Source={x:Static loc:LanguageManager.Instance}}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Services table card -->
+        <ContentControl Grid.Row="1"
+                        Style="{StaticResource NeuDashCardStyle}"
+                        Margin="8,0,8,18">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Card header -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding [SrvTableTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="16" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                        <TextBlock Text="{Binding [SrvTableSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11" Margin="0,2,0,0"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Count badge -->
+                        <Border Background="{DynamicResource NeuInputFillBrush}"
+                                CornerRadius="10" Padding="12,5" Margin="0,0,12,0">
+                            <TextBlock FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource NeuAccentBrush}">
+                                <Run Text="{Binding Services.Count, Mode=OneWay}" />
+                                <Run Text=" " />
+                                <Run Text="{Binding [SrvCountBadge], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
+                            </TextBlock>
+                        </Border>
+                        <!-- Refresh -->
+                        <Button Style="{StaticResource NeuButtonStyle}"
+                                Padding="10,8"
+                                Command="{Binding RefreshCommand}">
+                            <ui:SymbolIcon Symbol="ArrowSync24" FontSize="15" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Column headers -->
+                <Grid Grid.Row="1" Margin="0,16,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="130" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding [SrvColNumero], Source={x:Static loc:LanguageManager.Instance}}"   Style="{StaticResource SrvColHeaderStyle}" />
+                    <TextBlock Grid.Column="1" Text="{Binding [SrvColDescription], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource SrvColHeaderStyle}" />
+                    <TextBlock Grid.Column="2" Text="{Binding [SrvColCategorie], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource SrvColHeaderStyle}" />
+                    <TextBlock Grid.Column="3" Text="{Binding [SrvColPrix], Source={x:Static loc:LanguageManager.Instance}}"      Style="{StaticResource SrvColHeaderStyle}" />
+                    <TextBlock Grid.Column="4" Text="{Binding [SrvColActions], Source={x:Static loc:LanguageManager.Instance}}"   Style="{StaticResource SrvColHeaderStyle}" HorizontalAlignment="Center" />
+                </Grid>
+
+                <!-- Rows -->
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <ItemsControl ItemsSource="{Binding Services}"
+                                      ItemTemplate="{StaticResource ServiceRowTemplate}"
+                                      AlternationCount="2" />
+
+                        <!-- Loading overlay -->
+                        <Border Background="#33000000" CornerRadius="8"
+                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <ui:ProgressRing IsIndeterminate="True"
+                                             Width="40" Height="40"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             Foreground="{DynamicResource NeuAccentBrush}" />
+                        </Border>
+
+                        <!-- Empty state -->
+                        <TextBlock Text="{Binding [SrvEmpty], Source={x:Static loc:LanguageManager.Instance}}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                   Margin="0,32,0,32">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsLoading}" Value="False" />
+                                                <Condition Binding="{Binding Services.Count}" Value="0" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </ContentControl>
+
+        <!-- Status bar -->
+        <Border Grid.Row="2" Margin="8,0,8,0">
+            <StackPanel Orientation="Horizontal">
+                <!-- Error -->
+                <Border Background="#1FE05555" CornerRadius="8" Padding="12,6"
+                        Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ErrorCircle24" FontSize="14"
+                                       Foreground="#E05555" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   FontSize="12" Foreground="#E05555"
+                                   VerticalAlignment="Center" Margin="6,0,0,0" />
+                    </StackPanel>
+                </Border>
+                <!-- Success -->
+                <Border Background="#1F3FD46A" CornerRadius="8" Padding="12,6"
+                        Visibility="{Binding SuccessMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="14"
+                                       Foreground="#3FD46A" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding SuccessMessage}"
+                                   FontSize="12" Foreground="#3FD46A"
+                                   VerticalAlignment="Center" Margin="6,0,0,0" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+    </Grid>
 </UserControl>

@@ -406,4 +406,78 @@
   <data name="JaugEditColVolume" xml:space="preserve"><value>Volume (L)</value></data>
   <data name="JaugEditColTemp" xml:space="preserve"><value>Temp. (°C)</value></data>
   <data name="JaugEditColNotes" xml:space="preserve"><value>Notes</value></data>
+
+  <!-- ═══ Services Section ═══ -->
+  <data name="InfraServices" xml:space="preserve"><value>Services</value></data>
+  <data name="SrvBreadcrumbInfra" xml:space="preserve"><value>Infrastructure</value></data>
+  <data name="SrvBreadcrumbServices" xml:space="preserve"><value>Services</value></data>
+  <data name="SrvPageSubtitle" xml:space="preserve"><value>Gestion des services proposés</value></data>
+  <data name="SrvManageCategoriesButton" xml:space="preserve"><value>Gérer les catégories</value></data>
+  <data name="SrvAddButton" xml:space="preserve"><value>Nouveau service</value></data>
+  <data name="SrvTableTitle" xml:space="preserve"><value>Catalogue des services</value></data>
+  <data name="SrvTableSubtitle" xml:space="preserve"><value>Liste complète des services enregistrés</value></data>
+  <data name="SrvColNumero" xml:space="preserve"><value>NUMÉRO</value></data>
+  <data name="SrvColDescription" xml:space="preserve"><value>DESCRIPTION</value></data>
+  <data name="SrvColCategorie" xml:space="preserve"><value>CATÉGORIE</value></data>
+  <data name="SrvColPrix" xml:space="preserve"><value>PRIX</value></data>
+  <data name="SrvColActions" xml:space="preserve"><value>ACTIONS</value></data>
+  <data name="SrvEmpty" xml:space="preserve"><value>Aucun service enregistré.</value></data>
+  <data name="SrvCountBadge" xml:space="preserve"><value>services</value></data>
+  <data name="SrvEditTooltip" xml:space="preserve"><value>Modifier</value></data>
+  <data name="SrvDeleteTooltip" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="SrvDetailTooltip" xml:space="preserve"><value>Détails</value></data>
+  <data name="SrvDeleteSuccess" xml:space="preserve"><value>Service supprimé avec succès.</value></data>
+  <data name="SrvDeleteError" xml:space="preserve"><value>Impossible de supprimer le service.</value></data>
+
+  <!-- Nouveau Service Dialog -->
+  <data name="NouveauSrvTitle" xml:space="preserve"><value>Nouveau service</value></data>
+  <data name="NouveauSrvSubtitle" xml:space="preserve"><value>Remplissez les informations du nouveau service.</value></data>
+  <data name="NouveauSrvInfoSection" xml:space="preserve"><value>Informations générales</value></data>
+  <data name="NouveauSrvPrixSection" xml:space="preserve"><value>Tarification</value></data>
+  <data name="NouveauSrvLabelNumero" xml:space="preserve"><value>Numéro / Référence</value></data>
+  <data name="NouveauSrvLabelDescription" xml:space="preserve"><value>Description</value></data>
+  <data name="NouveauSrvLabelCategorie" xml:space="preserve"><value>Catégorie</value></data>
+  <data name="NouveauSrvLabelPrix" xml:space="preserve"><value>Prix (DH)</value></data>
+  <data name="NouveauSrvPlaceholderNumero" xml:space="preserve"><value>ex: SRV-001</value></data>
+  <data name="NouveauSrvPlaceholderDescription" xml:space="preserve"><value>Description du service…</value></data>
+  <data name="NouveauSrvPlaceholderPrix" xml:space="preserve"><value>0.00</value></data>
+  <data name="NouveauSrvCatNone" xml:space="preserve"><value>— Sans catégorie —</value></data>
+  <data name="NouveauSrvSaveButton" xml:space="preserve"><value>Enregistrer</value></data>
+  <data name="NouveauSrvCancelButton" xml:space="preserve"><value>Annuler</value></data>
+  <data name="NouveauSrvValidationNumero" xml:space="preserve"><value>Le numéro est obligatoire.</value></data>
+  <data name="NouveauSrvSaveError" xml:space="preserve"><value>Une erreur est survenue lors de la sauvegarde.</value></data>
+
+  <!-- Edit Service Dialog -->
+  <data name="EditSrvTitle" xml:space="preserve"><value>Modifier le service</value></data>
+  <data name="EditSrvSaveButton" xml:space="preserve"><value>Enregistrer les modifications</value></data>
+  <data name="EditSrvSaveError" xml:space="preserve"><value>Une erreur est survenue lors de la sauvegarde.</value></data>
+  <data name="EditSrvSaveSuccess" xml:space="preserve"><value>Service modifié avec succès.</value></data>
+
+  <!-- Detail Service Dialog -->
+  <data name="DetailSrvTitle" xml:space="preserve"><value>Détails du service</value></data>
+  <data name="DetailSrvInfoSection" xml:space="preserve"><value>Informations générales</value></data>
+  <data name="DetailSrvPrixSection" xml:space="preserve"><value>Tarification</value></data>
+  <data name="DetailSrvLabelNumero" xml:space="preserve"><value>Numéro</value></data>
+  <data name="DetailSrvLabelDescription" xml:space="preserve"><value>Description</value></data>
+  <data name="DetailSrvLabelCategorie" xml:space="preserve"><value>Catégorie</value></data>
+  <data name="DetailSrvLabelPrix" xml:space="preserve"><value>Prix</value></data>
+  <data name="DetailSrvCloseButton" xml:space="preserve"><value>Fermer</value></data>
+  <data name="DetailSrvEditButton" xml:space="preserve"><value>Modifier</value></data>
+
+  <!-- Gérer Catégories Service Dialog -->
+  <data name="CatSrvDlgTitle" xml:space="preserve"><value>Gérer les catégories de services</value></data>
+  <data name="CatSrvDlgNewPlaceholder" xml:space="preserve"><value>Nom de la catégorie…</value></data>
+  <data name="CatSrvDlgAddButton" xml:space="preserve"><value>Ajouter</value></data>
+  <data name="CatSrvDlgListTitle" xml:space="preserve"><value>Catégories existantes</value></data>
+  <data name="CatSrvDlgEmpty" xml:space="preserve"><value>Aucune catégorie enregistrée.</value></data>
+  <data name="CatSrvDlgCloseButton" xml:space="preserve"><value>Fermer</value></data>
+  <data name="CatSrvDlgAddError" xml:space="preserve"><value>Impossible d'ajouter la catégorie.</value></data>
+  <data name="CatSrvDlgUpdateError" xml:space="preserve"><value>Impossible de modifier la catégorie.</value></data>
+  <data name="CatSrvDlgDeleteError" xml:space="preserve"><value>Impossible de supprimer la catégorie.</value></data>
+  <data name="CatSrvDlgNewLabel" xml:space="preserve"><value>NOUVELLE CATÉGORIE</value></data>
+  <data name="CatSrvDlgExistingLabel" xml:space="preserve"><value>CATÉGORIES EXISTANTES</value></data>
+  <data name="CatSrvDlgEditTooltip" xml:space="preserve"><value>Modifier</value></data>
+  <data name="CatSrvDlgDeleteTooltip" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="CatSrvDlgSaveTooltip" xml:space="preserve"><value>Enregistrer</value></data>
+  <data name="CatSrvDlgCancelTooltip" xml:space="preserve"><value>Annuler</value></data>
 </root>
