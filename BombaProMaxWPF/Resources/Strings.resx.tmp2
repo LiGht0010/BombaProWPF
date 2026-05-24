@@ -164,11 +164,10 @@
   <data name="NouveauProdLabelDescription" xml:space="preserve"><value>Description</value></data>
   <data name="NouveauProdPlaceholderDescription" xml:space="preserve"><value>Description du produit…</value></data>
   <data name="NouveauProdLabelCategorie" xml:space="preserve"><value>Catégorie</value></data>
-  <data name="NouveauProdLabelPrixAchat" xml:space="preserve"><value>Prix d'achat (DH)</value></data>
-  <data name="NouveauProdLabelPrixHT" xml:space="preserve"><value>Prix HT (DH)</value></data>
+  <data name="NouveauProdLabelPrixAchat" xml:space="preserve"><value>Prix d'achat (DA)</value></data>
   <data name="NouveauProdLabelTVA" xml:space="preserve"><value>TVA (%)</value></data>
-  <data name="NouveauProdLabelPrixTTC" xml:space="preserve"><value>Prix TTC (DH)</value></data>
-  <data name="NouveauProdLabelMarge" xml:space="preserve"><value>Marge bénéficiaire (DH)</value></data>
+  <data name="NouveauProdLabelPrixTTC" xml:space="preserve"><value>Prix TTC (DA)</value></data>
+  <data name="NouveauProdLabelMarge" xml:space="preserve"><value>Marge bénéficiaire (DA)</value></data>
   <data name="NouveauProdLabelStock" xml:space="preserve"><value>Stock initial</value></data>
   <data name="NouveauProdLabelStockMin" xml:space="preserve"><value>Stock minimum</value></data>
   <data name="NouveauProdLabelDelai" xml:space="preserve"><value>Délai de livraison (j)</value></data>
@@ -177,28 +176,6 @@
   <data name="NouveauProdValidationNumero" xml:space="preserve"><value>Le numéro / référence est obligatoire.</value></data>
   <data name="NouveauProdSaveError" xml:space="preserve"><value>Impossible d'enregistrer le produit.</value></data>
   <data name="NouveauProdSaveSuccess" xml:space="preserve"><value>Produit enregistré avec succès.</value></data>
-    <data name="EditProdTitle" xml:space="preserve"><value>Modifier le produit</value></data>
-    <data name="EditProdSave" xml:space="preserve"><value>Enregistrer les modifications</value></data>
-    <data name="EditProdSaveError" xml:space="preserve"><value>Impossible de modifier le produit.</value></data>
-    <data name="EditProdSaveSuccess" xml:space="preserve"><value>Produit modifié avec succès.</value></data>
-    <data name="DetailProdTitle" xml:space="preserve"><value>Détails du produit</value></data>
-    <data name="DetailProdInfoSection" xml:space="preserve"><value>Informations générales</value></data>
-    <data name="DetailProdPricingSection" xml:space="preserve"><value>Tarification</value></data>
-    <data name="DetailProdStockSection" xml:space="preserve"><value>Stock &amp; logistique</value></data>
-    <data name="DetailProdClose" xml:space="preserve"><value>Fermer</value></data>
-    <data name="DetailProdTooltip" xml:space="preserve"><value>Voir les détails</value></data>
-    <data name="DetailProdLabelCategorie" xml:space="preserve"><value>Catégorie</value></data>
-    <data name="DetailProdLabelDescription" xml:space="preserve"><value>Description</value></data>
-    <data name="DetailProdLabelPrixAchat" xml:space="preserve"><value>Prix d'achat</value></data>
-    <data name="DetailProdLabelPrixHT" xml:space="preserve"><value>Prix HT</value></data>
-    <data name="DetailProdLabelTVA" xml:space="preserve"><value>TVA</value></data>
-    <data name="DetailProdLabelPrixTTC" xml:space="preserve"><value>Prix TTC</value></data>
-    <data name="DetailProdLabelMarge" xml:space="preserve"><value>Marge bénéficiaire</value></data>
-    <data name="DetailProdLabelMargePct" xml:space="preserve"><value>Marge %</value></data>
-    <data name="DetailProdLabelStock" xml:space="preserve"><value>Stock actuel</value></data>
-    <data name="DetailProdLabelStockMin" xml:space="preserve"><value>Stock minimum</value></data>
-    <data name="DetailProdLabelDelai" xml:space="preserve"><value>Délai de livraison</value></data>
-    <data name="DetailProdEditButton" xml:space="preserve"><value>Modifier</value></data>
 
   <data name="ResOnline" xml:space="preserve"><value>EN LIGNE</value></data>
   <data name="ResIdLabel" xml:space="preserve"><value>ID: {0}</value></data>

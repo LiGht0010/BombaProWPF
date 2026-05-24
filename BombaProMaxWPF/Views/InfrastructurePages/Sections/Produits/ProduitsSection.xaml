@@ -72,7 +72,7 @@
                         <ColumnDefinition Width="110" />
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="90" />
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="130" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Numéro badge -->
@@ -165,6 +165,13 @@
                     <StackPanel Grid.Column="7" Orientation="Horizontal"
                                 HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Button Style="{StaticResource ProdIconButtonStyle}"
+                                ToolTip="{Binding [DetailProdTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DetailProduitCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Info24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource ProdIconButtonStyle}"
+                                Margin="4,0,0,0"
                                 ToolTip="{Binding [ProdEditTooltip], Source={x:Static loc:LanguageManager.Instance}}"
                                 Command="{Binding DataContext.EditProduitCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                 CommandParameter="{Binding}">
@@ -215,19 +222,31 @@
                            Foreground="{DynamicResource NeuTextSecondaryBrush}" />
             </StackPanel>
 
-            <Button Grid.Column="1"
-                    Style="{StaticResource NeuButtonStyle}"
-                    Background="{DynamicResource NeuAccentBrush}"
-                    Foreground="White"
-                    Padding="16,10"
-                    FontWeight="SemiBold"
-                    Command="{Binding AddProduitCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <ui:SymbolIcon Symbol="AddCircle24" FontSize="16" VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding [ProdAddButton], Source={x:Static loc:LanguageManager.Instance}}"
-                               Margin="8,0,0,0" VerticalAlignment="Center" />
-                </StackPanel>
-            </Button>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Style="{StaticResource NeuButtonStyle}"
+                                    Padding="16,10"
+                                    FontWeight="SemiBold"
+                                    Margin="0,0,10,0"
+                                    Command="{Binding ManageCategoriesCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Tag24" FontSize="16" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding [ProdManageCategoriesButton], Source={x:Static loc:LanguageManager.Instance}}"
+                                               Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource NeuButtonStyle}"
+                                    Background="{DynamicResource NeuAccentBrush}"
+                                    Foreground="White"
+                                    Padding="16,10"
+                                    FontWeight="SemiBold"
+                                    Command="{Binding AddProduitCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="AddCircle24" FontSize="16" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding [ProdAddButton], Source={x:Static loc:LanguageManager.Instance}}"
+                                               Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
         </Grid>
 
         <!-- ─── Products table card ─── -->
@@ -287,7 +306,7 @@
                         <ColumnDefinition Width="110" />
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="90" />
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="130" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding [ProdColNumero], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource ProdColHeaderStyle}" />
                     <TextBlock Grid.Column="1" Text="{Binding [ProdColDescription], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource ProdColHeaderStyle}" />

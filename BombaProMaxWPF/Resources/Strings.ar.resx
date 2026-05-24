@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -114,6 +114,7 @@
   <data name="ProdBreadcrumbInfra" xml:space="preserve"><value>البنية التحتية</value></data>
   <data name="ProdBreadcrumbProduits" xml:space="preserve"><value>المنتجات</value></data>
   <data name="ProdPageSubtitle" xml:space="preserve"><value>u{625}u{62F}u{627}u{631}u{629} u{627}u{644}u{648}u{642}u{648}u{62F} u{648}u{627}u{644}u{645}u{646}u{62A}u{62C}u{627}u{62A} u{627}u{644}u{628}u{62A}u{631}u{648}u{644}u{64A}u{629}</value></data>
+  <data name="ProdManageCategoriesButton" xml:space="preserve"><value>إدارة الفئات</value></data>
   <data name="ProdAddButton" xml:space="preserve"><value>منتج جديد</value></data>
   <data name="ProdTableTitle" xml:space="preserve"><value>كتالوج المنتجات</value></data>
   <data name="ProdTableSubtitle" xml:space="preserve"><value>القائمة الكاملة للمنتجات المسجلة</value></data>
@@ -137,6 +138,43 @@
   <data name="ProdDeleteSuccess" xml:space="preserve"><value>تم حذف المنتج بنجاح.</value></data>
   <data name="ProdDeleteError" xml:space="preserve"><value>تعذر حذف المنتج.</value></data>
   <data name="ProdCountBadge" xml:space="preserve"><value>منتجات</value></data>
+  <data name="CatDlgTitle" xml:space="preserve"><value>إدارة الفئات</value></data>
+  <data name="CatDlgNewLabel" xml:space="preserve"><value>فئة جديدة</value></data>
+  <data name="CatDlgPlaceholder" xml:space="preserve"><value>اسم الفئة…</value></data>
+  <data name="CatDlgAjouter" xml:space="preserve"><value>إضافة</value></data>
+  <data name="CatDlgExistingLabel" xml:space="preserve"><value>الفئات الموجودة</value></data>
+  <data name="CatDlgEditTooltip" xml:space="preserve"><value>تعديل</value></data>
+  <data name="CatDlgDeleteTooltip" xml:space="preserve"><value>حذف</value></data>
+  <data name="CatDlgSaveTooltip" xml:space="preserve"><value>حفظ</value></data>
+  <data name="CatDlgCancelTooltip" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="CatDlgEmpty" xml:space="preserve"><value>لا توجد فئات مسجلة.</value></data>
+  <data name="CatDlgAddError" xml:space="preserve"><value>تعذر إضافة الفئة.</value></data>
+  <data name="CatDlgUpdateError" xml:space="preserve"><value>تعذر تعديل الفئة.</value></data>
+  <data name="CatDlgDeleteError" xml:space="preserve"><value>تعذر حذف الفئة.</value></data>
+  <data name="CatDlgFermer" xml:space="preserve"><value>إغلاق</value></data>
+
+  <data name="NouveauProdTitle" xml:space="preserve"><value>منتج جديد</value></data>
+  <data name="NouveauProdSubtitle" xml:space="preserve"><value>أدخل معلومات المنتج الجديد.</value></data>
+  <data name="NouveauProdInfoSection" xml:space="preserve"><value>المعلومات العامة</value></data>
+  <data name="NouveauProdPricingSection" xml:space="preserve"><value>التسعير</value></data>
+  <data name="NouveauProdStockSection" xml:space="preserve"><value>المخزون</value></data>
+  <data name="NouveauProdLabelNumero" xml:space="preserve"><value>الرقم / المرجع *</value></data>
+  <data name="NouveauProdPlaceholderNumero" xml:space="preserve"><value>مثال: SP95-001</value></data>
+  <data name="NouveauProdLabelDescription" xml:space="preserve"><value>الوصف</value></data>
+  <data name="NouveauProdPlaceholderDescription" xml:space="preserve"><value>وصف المنتج…</value></data>
+  <data name="NouveauProdLabelCategorie" xml:space="preserve"><value>الفئة</value></data>
+  <data name="NouveauProdLabelPrixAchat" xml:space="preserve"><value>سعر الشراء (دج)</value></data>
+  <data name="NouveauProdLabelTVA" xml:space="preserve"><value>الضريبة على القيمة المضافة (%)</value></data>
+  <data name="NouveauProdLabelPrixTTC" xml:space="preserve"><value>السعر شامل الضريبة (دج)</value></data>
+  <data name="NouveauProdLabelMarge" xml:space="preserve"><value>هامش الربح (دج)</value></data>
+  <data name="NouveauProdLabelStock" xml:space="preserve"><value>المخزون الأولي</value></data>
+  <data name="NouveauProdLabelStockMin" xml:space="preserve"><value>الحد الأدنى للمخزون</value></data>
+  <data name="NouveauProdLabelDelai" xml:space="preserve"><value>مهلة التسليم (أيام)</value></data>
+  <data name="NouveauProdSave" xml:space="preserve"><value>حفظ المنتج</value></data>
+  <data name="NouveauProdCancel" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="NouveauProdValidationNumero" xml:space="preserve"><value>الرقم / المرجع مطلوب.</value></data>
+  <data name="NouveauProdSaveError" xml:space="preserve"><value>تعذر حفظ المنتج.</value></data>
+  <data name="NouveauProdSaveSuccess" xml:space="preserve"><value>تم حفظ المنتج بنجاح.</value></data>
 
   <data name="ResOnline" xml:space="preserve"><value>متصل</value></data>
   <data name="ResIdLabel" xml:space="preserve"><value>الرمز: {0}</value></data>

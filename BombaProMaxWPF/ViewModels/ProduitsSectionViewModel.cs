@@ -28,14 +28,18 @@ public partial class ProduitsSectionViewModel : ObservableObject, IAsyncLoadable
 
     public IAsyncRelayCommand RefreshCommand { get; }
     public IRelayCommand AddProduitCommand { get; }
+    public IRelayCommand ManageCategoriesCommand { get; }
     public IRelayCommand<ProduitCardItem> EditProduitCommand { get; }
+    public IRelayCommand<ProduitCardItem> DetailProduitCommand { get; }
     public IAsyncRelayCommand<ProduitCardItem> DeleteProduitCommand { get; }
 
     public ProduitsSectionViewModel()
     {
         RefreshCommand = new AsyncRelayCommand(ct => RefreshAsync(ct));
         AddProduitCommand = new RelayCommand(OpenAddProduit);
+        ManageCategoriesCommand = new RelayCommand(OpenManageCategories);
         EditProduitCommand = new RelayCommand<ProduitCardItem>(OpenEditProduit);
+        DetailProduitCommand = new RelayCommand<ProduitCardItem>(OpenDetailProduit);
         DeleteProduitCommand = new AsyncRelayCommand<ProduitCardItem>(DeleteProduitAsync);
     }
 
@@ -83,15 +87,84 @@ public partial class ProduitsSectionViewModel : ObservableObject, IAsyncLoadable
 
     private void OpenAddProduit()
     {
-        // TODO: open NouveauProduitDialog when implemented
-        ErrorMessage = null;
+        try
+        {
+            ErrorMessage = null;
+            var dialog = new Views.InfrastructurePages.Sections.Produits.NouveauProduitDialog
+            {
+                Owner = System.Windows.Application.Current?.MainWindow
+            };
+            dialog.ShowDialog();
+            if (dialog.ViewModel.Saved)
+                _ = RefreshAsync(CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Impossible d'ouvrir le dialogue: {ex.Message}";
+            System.Diagnostics.Debug.WriteLine($"[ProduitsSectionVM] OpenAddProduit failed: {ex}");
+        }
+    }
+
+    private void OpenManageCategories()
+    {
+        try
+        {
+            ErrorMessage = null;
+            var dialog = new Views.InfrastructurePages.Sections.Produits.GererCategoriesDialog
+            {
+                Owner = System.Windows.Application.Current?.MainWindow
+            };
+            dialog.ShowDialog();
+            // Refresh the product list in case categories were renamed/deleted
+            _ = RefreshAsync(CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Impossible d'ouvrir le dialogue: {ex.Message}";
+            System.Diagnostics.Debug.WriteLine($"[ProduitsSectionVM] OpenManageCategories failed: {ex}");
+        }
     }
 
     private void OpenEditProduit(ProduitCardItem? item)
     {
         if (item is null) return;
-        // TODO: open EditProduitDialog when implemented
-        ErrorMessage = null;
+        try
+        {
+            ErrorMessage = null;
+            var dialog = new Views.InfrastructurePages.Sections.Produits.EditProduitDialog(item.Dto)
+            {
+                Owner = System.Windows.Application.Current?.MainWindow
+            };
+            dialog.ShowDialog();
+            if (dialog.ViewModel.Saved)
+                _ = RefreshAsync(CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Impossible d'ouvrir le dialogue: {ex.Message}";
+            System.Diagnostics.Debug.WriteLine($"[ProduitsSectionVM] OpenEditProduit failed: {ex}");
+        }
+    }
+
+    private void OpenDetailProduit(ProduitCardItem? item)
+    {
+        if (item is null) return;
+        try
+        {
+            ErrorMessage = null;
+            var dialog = new Views.InfrastructurePages.Sections.Produits.DetailProduitDialog(item.Dto)
+            {
+                Owner = System.Windows.Application.Current?.MainWindow
+            };
+            dialog.ShowDialog();
+            if (dialog.ShouldEdit)
+                OpenEditProduit(item);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Impossible d'ouvrir le dialogue: {ex.Message}";
+            System.Diagnostics.Debug.WriteLine($"[ProduitsSectionVM] OpenDetailProduit failed: {ex}");
+        }
     }
 
     private async Task DeleteProduitAsync(ProduitCardItem? item)
@@ -132,12 +205,13 @@ public partial class ProduitsSectionViewModel : ObservableObject, IAsyncLoadable
 /// </summary>
 public class ProduitCardItem(ProduitDto dto)
 {
+    public ProduitDto Dto => dto;
     public int ID => dto.ID;
     public string Numero => dto.NumeroProduit;
     public string Description => string.IsNullOrWhiteSpace(dto.Description) ? "—" : dto.Description;
     public string Categorie => string.IsNullOrWhiteSpace(dto.CategorieNom) ? "—" : dto.CategorieNom!;
-    public string PrixAchatDisplay => dto.PrixAchat.HasValue ? $"{dto.PrixAchat:N2} DA" : "—";
-    public string PrixTtcDisplay => dto.PrixTTC.HasValue ? $"{dto.PrixTTC:N2} DA" : "—";
+    public string PrixAchatDisplay => dto.PrixAchat.HasValue ? $"{dto.PrixAchat:N2} DH" : "—";
+    public string PrixTtcDisplay => dto.PrixTTC.HasValue ? $"{dto.PrixTTC:N2} DH" : "—";
     public string MargeDisplay => dto.MargePourcentage.HasValue ? $"{dto.MargePourcentage:N1}%" : "—";
     public int Stock => dto.Stock ?? 0;
     public int StockMinimum => dto.StockMinimum ?? 0;
