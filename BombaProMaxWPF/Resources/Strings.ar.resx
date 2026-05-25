@@ -373,6 +373,31 @@
   <data name="JaugDeleteSuccess" xml:space="preserve"><value>تم حذف القراءة بنجاح.</value></data>
   <data name="JaugDeleteError" xml:space="preserve"><value>حدث خطأ أثناء حذف القراءة.</value></data>
   <data name="JaugEditTitle" xml:space="preserve"><value>تعديل القراءة</value></data>
+
+  <!-- ═══ Pompes Section ═══ -->
+  <data name="PmpBreadcrumbInfra" xml:space="preserve"><value>البنية التحتية</value></data>
+  <data name="PmpBreadcrumbPompes" xml:space="preserve"><value>المضخات</value></data>
+  <data name="PmpPageSubtitle" xml:space="preserve"><value>إدارة مضخات المحطة</value></data>
+  <data name="PmpAddButton" xml:space="preserve"><value>مضخة جديدة</value></data>
+  <data name="PmpRefreshButton" xml:space="preserve"><value>تحديث</value></data>
+  <data name="PmpStatTotal" xml:space="preserve"><value>إجمالي المضخات</value></data>
+  <data name="PmpStatActives" xml:space="preserve"><value>نشطة</value></data>
+  <data name="PmpStatMaintenance" xml:space="preserve"><value>صيانة</value></data>
+  <data name="PmpStatArretees" xml:space="preserve"><value>متوقفة</value></data>
+  <data name="PmpLabelReservoir" xml:space="preserve"><value>خزان</value></data>
+  <data name="PmpLabelPompe" xml:space="preserve"><value>مضخة</value></data>
+  <data name="PmpLabelElectronique" xml:space="preserve"><value>عداد إلكتروني</value></data>
+  <data name="PmpLabelMecanique" xml:space="preserve"><value>عداد ميكانيكي</value></data>
+  <data name="PmpLabelLitres" xml:space="preserve"><value>L</value></data>
+  <data name="PmpHistoriqueButton" xml:space="preserve"><value>سجل القياس</value></data>
+  <data name="PmpStatusActive" xml:space="preserve"><value>نشطة</value></data>
+  <data name="PmpStatusMaintenance" xml:space="preserve"><value>صيانة</value></data>
+  <data name="PmpStatusArretee" xml:space="preserve"><value>متوقفة</value></data>
+  <data name="PmpDetailTooltip" xml:space="preserve"><value>عرض التفاصيل</value></data>
+  <data name="PmpEditTooltip" xml:space="preserve"><value>تعديل المضخة</value></data>
+  <data name="PmpDeleteTooltip" xml:space="preserve"><value>حذف المضخة</value></data>
+  <data name="PmpHistoriqueTooltip" xml:space="preserve"><value>عرض السجل</value></data>
+  <data name="PmpEmptyMessage" xml:space="preserve"><value>لا توجد مضخات مسجلة.</value></data>
   <data name="JaugEditSaveButton" xml:space="preserve"><value>حفظ التعديلات</value></data>
   <data name="JaugEditSaveError" xml:space="preserve"><value>حدث خطأ أثناء الحفظ.</value></data>
   <data name="JaugEditSaveSuccess" xml:space="preserve"><value>تم تعديل القراءة بنجاح.</value></data>

@@ -468,6 +468,31 @@
   <data name="CatSrvDlgTitle" xml:space="preserve"><value>Gérer les catégories de services</value></data>
   <data name="CatSrvDlgNewPlaceholder" xml:space="preserve"><value>Nom de la catégorie…</value></data>
   <data name="CatSrvDlgAddButton" xml:space="preserve"><value>Ajouter</value></data>
+
+  <!-- ═══ Pompes Section ═══ -->
+  <data name="PmpBreadcrumbInfra" xml:space="preserve"><value>Infrastructure</value></data>
+  <data name="PmpBreadcrumbPompes" xml:space="preserve"><value>Pompes</value></data>
+  <data name="PmpPageSubtitle" xml:space="preserve"><value>Gestion des pompes de la station</value></data>
+  <data name="PmpAddButton" xml:space="preserve"><value>Nouvelle pompe</value></data>
+  <data name="PmpRefreshButton" xml:space="preserve"><value>Actualiser</value></data>
+  <data name="PmpStatTotal" xml:space="preserve"><value>Total Pompes</value></data>
+  <data name="PmpStatActives" xml:space="preserve"><value>Actives</value></data>
+  <data name="PmpStatMaintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="PmpStatArretees" xml:space="preserve"><value>Arrêtées</value></data>
+  <data name="PmpLabelReservoir" xml:space="preserve"><value>Réservoir</value></data>
+  <data name="PmpLabelPompe" xml:space="preserve"><value>Pompe</value></data>
+  <data name="PmpLabelElectronique" xml:space="preserve"><value>COMPTEUR ÉLECTRONIQUE</value></data>
+  <data name="PmpLabelMecanique" xml:space="preserve"><value>COMPTEUR MÉCANIQUE</value></data>
+  <data name="PmpLabelLitres" xml:space="preserve"><value>L</value></data>
+  <data name="PmpHistoriqueButton" xml:space="preserve"><value>Historique de jaugeage</value></data>
+  <data name="PmpStatusActive" xml:space="preserve"><value>ACTIVE</value></data>
+  <data name="PmpStatusMaintenance" xml:space="preserve"><value>MAINTENANCE</value></data>
+  <data name="PmpStatusArretee" xml:space="preserve"><value>ARRÊTÉE</value></data>
+  <data name="PmpDetailTooltip" xml:space="preserve"><value>Voir les détails</value></data>
+  <data name="PmpEditTooltip" xml:space="preserve"><value>Modifier la pompe</value></data>
+  <data name="PmpDeleteTooltip" xml:space="preserve"><value>Supprimer la pompe</value></data>
+  <data name="PmpHistoriqueTooltip" xml:space="preserve"><value>Voir l'historique</value></data>
+  <data name="PmpEmptyMessage" xml:space="preserve"><value>Aucune pompe enregistrée.</value></data>
   <data name="CatSrvDlgListTitle" xml:space="preserve"><value>Catégories existantes</value></data>
   <data name="CatSrvDlgEmpty" xml:space="preserve"><value>Aucune catégorie enregistrée.</value></data>
   <data name="CatSrvDlgCloseButton" xml:space="preserve"><value>Fermer</value></data>

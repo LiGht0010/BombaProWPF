@@ -17,7 +17,7 @@ public static class ApiConfig
     //private static string _baseUrl = "http://62.84.189.17:5002/api";
 
     // Development (Local) - Matches Kestrel config in appsettings.json
-    private static string _baseUrl = "http://localhost:5006/api";
+    private static string _baseUrl = "http://localhost:5003/api";
 
     private static readonly string SettingsFilePath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),

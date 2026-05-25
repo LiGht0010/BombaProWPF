@@ -9,6 +9,20 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
                   PanningMode="VerticalOnly">
+        <ScrollViewer.Resources>
+            <!-- Accent scrollbar thumb — teal in light, orange in dark via NeuAccentBrush -->
+            <Style TargetType="Thumb">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Thumb">
+                            <Border Background="{DynamicResource NeuAccentBrush}"
+                                    CornerRadius="3"
+                                    Margin="2,0" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ScrollViewer.Resources>
         <StackPanel Margin="32,28,32,32">
 
             <!-- Header -->

@@ -1,20 +1,543 @@
-<UserControl x:Class="BombaProMaxWPF.Views.InfrastructurePages.Sections.Pompes.PompesSection"
+﻿<UserControl x:Class="BombaProMaxWPF.Views.InfrastructurePages.Sections.Pompes.PompesSection"
+             x:Name="PompesSectionRoot"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:loc="clr-namespace:BombaProMaxWPF.Localization"
+             xmlns:vm="clr-namespace:BombaProMaxWPF.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:PompeSectionViewModel}"
              Background="Transparent">
 
-    <ContentControl Style="{StaticResource NeuDashCardStyle}">
-        <StackPanel>
-            <TextBlock Text="{Binding [InfraPompes], Source={x:Static loc:LanguageManager.Instance}}"
-                       FontSize="18"
-                       FontWeight="SemiBold"
-                       Foreground="{DynamicResource NeuTextPrimaryBrush}" />
-            <TextBlock Text="{Binding [InfraComingSoon], Source={x:Static loc:LanguageManager.Instance}}"
+    <UserControl.Resources>
+
+        <!-- Pump card — inherits the full neumorphic shadow from NeuDashCardStyle -->
+        <Style x:Key="PmpCardStyle" TargetType="ContentControl" BasedOn="{StaticResource NeuDashCardStyle}">
+            <Setter Property="Padding"  Value="20,18" />
+            <Setter Property="Margin"   Value="8,8,8,8" />
+            <Setter Property="MinWidth" Value="340" />
+        </Style>
+
+        <!-- Stat mini-card -->
+        <Style x:Key="PmpStatCardStyle" TargetType="ContentControl" BasedOn="{StaticResource NeuDashCardStyle}">
+            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="Margin"  Value="8,8,8,8" />
+            <Setter Property="Width"   Value="185" />
+        </Style>
+
+        <!-- Icon-only ghost button (edit / delete / detail) -->
+        <Style x:Key="PmpIconBtnStyle" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground"      Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="Width"           Value="28" />
+            <Setter Property="Height"          Value="28" />
+            <Setter Property="Cursor"          Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Historique action button — outlined style matching the mockup -->
+        <Style x:Key="PmpHistBtnStyle" TargetType="Button">
+            <Setter Property="Background"       Value="Transparent" />
+            <Setter Property="BorderBrush"      Value="{DynamicResource NeuAccentBrush}" />
+            <Setter Property="BorderThickness"  Value="1" />
+            <Setter Property="Foreground"       Value="{DynamicResource NeuAccentBrush}" />
+            <Setter Property="Padding"          Value="14,10" />
+            <Setter Property="FontSize"         Value="12" />
+            <Setter Property="FontWeight"       Value="Medium" />
+            <Setter Property="Cursor"           Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuAccentBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Status badge colours — semantic, theme-independent -->
+        <SolidColorBrush x:Key="PmpPillBlueBrush"   Color="#4A90D9"/>
+        <SolidColorBrush x:Key="PmpMaintenanceFg"   Color="#EA580C"/>
+        <SolidColorBrush x:Key="PmpMaintenanceBg"   Color="#FFF3E0"/>
+        <SolidColorBrush x:Key="PmpArreteeFg"       Color="#DC2626"/>
+        <SolidColorBrush x:Key="PmpArreteeBg"       Color="#FEF2F2"/>
+
+        <DataTemplate x:Key="PompeCardTemplate" DataType="{x:Type vm:PompeCardItem}">
+            <ContentControl Style="{StaticResource PmpCardStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />  <!-- Row 0: status badge + action icons   -->
+                        <RowDefinition Height="Auto" />  <!-- Row 1: separator line                -->
+                        <RowDefinition Height="Auto" />  <!-- Row 2: Réservoir / Pompe info pills  -->
+                        <RowDefinition Height="12" />    <!-- Row 3: spacing                       -->
+                        <RowDefinition Height="Auto" />  <!-- Row 4: readings block                -->
+                        <RowDefinition Height="14" />    <!-- Row 5: spacing                       -->
+                        <RowDefinition Height="Auto" />  <!-- Row 6: Historique button             -->
+                    </Grid.RowDefinitions>
+
+                    <!-- ── Row 0: Status badge (left) + Edit / Info / Delete icons (right) ── -->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Status badge pill -->
+                        <Border Grid.Column="0"
+                                CornerRadius="20"
+                                Padding="10,5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsEnMaintenance}" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource PmpMaintenanceBg}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsArretee}" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource PmpArreteeBg}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="7" Height="7" VerticalAlignment="Center">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="{DynamicResource NeuAccentBrush}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEnMaintenance}" Value="True">
+                                                    <Setter Property="Fill" Value="{StaticResource PmpMaintenanceFg}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsArretee}" Value="True">
+                                                    <Setter Property="Fill" Value="{StaticResource PmpArreteeFg}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                                <ContentControl Margin="6,0,0,0" VerticalAlignment="Center">
+                                    <ContentControl.Style>
+                                        <Style TargetType="ContentControl">
+                                            <Setter Property="Content"    Value="{Binding [PmpStatusActive],      Source={x:Static loc:LanguageManager.Instance}}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource NeuAccentBrush}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEnMaintenance}" Value="True">
+                                                    <Setter Property="Content"    Value="{Binding [PmpStatusMaintenance], Source={x:Static loc:LanguageManager.Instance}}" />
+                                                    <Setter Property="Foreground" Value="{StaticResource PmpMaintenanceFg}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsArretee}" Value="True">
+                                                    <Setter Property="Content"    Value="{Binding [PmpStatusArretee],    Source={x:Static loc:LanguageManager.Instance}}" />
+                                                    <Setter Property="Foreground" Value="{StaticResource PmpArreteeFg}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                    <ContentControl.ContentTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}"
+                                                       FontSize="11" FontWeight="Bold"
+                                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ContentControl}}" />
+                                        </DataTemplate>
+                                    </ContentControl.ContentTemplate>
+                                </ContentControl>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Action icons: Edit / Info / Delete -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Style="{StaticResource PmpIconBtnStyle}"
+                                    ToolTip="{Binding [PmpEditTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                    Command="{Binding DataContext.EditPompeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}">
+                                <ui:SymbolIcon Symbol="Edit24" FontSize="14" />
+                            </Button>
+                            <Button Style="{StaticResource PmpIconBtnStyle}"
+                                    Margin="2,0,0,0"
+                                    ToolTip="{Binding [PmpDetailTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                    Command="{Binding DataContext.DetailPompeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}">
+                                <ui:SymbolIcon Symbol="Info24" FontSize="14" />
+                            </Button>
+                            <Button Style="{StaticResource PmpIconBtnStyle}"
+                                    Margin="2,0,0,0"
+                                    ToolTip="{Binding [PmpDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                    Command="{Binding DataContext.DeletePompeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}">
+                                <ui:SymbolIcon Symbol="Delete24" FontSize="14"
+                                               Foreground="{DynamicResource NeuDangerBrush}" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- ── Row 1: thin separator ── -->
+                    <Rectangle Grid.Row="1"
+                               Height="1"
+                               Margin="0,10,0,10"
+                               Fill="{DynamicResource NeuInputFillBrush}" />
+
+                    <!-- ── Row 2: Réservoir pill (left) + Pompe pill (right) ── -->
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Réservoir -->
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding [PmpLabelReservoir], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                            <TextBlock Text=": " FontSize="11"
+                                       Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                            <Border Background="{DynamicResource NeuAccentBrush}"
+                                    CornerRadius="6"
+                                    Padding="8,3">
+                                <TextBlock Text="{Binding CarburantDisplay}"
+                                           FontSize="11" FontWeight="SemiBold"
+                                           Foreground="White" />
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Pompe -->
+                        <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="{Binding [PmpLabelPompe], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                            <TextBlock Text=": " FontSize="11"
+                                       Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                            <Border Background="{StaticResource PmpPillBlueBrush}"
+                                    CornerRadius="6"
+                                    Padding="8,3">
+                                <TextBlock Text="{Binding Numero}"
+                                           FontSize="11" FontWeight="SemiBold"
+                                           Foreground="White" />
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- ── Row 4: pump icon (left) + readings (right) inside a sunken pill ── -->
+                    <Border Grid.Row="4"
+                            Background="{DynamicResource NeuInputFillBrush}"
+                            CornerRadius="12"
+                            Padding="12,14">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Pump icon pill -->
+                            <Border Grid.Column="0"
+                                    Width="56" Height="56"
+                                    CornerRadius="12"
+                                    Background="{DynamicResource NeuInputFillBrush}"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,14,0">
+                                <Viewbox Width="28" Height="28">
+                                    <Path Data="M6 2C4.9 2 4 2.9 4 4v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H6zm0 2h8v4H6V4zm0 6h8v8H6v-8zm10 0l2-2v2h1c.6 0 1 .4 1 1v5c0 .6-.4 1-1 1h-1v2h-2v-9z"
+                                          Stretch="Uniform">
+                                        <Path.Style>
+                                            <Style TargetType="Path">
+                                                <Setter Property="Fill" Value="{DynamicResource NeuAccentBrush}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEnMaintenance}" Value="True">
+                                                        <Setter Property="Fill" Value="{StaticResource PmpMaintenanceFg}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsArretee}" Value="True">
+                                                        <Setter Property="Fill" Value="{StaticResource PmpArreteeFg}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Path.Style>
+                                    </Path>
+                                </Viewbox>
+                            </Border>
+
+                            <!-- Readings stacked vertically -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+
+                                <!-- Compteur Électronique -->
+                                <TextBlock Text="{Binding [PmpLabelElectronique], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="9" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                <StackPanel Orientation="Horizontal" Margin="0,1,0,8">
+                                    <TextBlock Text="{Binding CompteurElectroniqueDisplay}"
+                                               FontSize="22" FontWeight="Bold"
+                                               Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                                    <TextBlock Text=" L"
+                                               FontSize="14" FontWeight="SemiBold"
+                                               VerticalAlignment="Bottom" Margin="0,0,0,2"
+                                               Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                </StackPanel>
+
+                                <!-- Compteur Mécanique -->
+                                <TextBlock Text="{Binding [PmpLabelMecanique], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="9" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                                    <TextBlock Text="{Binding CompteurMecaniqueDisplay}"
+                                               FontSize="20" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                                    <TextBlock Text=" L"
+                                               FontSize="13" FontWeight="SemiBold"
+                                               VerticalAlignment="Bottom" Margin="0,0,0,2"
+                                               Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                </StackPanel>
+
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- ── Row 6: Full-width green Historique button ── -->
+                    <Button Grid.Row="6"
+                            Style="{StaticResource PmpHistBtnStyle}"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding DataContext.DetailPompeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding}"
+                            ToolTip="{Binding [PmpHistoriqueTooltip], Source={x:Static loc:LanguageManager.Instance}}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <ui:SymbolIcon Symbol="History20" FontSize="15" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding [PmpHistoriqueButton], Source={x:Static loc:LanguageManager.Instance}}"
+                                       Margin="8,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+
+                </Grid>
+            </ContentControl>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- ── Row 0: Breadcrumb + Add button ──────────────────────────── -->
+        <Grid Grid.Row="0" Margin="8,0,8,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding [PmpBreadcrumbInfra],  Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                    <TextBlock Text=" › " FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    <TextBlock Text="{Binding [PmpBreadcrumbPompes], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                </StackPanel>
+                <TextBlock Text="{Binding [PmpPageSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                           FontSize="13" Margin="0,4,0,0"
+                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    Style="{StaticResource NeuButtonStyle}"
+                    Background="{DynamicResource NeuAccentBrush}"
+                    Foreground="White"
+                    Padding="16,10"
+                    FontWeight="SemiBold"
+                    Command="{Binding AddPompeCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="AddCircle24" FontSize="16" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding [PmpAddButton], Source={x:Static loc:LanguageManager.Instance}}"
+                               Margin="8,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- ── Row 1: Stat cards (Total / Actives / Maintenance / Arrêtées) ── -->
+        <Grid Grid.Row="1" Margin="0,0,0,4">
+            <StackPanel Orientation="Horizontal">
+
+                <!-- Total -->
+                <ContentControl Style="{StaticResource PmpStatCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="10"
+                                Background="{DynamicResource NeuInputFillBrush}"
+                                VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Multiplier2x20" FontSize="22"
+                                           Foreground="{DynamicResource NeuAccentBrush}" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding [PmpStatTotal], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                            <TextBlock Text="{Binding TotalCount}"
+                                       FontSize="26" FontWeight="Bold"
+                                       Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                        </StackPanel>
+                    </Grid>
+                </ContentControl>
+
+                <!-- Actives -->
+                <ContentControl Style="{StaticResource PmpStatCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="10"
+                                Background="{DynamicResource NeuInputFillBrush}"
+                                VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="CheckmarkCircle20" FontSize="22"
+                                           Foreground="{DynamicResource NeuAccentBrush}" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding [PmpStatActives], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource NeuAccentBrush}" />
+                            <TextBlock Text="{Binding ActivesCount}"
+                                       FontSize="26" FontWeight="Bold"
+                                       Foreground="{DynamicResource NeuAccentBrush}" />
+                        </StackPanel>
+                    </Grid>
+                </ContentControl>
+
+                <!-- Maintenance -->
+                <ContentControl Style="{StaticResource PmpStatCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="10"
+                                Background="{StaticResource PmpMaintenanceBg}"
+                                VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Wrench20" FontSize="22"
+                                           Foreground="{StaticResource PmpMaintenanceFg}" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding [PmpStatMaintenance], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="11"
+                                       Foreground="{StaticResource PmpMaintenanceFg}" />
+                            <TextBlock Text="{Binding MaintenanceCount, StringFormat='{}{0:D2}'}"
+                                       FontSize="26" FontWeight="Bold"
+                                       Foreground="{StaticResource PmpMaintenanceFg}" />
+                        </StackPanel>
+                    </Grid>
+                </ContentControl>
+
+                <!-- Arrêtées -->
+                <ContentControl Style="{StaticResource PmpStatCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="10"
+                                Background="{StaticResource PmpArreteeBg}"
+                                VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="DismissCircle20" FontSize="22"
+                                           Foreground="{StaticResource PmpArreteeFg}" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding [PmpStatArretees], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="11"
+                                       Foreground="{StaticResource PmpArreteeFg}" />
+                            <TextBlock Text="{Binding ArreteesCount, StringFormat='{}{0:D2}'}"
+                                       FontSize="26" FontWeight="Bold"
+                                       Foreground="{StaticResource PmpArreteeFg}" />
+                        </StackPanel>
+                    </Grid>
+                </ContentControl>
+
+            </StackPanel>
+        </Grid>
+
+        <!-- ── Row 2: Pump cards grid ───────────────────────────────────── -->
+        <Grid Grid.Row="2" Margin="0,0,0,8">
+            <ItemsControl ItemsSource="{Binding Cards}"
+                          ItemTemplate="{StaticResource PompeCardTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- Loading overlay -->
+            <Border Background="#33000000"
+                    CornerRadius="12"
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                <ui:ProgressRing IsIndeterminate="True"
+                                 Width="40" Height="40"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Foreground="{DynamicResource NeuAccentBrush}" />
+            </Border>
+
+            <!-- Empty state -->
+            <TextBlock HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
                        FontSize="13"
-                       Margin="0,8,0,0"
                        Foreground="{DynamicResource NeuTextSecondaryBrush}"
-                       TextWrapping="Wrap" />
-        </StackPanel>
-    </ContentControl>
+                       Text="{Binding [PmpEmptyMessage], Source={x:Static loc:LanguageManager.Instance}}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsLoading}" Value="False" />
+                                    <Condition Binding="{Binding TotalCount}" Value="0" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible" />
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+
+    </Grid>
+
 </UserControl>
