@@ -86,6 +86,12 @@ namespace BombaProMaxWPF
             }
             SyncRadioCheckedState();
             UpdateCollapsedVisuals();
+
+            // Re-assert the shell background after FluentWindow's own Loaded
+            // sequence has run — wpf-ui overwrites Background during that pass.
+            Dispatcher.BeginInvoke(
+                System.Windows.Threading.DispatcherPriority.Render,
+                () => this.SetResourceReference(BackgroundProperty, "NeuShellBackdropBrush"));
         }
 
         private void OnNavigationRequested(NavItem item)
@@ -254,6 +260,7 @@ namespace BombaProMaxWPF
 
         private void ThemeToggle_Checked(object sender, RoutedEventArgs e)
         {
+            if (_isInitializing) return;
             ThemePalette.Apply(dark: true);
             ApplicationThemeManager.Apply(ApplicationTheme.Dark);
             this.SetResourceReference(BackgroundProperty, "NeuBackgroundBrush");
@@ -262,14 +269,13 @@ namespace BombaProMaxWPF
             {
                 ThemeIcon.Symbol = SymbolRegular.WeatherMoon24;
             }
-
-            if (_isInitializing) return;
             Services.AppSettingsService.Instance.IsDarkTheme = true;
             Services.AppSettingsService.Instance.Save();
         }
 
         private void ThemeToggle_Unchecked(object sender, RoutedEventArgs e)
         {
+            if (_isInitializing) return;
             ThemePalette.Apply(dark: false);
             ApplicationThemeManager.Apply(ApplicationTheme.Light);
             this.SetResourceReference(BackgroundProperty, "NeuBackgroundBrush");
@@ -278,8 +284,6 @@ namespace BombaProMaxWPF
             {
                 ThemeIcon.Symbol = SymbolRegular.WeatherSunny24;
             }
-
-            if (_isInitializing) return;
             Services.AppSettingsService.Instance.IsDarkTheme = false;
             Services.AppSettingsService.Instance.Save();
         }

@@ -19,6 +19,15 @@
     <SolidColorBrush x:Key="NeuTextPrimaryBrush"    Color="{StaticResource NeuTextPrimaryColor}" />
     <SolidColorBrush x:Key="NeuTextSecondaryBrush"  Color="{StaticResource NeuTextSecondaryColor}" />
 
+    <!-- Soft shell backdrop — dark equivalent of the light version.
+         Subtle gradient across the dark background with slight blue/violet
+         accent blends so the shell surface has depth without being flat. -->
+    <LinearGradientBrush x:Key="NeuShellBackdropBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#0D1627" Offset="0" />
+        <GradientStop Color="#0C1430" Offset="0.5" />
+        <GradientStop Color="#0F1228" Offset="1" />
+    </LinearGradientBrush>
+
     <!-- ========================================================= -->
     <Style x:Key="NeuCardStyle" TargetType="ContentControl">
         <Setter Property="Background" Value="{DynamicResource NeuBackgroundBrush}" />
@@ -29,34 +38,26 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ContentControl">
+                    <Grid>
+                        <Grid.CacheMode>
+                            <BitmapCache SnapsToDevicePixels="True" />
+                        </Grid.CacheMode>
 
-                    <!-- Outer: carries the DARK shadow (bottom-right) -->
-                    <Border CornerRadius="24">
-                        <Border.Effect>
-                            <DropShadowEffect Color="#191e4f"
-                                          BlurRadius="60"
-                                          ShadowDepth="50"
-                                          Direction="135"
-                                          Opacity="0.4" />
-                        </Border.Effect>
-
-                        <!-- Inner: carries the bg + LIGHT shadow (top-left) -->
+                        <!-- Outer: carries the DARK shadow (bottom-right) -->
                         <Border CornerRadius="24"
-                                Background="{TemplateBinding Background}">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#425c7d"
-                                              BlurRadius="60"
-                                              ShadowDepth="50"
-                                              Direction="315"
-                                              Opacity="0.5" />
-                            </Border.Effect>
+                                Effect="{DynamicResource NeuShadowCardDark}">
 
-                            <ContentPresenter Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            <!-- Inner: carries the bg + LIGHT shadow (top-left) -->
+                            <Border CornerRadius="24"
+                                    Background="{TemplateBinding Background}"
+                                    Effect="{DynamicResource NeuShadowCardLight}">
+
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Border>
                         </Border>
-                    </Border>
-
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -74,28 +75,21 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ContentControl">
-                    <Border CornerRadius="16">
-                        <Border.Effect>
-                            <DropShadowEffect Color="#191e4f"
-                                              BlurRadius="60"
-                                              ShadowDepth="50"
-                                              Direction="135"
-                                              Opacity="0.4" />
-                        </Border.Effect>
+                    <Grid>
+                        <Grid.CacheMode>
+                            <BitmapCache SnapsToDevicePixels="True" />
+                        </Grid.CacheMode>
                         <Border CornerRadius="16"
-                                Background="{TemplateBinding Background}">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#425c7d"
-                                                  BlurRadius="60"
-                                                  ShadowDepth="50"
-                                                  Direction="315"
-                                                  Opacity="0.5" />
-                            </Border.Effect>
-                            <ContentPresenter Margin="{TemplateBinding Padding}"
-                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                Effect="{DynamicResource NeuShadowDashDark}">
+                            <Border CornerRadius="16"
+                                    Background="{TemplateBinding Background}"
+                                    Effect="{DynamicResource NeuShadowDashLight}">
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Border>
                         </Border>
-                    </Border>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -112,27 +106,17 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid">
+                        <Grid.CacheMode>
+                            <BitmapCache SnapsToDevicePixels="True" />
+                        </Grid.CacheMode>
                         <Border x:Name="OuterShadow"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="16">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#425c7d"
-                                                      BlurRadius="60"
-                                                      ShadowDepth="50"
-                                                      Direction="315"
-                                                      Opacity="0.5" />
-                            </Border.Effect>
-                        </Border>
+                                CornerRadius="16"
+                                Effect="{DynamicResource NeuShadowButtonDark}" />
                         <Border x:Name="InnerShadow"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="16">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#191e4f"
-                                                      BlurRadius="60"
-                                                      ShadowDepth="50"
-                                                      Direction="135"
-                                                      Opacity="0.4" />
-                            </Border.Effect>
+                                CornerRadius="16"
+                                Effect="{DynamicResource NeuShadowButtonLight}">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
                                               Margin="{TemplateBinding Padding}" />
@@ -143,20 +127,10 @@
                             <Setter TargetName="RootGrid" Property="Opacity" Value="0.92" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="OuterShadow" Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="#425c7d"
-                                                      BlurRadius="40" ShadowDepth="25"
-                                                      Direction="315" Opacity="0.5" />
-                                </Setter.Value>
-                            </Setter>
-                            <Setter TargetName="InnerShadow" Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="#191e4f"
-                                                      BlurRadius="40" ShadowDepth="25"
-                                                      Direction="135" Opacity="0.4" />
-                                </Setter.Value>
-                            </Setter>
+                            <Setter TargetName="OuterShadow" Property="Effect"
+                                    Value="{DynamicResource NeuShadowButtonPressedDark}" />
+                            <Setter TargetName="InnerShadow" Property="Effect"
+                                    Value="{DynamicResource NeuShadowButtonPressedLight}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -169,19 +143,16 @@
         <Setter Property="CornerRadius" Value="60" />
         <Setter Property="Width" Value="120" />
         <Setter Property="Height" Value="120" />
-        <Setter Property="Effect">
+        <Setter Property="Effect" Value="{DynamicResource NeuShadowBadgeDark}" />
+        <Setter Property="CacheMode">
             <Setter.Value>
-                <DropShadowEffect Color="#425c7d"
-                                  BlurRadius="60"
-                                  ShadowDepth="50"
-                                  Direction="315"
-                                  Opacity="0.5" />
+                <BitmapCache SnapsToDevicePixels="True" />
             </Setter.Value>
         </Setter>
     </Style>
 
     <!-- =========================================================
-         Inset (sunken) input field — TextBox
+         Inset (sunken) input field
          ========================================================= -->
     <Color x:Key="NeuInputFillColor">#121d38</Color>
     <SolidColorBrush x:Key="NeuInputFillBrush" Color="{StaticResource NeuInputFillColor}" />
@@ -297,23 +268,13 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ContentControl">
                     <Grid>
-                        <Border Background="{TemplateBinding Background}" CornerRadius="22">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#425c7d"
-                                                  BlurRadius="60"
-                                                  ShadowDepth="50"
-                                                  Direction="315"
-                                                  Opacity="0.5" />
-                            </Border.Effect>
-                        </Border>
-                        <Border Background="{TemplateBinding Background}" CornerRadius="22">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#191e4f"
-                                                  BlurRadius="60"
-                                                  ShadowDepth="50"
-                                                  Direction="135"
-                                                  Opacity="0.4" />
-                            </Border.Effect>
+                        <Grid.CacheMode>
+                            <BitmapCache SnapsToDevicePixels="True" />
+                        </Grid.CacheMode>
+                        <Border Background="{TemplateBinding Background}" CornerRadius="22"
+                                Effect="{DynamicResource NeuShadowToolbarDark}" />
+                        <Border Background="{TemplateBinding Background}" CornerRadius="22"
+                                Effect="{DynamicResource NeuShadowToolbarLight}">
                             <ContentPresenter Margin="{TemplateBinding Padding}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -441,14 +402,11 @@
                             <Border Background="{DynamicResource NeuBackgroundBrush}"
                                     CornerRadius="14"
                                     Margin="6"
-                                    MinWidth="{TemplateBinding ActualWidth}">
-                                <Border.Effect>
-                                    <DropShadowEffect Color="#425c7d"
-                                                      BlurRadius="60"
-                                                      ShadowDepth="50"
-                                                      Direction="315"
-                                                      Opacity="0.5" />
-                                </Border.Effect>
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    Effect="{DynamicResource NeuShadowToolbarDark}">
+                                <Border.CacheMode>
+                                    <BitmapCache SnapsToDevicePixels="True" />
+                                </Border.CacheMode>
                                 <ScrollViewer MaxHeight="{TemplateBinding MaxDropDownHeight}"
                                               Margin="4">
                                     <ItemsPresenter />
@@ -475,6 +433,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
                     <Border x:Name="OuterRing" CornerRadius="15" BorderThickness="1.2">
+                        <Border.CacheMode>
+                            <BitmapCache SnapsToDevicePixels="True" />
+                        </Border.CacheMode>
                         <Border.BorderBrush>
                             <LinearGradientBrush StartPoint="0.2,0" EndPoint="0.8,1">
                                 <GradientStop Color="{StaticResource NeuDarkShadowColor}" Offset="0" />
@@ -493,11 +454,7 @@
                                         Margin="3,0,0,0"
                                         Background="{DynamicResource NeuBackgroundBrush}">
                                     <Border.Effect>
-                                        <DropShadowEffect Color="#425c7d"
-                                                          BlurRadius="60"
-                                                          ShadowDepth="50"
-                                                          Direction="315"
-                                                          Opacity="0.5" />
+                                        <DynamicResourceExtension ResourceKey="NeuShadowKnobDark" />
                                     </Border.Effect>
                                 </Border>
                             </Grid>
@@ -531,23 +488,13 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ContentControl">
                     <Grid>
-                        <Border Background="{TemplateBinding Background}" CornerRadius="24">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#425c7d"
-                                                  BlurRadius="60"
-                                                  ShadowDepth="50"
-                                                  Direction="315"
-                                                  Opacity="0.5" />
-                            </Border.Effect>
-                        </Border>
-                        <Border Background="{TemplateBinding Background}" CornerRadius="24">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#191e4f"
-                                                  BlurRadius="60"
-                                                  ShadowDepth="50"
-                                                  Direction="135"
-                                                  Opacity="0.4" />
-                            </Border.Effect>
+                        <Grid.CacheMode>
+                            <BitmapCache SnapsToDevicePixels="True" />
+                        </Grid.CacheMode>
+                        <Border Background="{TemplateBinding Background}" CornerRadius="24"
+                                Effect="{DynamicResource NeuShadowSidebarDark}" />
+                        <Border Background="{TemplateBinding Background}" CornerRadius="24"
+                                Effect="{DynamicResource NeuShadowSidebarLight}">
                             <ContentPresenter Margin="{TemplateBinding Padding}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -669,25 +616,15 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="Root">
+                        <Grid.CacheMode>
+                            <BitmapCache SnapsToDevicePixels="True" />
+                        </Grid.CacheMode>
                         <Border x:Name="Shadow"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="14">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#425c7d"
-                                                  BlurRadius="60"
-                                                  ShadowDepth="50"
-                                                  Direction="315"
-                                                  Opacity="0.5" />
-                            </Border.Effect>
-                        </Border>
-                        <Border Background="{TemplateBinding Background}" CornerRadius="14">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#191e4f"
-                                                  BlurRadius="60"
-                                                  ShadowDepth="50"
-                                                  Direction="135"
-                                                  Opacity="0.4" />
-                            </Border.Effect>
+                                CornerRadius="14"
+                                Effect="{DynamicResource NeuShadowDashDark}" />
+                        <Border Background="{TemplateBinding Background}" CornerRadius="14"
+                                Effect="{DynamicResource NeuShadowDashLight}">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
                                               Margin="{TemplateBinding Padding}" />

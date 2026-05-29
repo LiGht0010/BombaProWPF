@@ -24,6 +24,11 @@ internal static class ThemePalette
     private static readonly Uri DarkDictUri =
         new("pack://application:,,,/Styles/Neumorphic.Dark.xaml", UriKind.Absolute);
 
+    private static readonly Uri LightShadowDictUri =
+        new("pack://application:,,,/Styles/Shadows.Light.xaml", UriKind.Absolute);
+    private static readonly Uri DarkShadowDictUri =
+        new("pack://application:,,,/Styles/Shadows.Dark.xaml", UriKind.Absolute);
+
     private static readonly Dictionary<string, Color> Light = new()
     {
         ["NeuBackgroundColor"]       = (Color)ColorConverter.ConvertFromString("#E6ECF3")!,
@@ -120,6 +125,7 @@ internal static class ThemePalette
         //    colors from the correct file, and the already-written brush
         //    resources are in place before any template is re-parsed.
         SwapNeumorphicDictionary(dark ? DarkDictUri : LightDictUri);
+        SwapShadowDictionary(dark ? DarkShadowDictUri : LightShadowDictUri);
     }
 
     /// <summary>
@@ -137,10 +143,9 @@ internal static class ThemePalette
         var existing = merged.FirstOrDefault(d =>
             d.Source == LightDictUri || d.Source == DarkDictUri);
 
-        // If we're already on the right dictionary, nothing to do.
-        if (existing?.Source == incomingUri)
-            return;
-
+        // Always remove and re-insert — even when the URI matches — so that
+        // DropShadowEffect instances (frozen at parse time) are re-created
+        // with the correct shadow colors and live controls get re-resolved.
         int insertAt = existing is not null ? merged.IndexOf(existing) : merged.Count;
 
         // Remove old dictionary first — this invalidates all styles that were
@@ -150,6 +155,28 @@ internal static class ThemePalette
             merged.Remove(existing);
 
         // Insert the incoming dictionary at the same slot.
+        merged.Insert(insertAt, new ResourceDictionary { Source = incomingUri });
+    }
+
+    /// <summary>
+    /// Same pattern as <see cref="SwapNeumorphicDictionary"/> but targets the
+    /// shadow-effect dictionary pair (<c>Shadows.Light.xaml</c> /
+    /// <c>Shadows.Dark.xaml</c>). Must be called after the main neumorphic
+    /// dictionary swap so the new <c>DropShadowEffect</c> resources are available
+    /// to the freshly re-parsed styles.
+    /// </summary>
+    private static void SwapShadowDictionary(Uri incomingUri)
+    {
+        var merged = Application.Current.Resources.MergedDictionaries;
+
+        var existing = merged.FirstOrDefault(d =>
+            d.Source == LightShadowDictUri || d.Source == DarkShadowDictUri);
+
+        int insertAt = existing is not null ? merged.IndexOf(existing) : merged.Count;
+
+        if (existing is not null)
+            merged.Remove(existing);
+
         merged.Insert(insertAt, new ResourceDictionary { Source = incomingUri });
     }
 }

@@ -4,12 +4,13 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:local="clr-namespace:BombaProMaxWPF"
              xmlns:conv="clr-namespace:BombaProMaxWPF.Converters"
-             StartupUri="Views/LoginWindow.xaml">
+             >
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Light" />
                 <ui:ControlsDictionary />
+                <ResourceDictionary Source="Styles/Shadows.Light.xaml" />
                 <ResourceDictionary Source="Styles/Neumorphic.Light.xaml" />
                 <ResourceDictionary Source="Styles/SegmentedPill.xaml" />
             </ResourceDictionary.MergedDictionaries>

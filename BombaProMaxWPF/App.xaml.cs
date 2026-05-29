@@ -4,6 +4,7 @@ using BombaProMaxWPF.Services;
 using BombaProMaxWPF.Theme;
 using System.Windows;
 using Wpf.Ui.Appearance;
+using BombaProMaxWPF.Views;
 
 namespace BombaProMaxWPF
 {
@@ -18,10 +19,9 @@ namespace BombaProMaxWPF
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            ApiConfig.Initialize();
 
-            // Load persisted theme + language and apply once before any window
-            // is shown so the very first frame matches the user's last choice.
+            // Load persisted theme + language and apply all tokens before any
+            // window is created so the very first frame renders correctly.
             var settings = AppSettingsService.Instance;
             settings.Load();
 
@@ -29,7 +29,13 @@ namespace BombaProMaxWPF
             ApplicationThemeManager.Apply(settings.IsDarkTheme
                 ? ApplicationTheme.Dark
                 : ApplicationTheme.Light);
+
+            ApiConfig.Initialize();
             LanguageManager.Instance.SetLanguage(settings.LanguageCode);
+
+            // Create the first window explicitly — after all resources are set —
+            // instead of relying on StartupUri which fires before OnStartup completes.
+            new LoginWindow().Show();
         }
     }
 }

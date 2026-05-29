@@ -1,0 +1,105 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Light-theme DropShadowEffect resources.
+
+        All effects are x:Shared="False" so every control that resolves
+        {DynamicResource NeuShadowXxx} receives its own mutable instance.
+        Colors are hard-coded to the light palette — they are NOT DynamicResource
+        references — because DropShadowEffect freezes its Color at parse time and
+        will never re-evaluate a DynamicResource binding after that point.
+        ThemePalette.cs swaps this entire dictionary for Shadows.Dark.xaml on a
+        theme change, which is what delivers the correct shadow colors to live
+        controls without requiring a navigation or restart.
+
+        Light palette shadow colors:
+          NeuDarkShadowColor  = #B8C4D6  (direction 315, bottom-right depth)
+          NeuLightShadowColor = #FFFFFF  (direction 135, top-left highlight)
+    -->
+
+    <!-- NeuDashCardStyle — outer dark (bottom-right), also reused by NeuStartDayButtonStyle -->
+    <DropShadowEffect x:Key="NeuShadowDashDark"
+                      x:Shared="False"
+                      Color="#B8C4D6"
+                      BlurRadius="14" ShadowDepth="4" Direction="315" Opacity="0.55" />
+
+    <!-- NeuDashCardStyle — inner light (top-left) -->
+    <DropShadowEffect x:Key="NeuShadowDashLight"
+                      x:Shared="False"
+                      Color="#FFFFFF"
+                      BlurRadius="14" ShadowDepth="4" Direction="135" Opacity="0.95" />
+
+    <!-- NeuCardStyle — outer dark -->
+    <DropShadowEffect x:Key="NeuShadowCardDark"
+                      x:Shared="False"
+                      Color="#B8C4D6"
+                      BlurRadius="30" ShadowDepth="10" Direction="315" Opacity="0.55" />
+
+    <!-- NeuCardStyle — inner light -->
+    <DropShadowEffect x:Key="NeuShadowCardLight"
+                      x:Shared="False"
+                      Color="#FFFFFF"
+                      BlurRadius="30" ShadowDepth="10" Direction="135" Opacity="0.95" />
+
+    <!-- NeuButtonStyle raised — outer dark -->
+    <DropShadowEffect x:Key="NeuShadowButtonDark"
+                      x:Shared="False"
+                      Color="#B8C4D6"
+                      BlurRadius="18" ShadowDepth="6" Direction="315" Opacity="0.6" />
+
+    <!-- NeuButtonStyle raised — inner light -->
+    <DropShadowEffect x:Key="NeuShadowButtonLight"
+                      x:Shared="False"
+                      Color="#FFFFFF"
+                      BlurRadius="18" ShadowDepth="6" Direction="135" Opacity="1" />
+
+    <!-- NeuButtonStyle pressed — outer dark (smaller blur/depth for sunken look) -->
+    <DropShadowEffect x:Key="NeuShadowButtonPressedDark"
+                      x:Shared="False"
+                      Color="#B8C4D6"
+                      BlurRadius="6" ShadowDepth="2" Direction="315" Opacity="0.6" />
+
+    <!-- NeuButtonStyle pressed — inner light -->
+    <DropShadowEffect x:Key="NeuShadowButtonPressedLight"
+                      x:Shared="False"
+                      Color="#FFFFFF"
+                      BlurRadius="6" ShadowDepth="2" Direction="135" Opacity="1" />
+
+    <!-- NeuLogoBadgeStyle -->
+    <DropShadowEffect x:Key="NeuShadowBadgeDark"
+                      x:Shared="False"
+                      Color="#B8C4D6"
+                      BlurRadius="24" ShadowDepth="8" Direction="315" Opacity="0.55" />
+
+    <!-- NeuToolbarStyle outer dark — also reused by NeuComboBoxStyle popup -->
+    <DropShadowEffect x:Key="NeuShadowToolbarDark"
+                      x:Shared="False"
+                      Color="#B8C4D6"
+                      BlurRadius="20" ShadowDepth="6" Direction="315" Opacity="0.55" />
+
+    <!-- NeuToolbarStyle inner light -->
+    <DropShadowEffect x:Key="NeuShadowToolbarLight"
+                      x:Shared="False"
+                      Color="#FFFFFF"
+                      BlurRadius="20" ShadowDepth="6" Direction="135" Opacity="0.95" />
+
+    <!-- NeuToggleSwitchStyle knob -->
+    <DropShadowEffect x:Key="NeuShadowKnobDark"
+                      x:Shared="False"
+                      Color="#B8C4D6"
+                      BlurRadius="8" ShadowDepth="2" Direction="315" Opacity="0.6" />
+
+    <!-- NeuSidebarStyle outer dark -->
+    <DropShadowEffect x:Key="NeuShadowSidebarDark"
+                      x:Shared="False"
+                      Color="#B8C4D6"
+                      BlurRadius="28" ShadowDepth="10" Direction="315" Opacity="0.55" />
+
+    <!-- NeuSidebarStyle inner light -->
+    <DropShadowEffect x:Key="NeuShadowSidebarLight"
+                      x:Shared="False"
+                      Color="#FFFFFF"
+                      BlurRadius="28" ShadowDepth="10" Direction="135" Opacity="0.95" />
+
+</ResourceDictionary>
