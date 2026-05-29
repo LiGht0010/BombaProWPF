@@ -1,19 +1,29 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
 namespace BombaProMaxWPF.Theme;
 
 /// <summary>
-/// Centralized neumorphic palette swap. Overwrites the eight palette
-/// <see cref="Color"/> keys on <see cref="Application.Current"/> so every
-/// brush that resolves them through <c>DynamicResource</c> follows the
-/// active theme — including <c>FluentWindow.Background</c>, which
-/// <c>Wpf.Ui.Appearance.ApplicationThemeManager</c> would otherwise
-/// overwrite.
+/// Centralized neumorphic palette swap. Overwrites palette
+/// <see cref="Color"/> keys and brush instances on <see cref="Application.Current"/>
+/// so every brush that resolves them through <c>DynamicResource</c> follows
+/// the active theme. Also swaps the neumorphic style dictionary entirely so
+/// that <see cref="System.Windows.Media.Effects.DropShadowEffect"/> instances
+/// — which WPF freezes at parse time and never re-evaluates via DynamicResource
+/// — pick up the hardcoded shadow colors baked into the correct file.
 /// </summary>
 internal static class ThemePalette
 {
+    // Pack URIs for the two neumorphic style dictionaries. These must match
+    // the Source paths declared in App.xaml (relative to the assembly root).
+    private static readonly Uri LightDictUri =
+        new("pack://application:,,,/Styles/Neumorphic.Light.xaml", UriKind.Absolute);
+    private static readonly Uri DarkDictUri =
+        new("pack://application:,,,/Styles/Neumorphic.Dark.xaml", UriKind.Absolute);
+
     private static readonly Dictionary<string, Color> Light = new()
     {
         ["NeuBackgroundColor"]       = (Color)ColorConverter.ConvertFromString("#E6ECF3")!,
@@ -35,14 +45,14 @@ internal static class ThemePalette
 
     private static readonly Dictionary<string, Color> Dark = new()
     {
-        ["NeuBackgroundColor"]       = (Color)ColorConverter.ConvertFromString("#2E3033")!,
-        ["NeuLightShadowColor"]      = (Color)ColorConverter.ConvertFromString("#4E5358")!,
-        ["NeuDarkShadowColor"]       = (Color)ColorConverter.ConvertFromString("#0F1012")!,
+        ["NeuBackgroundColor"]       = (Color)ColorConverter.ConvertFromString("#0B1223")!,
+        ["NeuLightShadowColor"]      = (Color)ColorConverter.ConvertFromString("#121D38")!,
+        ["NeuDarkShadowColor"]       = (Color)ColorConverter.ConvertFromString("#04070E")!,
         ["NeuAccentColor"]           = (Color)ColorConverter.ConvertFromString("#FF8A3D")!,
         ["NeuAccentHoverColor"]      = (Color)ColorConverter.ConvertFromString("#FFA464")!,
         ["NeuTextPrimaryColor"]      = (Color)ColorConverter.ConvertFromString("#E8ECF3")!,
         ["NeuTextSecondaryColor"]    = (Color)ColorConverter.ConvertFromString("#9AA5BA")!,
-        ["NeuInputFillColor"]        = (Color)ColorConverter.ConvertFromString("#26282B")!,
+        ["NeuInputFillColor"]        = (Color)ColorConverter.ConvertFromString("#121D38")!,
         // Dashboard accents (kept for the Forecourt Overview demo).
         ["NeuAccentSecondaryColor"]  = (Color)ColorConverter.ConvertFromString("#B721FF")!,
         ["NeuWarnColor"]             = (Color)ColorConverter.ConvertFromString("#F5C24A")!,
@@ -77,7 +87,7 @@ internal static class ThemePalette
         var palette = dark ? Dark : Light;
         var resources = Application.Current.Resources;
 
-        // 1. Overwrite Color keys (consumers via DropShadowEffect.Color etc.).
+        // 1. Overwrite Color keys.
         foreach (var (key, color) in palette)
         {
             resources[key] = color;
@@ -104,5 +114,42 @@ internal static class ThemePalette
         gradient.GradientStops.Add(new GradientStop(palette["NeuAccentGradientEnd"], 1));
         gradient.Freeze();
         resources["NeuAccentGradientBrush"] = gradient;
+
+        // 4. Swap the neumorphic style dictionary LAST so DropShadowEffect
+        //    instances (frozen at parse time) pick up their hardcoded shadow
+        //    colors from the correct file, and the already-written brush
+        //    resources are in place before any template is re-parsed.
+        SwapNeumorphicDictionary(dark ? DarkDictUri : LightDictUri);
+    }
+
+    /// <summary>
+    /// Finds whichever neumorphic dictionary is currently in
+    /// <see cref="Application.Current"/> merged dictionaries, removes it,
+    /// then inserts <paramref name="incomingUri"/> at the same position.
+    /// Inserting at the original position preserves key-override order
+    /// (SegmentedPill.xaml and wpf-ui dicts stay in the correct slots).
+    /// </summary>
+    private static void SwapNeumorphicDictionary(Uri incomingUri)
+    {
+        var merged = Application.Current.Resources.MergedDictionaries;
+
+        // Find the currently loaded neumorphic dictionary by its source URI.
+        var existing = merged.FirstOrDefault(d =>
+            d.Source == LightDictUri || d.Source == DarkDictUri);
+
+        // If we're already on the right dictionary, nothing to do.
+        if (existing?.Source == incomingUri)
+            return;
+
+        int insertAt = existing is not null ? merged.IndexOf(existing) : merged.Count;
+
+        // Remove old dictionary first — this invalidates all styles that were
+        // parsed from it, which is intentional: WPF will re-resolve them from
+        // the new dictionary on the next layout pass.
+        if (existing is not null)
+            merged.Remove(existing);
+
+        // Insert the incoming dictionary at the same slot.
+        merged.Insert(insertAt, new ResourceDictionary { Source = incomingUri });
     }
 }

@@ -199,13 +199,8 @@
             </ContentControl>
 
             <!-- 4. Spatial View hero -->
-            <Border Grid.Row="3" CornerRadius="16">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#0E1428" Offset="0" />
-                        <GradientStop Color="#050810" Offset="1" />
-                    </LinearGradientBrush>
-                </Border.Background>
+            <Border Grid.Row="3" CornerRadius="16"
+                    Background="{DynamicResource NeuBackgroundBrush}">
                 <Grid Margin="24">
                     <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left">
                         <TextBlock FontSize="18" FontWeight="SemiBold"
