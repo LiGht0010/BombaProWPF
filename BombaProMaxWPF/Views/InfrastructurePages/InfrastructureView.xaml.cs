@@ -13,11 +13,12 @@ using BombaProMaxWPF.Views.InfrastructurePages.Sections.Services;
 namespace BombaProMaxWPF.Views.InfrastructurePages;
 
 /// <summary>
-/// Infrastructure shell — hosts a segmented pill bar across four sub-sections
-/// (Produits, R\u00e9servoirs, Pompes, Services). Sub-section UserControls are
-/// instantiated lazily on first selection and cached for the lifetime of this
-/// view, so switching pills is instant after the initial build.
-/// Jaugeage lives inside R\u00e9servoirs as a nested concern, not a top-level pill.
+/// Infrastructure shell — hub-and-spoke pattern.
+/// State 1 (landing): four clickable cards, one per sub-section.
+/// State 2 (section): selected sub-section UserControl with a back button.
+/// Sub-section UserControls are instantiated lazily on first selection and
+/// cached for the lifetime of this view.
+/// Jaugeage lives inside Réservoirs as a nested concern.
 /// </summary>
 public partial class InfrastructureView : UserControl
 {
@@ -31,17 +32,12 @@ public partial class InfrastructureView : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
-        // First show: surface the default section. The IsChecked=True on
-        // PillProduits already fires Pill_Checked during template apply,
-        // but Loaded re-asserts in case the section host was cleared.
-        if (SectionHost.Content is null)
-        {
-            ShowSection("produits");
-        }
+        // Always start on the landing hub.
+        LandingPanel.Visibility  = Visibility.Visible;
+        SectionPanel.Visibility  = Visibility.Collapsed;
+        BackButton.Visibility    = Visibility.Collapsed;
 
-        // Kick off any async data load on the currently visible section.
         _loadCts = new CancellationTokenSource();
-        _ = TryLoadCurrentSectionAsync(_loadCts.Token);
     }
 
     private void UserControl_Unloaded(object sender, RoutedEventArgs e)
@@ -52,21 +48,25 @@ public partial class InfrastructureView : UserControl
         _loadCts = null;
     }
 
-    private void Pill_Checked(object sender, RoutedEventArgs e)
+    private void Card_Click(object sender, RoutedEventArgs e)
     {
-        // Guard: the IsChecked="True" on PillProduits in XAML fires this
-        // handler during InitializeComponent, before SectionHost has been
-        // field-assigned. UserControl_Loaded handles the initial show.
-        if (SectionHost is null) return;
+        if (sender is not Button { Tag: string key }) return;
 
-        if (sender is RadioButton { Tag: string key })
-        {
-            ShowSection(key);
+        ShowSection(key);
 
-            // Trigger lazy load on the new section if it implements IAsyncLoadable.
-            _loadCts ??= new CancellationTokenSource();
-            _ = TryLoadCurrentSectionAsync(_loadCts.Token);
-        }
+        LandingPanel.Visibility = Visibility.Collapsed;
+        SectionPanel.Visibility = Visibility.Visible;
+        BackButton.Visibility   = Visibility.Visible;
+
+        _loadCts ??= new CancellationTokenSource();
+        _ = TryLoadCurrentSectionAsync(_loadCts.Token);
+    }
+
+    private void Back_Click(object sender, RoutedEventArgs e)
+    {
+        SectionPanel.Visibility = Visibility.Collapsed;
+        LandingPanel.Visibility = Visibility.Visible;
+        BackButton.Visibility   = Visibility.Collapsed;
     }
 
     private void ShowSection(string key)

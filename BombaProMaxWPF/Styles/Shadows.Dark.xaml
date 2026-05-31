@@ -23,84 +23,84 @@
     <DropShadowEffect x:Key="NeuShadowDashDark"
                       x:Shared="False"
                       Color="#425c7d"
-                      BlurRadius="60" ShadowDepth="50" Direction="315" Opacity="0.5" />
+                      BlurRadius="14" ShadowDepth="4" Direction="315" Opacity="0.5" />
 
     <!-- NeuDashCardStyle inner (135) -->
     <DropShadowEffect x:Key="NeuShadowDashLight"
                       x:Shared="False"
                       Color="#191e4f"
-                      BlurRadius="60" ShadowDepth="50" Direction="135" Opacity="0.4" />
+                      BlurRadius="14" ShadowDepth="4" Direction="135" Opacity="0.4" />
 
     <!-- NeuCardStyle outer (315) -->
     <DropShadowEffect x:Key="NeuShadowCardDark"
                       x:Shared="False"
                       Color="#425c7d"
-                      BlurRadius="60" ShadowDepth="50" Direction="315" Opacity="0.5" />
+                      BlurRadius="30" ShadowDepth="10" Direction="315" Opacity="0.5" />
 
     <!-- NeuCardStyle inner (135) -->
     <DropShadowEffect x:Key="NeuShadowCardLight"
                       x:Shared="False"
                       Color="#191e4f"
-                      BlurRadius="60" ShadowDepth="50" Direction="135" Opacity="0.4" />
+                      BlurRadius="30" ShadowDepth="10" Direction="135" Opacity="0.4" />
 
     <!-- NeuButtonStyle raised outer (315) -->
     <DropShadowEffect x:Key="NeuShadowButtonDark"
                       x:Shared="False"
                       Color="#425c7d"
-                      BlurRadius="60" ShadowDepth="50" Direction="315" Opacity="0.5" />
+                      BlurRadius="18" ShadowDepth="6" Direction="315" Opacity="0.5" />
 
     <!-- NeuButtonStyle raised inner (135) -->
     <DropShadowEffect x:Key="NeuShadowButtonLight"
                       x:Shared="False"
                       Color="#191e4f"
-                      BlurRadius="60" ShadowDepth="50" Direction="135" Opacity="0.4" />
+                      BlurRadius="18" ShadowDepth="6" Direction="135" Opacity="0.4" />
 
     <!-- NeuButtonStyle pressed outer (315, reduced) -->
     <DropShadowEffect x:Key="NeuShadowButtonPressedDark"
                       x:Shared="False"
                       Color="#425c7d"
-                      BlurRadius="40" ShadowDepth="25" Direction="315" Opacity="0.5" />
+                      BlurRadius="6" ShadowDepth="2" Direction="315" Opacity="0.5" />
 
     <!-- NeuButtonStyle pressed inner (135, reduced) -->
     <DropShadowEffect x:Key="NeuShadowButtonPressedLight"
                       x:Shared="False"
                       Color="#191e4f"
-                      BlurRadius="40" ShadowDepth="25" Direction="135" Opacity="0.4" />
+                      BlurRadius="6" ShadowDepth="2" Direction="135" Opacity="0.4" />
 
     <!-- NeuLogoBadgeStyle (315) -->
     <DropShadowEffect x:Key="NeuShadowBadgeDark"
                       x:Shared="False"
                       Color="#425c7d"
-                      BlurRadius="60" ShadowDepth="50" Direction="315" Opacity="0.5" />
+                      BlurRadius="24" ShadowDepth="8" Direction="315" Opacity="0.5" />
 
     <!-- NeuToolbarStyle / NeuComboBoxStyle popup outer (315) -->
     <DropShadowEffect x:Key="NeuShadowToolbarDark"
                       x:Shared="False"
                       Color="#425c7d"
-                      BlurRadius="60" ShadowDepth="50" Direction="315" Opacity="0.5" />
+                      BlurRadius="20" ShadowDepth="6" Direction="315" Opacity="0.5" />
 
     <!-- NeuToolbarStyle inner (135) -->
     <DropShadowEffect x:Key="NeuShadowToolbarLight"
                       x:Shared="False"
                       Color="#191e4f"
-                      BlurRadius="60" ShadowDepth="50" Direction="135" Opacity="0.4" />
+                      BlurRadius="20" ShadowDepth="6" Direction="135" Opacity="0.4" />
 
     <!-- NeuToggleSwitchStyle knob (315) -->
     <DropShadowEffect x:Key="NeuShadowKnobDark"
                       x:Shared="False"
                       Color="#425c7d"
-                      BlurRadius="60" ShadowDepth="50" Direction="315" Opacity="0.5" />
+                      BlurRadius="8" ShadowDepth="2" Direction="315" Opacity="0.5" />
 
     <!-- NeuSidebarStyle outer (315) -->
     <DropShadowEffect x:Key="NeuShadowSidebarDark"
                       x:Shared="False"
                       Color="#425c7d"
-                      BlurRadius="60" ShadowDepth="50" Direction="315" Opacity="0.5" />
+                      BlurRadius="28" ShadowDepth="10" Direction="315" Opacity="0.5" />
 
     <!-- NeuSidebarStyle inner (135) -->
     <DropShadowEffect x:Key="NeuShadowSidebarLight"
                       x:Shared="False"
                       Color="#191e4f"
-                      BlurRadius="60" ShadowDepth="50" Direction="135" Opacity="0.4" />
+                      BlurRadius="28" ShadowDepth="10" Direction="135" Opacity="0.4" />
 
 </ResourceDictionary>

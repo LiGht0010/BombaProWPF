@@ -108,6 +108,12 @@
   <data name="InfraReservoirs" xml:space="preserve"><value>Réservoirs</value></data>
   <data name="InfraPompes" xml:space="preserve"><value>Pompes</value></data>
   <data name="InfraServices" xml:space="preserve"><value>Services</value></data>
+  <data name="InfraCardDescProduits" xml:space="preserve"><value>Gérez les carburants et produits disponibles</value></data>
+  <data name="InfraCardDescReservoirs" xml:space="preserve"><value>Capacités, jaugeage et calibration des cuves</value></data>
+  <data name="InfraCardDescPompes" xml:space="preserve"><value>Configuration et état des pompes de distribution</value></data>
+  <data name="InfraCardDescServices" xml:space="preserve"><value>Prestations et tarifs des services de la station</value></data>
+  <data name="InfraBackButton" xml:space="preserve"><value>Retour</value></data>
+  <data name="InfraBackTooltip" xml:space="preserve"><value>Retourner à la section Infrastructure</value></data>
   <data name="InfraRefresh" xml:space="preserve"><value>Actualiser</value></data>
   <data name="InfraComingSoon" xml:space="preserve"><value>Section en cours de portage — disponible bientôt.</value></data>
 

@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -10,7 +69,7 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
               <xsd:attribute ref="xml:space" />
@@ -46,363 +105,1069 @@
       </xsd:complexType>
     </xsd:element>
   </xsd:schema>
-  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
-  <resheader name="version"><value>2.0</value></resheader>
-  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-
-  <data name="AppName" xml:space="preserve"><value>BombaProMax</value></data>
-  <data name="Welcome" xml:space="preserve"><value>مرحبا بك</value></data>
-  <data name="Tagline" xml:space="preserve"><value>إدارة ذكية لمحطة الوقود الخاصة بك</value></data>
-  <data name="GetStarted" xml:space="preserve"><value>ابدأ الآن</value></data>
-  <data name="ThemeLabel" xml:space="preserve"><value>السمة</value></data>
-  <data name="LanguageLabel" xml:space="preserve"><value>اللغة</value></data>
-  <data name="Light" xml:space="preserve"><value>فاتح</value></data>
-  <data name="Dark" xml:space="preserve"><value>داكن</value></data>
-  <data name="SignInTitle" xml:space="preserve"><value>تسجيل الدخول إلى حسابك</value></data>
-  <data name="EmailLabel" xml:space="preserve"><value>البريد الإلكتروني</value></data>
-  <data name="PasswordLabel" xml:space="preserve"><value>كلمة المرور</value></data>
-  <data name="SignInButton" xml:space="preserve"><value>تسجيل الدخول</value></data>
-  <data name="ForgotPassword" xml:space="preserve"><value>هل نسيت كلمة المرور؟</value></data>
-  <data name="Connecting" xml:space="preserve"><value>جارٍ الاتصال…</value></data>
-  <data name="InvalidCredentials" xml:space="preserve"><value>البريد الإلكتروني أو كلمة المرور غير صحيحة.</value></data>
-
-  <data name="TogglePaneTooltip" xml:space="preserve"><value>طي / توسيع</value></data>
-  <data name="StartDay" xml:space="preserve"><value>بدء اليوم</value></data>
-  <data name="LogoutTooltip" xml:space="preserve"><value>تسجيل الخروج</value></data>
-
-  <data name="NavDashboard" xml:space="preserve"><value>لوحة التحكم</value></data>
-  <data name="NavVentes" xml:space="preserve"><value>المبيعات</value></data>
-  <data name="NavAchats" xml:space="preserve"><value>المشتريات</value></data>
-  <data name="NavCaisse" xml:space="preserve"><value>الصندوق</value></data>
-  <data name="NavClients" xml:space="preserve"><value>العملاء</value></data>
-  <data name="NavInfrastructure" xml:space="preserve"><value>البنية التحتية</value></data>
-  <data name="NavRessources" xml:space="preserve"><value>الموارد</value></data>
-  <data name="NavRapports" xml:space="preserve"><value>التقارير</value></data>
-  <data name="NavParametres" xml:space="preserve"><value>الإعدادات</value></data>
-
-  <data name="DashTitle" xml:space="preserve"><value>نظرة عامة على المحطة</value></data>
-  <data name="DashSubtitle" xml:space="preserve"><value>المحطة رقم 442 — الطرف الشمالي</value></data>
-  <data name="DashLiveTankInventory" xml:space="preserve"><value>المخزون الحي للخزانات</value></data>
-  <data name="DashSyncingLive" xml:space="preserve"><value>مزامنة حية</value></data>
-  <data name="DashMarketPricing" xml:space="preserve"><value>تسعير السوق</value></data>
-  <data name="DashUpdateDisplays" xml:space="preserve"><value>تحديث جميع الشاشات</value></data>
-  <data name="DashActivePumps" xml:space="preserve"><value>مراقبة المضخات النشطة</value></data>
-  <data name="DashSpatialView" xml:space="preserve"><value>العرض المكاني</value></data>
-  <data name="DashSpatialSub" xml:space="preserve"><value>تتبع الإشغال في الوقت الحقيقي مفعّل</value></data>
-  <data name="DashUnleaded" xml:space="preserve"><value>بدون رصاص</value></data>
-  <data name="DashDiesel" xml:space="preserve"><value>ديزل</value></data>
-  <data name="DashPremium" xml:space="preserve"><value>بريميوم</value></data>
-  <data name="DashInUse" xml:space="preserve"><value>قيد الاستخدام</value></data>
-  <data name="DashIdle" xml:space="preserve"><value>متوقف</value></data>
-  <data name="DashCheck" xml:space="preserve"><value>يتطلب فحص</value></data>
-  <data name="DashLowStockAlert" xml:space="preserve"><value>تنبيه مخزون منخفض</value></data>
-  <data name="DashCap" xml:space="preserve"><value>السعة: {0} لتر</value></data>
-  <data name="DashStable" xml:space="preserve"><value>مستقر</value></data>
-  <data name="DashMarketDelta" xml:space="preserve"><value>{0} السوق</value></data>
-  <data name="DashTargetDelta" xml:space="preserve"><value>{0} الهدف</value></data>
-
-  <data name="InfraTitle" xml:space="preserve"><value>البنية التحتية</value></data>
-  <data name="InfraSubtitle" xml:space="preserve"><value>إعداد الأصول المادية للمحطة</value></data>
-  <data name="InfraProduits" xml:space="preserve"><value>المنتجات</value></data>
-  <data name="InfraReservoirs" xml:space="preserve"><value>الخزانات</value></data>
-  <data name="InfraPompes" xml:space="preserve"><value>المضخات</value></data>
-  <data name="InfraServices" xml:space="preserve"><value>الخدمات</value></data>
-  <data name="InfraRefresh" xml:space="preserve"><value>تحديث</value></data>
-  <data name="InfraComingSoon" xml:space="preserve"><value>القسم قيد النقل — سيكون متاحًا قريبًا.</value></data>
-
-  <data name="ProdBreadcrumbInfra" xml:space="preserve"><value>البنية التحتية</value></data>
-  <data name="ProdBreadcrumbProduits" xml:space="preserve"><value>المنتجات</value></data>
-  <data name="ProdPageSubtitle" xml:space="preserve"><value>u{625}u{62F}u{627}u{631}u{629} u{627}u{644}u{648}u{642}u{648}u{62F} u{648}u{627}u{644}u{645}u{646}u{62A}u{62C}u{627}u{62A} u{627}u{644}u{628}u{62A}u{631}u{648}u{644}u{64A}u{629}</value></data>
-  <data name="ProdManageCategoriesButton" xml:space="preserve"><value>إدارة الفئات</value></data>
-  <data name="ProdAddButton" xml:space="preserve"><value>منتج جديد</value></data>
-  <data name="ProdTableTitle" xml:space="preserve"><value>كتالوج المنتجات</value></data>
-  <data name="ProdTableSubtitle" xml:space="preserve"><value>القائمة الكاملة للمنتجات المسجلة</value></data>
-  <data name="ProdColNumero" xml:space="preserve"><value>الرقم</value></data>
-  <data name="ProdColDescription" xml:space="preserve"><value>الوصف</value></data>
-  <data name="ProdColCategorie" xml:space="preserve"><value>الفئة</value></data>
-  <data name="ProdColPrixAchat" xml:space="preserve"><value>سعر الشراء</value></data>
-  <data name="ProdColPrixTTC" xml:space="preserve"><value>السعر شامل الضريبة</value></data>
-  <data name="ProdColMarge" xml:space="preserve"><value>الهامش</value></data>
-  <data name="ProdColStock" xml:space="preserve"><value>المخزون</value></data>
-  <data name="ProdColActions" xml:space="preserve"><value>الإجراءات</value></data>
-  <data name="ProdEmpty" xml:space="preserve"><value>لا توجد منتجات مسجلة.</value></data>
-  <data name="ProdEditTooltip" xml:space="preserve"><value>تعديل</value></data>
-  <data name="ProdDeleteTooltip" xml:space="preserve"><value>حذف</value></data>
-  <data name="ProdDetailsTooltip" xml:space="preserve"><value>تفاصيل</value></data>
-  <data name="ProdBadgeStockOk" xml:space="preserve"><value>في المخزون</value></data>
-  <data name="ProdBadgeStockBas" xml:space="preserve"><value>مخزون منخفض</value></data>
-  <data name="ProdBadgeRupture" xml:space="preserve"><value>نفاد المخزون</value></data>
-  <data name="ProdDeleteConfirmTitle" xml:space="preserve"><value>حذف المنتج</value></data>
-  <data name="ProdDeleteConfirmMsg" xml:space="preserve"><value>هل أنت متأكد من حذف هذا المنتج؟</value></data>
-  <data name="ProdDeleteSuccess" xml:space="preserve"><value>تم حذف المنتج بنجاح.</value></data>
-  <data name="ProdDeleteError" xml:space="preserve"><value>تعذر حذف المنتج.</value></data>
-  <data name="ProdCountBadge" xml:space="preserve"><value>منتجات</value></data>
-  <data name="CatDlgTitle" xml:space="preserve"><value>إدارة الفئات</value></data>
-  <data name="CatDlgNewLabel" xml:space="preserve"><value>فئة جديدة</value></data>
-  <data name="CatDlgPlaceholder" xml:space="preserve"><value>اسم الفئة…</value></data>
-  <data name="CatDlgAjouter" xml:space="preserve"><value>إضافة</value></data>
-  <data name="CatDlgExistingLabel" xml:space="preserve"><value>الفئات الموجودة</value></data>
-  <data name="CatDlgEditTooltip" xml:space="preserve"><value>تعديل</value></data>
-  <data name="CatDlgDeleteTooltip" xml:space="preserve"><value>حذف</value></data>
-  <data name="CatDlgSaveTooltip" xml:space="preserve"><value>حفظ</value></data>
-  <data name="CatDlgCancelTooltip" xml:space="preserve"><value>إلغاء</value></data>
-  <data name="CatDlgEmpty" xml:space="preserve"><value>لا توجد فئات مسجلة.</value></data>
-  <data name="CatDlgAddError" xml:space="preserve"><value>تعذر إضافة الفئة.</value></data>
-  <data name="CatDlgUpdateError" xml:space="preserve"><value>تعذر تعديل الفئة.</value></data>
-  <data name="CatDlgDeleteError" xml:space="preserve"><value>تعذر حذف الفئة.</value></data>
-  <data name="CatDlgFermer" xml:space="preserve"><value>إغلاق</value></data>
-
-  <data name="NouveauProdTitle" xml:space="preserve"><value>منتج جديد</value></data>
-  <data name="NouveauProdSubtitle" xml:space="preserve"><value>أدخل معلومات المنتج الجديد.</value></data>
-  <data name="NouveauProdInfoSection" xml:space="preserve"><value>المعلومات العامة</value></data>
-  <data name="NouveauProdPricingSection" xml:space="preserve"><value>التسعير</value></data>
-  <data name="NouveauProdStockSection" xml:space="preserve"><value>المخزون</value></data>
-  <data name="NouveauProdLabelNumero" xml:space="preserve"><value>الرقم / المرجع *</value></data>
-  <data name="NouveauProdPlaceholderNumero" xml:space="preserve"><value>مثال: SP95-001</value></data>
-  <data name="NouveauProdLabelDescription" xml:space="preserve"><value>الوصف</value></data>
-  <data name="NouveauProdPlaceholderDescription" xml:space="preserve"><value>وصف المنتج…</value></data>
-  <data name="NouveauProdLabelCategorie" xml:space="preserve"><value>الفئة</value></data>
-  <data name="NouveauProdLabelPrixAchat" xml:space="preserve"><value>سعر الشراء (دج)</value></data>
-  <data name="NouveauProdLabelTVA" xml:space="preserve"><value>الضريبة على القيمة المضافة (%)</value></data>
-  <data name="NouveauProdLabelPrixTTC" xml:space="preserve"><value>السعر شامل الضريبة (دج)</value></data>
-  <data name="NouveauProdLabelMarge" xml:space="preserve"><value>هامش الربح (دج)</value></data>
-  <data name="NouveauProdLabelStock" xml:space="preserve"><value>المخزون الأولي</value></data>
-  <data name="NouveauProdLabelStockMin" xml:space="preserve"><value>الحد الأدنى للمخزون</value></data>
-  <data name="NouveauProdLabelDelai" xml:space="preserve"><value>مهلة التسليم (أيام)</value></data>
-  <data name="NouveauProdSave" xml:space="preserve"><value>حفظ المنتج</value></data>
-  <data name="NouveauProdCancel" xml:space="preserve"><value>إلغاء</value></data>
-  <data name="NouveauProdValidationNumero" xml:space="preserve"><value>الرقم / المرجع مطلوب.</value></data>
-  <data name="NouveauProdSaveError" xml:space="preserve"><value>تعذر حفظ المنتج.</value></data>
-  <data name="NouveauProdSaveSuccess" xml:space="preserve"><value>تم حفظ المنتج بنجاح.</value></data>
-
-  <data name="ResOnline" xml:space="preserve"><value>متصل</value></data>
-  <data name="ResIdLabel" xml:space="preserve"><value>الرمز: {0}</value></data>
-  <data name="ResTotalCapacity" xml:space="preserve"><value>السعة الإجمالية: {0} لتر</value></data>
-  <data name="ResCurrentLevel" xml:space="preserve"><value>المستوى الحالي: {0} لتر</value></data>
-  <data name="ResHistoryButton" xml:space="preserve"><value>السجل</value></data>
-  <data name="ResRecordReadingButton" xml:space="preserve"><value>تسجيل قراءة</value></data>
-  <data name="ResLastReadingHeader" xml:space="preserve"><value>آخر قراءة (يدوية)</value></data>
-  <data name="ResHoursAgo" xml:space="preserve"><value>منذ {0} ساعات — {1}</value></data>
-  <data name="ResHeightLabel" xml:space="preserve"><value>الارتفاع</value></data>
-  <data name="ResTempLabel" xml:space="preserve"><value>درجة الحرارة</value></data>
-  <data name="ResWaterLabel" xml:space="preserve"><value>الماء</value></data>
-  <data name="ResAlertLow" xml:space="preserve"><value>تنبيه: مستوى منخفض</value></data>
-  <data name="ResNewReadingTitle" xml:space="preserve"><value>قراءة جديدة</value></data>
-  <data name="ResSelectReservoir" xml:space="preserve"><value>اختر الخزان</value></data>
-  <data name="ResProductHeight" xml:space="preserve"><value>ارتفاع المنتج (مم)</value></data>
-  <data name="ResTempField" xml:space="preserve"><value>درجة الحرارة (°م)</value></data>
-  <data name="ResWaterHeight" xml:space="preserve"><value>ارتفاع الماء (مم)</value></data>
-  <data name="ResSaveButton" xml:space="preserve"><value>حفظ القراءة</value></data>
-  <data name="ResSaveHint" xml:space="preserve"><value>سيتم إعادة حساب المخزون تلقائيًا بعد التحقق.</value></data>
-  <data name="ResRecentReadings" xml:space="preserve"><value>القراءات الأخيرة</value></data>
-  <data name="ResValidated" xml:space="preserve"><value>متحقق</value></data>
-  <data name="ResToday" xml:space="preserve"><value>اليوم، {0}</value></data>
-  <data name="ResYesterday" xml:space="preserve"><value>أمس، {0}</value></data>
-  <data name="ResBreadcrumbInfra" xml:space="preserve"><value>البنية التحتية</value></data>
-  <data name="ResBreadcrumbReservoirs" xml:space="preserve"><value>الخزانات</value></data>
-  <data name="ResPageSubtitle" xml:space="preserve"><value>إدارة الخزانات</value></data>
-  <data name="ResAddReservoir" xml:space="preserve"><value>إضافة خزان</value></data>
-  <data name="NResTitle" xml:space="preserve"><value>خزان جديد</value></data>
-  <data name="NResInfoSection" xml:space="preserve"><value>المعلومات العامة</value></data>
-  <data name="NResCalibSection" xml:space="preserve"><value>جدول المعايرة</value></data>
-  <data name="NResLabelNumero" xml:space="preserve"><value>رقم الخزان</value></data>
-  <data name="NResPlaceholderNumero" xml:space="preserve"><value>مثال: Tank A-01</value></data>
-  <data name="NResLabelProduit" xml:space="preserve"><value>نوع المنتج</value></data>
-  <data name="NResLabelCapacite" xml:space="preserve"><value>السعة (لتر)</value></data>
-  <data name="NResPlaceholderCapacite" xml:space="preserve"><value>10000</value></data>
-  <data name="NResLabelFabricant" xml:space="preserve"><value>الشركة المصنّعة</value></data>
-  <data name="NResPlaceholderFabricant" xml:space="preserve"><value>مثال: TerraSteel Corp</value></data>
-  <data name="NResLabelNumSerie" xml:space="preserve"><value>الرقم التسلسلي</value></data>
-  <data name="NResPlaceholderNumSerie" xml:space="preserve"><value>SN-8829-X</value></data>
-  <data name="NResLabelDiametre" xml:space="preserve"><value>القطر (سم)</value></data>
-  <data name="NResPlaceholderDiametre" xml:space="preserve"><value>250</value></data>
-  <data name="NResTabManuel" xml:space="preserve"><value>إدخال يدوي</value></data>
-  <data name="NResTabCSV" xml:space="preserve"><value>استيراد CSV</value></data>
-  <data name="NResCalibColHauteur" xml:space="preserve"><value>الارتفاع (سم)</value></data>
-  <data name="NResCalibColVolume" xml:space="preserve"><value>الحجم (لتر)</value></data>
-  <data name="NResAddLine" xml:space="preserve"><value>إضافة سطر</value></data>
-  <data name="NResCsvDrop" xml:space="preserve"><value>اسحب ملفك هنا</value></data>
-  <data name="NResCsvFormat" xml:space="preserve"><value>الصيغة المدعومة: CSV (حد أقصى 5 ميغابايت)</value></data>
-  <data name="NResCsvChoose" xml:space="preserve"><value>اختر ملفاً</value></data>
-  <data name="NResCsvDownload" xml:space="preserve"><value>تنزيل نموذج المعايرة</value></data>
-  <data name="NResCancel" xml:space="preserve"><value>إلغاء</value></data>
-  <data name="NResSave" xml:space="preserve"><value>حفظ الخزان</value></data>
-  <data name="NResValidationNumero" xml:space="preserve"><value>رقم الخزان مطلوب.</value></data>
-  <data name="NResValidationCapacite" xml:space="preserve"><value>يجب أن تكون السعة أكبر من الصفر.</value></data>
-  <data name="NResNumeroExists" xml:space="preserve"><value>هذا الرقم مستخدم بالفعل لخزان آخر.</value></data>
-  <data name="NResSaveError" xml:space="preserve"><value>خطأ أثناء حفظ الخزان.</value></data>
-  <data name="ResSaisirGlobal" xml:space="preserve"><value>تسجيل قراءة شاملة</value></data>
-  <data name="ResIdBadgeFormat" xml:space="preserve"><value>الخزان رقم {0}</value></data>
-  <data name="ResLevelLabel" xml:space="preserve"><value>المستوى الحالي</value></data>
-  <data name="ResVolumeLabel" xml:space="preserve"><value>الحجم</value></data>
-  <data name="ResStatusLabel" xml:space="preserve"><value>الحالة</value></data>
-  <data name="ResStatusPlein" xml:space="preserve"><value>ممتلئ</value></data>
-  <data name="ResStatusMoyen" xml:space="preserve"><value>متوسط</value></data>
-  <data name="ResStatusBas" xml:space="preserve"><value>منخفض</value></data>
-  <data name="ResEditTooltip" xml:space="preserve"><value>تعديل</value></data>
-  <data name="ResDetailsTooltip" xml:space="preserve"><value>التفاصيل</value></data>
-  <data name="ResDeleteTooltip" xml:space="preserve"><value>حذف</value></data>
-  <data name="ResDeleteConfirmTitle" xml:space="preserve"><value>حذف الخزان</value></data>
-  <data name="ResDeleteConfirmMessage" xml:space="preserve"><value>هل أنت متأكد من حذف الخزان {0}؟ لا يمكن التراجع عن هذه العملية.</value></data>
-  <data name="ResDeleteSuccess" xml:space="preserve"><value>تم حذف الخزان بنجاح.</value></data>
-  <data name="ResDeleteError" xml:space="preserve"><value>حدث خطأ أثناء حذف الخزان.</value></data>
-  <data name="ResDeleteConfirmYes" xml:space="preserve"><value>حذف</value></data>
-  <data name="ResDeleteConfirmNo" xml:space="preserve"><value>إلغاء</value></data>
-  <data name="EditResTitle" xml:space="preserve"><value>تعديل الخزان</value></data>
-  <data name="EditResInfoSection" xml:space="preserve"><value>المعلومات العامة</value></data>
-  <data name="EditResCalibSection" xml:space="preserve"><value>جدول المعايرة</value></data>
-  <data name="EditResLabelNumero" xml:space="preserve"><value>رقم الخزان *</value></data>
-  <data name="EditResLabelProduit" xml:space="preserve"><value>نوع المنتج</value></data>
-  <data name="EditResLabelCapacite" xml:space="preserve"><value>السعة (لتر) *</value></data>
-  <data name="EditResLabelFabricant" xml:space="preserve"><value>الشركة المصنّعة</value></data>
-  <data name="EditResLabelNumSerie" xml:space="preserve"><value>الرقم التسلسلي</value></data>
-  <data name="EditResLabelDiametre" xml:space="preserve"><value>القطر (سم)</value></data>
-  <data name="EditResTabManuel" xml:space="preserve"><value>إدخال يدوي</value></data>
-  <data name="EditResTabCSV" xml:space="preserve"><value>استيراد CSV</value></data>
-  <data name="EditResCalibColHauteur" xml:space="preserve"><value>الارتفاع (سم)</value></data>
-  <data name="EditResCalibColVolume" xml:space="preserve"><value>الحجم (لتر)</value></data>
-  <data name="EditResAddLine" xml:space="preserve"><value>إضافة سطر</value></data>
-  <data name="EditResCsvDrop" xml:space="preserve"><value>اسحب ملفك هنا</value></data>
-  <data name="EditResCsvFormat" xml:space="preserve"><value>الصيغة المدعومة: CSV (حد أقصى 5 ميغابايت)</value></data>
-  <data name="EditResCsvChoose" xml:space="preserve"><value>اختر ملفاً</value></data>
-  <data name="EditResCsvDownload" xml:space="preserve"><value>تنزيل نموذج المعايرة</value></data>
-  <data name="EditResCancel" xml:space="preserve"><value>إلغاء</value></data>
-  <data name="EditResSave" xml:space="preserve"><value>حفظ التعديلات</value></data>
-  <data name="DetailsResTitle" xml:space="preserve"><value>تفاصيل الخزان</value></data>
-  <data name="DetailsResInfoSection" xml:space="preserve"><value>المعلومات العامة</value></data>
-  <data name="DetailsResCalibSection" xml:space="preserve"><value>جدول المعايرة</value></data>
-  <data name="DetailsResJaugeagesSection" xml:space="preserve"><value>أحدث القياسات</value></data>
-  <data name="DetailsResLabelNumero" xml:space="preserve"><value>الرقم</value></data>
-  <data name="DetailsResLabelProduit" xml:space="preserve"><value>نوع المنتج</value></data>
-  <data name="DetailsResLabelCapacite" xml:space="preserve"><value>السعة</value></data>
-  <data name="DetailsResLabelNiveau" xml:space="preserve"><value>المستوى الحالي</value></data>
-  <data name="DetailsResLabelFabricant" xml:space="preserve"><value>الشركة المصنّعة</value></data>
-  <data name="DetailsResLabelNumSerie" xml:space="preserve"><value>الرقم التسلسلي</value></data>
-  <data name="DetailsResLabelDiametre" xml:space="preserve"><value>القطر</value></data>
-  <data name="DetailsResLabelDateCreation" xml:space="preserve"><value>تاريخ الإنشاء</value></data>
-  <data name="DetailsResEmptyCalib" xml:space="preserve"><value>لا توجد بيانات معايرة مسجّلة.</value></data>
-  <data name="DetailsResEmptyJaugeages" xml:space="preserve"><value>لا توجد قياسات مسجّلة لهذا الخزان.</value></data>
-  <data name="DetailsResVoirCalib" xml:space="preserve"><value>عرض جميع المعايرات</value></data>
-  <data name="DetailsResColNumero" xml:space="preserve"><value>رقم القياس</value></data>
-  <data name="DetailsResColDate" xml:space="preserve"><value>التاريخ</value></data>
-  <data name="DetailsResColVolume" xml:space="preserve"><value>الحجم (لتر)</value></data>
-  <data name="DetailsResLoading" xml:space="preserve"><value>جارٍ التحميل…</value></data>
-  <data name="DetailsResClose" xml:space="preserve"><value>إغلاق</value></data>
-  <data name="DetailsResCalibLines" xml:space="preserve"><value>سطور</value></data>
-  <data name="CalibTableTitle" xml:space="preserve"><value>جدول المعايرة</value></data>
-  <data name="CalibTableReservoir" xml:space="preserve"><value>خزان</value></data>
-  <data name="CalibTableLines" xml:space="preserve"><value>سطور</value></data>
-  <data name="CalibTableColHash" xml:space="preserve"><value>#</value></data>
-  <data name="CalibTableColHauteur" xml:space="preserve"><value>الارتفاع (سم)</value></data>
-  <data name="CalibTableColVolume" xml:space="preserve"><value>الحجم (لتر)</value></data>
-  <data name="CalibTableClose" xml:space="preserve"><value>إغلاق</value></data>
-  <data name="ResRecentTitle" xml:space="preserve"><value>آخر القراءات</value></data>
-  <data name="ResRecentSubtitle" xml:space="preserve"><value>سجل قياسات المخزون اليدوية والإلكترونية</value></data>
-  <data name="ResFilter" xml:space="preserve"><value>تصفية</value></data>
-  <data name="ResExport" xml:space="preserve"><value>تصدير</value></data>
-  <data name="ResColNumero" xml:space="preserve"><value>الرقم</value></data>
-  <data name="ResColDateHeure" xml:space="preserve"><value>التاريخ والوقت</value></data>
-  <data name="ResColVolumeTotal" xml:space="preserve"><value>الحجم الإجمالي (لتر)</value></data>
-  <data name="ResColOperateur" xml:space="preserve"><value>المشغّل / الشاهد</value></data>
-  <data name="ResColStatus" xml:space="preserve"><value>الحالة</value></data>
-  <data name="ResColActions" xml:space="preserve"><value>الإجراءات</value></data>
-  <data name="ResViewAll" xml:space="preserve"><value>عرض السجل بالكامل</value></data>
-  <data name="ResEmpty" xml:space="preserve"><value>لا يوجد خزان متاح.</value></data>
-  <data name="ResFooterCalibration" xml:space="preserve"><value>آخر معايرة</value></data>
-  <data name="ResFooterTerminal" xml:space="preserve"><value>الرقم التسلسلي للمحطة</value></data>
-  <data name="ResFooterFrequence" xml:space="preserve"><value>تكرار القراءة</value></data>
-  <data name="JaugDlgTitle" xml:space="preserve"><value>تسجيل قراءة شاملة</value></data>
-  <data name="JaugDlgSubtitle" xml:space="preserve"><value>تسجيل قياسات جميع الخزانات النشطة في آنٍ واحد.</value></data>
-  <data name="JaugDlgDateLabel" xml:space="preserve"><value>تاريخ القراءة</value></data>
-  <data name="JaugDlgTemoinLabel" xml:space="preserve"><value>الموثّق (المعتمد)</value></data>
-  <data name="JaugDlgColReservoir" xml:space="preserve"><value>الخزان</value></data>
-  <data name="JaugDlgColHauteur" xml:space="preserve"><value>الارتفاع المقاس (مم)</value></data>
-  <data name="JaugDlgColVolume" xml:space="preserve"><value>الحجم المحسوب (لتر)</value></data>
-  <data name="JaugDlgColTemp" xml:space="preserve"><value>الحرارة (°م)</value></data>
-  <data name="JaugDlgColNotes" xml:space="preserve"><value>ملاحظات</value></data>
-  <data name="JaugDlgInfoCaption" xml:space="preserve"><value>تُحسب الأحجام تلقائياً وفقاً لجداول معايرة كل خزان.</value></data>
-  <data name="JaugDlgCancel" xml:space="preserve"><value>إلغاء</value></data>
-  <data name="JaugDlgSave" xml:space="preserve"><value>حفظ القراءة الشاملة</value></data>
-  <data name="JaugDlgGeneralInfo" xml:space="preserve"><value>معلومات عامة</value></data>
-  <data name="JaugDlgNumeroLabel" xml:space="preserve"><value>رقم القراءة</value></data>
-  <data name="JaugDlgObservationsLabel" xml:space="preserve"><value>ملاحظات</value></data>
-  <data name="JaugDlgObservationsPlaceholder" xml:space="preserve"><value>ملاحظات عامة حول حالة الخزانات أو الظروف الجوية...</value></data>
-  <data name="JaugDlgDetailsCard" xml:space="preserve"><value>تفاصيل الخزان</value></data>
-  <data name="JaugDlgSelectReservoir" xml:space="preserve"><value>اختر خزاناً</value></data>
-  <data name="JaugDlgHauteurCm" xml:space="preserve"><value>الارتفاع المقاس (سم)</value></data>
-  <data name="JaugDlgVolumeLitres" xml:space="preserve"><value>الحجم المحسوب (لتر)</value></data>
-  <data name="JaugDlgVolumeAutoPlaceholder" xml:space="preserve"><value>حساب تلقائي...</value></data>
-  <data name="JaugDlgNotesSpecLabel" xml:space="preserve"><value>ملاحظات محددة</value></data>
-  <data name="JaugDlgNotesSpecPlaceholder" xml:space="preserve"><value>حدد الحالات الشاذة...</value></data>
-  <data name="JaugDlgAddToJaugeage" xml:space="preserve"><value>إضافة إلى القراءة</value></data>
-  <data name="JaugDlgItemsAdded" xml:space="preserve"><value>العناصر المضافة</value></data>
-  <data name="JaugDlgResCountBadge" xml:space="preserve"><value>{0} خزانات مسجلة</value></data>
-  <data name="JaugDlgColProduit" xml:space="preserve"><value>المنتج</value></data>
-  <data name="JaugDlgColAction" xml:space="preserve"><value>إجراء</value></data>
-  <data name="JaugDlgFooterBrand" xml:space="preserve"><value>نظام إدارة الوقود</value></data>
-  <data name="JaugDlgEmptyState" xml:space="preserve"><value>لم يتم إضافة أي خزان. استخدم النموذج أعلاه لإضافة قياس.</value></data>
-  <data name="JaugDlgSaveShort" xml:space="preserve"><value>حفظ</value></data>
-  <data name="JaugDetTitle" xml:space="preserve"><value>تفاصيل القراءة</value></data>
-  <data name="JaugDetModifier" xml:space="preserve"><value>تعديل</value></data>
-  <data name="JaugDetImprimer" xml:space="preserve"><value>طباعة</value></data>
-  <data name="JaugDetLabelNumero" xml:space="preserve"><value>الرقم</value></data>
-  <data name="JaugDetLabelDate" xml:space="preserve"><value>تاريخ العملية</value></data>
-  <data name="JaugDetLabelTemoin" xml:space="preserve"><value>الشاهد / الموظف</value></data>
-  <data name="JaugDetLabelStatut" xml:space="preserve"><value>الحالة</value></data>
-  <data name="JaugDetLabelObservations" xml:space="preserve"><value>الملاحظات</value></data>
-  <data name="JaugDetDetailTitle" xml:space="preserve"><value>تفاصيل الخزانات</value></data>
-  <data name="JaugDetColReservoir" xml:space="preserve"><value>الخزان</value></data>
-  <data name="JaugDetColProduit" xml:space="preserve"><value>المنتج</value></data>
-  <data name="JaugDetColHauteur" xml:space="preserve"><value>الارتفاع (سم)</value></data>
-  <data name="JaugDetColVolume" xml:space="preserve"><value>الحجم (ل)</value></data>
-  <data name="JaugDetColNotes" xml:space="preserve"><value>ملاحظات</value></data>
-  <data name="JaugDetStatutValide" xml:space="preserve"><value>مُعتمد</value></data>
-  <data name="JaugDetStatutPending" xml:space="preserve"><value>معلق</value></data>
-  <data name="JaugDetAnnuler" xml:space="preserve"><value>إلغاء</value></data>
-  <data name="JaugDetFermer" xml:space="preserve"><value>إغلاق</value></data>
-  <data name="JaugDetBrand" xml:space="preserve"><value>نظام تيرا</value></data>
-  <data name="JaugDetLoading" xml:space="preserve"><value>جارٍ تحميل التفاصيل…</value></data>
-  <data name="JaugDetNoObs" xml:space="preserve"><value>لا توجد ملاحظات مسجلة.</value></data>
-  <data name="JaugMenuEdit" xml:space="preserve"><value>تعديل</value></data>
-  <data name="JaugMenuDelete" xml:space="preserve"><value>حذف</value></data>
-  <data name="JaugDeleteConfirmTitle" xml:space="preserve"><value>حذف القراءة</value></data>
-  <data name="JaugDeleteConfirmMessage" xml:space="preserve"><value>هل أنت متأكد من حذف القراءة {0}؟ لا يمكن التراجع عن هذه العملية.</value></data>
-  <data name="JaugDeleteConfirmYes" xml:space="preserve"><value>حذف</value></data>
-  <data name="JaugDeleteConfirmNo" xml:space="preserve"><value>إلغاء</value></data>
-  <data name="JaugDeleteSuccess" xml:space="preserve"><value>تم حذف القراءة بنجاح.</value></data>
-  <data name="JaugDeleteError" xml:space="preserve"><value>حدث خطأ أثناء حذف القراءة.</value></data>
-  <data name="JaugEditTitle" xml:space="preserve"><value>تعديل القراءة</value></data>
-
-  <!-- ═══ Pompes Section ═══ -->
-  <data name="PmpBreadcrumbInfra" xml:space="preserve"><value>البنية التحتية</value></data>
-  <data name="PmpBreadcrumbPompes" xml:space="preserve"><value>المضخات</value></data>
-  <data name="PmpPageSubtitle" xml:space="preserve"><value>إدارة مضخات المحطة</value></data>
-  <data name="PmpAddButton" xml:space="preserve"><value>مضخة جديدة</value></data>
-  <data name="PmpRefreshButton" xml:space="preserve"><value>تحديث</value></data>
-  <data name="PmpStatTotal" xml:space="preserve"><value>إجمالي المضخات</value></data>
-  <data name="PmpStatActives" xml:space="preserve"><value>نشطة</value></data>
-  <data name="PmpStatMaintenance" xml:space="preserve"><value>صيانة</value></data>
-  <data name="PmpStatArretees" xml:space="preserve"><value>متوقفة</value></data>
-  <data name="PmpLabelReservoir" xml:space="preserve"><value>خزان</value></data>
-  <data name="PmpLabelPompe" xml:space="preserve"><value>مضخة</value></data>
-  <data name="PmpLabelElectronique" xml:space="preserve"><value>عداد إلكتروني</value></data>
-  <data name="PmpLabelMecanique" xml:space="preserve"><value>عداد ميكانيكي</value></data>
-  <data name="PmpLabelLitres" xml:space="preserve"><value>L</value></data>
-  <data name="PmpHistoriqueButton" xml:space="preserve"><value>سجل القياس</value></data>
-  <data name="PmpStatusActive" xml:space="preserve"><value>نشطة</value></data>
-  <data name="PmpStatusMaintenance" xml:space="preserve"><value>صيانة</value></data>
-  <data name="PmpStatusArretee" xml:space="preserve"><value>متوقفة</value></data>
-  <data name="PmpDetailTooltip" xml:space="preserve"><value>عرض التفاصيل</value></data>
-  <data name="PmpEditTooltip" xml:space="preserve"><value>تعديل المضخة</value></data>
-  <data name="PmpDeleteTooltip" xml:space="preserve"><value>حذف المضخة</value></data>
-  <data name="PmpHistoriqueTooltip" xml:space="preserve"><value>عرض السجل</value></data>
-  <data name="PmpEmptyMessage" xml:space="preserve"><value>لا توجد مضخات مسجلة.</value></data>
-  <data name="JaugEditSaveButton" xml:space="preserve"><value>حفظ التعديلات</value></data>
-  <data name="JaugEditSaveError" xml:space="preserve"><value>حدث خطأ أثناء الحفظ.</value></data>
-  <data name="JaugEditSaveSuccess" xml:space="preserve"><value>تم تعديل القراءة بنجاح.</value></data>
-  <data name="JaugEditColHauteur" xml:space="preserve"><value>الارتفاع (سم)</value></data>
-  <data name="JaugEditColVolume" xml:space="preserve"><value>الحجم (ل)</value></data>
-  <data name="JaugEditColTemp" xml:space="preserve"><value>الحرارة (دم)</value></data>
-  <data name="JaugEditColNotes" xml:space="preserve"><value>ملاحظات</value></data>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppName" xml:space="preserve">
+    <value>BombaProMax</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>مرحبا بك</value>
+  </data>
+  <data name="Tagline" xml:space="preserve">
+    <value>إدارة ذكية لمحطة الوقود الخاصة بك</value>
+  </data>
+  <data name="GetStarted" xml:space="preserve">
+    <value>ابدأ الآن</value>
+  </data>
+  <data name="ThemeLabel" xml:space="preserve">
+    <value>السمة</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>فاتح</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>داكن</value>
+  </data>
+  <data name="SignInTitle" xml:space="preserve">
+    <value>تسجيل الدخول إلى حسابك</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+  <data name="SignInButton" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>هل نسيت كلمة المرور؟</value>
+  </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>جارٍ الاتصال…</value>
+  </data>
+  <data name="InvalidCredentials" xml:space="preserve">
+    <value>البريد الإلكتروني أو كلمة المرور غير صحيحة.</value>
+  </data>
+  <data name="TogglePaneTooltip" xml:space="preserve">
+    <value>طي / توسيع</value>
+  </data>
+  <data name="StartDay" xml:space="preserve">
+    <value>بدء اليوم</value>
+  </data>
+  <data name="LogoutTooltip" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+  <data name="NavDashboard" xml:space="preserve">
+    <value>لوحة التحكم</value>
+  </data>
+  <data name="NavVentes" xml:space="preserve">
+    <value>المبيعات</value>
+  </data>
+  <data name="NavAchats" xml:space="preserve">
+    <value>المشتريات</value>
+  </data>
+  <data name="NavCaisse" xml:space="preserve">
+    <value>الصندوق</value>
+  </data>
+  <data name="NavClients" xml:space="preserve">
+    <value>العملاء</value>
+  </data>
+  <data name="NavInfrastructure" xml:space="preserve">
+    <value>البنية التحتية</value>
+  </data>
+  <data name="NavRessources" xml:space="preserve">
+    <value>الموارد</value>
+  </data>
+  <data name="NavRapports" xml:space="preserve">
+    <value>التقارير</value>
+  </data>
+  <data name="NavParametres" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="DashTitle" xml:space="preserve">
+    <value>نظرة عامة على المحطة</value>
+  </data>
+  <data name="DashSubtitle" xml:space="preserve">
+    <value>المحطة رقم 442 — الطرف الشمالي</value>
+  </data>
+  <data name="DashLiveTankInventory" xml:space="preserve">
+    <value>المخزون الحي للخزانات</value>
+  </data>
+  <data name="DashSyncingLive" xml:space="preserve">
+    <value>مزامنة حية</value>
+  </data>
+  <data name="DashMarketPricing" xml:space="preserve">
+    <value>تسعير السوق</value>
+  </data>
+  <data name="DashUpdateDisplays" xml:space="preserve">
+    <value>تحديث جميع الشاشات</value>
+  </data>
+  <data name="DashActivePumps" xml:space="preserve">
+    <value>مراقبة المضخات النشطة</value>
+  </data>
+  <data name="DashSpatialView" xml:space="preserve">
+    <value>العرض المكاني</value>
+  </data>
+  <data name="DashSpatialSub" xml:space="preserve">
+    <value>تتبع الإشغال في الوقت الحقيقي مفعّل</value>
+  </data>
+  <data name="DashUnleaded" xml:space="preserve">
+    <value>بدون رصاص</value>
+  </data>
+  <data name="DashDiesel" xml:space="preserve">
+    <value>ديزل</value>
+  </data>
+  <data name="DashPremium" xml:space="preserve">
+    <value>بريميوم</value>
+  </data>
+  <data name="DashInUse" xml:space="preserve">
+    <value>قيد الاستخدام</value>
+  </data>
+  <data name="DashIdle" xml:space="preserve">
+    <value>متوقف</value>
+  </data>
+  <data name="DashCheck" xml:space="preserve">
+    <value>يتطلب فحص</value>
+  </data>
+  <data name="DashLowStockAlert" xml:space="preserve">
+    <value>تنبيه مخزون منخفض</value>
+  </data>
+  <data name="DashCap" xml:space="preserve">
+    <value>السعة: {0} لتر</value>
+  </data>
+  <data name="DashStable" xml:space="preserve">
+    <value>مستقر</value>
+  </data>
+  <data name="DashMarketDelta" xml:space="preserve">
+    <value>{0} السوق</value>
+  </data>
+  <data name="DashTargetDelta" xml:space="preserve">
+    <value>{0} الهدف</value>
+  </data>
+  <data name="InfraTitle" xml:space="preserve">
+    <value>البنية التحتية</value>
+  </data>
+  <data name="InfraSubtitle" xml:space="preserve">
+    <value>إعداد الأصول المادية للمحطة</value>
+  </data>
+  <data name="InfraProduits" xml:space="preserve">
+    <value>المنتجات</value>
+  </data>
+  <data name="InfraReservoirs" xml:space="preserve">
+    <value>الخزانات</value>
+  </data>
+  <data name="InfraPompes" xml:space="preserve">
+    <value>المضخات</value>
+  </data>
+  <data name="InfraServices" xml:space="preserve">
+    <value>الخدمات</value>
+  </data>
+  <data name="InfraCardDescProduits" xml:space="preserve">
+    <value>إدارة الوقود والمنتجات المتاحة</value>
+  </data>
+  <data name="InfraCardDescReservoirs" xml:space="preserve">
+    <value>السعات والقياس ومعايرة الخزانات</value>
+  </data>
+  <data name="InfraCardDescPompes" xml:space="preserve">
+    <value>إعداد وحالة مضخات التوزيع</value>
+  </data>
+  <data name="InfraCardDescServices" xml:space="preserve">
+    <value>خدمات وتعريفات المحطة</value>
+  </data>
+  <data name="InfraBackButton" xml:space="preserve">
+    <value>رجوع</value>
+  </data>
+  <data name="InfraBackTooltip" xml:space="preserve">
+    <value>العودة إلى قسم البنية التحتية</value>
+  </data>
+  <data name="InfraRefresh" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="InfraComingSoon" xml:space="preserve">
+    <value>القسم قيد النقل — سيكون متاحًا قريبًا.</value>
+  </data>
+  <data name="ProdBreadcrumbInfra" xml:space="preserve">
+    <value>البنية التحتية</value>
+  </data>
+  <data name="ProdBreadcrumbProduits" xml:space="preserve">
+    <value>المنتجات</value>
+  </data>
+  <data name="ProdPageSubtitle" xml:space="preserve">
+    <value>إدارة الوقود والمنتجات البترولية</value>
+  </data>
+  <data name="ProdManageCategoriesButton" xml:space="preserve">
+    <value>إدارة الفئات</value>
+  </data>
+  <data name="ProdAddButton" xml:space="preserve">
+    <value>منتج جديد</value>
+  </data>
+  <data name="ProdTableTitle" xml:space="preserve">
+    <value>كتالوج المنتجات</value>
+  </data>
+  <data name="ProdTableSubtitle" xml:space="preserve">
+    <value>القائمة الكاملة للمنتجات المسجلة</value>
+  </data>
+  <data name="ProdColNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="ProdColDescription" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="ProdColCategorie" xml:space="preserve">
+    <value>الفئة</value>
+  </data>
+  <data name="ProdColPrixAchat" xml:space="preserve">
+    <value>سعر الشراء</value>
+  </data>
+  <data name="ProdColPrixTTC" xml:space="preserve">
+    <value>السعر شامل الضريبة</value>
+  </data>
+  <data name="ProdColMarge" xml:space="preserve">
+    <value>الهامش</value>
+  </data>
+  <data name="ProdColStock" xml:space="preserve">
+    <value>المخزون</value>
+  </data>
+  <data name="ProdColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="ProdEmpty" xml:space="preserve">
+    <value>لا توجد منتجات مسجلة.</value>
+  </data>
+  <data name="ProdEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="ProdDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="ProdDetailsTooltip" xml:space="preserve">
+    <value>تفاصيل</value>
+  </data>
+  <data name="ProdBadgeStockOk" xml:space="preserve">
+    <value>في المخزون</value>
+  </data>
+  <data name="ProdBadgeStockBas" xml:space="preserve">
+    <value>مخزون منخفض</value>
+  </data>
+  <data name="ProdBadgeRupture" xml:space="preserve">
+    <value>نفاد المخزون</value>
+  </data>
+  <data name="ProdDeleteConfirmTitle" xml:space="preserve">
+    <value>حذف المنتج</value>
+  </data>
+  <data name="ProdDeleteConfirmMsg" xml:space="preserve">
+    <value>هل أنت متأكد من حذف هذا المنتج؟</value>
+  </data>
+  <data name="ProdDeleteSuccess" xml:space="preserve">
+    <value>تم حذف المنتج بنجاح.</value>
+  </data>
+  <data name="ProdDeleteError" xml:space="preserve">
+    <value>تعذر حذف المنتج.</value>
+  </data>
+  <data name="ProdCountBadge" xml:space="preserve">
+    <value>منتجات</value>
+  </data>
+  <data name="CatDlgTitle" xml:space="preserve">
+    <value>إدارة الفئات</value>
+  </data>
+  <data name="CatDlgNewLabel" xml:space="preserve">
+    <value>فئة جديدة</value>
+  </data>
+  <data name="CatDlgPlaceholder" xml:space="preserve">
+    <value>اسم الفئة…</value>
+  </data>
+  <data name="CatDlgAjouter" xml:space="preserve">
+    <value>إضافة</value>
+  </data>
+  <data name="CatDlgExistingLabel" xml:space="preserve">
+    <value>الفئات الموجودة</value>
+  </data>
+  <data name="CatDlgEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="CatDlgDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="CatDlgSaveTooltip" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="CatDlgCancelTooltip" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="CatDlgEmpty" xml:space="preserve">
+    <value>لا توجد فئات مسجلة.</value>
+  </data>
+  <data name="CatDlgAddError" xml:space="preserve">
+    <value>تعذر إضافة الفئة.</value>
+  </data>
+  <data name="CatDlgUpdateError" xml:space="preserve">
+    <value>تعذر تعديل الفئة.</value>
+  </data>
+  <data name="CatDlgDeleteError" xml:space="preserve">
+    <value>تعذر حذف الفئة.</value>
+  </data>
+  <data name="CatDlgFermer" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="NouveauProdTitle" xml:space="preserve">
+    <value>منتج جديد</value>
+  </data>
+  <data name="NouveauProdSubtitle" xml:space="preserve">
+    <value>أدخل معلومات المنتج الجديد.</value>
+  </data>
+  <data name="NouveauProdInfoSection" xml:space="preserve">
+    <value>المعلومات العامة</value>
+  </data>
+  <data name="NouveauProdPricingSection" xml:space="preserve">
+    <value>التسعير</value>
+  </data>
+  <data name="NouveauProdStockSection" xml:space="preserve">
+    <value>المخزون</value>
+  </data>
+  <data name="NouveauProdLabelNumero" xml:space="preserve">
+    <value>الرقم / المرجع *</value>
+  </data>
+  <data name="NouveauProdPlaceholderNumero" xml:space="preserve">
+    <value>مثال: SP95-001</value>
+  </data>
+  <data name="NouveauProdLabelDescription" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="NouveauProdPlaceholderDescription" xml:space="preserve">
+    <value>وصف المنتج…</value>
+  </data>
+  <data name="NouveauProdLabelCategorie" xml:space="preserve">
+    <value>الفئة</value>
+  </data>
+  <data name="NouveauProdLabelPrixAchat" xml:space="preserve">
+    <value>سعر الشراء (دج)</value>
+  </data>
+  <data name="NouveauProdLabelTVA" xml:space="preserve">
+    <value>الضريبة على القيمة المضافة (%)</value>
+  </data>
+  <data name="NouveauProdLabelPrixTTC" xml:space="preserve">
+    <value>السعر شامل الضريبة (دج)</value>
+  </data>
+  <data name="NouveauProdLabelMarge" xml:space="preserve">
+    <value>هامش الربح (دج)</value>
+  </data>
+  <data name="NouveauProdLabelStock" xml:space="preserve">
+    <value>المخزون الأولي</value>
+  </data>
+  <data name="NouveauProdLabelStockMin" xml:space="preserve">
+    <value>الحد الأدنى للمخزون</value>
+  </data>
+  <data name="NouveauProdLabelDelai" xml:space="preserve">
+    <value>مهلة التسليم (أيام)</value>
+  </data>
+  <data name="NouveauProdSave" xml:space="preserve">
+    <value>حفظ المنتج</value>
+  </data>
+  <data name="NouveauProdCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauProdValidationNumero" xml:space="preserve">
+    <value>الرقم / المرجع مطلوب.</value>
+  </data>
+  <data name="NouveauProdSaveError" xml:space="preserve">
+    <value>تعذر حفظ المنتج.</value>
+  </data>
+  <data name="NouveauProdSaveSuccess" xml:space="preserve">
+    <value>تم حفظ المنتج بنجاح.</value>
+  </data>
+  <data name="ResOnline" xml:space="preserve">
+    <value>متصل</value>
+  </data>
+  <data name="ResIdLabel" xml:space="preserve">
+    <value>الرمز: {0}</value>
+  </data>
+  <data name="ResTotalCapacity" xml:space="preserve">
+    <value>السعة الإجمالية: {0} لتر</value>
+  </data>
+  <data name="ResCurrentLevel" xml:space="preserve">
+    <value>المستوى الحالي: {0} لتر</value>
+  </data>
+  <data name="ResHistoryButton" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="ResRecordReadingButton" xml:space="preserve">
+    <value>تسجيل قراءة</value>
+  </data>
+  <data name="ResLastReadingHeader" xml:space="preserve">
+    <value>آخر قراءة (يدوية)</value>
+  </data>
+  <data name="ResHoursAgo" xml:space="preserve">
+    <value>منذ {0} ساعات — {1}</value>
+  </data>
+  <data name="ResHeightLabel" xml:space="preserve">
+    <value>الارتفاع</value>
+  </data>
+  <data name="ResTempLabel" xml:space="preserve">
+    <value>درجة الحرارة</value>
+  </data>
+  <data name="ResWaterLabel" xml:space="preserve">
+    <value>الماء</value>
+  </data>
+  <data name="ResAlertLow" xml:space="preserve">
+    <value>تنبيه: مستوى منخفض</value>
+  </data>
+  <data name="ResNewReadingTitle" xml:space="preserve">
+    <value>قراءة جديدة</value>
+  </data>
+  <data name="ResSelectReservoir" xml:space="preserve">
+    <value>اختر الخزان</value>
+  </data>
+  <data name="ResProductHeight" xml:space="preserve">
+    <value>ارتفاع المنتج (مم)</value>
+  </data>
+  <data name="ResTempField" xml:space="preserve">
+    <value>درجة الحرارة (°م)</value>
+  </data>
+  <data name="ResWaterHeight" xml:space="preserve">
+    <value>ارتفاع الماء (مم)</value>
+  </data>
+  <data name="ResSaveButton" xml:space="preserve">
+    <value>حفظ القراءة</value>
+  </data>
+  <data name="ResSaveHint" xml:space="preserve">
+    <value>سيتم إعادة حساب المخزون تلقائيًا بعد التحقق.</value>
+  </data>
+  <data name="ResRecentReadings" xml:space="preserve">
+    <value>القراءات الأخيرة</value>
+  </data>
+  <data name="ResValidated" xml:space="preserve">
+    <value>متحقق</value>
+  </data>
+  <data name="ResToday" xml:space="preserve">
+    <value>اليوم، {0}</value>
+  </data>
+  <data name="ResYesterday" xml:space="preserve">
+    <value>أمس، {0}</value>
+  </data>
+  <data name="ResBreadcrumbInfra" xml:space="preserve">
+    <value>البنية التحتية</value>
+  </data>
+  <data name="ResBreadcrumbReservoirs" xml:space="preserve">
+    <value>الخزانات</value>
+  </data>
+  <data name="ResPageSubtitle" xml:space="preserve">
+    <value>إدارة الخزانات</value>
+  </data>
+  <data name="ResSaisirGlobal" xml:space="preserve">
+    <value>تسجيل قراءة شاملة</value>
+  </data>
+  <data name="ResAddReservoir" xml:space="preserve">
+    <value>إضافة خزان</value>
+  </data>
+  <data name="NResTitle" xml:space="preserve">
+    <value>خزان جديد</value>
+  </data>
+  <data name="NResInfoSection" xml:space="preserve">
+    <value>المعلومات العامة</value>
+  </data>
+  <data name="NResCalibSection" xml:space="preserve">
+    <value>جدول المعايرة</value>
+  </data>
+  <data name="NResLabelNumero" xml:space="preserve">
+    <value>رقم الخزان</value>
+  </data>
+  <data name="NResPlaceholderNumero" xml:space="preserve">
+    <value>مثال: Tank A-01</value>
+  </data>
+  <data name="NResLabelProduit" xml:space="preserve">
+    <value>نوع المنتج</value>
+  </data>
+  <data name="NResLabelCapacite" xml:space="preserve">
+    <value>السعة (لتر)</value>
+  </data>
+  <data name="NResPlaceholderCapacite" xml:space="preserve">
+    <value>10000</value>
+  </data>
+  <data name="NResLabelFabricant" xml:space="preserve">
+    <value>الشركة المصنّعة</value>
+  </data>
+  <data name="NResPlaceholderFabricant" xml:space="preserve">
+    <value>مثال: TerraSteel Corp</value>
+  </data>
+  <data name="NResLabelNumSerie" xml:space="preserve">
+    <value>الرقم التسلسلي</value>
+  </data>
+  <data name="NResPlaceholderNumSerie" xml:space="preserve">
+    <value>SN-8829-X</value>
+  </data>
+  <data name="NResLabelDiametre" xml:space="preserve">
+    <value>القطر (سم)</value>
+  </data>
+  <data name="NResPlaceholderDiametre" xml:space="preserve">
+    <value>250</value>
+  </data>
+  <data name="NResTabManuel" xml:space="preserve">
+    <value>إدخال يدوي</value>
+  </data>
+  <data name="NResTabCSV" xml:space="preserve">
+    <value>استيراد CSV</value>
+  </data>
+  <data name="NResCalibColHauteur" xml:space="preserve">
+    <value>الارتفاع (سم)</value>
+  </data>
+  <data name="NResCalibColVolume" xml:space="preserve">
+    <value>الحجم (لتر)</value>
+  </data>
+  <data name="NResAddLine" xml:space="preserve">
+    <value>إضافة سطر</value>
+  </data>
+  <data name="NResCsvDrop" xml:space="preserve">
+    <value>اسحب ملفك هنا</value>
+  </data>
+  <data name="NResCsvFormat" xml:space="preserve">
+    <value>الصيغة المدعومة: CSV (حد أقصى 5 ميغابايت)</value>
+  </data>
+  <data name="NResCsvChoose" xml:space="preserve">
+    <value>اختر ملفاً</value>
+  </data>
+  <data name="NResCsvDownload" xml:space="preserve">
+    <value>تنزيل نموذج المعايرة</value>
+  </data>
+  <data name="NResCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NResSave" xml:space="preserve">
+    <value>حفظ الخزان</value>
+  </data>
+  <data name="NResValidationNumero" xml:space="preserve">
+    <value>رقم الخزان مطلوب.</value>
+  </data>
+  <data name="NResValidationCapacite" xml:space="preserve">
+    <value>يجب أن تكون السعة أكبر من الصفر.</value>
+  </data>
+  <data name="NResNumeroExists" xml:space="preserve">
+    <value>هذا الرقم مستخدم بالفعل لخزان آخر.</value>
+  </data>
+  <data name="NResSaveError" xml:space="preserve">
+    <value>خطأ أثناء حفظ الخزان.</value>
+  </data>
+  <data name="ResIdBadgeFormat" xml:space="preserve">
+    <value>الخزان رقم {0}</value>
+  </data>
+  <data name="ResLevelLabel" xml:space="preserve">
+    <value>المستوى الحالي</value>
+  </data>
+  <data name="ResVolumeLabel" xml:space="preserve">
+    <value>الحجم</value>
+  </data>
+  <data name="ResStatusLabel" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="ResStatusPlein" xml:space="preserve">
+    <value>ممتلئ</value>
+  </data>
+  <data name="ResStatusMoyen" xml:space="preserve">
+    <value>متوسط</value>
+  </data>
+  <data name="ResStatusBas" xml:space="preserve">
+    <value>منخفض</value>
+  </data>
+  <data name="ResEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="ResDetailsTooltip" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="ResDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="ResDeleteConfirmTitle" xml:space="preserve">
+    <value>حذف الخزان</value>
+  </data>
+  <data name="ResDeleteConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد من حذف الخزان {0}؟ لا يمكن التراجع عن هذه العملية.</value>
+  </data>
+  <data name="ResDeleteSuccess" xml:space="preserve">
+    <value>تم حذف الخزان بنجاح.</value>
+  </data>
+  <data name="ResDeleteError" xml:space="preserve">
+    <value>حدث خطأ أثناء حذف الخزان.</value>
+  </data>
+  <data name="ResDeleteConfirmYes" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="ResDeleteConfirmNo" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="EditResTitle" xml:space="preserve">
+    <value>تعديل الخزان</value>
+  </data>
+  <data name="EditResInfoSection" xml:space="preserve">
+    <value>المعلومات العامة</value>
+  </data>
+  <data name="EditResCalibSection" xml:space="preserve">
+    <value>جدول المعايرة</value>
+  </data>
+  <data name="EditResLabelNumero" xml:space="preserve">
+    <value>رقم الخزان *</value>
+  </data>
+  <data name="EditResLabelProduit" xml:space="preserve">
+    <value>نوع المنتج</value>
+  </data>
+  <data name="EditResLabelCapacite" xml:space="preserve">
+    <value>السعة (لتر) *</value>
+  </data>
+  <data name="EditResLabelFabricant" xml:space="preserve">
+    <value>الشركة المصنّعة</value>
+  </data>
+  <data name="EditResLabelNumSerie" xml:space="preserve">
+    <value>الرقم التسلسلي</value>
+  </data>
+  <data name="EditResLabelDiametre" xml:space="preserve">
+    <value>القطر (سم)</value>
+  </data>
+  <data name="EditResTabManuel" xml:space="preserve">
+    <value>إدخال يدوي</value>
+  </data>
+  <data name="EditResTabCSV" xml:space="preserve">
+    <value>استيراد CSV</value>
+  </data>
+  <data name="EditResCalibColHauteur" xml:space="preserve">
+    <value>الارتفاع (سم)</value>
+  </data>
+  <data name="EditResCalibColVolume" xml:space="preserve">
+    <value>الحجم (لتر)</value>
+  </data>
+  <data name="EditResAddLine" xml:space="preserve">
+    <value>إضافة سطر</value>
+  </data>
+  <data name="EditResCsvDrop" xml:space="preserve">
+    <value>اسحب ملفك هنا</value>
+  </data>
+  <data name="EditResCsvFormat" xml:space="preserve">
+    <value>الصيغة المدعومة: CSV (حد أقصى 5 ميغابايت)</value>
+  </data>
+  <data name="EditResCsvChoose" xml:space="preserve">
+    <value>اختر ملفاً</value>
+  </data>
+  <data name="EditResCsvDownload" xml:space="preserve">
+    <value>تنزيل نموذج المعايرة</value>
+  </data>
+  <data name="EditResCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="EditResSave" xml:space="preserve">
+    <value>حفظ التعديلات</value>
+  </data>
+  <data name="DetailsResTitle" xml:space="preserve">
+    <value>تفاصيل الخزان</value>
+  </data>
+  <data name="DetailsResInfoSection" xml:space="preserve">
+    <value>المعلومات العامة</value>
+  </data>
+  <data name="DetailsResCalibSection" xml:space="preserve">
+    <value>جدول المعايرة</value>
+  </data>
+  <data name="DetailsResJaugeagesSection" xml:space="preserve">
+    <value>أحدث القياسات</value>
+  </data>
+  <data name="DetailsResLabelNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="DetailsResLabelProduit" xml:space="preserve">
+    <value>نوع المنتج</value>
+  </data>
+  <data name="DetailsResLabelCapacite" xml:space="preserve">
+    <value>السعة</value>
+  </data>
+  <data name="DetailsResLabelNiveau" xml:space="preserve">
+    <value>المستوى الحالي</value>
+  </data>
+  <data name="DetailsResLabelFabricant" xml:space="preserve">
+    <value>الشركة المصنّعة</value>
+  </data>
+  <data name="DetailsResLabelNumSerie" xml:space="preserve">
+    <value>الرقم التسلسلي</value>
+  </data>
+  <data name="DetailsResLabelDiametre" xml:space="preserve">
+    <value>القطر</value>
+  </data>
+  <data name="DetailsResLabelDateCreation" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+  <data name="DetailsResEmptyCalib" xml:space="preserve">
+    <value>لا توجد بيانات معايرة مسجّلة.</value>
+  </data>
+  <data name="DetailsResEmptyJaugeages" xml:space="preserve">
+    <value>لا توجد قياسات مسجّلة لهذا الخزان.</value>
+  </data>
+  <data name="DetailsResVoirCalib" xml:space="preserve">
+    <value>عرض جميع المعايرات</value>
+  </data>
+  <data name="DetailsResColNumero" xml:space="preserve">
+    <value>رقم القياس</value>
+  </data>
+  <data name="DetailsResColDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="DetailsResColVolume" xml:space="preserve">
+    <value>الحجم (لتر)</value>
+  </data>
+  <data name="DetailsResLoading" xml:space="preserve">
+    <value>جارٍ التحميل…</value>
+  </data>
+  <data name="DetailsResClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailsResCalibLines" xml:space="preserve">
+    <value>سطور</value>
+  </data>
+  <data name="CalibTableTitle" xml:space="preserve">
+    <value>جدول المعايرة</value>
+  </data>
+  <data name="CalibTableReservoir" xml:space="preserve">
+    <value>خزان</value>
+  </data>
+  <data name="CalibTableLines" xml:space="preserve">
+    <value>سطور</value>
+  </data>
+  <data name="CalibTableColHash" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="CalibTableColHauteur" xml:space="preserve">
+    <value>الارتفاع (سم)</value>
+  </data>
+  <data name="CalibTableColVolume" xml:space="preserve">
+    <value>الحجم (لتر)</value>
+  </data>
+  <data name="CalibTableClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="ResRecentTitle" xml:space="preserve">
+    <value>آخر القراءات</value>
+  </data>
+  <data name="ResRecentSubtitle" xml:space="preserve">
+    <value>سجل قياسات المخزون اليدوية والإلكترونية</value>
+  </data>
+  <data name="ResFilter" xml:space="preserve">
+    <value>تصفية</value>
+  </data>
+  <data name="ResExport" xml:space="preserve">
+    <value>تصدير</value>
+  </data>
+  <data name="ResColNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="ResColDateHeure" xml:space="preserve">
+    <value>التاريخ والوقت</value>
+  </data>
+  <data name="ResColVolumeTotal" xml:space="preserve">
+    <value>الحجم الإجمالي (لتر)</value>
+  </data>
+  <data name="ResColOperateur" xml:space="preserve">
+    <value>المشغّل / الشاهد</value>
+  </data>
+  <data name="ResColStatus" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="ResColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="ResViewAll" xml:space="preserve">
+    <value>عرض السجل بالكامل</value>
+  </data>
+  <data name="ResEmpty" xml:space="preserve">
+    <value>لا يوجد خزان متاح.</value>
+  </data>
+  <data name="ResFooterCalibration" xml:space="preserve">
+    <value>آخر معايرة</value>
+  </data>
+  <data name="ResFooterTerminal" xml:space="preserve">
+    <value>الرقم التسلسلي للمحطة</value>
+  </data>
+  <data name="ResFooterFrequence" xml:space="preserve">
+    <value>تكرار القراءة</value>
+  </data>
+  <data name="JaugDlgTitle" xml:space="preserve">
+    <value>تسجيل قراءة شاملة</value>
+  </data>
+  <data name="JaugDlgSubtitle" xml:space="preserve">
+    <value>تسجيل قياسات جميع الخزانات النشطة في آنٍ واحد.</value>
+  </data>
+  <data name="JaugDlgDateLabel" xml:space="preserve">
+    <value>تاريخ القراءة</value>
+  </data>
+  <data name="JaugDlgTemoinLabel" xml:space="preserve">
+    <value>الموثّق (المعتمد)</value>
+  </data>
+  <data name="JaugDlgColReservoir" xml:space="preserve">
+    <value>الخزان</value>
+  </data>
+  <data name="JaugDlgColHauteur" xml:space="preserve">
+    <value>الارتفاع المقاس (مم)</value>
+  </data>
+  <data name="JaugDlgColVolume" xml:space="preserve">
+    <value>الحجم المحسوب (لتر)</value>
+  </data>
+  <data name="JaugDlgColTemp" xml:space="preserve">
+    <value>الحرارة (°م)</value>
+  </data>
+  <data name="JaugDlgColNotes" xml:space="preserve">
+    <value>ملاحظات</value>
+  </data>
+  <data name="JaugDlgInfoCaption" xml:space="preserve">
+    <value>تُحسب الأحجام تلقائياً وفقاً لجداول معايرة كل خزان.</value>
+  </data>
+  <data name="JaugDlgCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="JaugDlgSave" xml:space="preserve">
+    <value>حفظ القراءة الشاملة</value>
+  </data>
+  <data name="JaugDlgGeneralInfo" xml:space="preserve">
+    <value>معلومات عامة</value>
+  </data>
+  <data name="JaugDlgNumeroLabel" xml:space="preserve">
+    <value>رقم القراءة</value>
+  </data>
+  <data name="JaugDlgObservationsLabel" xml:space="preserve">
+    <value>ملاحظات</value>
+  </data>
+  <data name="JaugDlgObservationsPlaceholder" xml:space="preserve">
+    <value>ملاحظات عامة حول حالة الخزانات أو الظروف الجوية...</value>
+  </data>
+  <data name="JaugDlgDetailsCard" xml:space="preserve">
+    <value>تفاصيل الخزان</value>
+  </data>
+  <data name="JaugDlgSelectReservoir" xml:space="preserve">
+    <value>اختر خزاناً</value>
+  </data>
+  <data name="JaugDlgHauteurCm" xml:space="preserve">
+    <value>الارتفاع المقاس (سم)</value>
+  </data>
+  <data name="JaugDlgVolumeLitres" xml:space="preserve">
+    <value>الحجم المحسوب (لتر)</value>
+  </data>
+  <data name="JaugDlgVolumeAutoPlaceholder" xml:space="preserve">
+    <value>حساب تلقائي...</value>
+  </data>
+  <data name="JaugDlgNotesSpecLabel" xml:space="preserve">
+    <value>ملاحظات محددة</value>
+  </data>
+  <data name="JaugDlgNotesSpecPlaceholder" xml:space="preserve">
+    <value>حدد الحالات الشاذة...</value>
+  </data>
+  <data name="JaugDlgAddToJaugeage" xml:space="preserve">
+    <value>إضافة إلى القراءة</value>
+  </data>
+  <data name="JaugDlgItemsAdded" xml:space="preserve">
+    <value>العناصر المضافة</value>
+  </data>
+  <data name="JaugDlgResCountBadge" xml:space="preserve">
+    <value>{0} خزانات مسجلة</value>
+  </data>
+  <data name="JaugDlgColProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="JaugDlgColAction" xml:space="preserve">
+    <value>إجراء</value>
+  </data>
+  <data name="JaugDlgFooterBrand" xml:space="preserve">
+    <value>نظام إدارة الوقود</value>
+  </data>
+  <data name="JaugDlgEmptyState" xml:space="preserve">
+    <value>لم يتم إضافة أي خزان. استخدم النموذج أعلاه لإضافة قياس.</value>
+  </data>
+  <data name="JaugDlgSaveShort" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="JaugDetTitle" xml:space="preserve">
+    <value>تفاصيل القراءة</value>
+  </data>
+  <data name="JaugDetModifier" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="JaugDetImprimer" xml:space="preserve">
+    <value>طباعة</value>
+  </data>
+  <data name="JaugDetLabelNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="JaugDetLabelDate" xml:space="preserve">
+    <value>تاريخ العملية</value>
+  </data>
+  <data name="JaugDetLabelTemoin" xml:space="preserve">
+    <value>الشاهد / الموظف</value>
+  </data>
+  <data name="JaugDetLabelStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="JaugDetLabelObservations" xml:space="preserve">
+    <value>الملاحظات</value>
+  </data>
+  <data name="JaugDetDetailTitle" xml:space="preserve">
+    <value>تفاصيل الخزانات</value>
+  </data>
+  <data name="JaugDetColReservoir" xml:space="preserve">
+    <value>الخزان</value>
+  </data>
+  <data name="JaugDetColProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="JaugDetColHauteur" xml:space="preserve">
+    <value>الارتفاع (سم)</value>
+  </data>
+  <data name="JaugDetColVolume" xml:space="preserve">
+    <value>الحجم (ل)</value>
+  </data>
+  <data name="JaugDetColNotes" xml:space="preserve">
+    <value>ملاحظات</value>
+  </data>
+  <data name="JaugDetStatutValide" xml:space="preserve">
+    <value>مُعتمد</value>
+  </data>
+  <data name="JaugDetStatutPending" xml:space="preserve">
+    <value>معلق</value>
+  </data>
+  <data name="JaugDetAnnuler" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="JaugDetFermer" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="JaugDetBrand" xml:space="preserve">
+    <value>نظام تيرا</value>
+  </data>
+  <data name="JaugDetLoading" xml:space="preserve">
+    <value>جارٍ تحميل التفاصيل…</value>
+  </data>
+  <data name="JaugDetNoObs" xml:space="preserve">
+    <value>لا توجد ملاحظات مسجلة.</value>
+  </data>
+  <data name="JaugMenuEdit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="JaugMenuDelete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="JaugDeleteConfirmTitle" xml:space="preserve">
+    <value>حذف القراءة</value>
+  </data>
+  <data name="JaugDeleteConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد من حذف القراءة {0}؟ لا يمكن التراجع عن هذه العملية.</value>
+  </data>
+  <data name="JaugDeleteConfirmYes" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="JaugDeleteConfirmNo" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="JaugDeleteSuccess" xml:space="preserve">
+    <value>تم حذف القراءة بنجاح.</value>
+  </data>
+  <data name="JaugDeleteError" xml:space="preserve">
+    <value>حدث خطأ أثناء حذف القراءة.</value>
+  </data>
+  <data name="JaugEditTitle" xml:space="preserve">
+    <value>تعديل القراءة</value>
+  </data>
+  <data name="JaugEditSaveButton" xml:space="preserve">
+    <value>حفظ التعديلات</value>
+  </data>
+  <data name="JaugEditSaveError" xml:space="preserve">
+    <value>حدث خطأ أثناء الحفظ.</value>
+  </data>
+  <data name="JaugEditSaveSuccess" xml:space="preserve">
+    <value>تم تعديل القراءة بنجاح.</value>
+  </data>
+  <data name="JaugEditColHauteur" xml:space="preserve">
+    <value>الارتفاع (سم)</value>
+  </data>
+  <data name="JaugEditColVolume" xml:space="preserve">
+    <value>الحجم (ل)</value>
+  </data>
+  <data name="JaugEditColTemp" xml:space="preserve">
+    <value>الحرارة (دم)</value>
+  </data>
+  <data name="JaugEditColNotes" xml:space="preserve">
+    <value>ملاحظات</value>
+  </data>
+  <data name="PmpBreadcrumbInfra" xml:space="preserve">
+    <value>البنية التحتية</value>
+  </data>
+  <data name="PmpBreadcrumbPompes" xml:space="preserve">
+    <value>المضخات</value>
+  </data>
+  <data name="PmpPageSubtitle" xml:space="preserve">
+    <value>إدارة مضخات المحطة</value>
+  </data>
+  <data name="PmpAddButton" xml:space="preserve">
+    <value>مضخة جديدة</value>
+  </data>
+  <data name="PmpRefreshButton" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="PmpStatTotal" xml:space="preserve">
+    <value>إجمالي المضخات</value>
+  </data>
+  <data name="PmpStatActives" xml:space="preserve">
+    <value>نشطة</value>
+  </data>
+  <data name="PmpStatMaintenance" xml:space="preserve">
+    <value>صيانة</value>
+  </data>
+  <data name="PmpStatArretees" xml:space="preserve">
+    <value>متوقفة</value>
+  </data>
+  <data name="PmpLabelReservoir" xml:space="preserve">
+    <value>خزان</value>
+  </data>
+  <data name="PmpLabelPompe" xml:space="preserve">
+    <value>مضخة</value>
+  </data>
+  <data name="PmpLabelElectronique" xml:space="preserve">
+    <value>عداد إلكتروني</value>
+  </data>
+  <data name="PmpLabelMecanique" xml:space="preserve">
+    <value>عداد ميكانيكي</value>
+  </data>
+  <data name="PmpLabelLitres" xml:space="preserve">
+    <value>L</value>
+  </data>
+  <data name="PmpHistoriqueButton" xml:space="preserve">
+    <value>سجل القياس</value>
+  </data>
+  <data name="PmpStatusActive" xml:space="preserve">
+    <value>نشطة</value>
+  </data>
+  <data name="PmpStatusMaintenance" xml:space="preserve">
+    <value>صيانة</value>
+  </data>
+  <data name="PmpStatusArretee" xml:space="preserve">
+    <value>متوقفة</value>
+  </data>
+  <data name="PmpDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="PmpEditTooltip" xml:space="preserve">
+    <value>تعديل المضخة</value>
+  </data>
+  <data name="PmpDeleteTooltip" xml:space="preserve">
+    <value>حذف المضخة</value>
+  </data>
+  <data name="PmpHistoriqueTooltip" xml:space="preserve">
+    <value>عرض السجل</value>
+  </data>
+  <data name="PmpEmptyMessage" xml:space="preserve">
+    <value>لا توجد مضخات مسجلة.</value>
+  </data>
 </root>

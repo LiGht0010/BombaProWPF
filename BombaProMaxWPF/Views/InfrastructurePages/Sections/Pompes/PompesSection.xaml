@@ -27,24 +27,26 @@
             <Setter Property="Width"   Value="185" />
         </Style>
 
-        <!-- Icon-only ghost button (edit / delete / detail) -->
+        <!-- Icon-only action button (edit / delete / detail) -->
         <Style x:Key="PmpIconBtnStyle" TargetType="Button">
-            <Setter Property="Background"      Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Foreground"      Value="{DynamicResource NeuTextSecondaryBrush}" />
-            <Setter Property="Width"           Value="28" />
-            <Setter Property="Height"          Value="28" />
-            <Setter Property="Cursor"          Value="Hand" />
+            <Setter Property="Width"  Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuActionIconBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="6">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="Transparent"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource NeuActionBorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bd" Property="Background"
-                                        Value="{DynamicResource NeuInputFillBrush}" />
+                                        Value="{DynamicResource NeuActionHoverFillBrush}" />
+                                <Setter Property="Foreground" Value="White" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -196,8 +198,7 @@
                                     ToolTip="{Binding [PmpDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
                                     Command="{Binding DataContext.DeletePompeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                     CommandParameter="{Binding}">
-                                <ui:SymbolIcon Symbol="Delete24" FontSize="14"
-                                               Foreground="{DynamicResource NeuDangerBrush}" />
+                                <ui:SymbolIcon Symbol="Delete24" FontSize="14" />
                             </Button>
                         </StackPanel>
                     </Grid>

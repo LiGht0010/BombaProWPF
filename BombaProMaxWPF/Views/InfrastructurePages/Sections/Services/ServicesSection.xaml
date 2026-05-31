@@ -13,21 +13,24 @@
     <UserControl.Resources>
 
         <Style x:Key="SrvIconButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
             <Setter Property="Width" Value="28" />
             <Setter Property="Height" Value="28" />
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuActionIconBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="6">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="Transparent"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource NeuActionBorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuActionHoverFillBrush}" />
+                                <Setter Property="Foreground" Value="White" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -117,8 +120,7 @@
                                 Margin="4,0,0,0"
                                 ToolTip="{Binding [SrvDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
                                 Command="{Binding DataContext.DeleteServiceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                CommandParameter="{Binding}"
-                                Foreground="{DynamicResource NeuDangerBrush}">
+                                CommandParameter="{Binding}">
                             <ui:SymbolIcon Symbol="Delete24" FontSize="14" />
                         </Button>
                     </StackPanel>

@@ -124,8 +124,8 @@ internal static class ThemePalette
         //    instances (frozen at parse time) pick up their hardcoded shadow
         //    colors from the correct file, and the already-written brush
         //    resources are in place before any template is re-parsed.
-        SwapNeumorphicDictionary(dark ? DarkDictUri : LightDictUri);
         SwapShadowDictionary(dark ? DarkShadowDictUri : LightShadowDictUri);
+        SwapNeumorphicDictionary(dark ? DarkDictUri : LightDictUri);
     }
 
     /// <summary>

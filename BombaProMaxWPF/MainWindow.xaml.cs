@@ -49,7 +49,6 @@ namespace BombaProMaxWPF
             // and reassert our window brushes (Wpf.Ui's theme manager overwrites
             // the local Background otherwise — see Issue #4 lesson).
             var settings = Services.AppSettingsService.Instance;
-            this.SetResourceReference(BackgroundProperty, "NeuBackgroundBrush");
             this.SetResourceReference(ForegroundProperty, "NeuTextPrimaryBrush");
             ThemeToggle.IsChecked = settings.IsDarkTheme;
             if (ThemeIcon is not null)
@@ -90,7 +89,7 @@ namespace BombaProMaxWPF
             // Re-assert the shell background after FluentWindow's own Loaded
             // sequence has run — wpf-ui overwrites Background during that pass.
             Dispatcher.BeginInvoke(
-                System.Windows.Threading.DispatcherPriority.Render,
+                System.Windows.Threading.DispatcherPriority.ApplicationIdle,
                 () => this.SetResourceReference(BackgroundProperty, "NeuShellBackdropBrush"));
         }
 

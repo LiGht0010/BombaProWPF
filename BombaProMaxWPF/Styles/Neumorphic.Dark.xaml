@@ -19,6 +19,13 @@
     <SolidColorBrush x:Key="NeuTextPrimaryBrush"    Color="{StaticResource NeuTextPrimaryColor}" />
     <SolidColorBrush x:Key="NeuTextSecondaryBrush"  Color="{StaticResource NeuTextSecondaryColor}" />
 
+    <!-- Action button semantic brushes (dark theme) -->
+    <!-- Icon is white at rest and stays white on hover -->
+    <SolidColorBrush x:Key="NeuActionIconBrush"      Color="#FFFFFF" />
+    <!-- Hover fill + border derived from the dark theme's light shadow -->
+    <SolidColorBrush x:Key="NeuActionHoverFillBrush" Color="{StaticResource NeuLightShadowColor}" />
+    <SolidColorBrush x:Key="NeuActionBorderBrush"    Color="#66121d38" />
+
     <!-- Soft shell backdrop — dark equivalent of the light version.
          Subtle gradient across the dark background with slight blue/violet
          accent blends so the shell surface has depth without being flat. -->
