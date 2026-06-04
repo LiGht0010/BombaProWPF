@@ -1,0 +1,414 @@
+<UserControl x:Class="FourniPro.Views.InfrastructurePages.Sections.Fournisseurs.FournisseursSection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:FourniPro.Localization"
+             xmlns:vm="clr-namespace:FourniPro.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:FournisseursSectionViewModel}"
+             Background="Transparent">
+
+    <UserControl.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+        <!-- Shared icon-button style -->
+        <Style x:Key="FourIconButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuActionIconBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="Transparent"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource NeuActionBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuActionHoverFillBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FourDeleteBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="Transparent"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource NeuActionDeleteBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuDangerBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FourColHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="FourCellTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <!-- Row template -->
+        <DataTemplate x:Key="FournisseurRowTemplate">
+            <Border Padding="0,12,0,12"
+                    BorderBrush="{DynamicResource NeuInputFillBrush}"
+                    BorderThickness="0,0,0,1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="100" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Nom / Prénom -->
+                    <TextBlock Grid.Column="0" Text="{Binding NomComplet}"
+                               Style="{StaticResource FourCellTextStyle}"
+                               HorizontalAlignment="Left" Margin="0,0,8,0" />
+
+                    <!-- Société badge -->
+                    <Border Grid.Column="1" Background="{DynamicResource NeuInputFillBrush}"
+                            CornerRadius="6" Padding="8,3" HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Societe}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuAccentBrush}" />
+                    </Border>
+
+                    <!-- Contact -->
+                    <TextBlock Grid.Column="2" Text="{Binding Contact}"
+                               Style="{StaticResource FourCellTextStyle}" HorizontalAlignment="Left" />
+
+                    <!-- Téléphone -->
+                    <TextBlock Grid.Column="3" Text="{Binding Telephone}"
+                               Style="{StaticResource FourCellTextStyle}" HorizontalAlignment="Left" />
+
+                    <!-- Email -->
+                    <TextBlock Grid.Column="4" Text="{Binding Email}"
+                               Style="{StaticResource FourCellTextStyle}" HorizontalAlignment="Left" />
+
+                    <!-- Statut badge -->
+                    <Border Grid.Column="5"
+                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                            CornerRadius="10" Padding="10,4">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#1F3FD46A" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsActif}" Value="False">
+                                        <Setter Property="Background" Value="#1FE05555" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="6" Height="6" Margin="0,0,5,0" VerticalAlignment="Center">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="#3FD46A" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsActif}" Value="False">
+                                                <Setter Property="Fill" Value="#E05555" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock FontSize="10" FontWeight="SemiBold">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding [FourBadgeActif], Source={x:Static loc:LanguageManager.Instance}}" />
+                                        <Setter Property="Foreground" Value="#3FD46A" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsActif}" Value="False">
+                                                <Setter Property="Text" Value="{Binding [FourBadgeInactif], Source={x:Static loc:LanguageManager.Instance}}" />
+                                                <Setter Property="Foreground" Value="#E05555" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Actions -->
+                    <StackPanel Grid.Column="6" Orientation="Horizontal"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Style="{StaticResource FourIconButtonStyle}"
+                                ToolTip="{Binding [FourDetailTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DetailFournisseurCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Eye24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource FourIconButtonStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [FourEditTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.EditFournisseurCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Edit24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource FourDeleteBtnStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [FourDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DeleteFournisseurCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Delete24" FontSize="14" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- ─── Header: breadcrumb + Add button ─── -->
+        <Grid Grid.Row="0" Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding [ProdBreadcrumbInfra], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                    <TextBlock Text=" › " FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    <TextBlock Text="{Binding [FourBreadcrumbFournisseurs], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                </StackPanel>
+                <TextBlock Text="{Binding [FourPageSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                           FontSize="13" Margin="0,4,0,0"
+                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    Style="{StaticResource NeuButtonStyle}"
+                    Background="{DynamicResource NeuAccentBrush}"
+                    Foreground="White"
+                    Padding="16,10"
+                    FontWeight="SemiBold"
+                    Command="{Binding AddFournisseurCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="AddCircle24" FontSize="16" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding [FourAddButton], Source={x:Static loc:LanguageManager.Instance}}"
+                               Margin="8,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- ─── Table card ─── -->
+        <ContentControl Grid.Row="1"
+                        Style="{StaticResource NeuDashCardStyle}"
+                        Margin="8,0,8,18">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Card header -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding [FourTableTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="16" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                        <TextBlock Text="{Binding [FourTableSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11" Margin="0,2,0,0"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Count badge -->
+                        <Border Background="{DynamicResource NeuInputFillBrush}"
+                                CornerRadius="10" Padding="12,5" Margin="0,0,12,0">
+                            <TextBlock FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource NeuAccentBrush}">
+                                <Run Text="{Binding Fournisseurs.Count, Mode=OneWay}" />
+                                <Run Text=" " />
+                                <Run Text="{Binding [FourCountBadge], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
+                            </TextBlock>
+                        </Border>
+                        <!-- Refresh -->
+                        <Button Style="{StaticResource NeuButtonStyle}"
+                                Padding="10,8"
+                                Command="{Binding RefreshCommand}">
+                            <ui:SymbolIcon Symbol="ArrowSync24" FontSize="15" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Column headers -->
+                <Grid Grid.Row="1" Margin="0,16,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="100" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding [FourColNom],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource FourColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="1" Text="{Binding [FourColSociete],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource FourColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="2" Text="{Binding [FourColContact],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource FourColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="3" Text="{Binding [FourColTelephone], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource FourColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="4" Text="{Binding [FourColEmail],     Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource FourColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="5" Text="{Binding [FourColStatut],    Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource FourColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="6" Text="{Binding [FourColActions],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource FourColHeaderStyle}" HorizontalAlignment="Center" />
+                </Grid>
+
+                <!-- Rows -->
+                <Grid Grid.Row="2" MinHeight="120">
+                        <ItemsControl ItemsSource="{Binding Fournisseurs}"
+                                      ItemTemplate="{StaticResource FournisseurRowTemplate}"
+                                      AlternationCount="2" />
+
+                        <!-- Loading overlay -->
+                        <Border Background="#33000000" CornerRadius="8"
+                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <ui:ProgressRing IsIndeterminate="True"
+                                             Width="40" Height="40"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             Foreground="{DynamicResource NeuAccentBrush}" />
+                        </Border>
+
+                        <!-- Empty state -->
+                        <TextBlock Text="{Binding [FourEmpty], Source={x:Static loc:LanguageManager.Instance}}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                   Margin="0,32,0,32">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsLoading}" Value="False" />
+                                                <Condition Binding="{Binding Fournisseurs.Count}" Value="0" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                            </Grid>
+                        </Grid>
+                    </ContentControl>
+
+        <!-- ─── Status bar ─── -->
+        <Border Grid.Row="2" Margin="8,0,8,0">
+            <StackPanel Orientation="Horizontal">
+                <!-- Error -->
+                <Border CornerRadius="8" Padding="12,6" Background="#1FE05555">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ErrorMessage}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ErrorCircle24" FontSize="14"
+                                       Foreground="#E05555" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   FontSize="12" Foreground="#E05555"
+                                   VerticalAlignment="Center" Margin="6,0,0,0" />
+                    </StackPanel>
+                </Border>
+                <!-- Success -->
+                <Border CornerRadius="8" Padding="12,6" Background="#1F3FD46A">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SuccessMessage}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="14"
+                                       Foreground="#3FD46A" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding SuccessMessage}"
+                                   FontSize="12" Foreground="#3FD46A"
+                                   VerticalAlignment="Center" Margin="6,0,0,0" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+    </ScrollViewer>
+</UserControl>

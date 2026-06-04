@@ -1,0 +1,282 @@
+﻿using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using FourniPro.Localization;
+using FourniPro.Models;
+using FourniPro.Theme;
+using FourniPro.ViewModels;
+using FourniPro.Views;
+using FourniPro.Views.InfrastructurePages;
+using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
+
+namespace FourniPro
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml — neumorphic shell hosting a
+    /// collapsible sidebar and a <see cref="System.Windows.Controls.Frame"/>
+    /// for the active page.
+    /// </summary>
+    public partial class MainWindow : FluentWindow
+    {
+        private const double SidebarExpandedWidth = 260;
+        private const double SidebarCollapsedWidth = 88;
+
+        private readonly ShellViewModel _viewModel;
+        private bool _isInitializing;
+
+        private readonly Dictionary<string, UserControl> _viewCache = new(StringComparer.OrdinalIgnoreCase);
+
+        public MainWindow()
+        {
+            _isInitializing = true;
+            InitializeComponent();
+
+            _viewModel = new ShellViewModel();
+            _viewModel.NavigationRequested += OnNavigationRequested;
+            _viewModel.LogoutRequested += OnLogoutRequested;
+            _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+
+            DataContext = _viewModel;
+
+            var settings = Services.AppSettingsService.Instance;
+            this.SetResourceReference(ForegroundProperty, "NeuTextPrimaryBrush");
+            ThemeToggle.IsChecked = settings.IsDarkTheme;
+            if (ThemeIcon is not null)
+            {
+                ThemeIcon.Symbol = settings.IsDarkTheme
+                    ? SymbolRegular.WeatherMoon24
+                    : SymbolRegular.WeatherSunny24;
+            }
+            SyncLanguageComboFromSettings(settings.LanguageCode);
+
+            _isInitializing = false;
+
+            Loaded += OnLoaded;
+        }
+
+        private void SyncLanguageComboFromSettings(string code)
+        {
+            foreach (var item in LanguageComboBox.Items)
+            {
+                if (item is ComboBoxItem cbi && cbi.Tag is string tag &&
+                    string.Equals(tag, code, StringComparison.OrdinalIgnoreCase))
+                {
+                    LanguageComboBox.SelectedItem = cbi;
+                    return;
+                }
+            }
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.SelectedItem is null && _viewModel.Items.Count > 0)
+                _viewModel.SelectedItem = _viewModel.Items[0];
+
+            SyncRadioCheckedState();
+            UpdateCollapsedVisuals();
+
+            Dispatcher.BeginInvoke(
+                System.Windows.Threading.DispatcherPriority.ApplicationIdle,
+                () => this.SetResourceReference(BackgroundProperty, "NeuShellBackdropBrush"));
+        }
+
+        private void OnNavigationRequested(NavItem item)
+        {
+            if (item is null) return;
+
+            if (!_viewCache.TryGetValue(item.Key, out var view))
+            {
+                view = item.Key switch
+                {
+                    "infrastructure" => new InfrastructureView(),
+                    // TODO: add remaining page views as they are built.
+                    _ => null!
+                };
+
+                if (view is null)
+                {
+                    ContentFrame.Content = null;
+                    return;
+                }
+
+                _viewCache[item.Key] = view;
+            }
+
+            ContentFrame.Content = view;
+        }
+
+        private void OnLogoutRequested()
+        {
+            App.CurrentUser = null;
+
+            var login = new LoginWindow();
+            Application.Current.MainWindow = login;
+            login.Show();
+            Close();
+        }
+
+        private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ShellViewModel.IsPaneOpen))
+                UpdateCollapsedVisuals();
+            else if (e.PropertyName == nameof(ShellViewModel.SelectedItem))
+                SyncRadioCheckedState();
+        }
+
+        private void NavItem_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton { Tag: NavItem item })
+                _viewModel.SelectedItem = item;
+        }
+
+        private void SyncRadioCheckedState()
+        {
+            foreach (var rb in FindVisualChildren<RadioButton>(this))
+            {
+                if (rb.GroupName == "ShellNav" && rb.Tag is NavItem item)
+                {
+                    bool shouldBeChecked = ReferenceEquals(item, _viewModel.SelectedItem);
+                    if (rb.IsChecked != shouldBeChecked)
+                        rb.IsChecked = shouldBeChecked;
+                }
+            }
+        }
+
+        private void UpdateCollapsedVisuals()
+        {
+            bool open = _viewModel.IsPaneOpen;
+            SidebarColumn.Width = new GridLength(open ? SidebarExpandedWidth : SidebarCollapsedWidth);
+
+            SidebarBrand.Visibility = open ? Visibility.Visible : Visibility.Collapsed;
+            UserText.Visibility     = open ? Visibility.Visible : Visibility.Collapsed;
+            LogoutButton.Visibility = open ? Visibility.Visible : Visibility.Collapsed;
+
+            if (open)
+            {
+                Grid.SetColumn(PaneToggleButton, 1);
+                Grid.SetColumnSpan(PaneToggleButton, 1);
+                PaneToggleButton.HorizontalAlignment = HorizontalAlignment.Right;
+            }
+            else
+            {
+                Grid.SetColumn(PaneToggleButton, 0);
+                Grid.SetColumnSpan(PaneToggleButton, 2);
+                PaneToggleButton.HorizontalAlignment = HorizontalAlignment.Center;
+            }
+
+            UserPill.Padding = open ? new Thickness(10, 8, 10, 8) : new Thickness(0, 8, 0, 8);
+
+            if (open)
+            {
+                Grid.SetColumnSpan(UserAvatar, 1);
+                UserAvatar.Width  = 32;
+                UserAvatar.Height = 32;
+                UserAvatar.Margin = new Thickness(0, 0, 10, 0);
+                UserAvatar.HorizontalAlignment = HorizontalAlignment.Left;
+            }
+            else
+            {
+                Grid.SetColumnSpan(UserAvatar, 3);
+                UserAvatar.Width  = 24;
+                UserAvatar.Height = 24;
+                UserAvatar.Margin = new Thickness(0);
+                UserAvatar.HorizontalAlignment = HorizontalAlignment.Center;
+            }
+
+            foreach (var tb in FindVisualChildren<System.Windows.Controls.TextBlock>(this))
+            {
+                if (tb.Name == "NavLabel")
+                    tb.Visibility = open ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            foreach (var icon in FindVisualChildren<Wpf.Ui.Controls.SymbolIcon>(this))
+            {
+                if (icon.Name == "NavIcon")
+                {
+                    icon.Margin = open ? new Thickness(0, 0, 12, 0) : new Thickness(0);
+                    icon.HorizontalAlignment = open ? HorizontalAlignment.Left : HorizontalAlignment.Center;
+                }
+            }
+
+            foreach (var rb in FindVisualChildren<RadioButton>(this))
+            {
+                if (rb.GroupName == "ShellNav")
+                {
+                    rb.HorizontalContentAlignment = open ? HorizontalAlignment.Stretch : HorizontalAlignment.Center;
+                    rb.Padding = open ? new Thickness(14, 10, 14, 10) : new Thickness(0, 10, 0, 10);
+                }
+            }
+        }
+
+        private void ThemeToggle_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_isInitializing) return;
+            ThemePalette.Apply(dark: true);
+            ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+            this.SetResourceReference(BackgroundProperty, "NeuBackgroundBrush");
+            this.SetResourceReference(ForegroundProperty, "NeuTextPrimaryBrush");
+            if (ThemeIcon is not null) ThemeIcon.Symbol = SymbolRegular.WeatherMoon24;
+            Services.AppSettingsService.Instance.IsDarkTheme = true;
+            Services.AppSettingsService.Instance.Save();
+        }
+
+        private void ThemeToggle_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (_isInitializing) return;
+            ThemePalette.Apply(dark: false);
+            ApplicationThemeManager.Apply(ApplicationTheme.Light);
+            this.SetResourceReference(BackgroundProperty, "NeuBackgroundBrush");
+            this.SetResourceReference(ForegroundProperty, "NeuTextPrimaryBrush");
+            if (ThemeIcon is not null) ThemeIcon.Symbol = SymbolRegular.WeatherSunny24;
+            Services.AppSettingsService.Instance.IsDarkTheme = false;
+            Services.AppSettingsService.Instance.Save();
+        }
+
+        private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LanguageComboBox.SelectedItem is not ComboBoxItem { Tag: string code })
+                return;
+
+            LanguageManager.Instance.SetLanguage(code);
+
+            if (_isInitializing) return;
+            Services.AppSettingsService.Instance.LanguageCode = code;
+            Services.AppSettingsService.Instance.Save();
+        }
+
+        private void LanguagePickerHost_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.OriginalSource is DependencyObject src && IsDescendantOf(src, LanguageComboBox))
+                return;
+
+            LanguageComboBox.IsDropDownOpen = !LanguageComboBox.IsDropDownOpen;
+            e.Handled = true;
+        }
+
+        private static bool IsDescendantOf(DependencyObject node, DependencyObject ancestor)
+        {
+            for (var current = node; current is not null;
+                 current = System.Windows.Media.VisualTreeHelper.GetParent(current)
+                         ?? System.Windows.LogicalTreeHelper.GetParent(current))
+            {
+                if (ReferenceEquals(current, ancestor)) return true;
+            }
+            return false;
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject root)
+            where T : DependencyObject
+        {
+            if (root is null) yield break;
+            int count = System.Windows.Media.VisualTreeHelper.GetChildrenCount(root);
+            for (int i = 0; i < count; i++)
+            {
+                var child = System.Windows.Media.VisualTreeHelper.GetChild(root, i);
+                if (child is T t) yield return t;
+                foreach (var sub in FindVisualChildren<T>(child))
+                    yield return sub;
+            }
+        }
+    }
+}

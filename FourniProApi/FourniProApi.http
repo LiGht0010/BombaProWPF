@@ -1,0 +1,6 @@
+@FourniProApi_HostAddress = http://localhost:5242
+
+GET {{FourniProApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

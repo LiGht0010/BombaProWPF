@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombaProMaxApi", "BombaProM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombaProMaxWPF", "BombaProMaxWPF\BombaProMaxWPF.csproj", "{D77F1232-53D9-4B3A-AF53-28C585B87EA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FourniPro", "FourniPro\FourniPro.csproj", "{DD1114CE-F9D1-4E14-8681-DF1A5FEFAB42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FourniProApi", "FourniProApi\FourniProApi.csproj", "{C57124D6-9EAD-4585-B33B-4898826D7443}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +32,14 @@ Global
 		{D77F1232-53D9-4B3A-AF53-28C585B87EA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D77F1232-53D9-4B3A-AF53-28C585B87EA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D77F1232-53D9-4B3A-AF53-28C585B87EA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD1114CE-F9D1-4E14-8681-DF1A5FEFAB42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD1114CE-F9D1-4E14-8681-DF1A5FEFAB42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD1114CE-F9D1-4E14-8681-DF1A5FEFAB42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD1114CE-F9D1-4E14-8681-DF1A5FEFAB42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C57124D6-9EAD-4585-B33B-4898826D7443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C57124D6-9EAD-4585-B33B-4898826D7443}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C57124D6-9EAD-4585-B33B-4898826D7443}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C57124D6-9EAD-4585-B33B-4898826D7443}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

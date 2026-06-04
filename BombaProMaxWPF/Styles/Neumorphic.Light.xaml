@@ -33,10 +33,12 @@
 
     <!-- Action button semantic brushes (light theme) -->
     <!-- Icon is dark grey at rest, turns white on hover -->
-    <SolidColorBrush x:Key="NeuActionIconBrush"      Color="#4A5568" />
+    <SolidColorBrush x:Key="NeuActionIconBrush"         Color="#4A5568" />
     <!-- Hover fill + border derived from the light theme's dark shadow -->
-    <SolidColorBrush x:Key="NeuActionHoverFillBrush" Color="{StaticResource NeuDarkShadowColor}" />
-    <SolidColorBrush x:Key="NeuActionBorderBrush"    Color="#66B8C4D6" />
+    <SolidColorBrush x:Key="NeuActionHoverFillBrush"    Color="{StaticResource NeuDarkShadowColor}" />
+    <SolidColorBrush x:Key="NeuActionBorderBrush"       Color="#66B8C4D6" />
+    <!-- Delete button: red identity, 40% opacity border -->
+    <SolidColorBrush x:Key="NeuActionDeleteBorderBrush" Color="#66D86070" />
 
     <!-- Cyan→violet hero gradient (rebuilt + frozen on each ThemePalette.Apply). -->
     <LinearGradientBrush x:Key="NeuAccentGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">

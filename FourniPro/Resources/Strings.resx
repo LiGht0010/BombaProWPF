@@ -1,0 +1,1692 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppName" xml:space="preserve">
+    <value>FourniPro</value>
+  </data>
+  <data name="ThemeLabel" xml:space="preserve">
+    <value>Thème</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Clair</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Sombre</value>
+  </data>
+  <data name="SignInTitle" xml:space="preserve">
+    <value>Connexion à votre compte</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="SignInButton" xml:space="preserve">
+    <value>Se connecter</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>Mot de passe oublié ?</value>
+  </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Connexion en cours…</value>
+  </data>
+  <data name="InvalidCredentials" xml:space="preserve">
+    <value>Email ou mot de passe incorrect.</value>
+  </data>
+  <data name="TogglePaneTooltip" xml:space="preserve">
+    <value>Réduire / agrandir</value>
+  </data>
+  <data name="LogoutTooltip" xml:space="preserve">
+    <value>Déconnexion</value>
+  </data>
+  <data name="NavDashboard" xml:space="preserve">
+    <value>Tableau de bord</value>
+  </data>
+  <data name="NavVentes" xml:space="preserve">
+    <value>Ventes</value>
+  </data>
+  <data name="NavAchats" xml:space="preserve">
+    <value>Achats</value>
+  </data>
+  <data name="NavCaisse" xml:space="preserve">
+    <value>Caisse</value>
+  </data>
+  <data name="NavClients" xml:space="preserve">
+    <value>Clients</value>
+  </data>
+  <data name="NavInfrastructure" xml:space="preserve">
+    <value>Infrastructure</value>
+  </data>
+  <data name="NavRessources" xml:space="preserve">
+    <value>Ressources</value>
+  </data>
+  <data name="NavRapports" xml:space="preserve">
+    <value>Rapports</value>
+  </data>
+  <data name="NavParametres" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="InfraTitle" xml:space="preserve">
+    <value>Infrastructure</value>
+  </data>
+  <data name="InfraSubtitle" xml:space="preserve">
+    <value>Gérez vos ressources et équipements</value>
+  </data>
+  <data name="InfraBackButton" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="InfraBackTooltip" xml:space="preserve">
+    <value>Retour à l'accueil Infrastructure</value>
+  </data>
+  <data name="InfraProduits" xml:space="preserve">
+    <value>Produits</value>
+  </data>
+  <data name="InfraCardDescProduits" xml:space="preserve">
+    <value>Catalogue, prix et stock</value>
+  </data>
+  <data name="InfraFournisseurs" xml:space="preserve">
+    <value>Fournisseurs</value>
+  </data>
+  <data name="InfraCardDescFournisseurs" xml:space="preserve">
+    <value>Gérez vos fournisseurs</value>
+  </data>
+  <data name="FourBreadcrumbFournisseurs" xml:space="preserve">
+    <value>Fournisseurs</value>
+  </data>
+  <data name="FourPageSubtitle" xml:space="preserve">
+    <value>Liste et gestion des fournisseurs</value>
+  </data>
+  <data name="FourAddButton" xml:space="preserve">
+    <value>Nouveau fournisseur</value>
+  </data>
+  <data name="FourTableTitle" xml:space="preserve">
+    <value>Liste des fournisseurs</value>
+  </data>
+  <data name="FourTableSubtitle" xml:space="preserve">
+    <value>Tous les fournisseurs enregistrés</value>
+  </data>
+  <data name="FourCountBadge" xml:space="preserve">
+    <value>fournisseurs</value>
+  </data>
+  <data name="FourEmpty" xml:space="preserve">
+    <value>Aucun fournisseur trouvé.</value>
+  </data>
+  <data name="FourColNom" xml:space="preserve">
+    <value>NOM / PRÉNOM</value>
+  </data>
+  <data name="FourColSociete" xml:space="preserve">
+    <value>SOCIÉTÉ</value>
+  </data>
+  <data name="FourColContact" xml:space="preserve">
+    <value>CONTACT</value>
+  </data>
+  <data name="FourColTelephone" xml:space="preserve">
+    <value>TÉLÉPHONE</value>
+  </data>
+  <data name="FourColEmail" xml:space="preserve">
+    <value>EMAIL</value>
+  </data>
+  <data name="FourColStatut" xml:space="preserve">
+    <value>STATUT</value>
+  </data>
+  <data name="FourColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="FourDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="FourEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="FourDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="FourDeleteSuccess" xml:space="preserve">
+    <value>Fournisseur supprimé avec succès.</value>
+  </data>
+  <data name="FourDeleteError" xml:space="preserve">
+    <value>Échec de la suppression du fournisseur.</value>
+  </data>
+  <data name="FourBadgeActif" xml:space="preserve">
+    <value>Actif</value>
+  </data>
+  <data name="FourBadgeInactif" xml:space="preserve">
+    <value>Inactif</value>
+  </data>
+  <data name="NouveauFourTitle" xml:space="preserve">
+    <value>Nouveau fournisseur</value>
+  </data>
+  <data name="NouveauFourInfoSection" xml:space="preserve">
+    <value>Informations générales</value>
+  </data>
+  <data name="NouveauFourContactSection" xml:space="preserve">
+    <value>Contact &amp; coordonnées</value>
+  </data>
+  <data name="NouveauFourFinanceSection" xml:space="preserve">
+    <value>Finances &amp; conditions</value>
+  </data>
+  <data name="NouveauFourLabelPrenom" xml:space="preserve">
+    <value>Prénom</value>
+  </data>
+  <data name="NouveauFourLabelNom" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="NouveauFourLabelSociete" xml:space="preserve">
+    <value>Société *</value>
+  </data>
+  <data name="NouveauFourLabelAdresse" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="NouveauFourLabelTelephone" xml:space="preserve">
+    <value>Téléphone</value>
+  </data>
+  <data name="NouveauFourLabelEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="NouveauFourLabelContact" xml:space="preserve">
+    <value>Personne de contact</value>
+  </data>
+  <data name="NouveauFourLabelRIB" xml:space="preserve">
+    <value>RIB</value>
+  </data>
+  <data name="NouveauFourLabelConditions" xml:space="preserve">
+    <value>Conditions de paiement</value>
+  </data>
+  <data name="NouveauFourLabelStatut" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="NouveauFourCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="NouveauFourSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauFourSaving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+  <data name="NouveauFourValidationSociete" xml:space="preserve">
+    <value>Le nom de la société est obligatoire.</value>
+  </data>
+  <data name="NouveauFourSaveError" xml:space="preserve">
+    <value>Impossible d'enregistrer le fournisseur. Vérifiez votre connexion.</value>
+  </data>
+  <data name="EditFourTitle" xml:space="preserve">
+    <value>Modifier le fournisseur</value>
+  </data>
+  <data name="EditFourSave" xml:space="preserve">
+    <value>Enregistrer les modifications</value>
+  </data>
+  <data name="EditFourSaving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+  <data name="EditFourValidationSociete" xml:space="preserve">
+    <value>Le nom de la société est obligatoire.</value>
+  </data>
+  <data name="EditFourSaveError" xml:space="preserve">
+    <value>Impossible de mettre à jour le fournisseur. Vérifiez votre connexion.</value>
+  </data>
+  <data name="DetailFourTitle" xml:space="preserve">
+    <value>Fiche fournisseur</value>
+  </data>
+  <data name="DetailFourInfoSection" xml:space="preserve">
+    <value>Informations générales</value>
+  </data>
+  <data name="DetailFourContactSection" xml:space="preserve">
+    <value>Contact &amp; coordonnées</value>
+  </data>
+  <data name="DetailFourFinanceSection" xml:space="preserve">
+    <value>Finances &amp; conditions</value>
+  </data>
+  <data name="DetailFourAuditSection" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="DetailFourLabelPrenom" xml:space="preserve">
+    <value>NOM COMPLET</value>
+  </data>
+  <data name="DetailFourLabelNom" xml:space="preserve">
+    <value>NOM</value>
+  </data>
+  <data name="DetailFourLabelSociete" xml:space="preserve">
+    <value>SOCIÉTÉ</value>
+  </data>
+  <data name="DetailFourLabelStatut" xml:space="preserve">
+    <value>STATUT</value>
+  </data>
+  <data name="DetailFourLabelTelephone" xml:space="preserve">
+    <value>TÉLÉPHONE</value>
+  </data>
+  <data name="DetailFourLabelEmail" xml:space="preserve">
+    <value>EMAIL</value>
+  </data>
+  <data name="DetailFourLabelContact" xml:space="preserve">
+    <value>PERSONNE DE CONTACT</value>
+  </data>
+  <data name="DetailFourLabelAdresse" xml:space="preserve">
+    <value>ADRESSE</value>
+  </data>
+  <data name="DetailFourLabelRIB" xml:space="preserve">
+    <value>RIB</value>
+  </data>
+  <data name="DetailFourLabelConditions" xml:space="preserve">
+    <value>CONDITIONS DE PAIEMENT</value>
+  </data>
+  <data name="DetailFourLabelCreePar" xml:space="preserve">
+    <value>CRÉÉ PAR</value>
+  </data>
+  <data name="DetailFourLabelModifiePar" xml:space="preserve">
+    <value>MODIFIÉ PAR</value>
+  </data>
+  <data name="DetailFourClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailFourEditButton" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="ProdBreadcrumbInfra" xml:space="preserve">
+    <value>Infrastructure</value>
+  </data>
+  <data name="ProdBreadcrumbProduits" xml:space="preserve">
+    <value>Produits</value>
+  </data>
+  <data name="ProdPageSubtitle" xml:space="preserve">
+    <value>Gérez votre catalogue de produits, prix et niveaux de stock</value>
+  </data>
+  <data name="ProdAddButton" xml:space="preserve">
+    <value>Nouveau produit</value>
+  </data>
+  <data name="ProdTableTitle" xml:space="preserve">
+    <value>Catalogue des produits</value>
+  </data>
+  <data name="ProdTableSubtitle" xml:space="preserve">
+    <value>Tous les produits enregistrés</value>
+  </data>
+  <data name="ProdCountBadge" xml:space="preserve">
+    <value>produit(s)</value>
+  </data>
+  <data name="ProdColNumero" xml:space="preserve">
+    <value>NUMÉRO</value>
+  </data>
+  <data name="ProdColDescription" xml:space="preserve">
+    <value>DESCRIPTION</value>
+  </data>
+  <data name="ProdColPrixAchat" xml:space="preserve">
+    <value>PRIX ACHAT</value>
+  </data>
+  <data name="ProdColPrixTTC" xml:space="preserve">
+    <value>PRIX TTC</value>
+  </data>
+  <data name="ProdColMarge" xml:space="preserve">
+    <value>MARGE</value>
+  </data>
+  <data name="ProdColStock" xml:space="preserve">
+    <value>STOCK</value>
+  </data>
+  <data name="ProdColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="ProdBadgeStockOk" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ProdBadgeStockBas" xml:space="preserve">
+    <value>BAS</value>
+  </data>
+  <data name="ProdBadgeRupture" xml:space="preserve">
+    <value>RUPTURE</value>
+  </data>
+  <data name="ProdEmpty" xml:space="preserve">
+    <value>Aucun produit trouvé.</value>
+  </data>
+  <data name="DetailProdTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="DetailProdTitle" xml:space="preserve">
+    <value>Fiche produit</value>
+  </data>
+  <data name="DetailProdInfoSection" xml:space="preserve">
+    <value>Informations générales</value>
+  </data>
+  <data name="DetailProdPricingSection" xml:space="preserve">
+    <value>Tarification</value>
+  </data>
+  <data name="DetailProdStockSection" xml:space="preserve">
+    <value>Stock &amp; Logistique</value>
+  </data>
+  <data name="DetailProdLabelDescription" xml:space="preserve">
+    <value>DESCRIPTION</value>
+  </data>
+  <data name="DetailProdLabelPrixAchat" xml:space="preserve">
+    <value>PRIX D'ACHAT</value>
+  </data>
+  <data name="DetailProdLabelPrixHT" xml:space="preserve">
+    <value>PRIX HT</value>
+  </data>
+  <data name="DetailProdLabelTVA" xml:space="preserve">
+    <value>TVA</value>
+  </data>
+  <data name="DetailProdLabelPrixTTC" xml:space="preserve">
+    <value>PRIX TTC</value>
+  </data>
+  <data name="DetailProdLabelMarge" xml:space="preserve">
+    <value>MARGE BÉNÉFICIAIRE</value>
+  </data>
+  <data name="DetailProdLabelMargePct" xml:space="preserve">
+    <value>MARGE %</value>
+  </data>
+  <data name="DetailProdLabelStock" xml:space="preserve">
+    <value>STOCK</value>
+  </data>
+  <data name="DetailProdLabelStockMin" xml:space="preserve">
+    <value>STOCK MIN.</value>
+  </data>
+  <data name="DetailProdLabelDelai" xml:space="preserve">
+    <value>DÉLAI (j.)</value>
+  </data>
+  <data name="DetailProdClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailProdEditButton" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="DetailProdAuditSection" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="DetailProdLabelCreePar" xml:space="preserve">
+    <value>CRÉÉ PAR</value>
+  </data>
+  <data name="DetailProdLabelModifiePar" xml:space="preserve">
+    <value>MODIFIÉ PAR</value>
+  </data>
+  <data name="ProdEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="ProdDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="ProdDeleteSuccess" xml:space="preserve">
+    <value>Produit supprimé avec succès.</value>
+  </data>
+  <data name="ProdDeleteError" xml:space="preserve">
+    <value>Échec de la suppression. Le produit est peut-être référencé ailleurs.</value>
+  </data>
+  <data name="NouveauProdTitle" xml:space="preserve">
+    <value>Nouveau produit</value>
+  </data>
+  <data name="NouveauProdInfoSection" xml:space="preserve">
+    <value>Informations générales</value>
+  </data>
+  <data name="NouveauProdPricingSection" xml:space="preserve">
+    <value>Tarification</value>
+  </data>
+  <data name="NouveauProdStockSection" xml:space="preserve">
+    <value>Stock &amp; logistique</value>
+  </data>
+  <data name="NouveauProdLabelNumero" xml:space="preserve">
+    <value>Numéro du produit *</value>
+  </data>
+  <data name="NouveauProdLabelDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="NouveauProdLabelPrixAchat" xml:space="preserve">
+    <value>Prix d'achat (DH)</value>
+  </data>
+  <data name="NouveauProdLabelPrixHT" xml:space="preserve">
+    <value>Prix HT (DH)</value>
+  </data>
+  <data name="NouveauProdLabelTVA" xml:space="preserve">
+    <value>TVA (%)</value>
+  </data>
+  <data name="NouveauProdLabelPrixTTC" xml:space="preserve">
+    <value>Prix TTC (DH)</value>
+  </data>
+  <data name="NouveauProdLabelMarge" xml:space="preserve">
+    <value>Marge bénéficiaire (DH)</value>
+  </data>
+  <data name="NouveauProdLabelStock" xml:space="preserve">
+    <value>Stock initial</value>
+  </data>
+  <data name="NouveauProdLabelStockMin" xml:space="preserve">
+    <value>Stock minimum</value>
+  </data>
+  <data name="NouveauProdLabelDelai" xml:space="preserve">
+    <value>Délai livraison (jours)</value>
+  </data>
+  <data name="NouveauProdCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="NouveauProdSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauProdValidationNumero" xml:space="preserve">
+    <value>Le numéro du produit est obligatoire.</value>
+  </data>
+  <data name="NouveauProdSaveError" xml:space="preserve">
+    <value>Impossible d'enregistrer le produit. Vérifiez votre connexion.</value>
+  </data>
+  <data name="EditProdTitle" xml:space="preserve">
+    <value>Modifier le produit</value>
+  </data>
+  <data name="EditProdSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="EditProdSaveError" xml:space="preserve">
+    <value>Impossible de mettre à jour le produit. Vérifiez votre connexion.</value>
+  </data>
+  <data name="NouveauProdSaving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+  <data name="InfraClients" xml:space="preserve">
+    <value>Clients</value>
+  </data>
+  <data name="InfraCardDescClients" xml:space="preserve">
+    <value>Gérer les fiches clients</value>
+  </data>
+  <data name="CliBreadcrumb" xml:space="preserve">
+    <value>Clients</value>
+  </data>
+  <data name="CliPageSubtitle" xml:space="preserve">
+    <value>Consultez et gérez vos clients</value>
+  </data>
+  <data name="CliAddButton" xml:space="preserve">
+    <value>Nouveau client</value>
+  </data>
+  <data name="CliTableTitle" xml:space="preserve">
+    <value>Liste des clients</value>
+  </data>
+  <data name="CliTableSubtitle" xml:space="preserve">
+    <value>Tous les clients enregistrés</value>
+  </data>
+  <data name="CliCountBadge" xml:space="preserve">
+    <value>clients</value>
+  </data>
+  <data name="CliEmpty" xml:space="preserve">
+    <value>Aucun client trouvé.</value>
+  </data>
+  <data name="CliColNom" xml:space="preserve">
+    <value>NOM</value>
+  </data>
+  <data name="CliColNumero" xml:space="preserve">
+    <value>N° CLIENT</value>
+  </data>
+  <data name="CliColSociete" xml:space="preserve">
+    <value>SOCIÉTÉ</value>
+  </data>
+  <data name="CliColCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="CliColContact" xml:space="preserve">
+    <value>CONTACT</value>
+  </data>
+  <data name="CliColPersonel" xml:space="preserve">
+    <value>PERSONEL</value>
+  </data>
+  <data name="CliColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="CliDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="CliEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="CliDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="ClientNotFound" xml:space="preserve">
+    <value>Client introuvable.</value>
+  </data>
+  <data name="ClientDeleteSuccess" xml:space="preserve">
+    <value>Client supprimé avec succès.</value>
+  </data>
+  <data name="ClientDeleteError" xml:space="preserve">
+    <value>Impossible de supprimer le client.</value>
+  </data>
+  <data name="NouveauCliTitle" xml:space="preserve">
+    <value>Nouveau client</value>
+  </data>
+  <data name="NouveauCliInfoSection" xml:space="preserve">
+    <value>Informations générales</value>
+  </data>
+  <data name="NouveauCliContactSection" xml:space="preserve">
+    <value>Contact &amp; coordonnées</value>
+  </data>
+  <data name="NouveauCliLabelNom" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="NouveauCliLabelNumero" xml:space="preserve">
+    <value>N° Client</value>
+  </data>
+  <data name="NouveauCliLabelCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="NouveauCliLabelSociete" xml:space="preserve">
+    <value>Société</value>
+  </data>
+  <data name="NouveauCliLabelContact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="NouveauCliLabelPersonel" xml:space="preserve">
+    <value>Personel</value>
+  </data>
+  <data name="NouveauCliLabelAdresse" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="NouveauCliSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauCliSaving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+  <data name="NouveauCliCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="NouveauCliValidationNom" xml:space="preserve">
+    <value>Le nom du client est obligatoire.</value>
+  </data>
+  <data name="NouveauCliValidationNumero" xml:space="preserve">
+    <value>Le numéro client est obligatoire.</value>
+  </data>
+  <data name="NouveauCliSaveError" xml:space="preserve">
+    <value>Impossible d'enregistrer le client. Vérifiez votre connexion.</value>
+  </data>
+  <data name="EditCliTitle" xml:space="preserve">
+    <value>Modifier le client</value>
+  </data>
+  <data name="EditCliSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="EditCliSaving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+  <data name="EditCliValidationNom" xml:space="preserve">
+    <value>Le nom du client est obligatoire.</value>
+  </data>
+  <data name="EditCliValidationNumero" xml:space="preserve">
+    <value>Le numéro client est obligatoire.</value>
+  </data>
+  <data name="EditCliSaveError" xml:space="preserve">
+    <value>Impossible de mettre à jour le client. Vérifiez votre connexion.</value>
+  </data>
+  <data name="DetailCliTitle" xml:space="preserve">
+    <value>Fiche client</value>
+  </data>
+  <data name="DetailCliInfoSection" xml:space="preserve">
+    <value>Informations générales</value>
+  </data>
+  <data name="DetailCliContactSection" xml:space="preserve">
+    <value>Contact &amp; coordonnées</value>
+  </data>
+  <data name="DetailCliAuditSection" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="DetailCliLabelNom" xml:space="preserve">
+    <value>NOM</value>
+  </data>
+  <data name="DetailCliLabelNumero" xml:space="preserve">
+    <value>N° CLIENT</value>
+  </data>
+  <data name="DetailCliLabelCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="DetailCliLabelSociete" xml:space="preserve">
+    <value>SOCIÉTÉ</value>
+  </data>
+  <data name="DetailCliLabelContact" xml:space="preserve">
+    <value>CONTACT</value>
+  </data>
+  <data name="DetailCliLabelPersonel" xml:space="preserve">
+    <value>PERSONEL</value>
+  </data>
+  <data name="DetailCliLabelAdresse" xml:space="preserve">
+    <value>ADRESSE</value>
+  </data>
+  <data name="DetailCliLabelCreePar" xml:space="preserve">
+    <value>CRÉÉ PAR</value>
+  </data>
+  <data name="DetailCliLabelModifiePar" xml:space="preserve">
+    <value>MODIFIÉ PAR</value>
+  </data>
+  <data name="DetailCliClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailCliEditButton" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="InfraChauffeurs" xml:space="preserve">
+    <value>Chauffeurs</value>
+  </data>
+  <data name="InfraCardDescChauffeurs" xml:space="preserve">
+    <value>Gérer les chauffeurs</value>
+  </data>
+  <data name="ChaufBreadcrumb" xml:space="preserve">
+    <value>Chauffeurs</value>
+  </data>
+  <data name="ChaufPageSubtitle" xml:space="preserve">
+    <value>Liste et gestion des chauffeurs</value>
+  </data>
+  <data name="ChaufAddButton" xml:space="preserve">
+    <value>Nouveau chauffeur</value>
+  </data>
+  <data name="ChaufTableTitle" xml:space="preserve">
+    <value>Chauffeurs</value>
+  </data>
+  <data name="ChaufTableSubtitle" xml:space="preserve">
+    <value>Tous les chauffeurs enregistrés</value>
+  </data>
+  <data name="ChaufCountBadge" xml:space="preserve">
+    <value>chauffeur(s)</value>
+  </data>
+  <data name="ChaufEmpty" xml:space="preserve">
+    <value>Aucun chauffeur trouvé.</value>
+  </data>
+  <data name="ChaufColNumero" xml:space="preserve">
+    <value>N° CHAUFFEUR</value>
+  </data>
+  <data name="ChaufColNom" xml:space="preserve">
+    <value>NOM / PRÉNOM</value>
+  </data>
+  <data name="ChaufColCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="ChaufColTel" xml:space="preserve">
+    <value>TÉLÉPHONE</value>
+  </data>
+  <data name="ChaufColPermis" xml:space="preserve">
+    <value>N° PERMIS</value>
+  </data>
+  <data name="ChaufColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="ChaufDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="ChaufEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="ChaufDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="NouveauChaufTitle" xml:space="preserve">
+    <value>Nouveau chauffeur</value>
+  </data>
+  <data name="NouveauChaufCardIdentity" xml:space="preserve">
+    <value>Identité</value>
+  </data>
+  <data name="NouveauChaufNom" xml:space="preserve">
+    <value>Nom *</value>
+  </data>
+  <data name="NouveauChaufPrenom" xml:space="preserve">
+    <value>Prénom</value>
+  </data>
+  <data name="NouveauChaufCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="NouveauChaufCardContact" xml:space="preserve">
+    <value>Contact &amp; Permis</value>
+  </data>
+  <data name="NouveauChaufTelephone" xml:space="preserve">
+    <value>Téléphone</value>
+  </data>
+  <data name="NouveauChaufPermis" xml:space="preserve">
+    <value>N° Permis</value>
+  </data>
+  <data name="NouveauChaufSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauChaufCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="EditChaufTitle" xml:space="preserve">
+    <value>Modifier le chauffeur</value>
+  </data>
+  <data name="EditChaufCardIdentity" xml:space="preserve">
+    <value>Identité</value>
+  </data>
+  <data name="EditChaufNom" xml:space="preserve">
+    <value>Nom *</value>
+  </data>
+  <data name="EditChaufPrenom" xml:space="preserve">
+    <value>Prénom</value>
+  </data>
+  <data name="EditChaufCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="EditChaufCardContact" xml:space="preserve">
+    <value>Contact &amp; Permis</value>
+  </data>
+  <data name="EditChaufTelephone" xml:space="preserve">
+    <value>Téléphone</value>
+  </data>
+  <data name="EditChaufPermis" xml:space="preserve">
+    <value>N° Permis</value>
+  </data>
+  <data name="EditChaufSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="EditChaufCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="DetailChaufTitle" xml:space="preserve">
+    <value>Détails du chauffeur</value>
+  </data>
+  <data name="DetailChaufCardIdentity" xml:space="preserve">
+    <value>Identité</value>
+  </data>
+  <data name="DetailChaufNom" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="DetailChaufPrenom" xml:space="preserve">
+    <value>Prénom</value>
+  </data>
+  <data name="DetailChaufCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="DetailChaufCardContact" xml:space="preserve">
+    <value>Contact &amp; Permis</value>
+  </data>
+  <data name="DetailChaufTelephone" xml:space="preserve">
+    <value>Téléphone</value>
+  </data>
+  <data name="DetailChaufPermis" xml:space="preserve">
+    <value>N° Permis</value>
+  </data>
+  <data name="DetailChaufCardAudit" xml:space="preserve">
+    <value>Audit</value>
+  </data>
+  <data name="DetailChaufCreatedBy" xml:space="preserve">
+    <value>Créé par</value>
+  </data>
+  <data name="DetailChaufCreatedAt" xml:space="preserve">
+    <value>Date de création</value>
+  </data>
+  <data name="DetailChaufEditedBy" xml:space="preserve">
+    <value>Modifié par</value>
+  </data>
+  <data name="DetailChaufEditedAt" xml:space="preserve">
+    <value>Date de modification</value>
+  </data>
+  <data name="DetailChaufClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailChaufEdit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="InfraCiternes" xml:space="preserve">
+    <value>Citernes</value>
+  </data>
+  <data name="InfraCardDescCiternes" xml:space="preserve">
+    <value>Gérer les citernes</value>
+  </data>
+  <data name="CiterneBreadcrumb" xml:space="preserve">
+    <value>Citernes</value>
+  </data>
+  <data name="CiternePageSubtitle" xml:space="preserve">
+    <value>Liste et gestion des citernes</value>
+  </data>
+  <data name="CiterneAddButton" xml:space="preserve">
+    <value>Nouvelle citerne</value>
+  </data>
+  <data name="CiterneTableTitle" xml:space="preserve">
+    <value>Citernes</value>
+  </data>
+  <data name="CiterneTableSubtitle" xml:space="preserve">
+    <value>Toutes les citernes enregistrées</value>
+  </data>
+  <data name="CiterneCountBadge" xml:space="preserve">
+    <value>citerne(s)</value>
+  </data>
+  <data name="CiterneEmpty" xml:space="preserve">
+    <value>Aucune citerne trouvée.</value>
+  </data>
+  <data name="CiterneColNumero" xml:space="preserve">
+    <value>N° CITERNE</value>
+  </data>
+  <data name="CiterneColMatricule" xml:space="preserve">
+    <value>MATRICULE</value>
+  </data>
+  <data name="CiterneColCapacite" xml:space="preserve">
+    <value>CAPACITÉ (L)</value>
+  </data>
+  <data name="CiterneColPartitions" xml:space="preserve">
+    <value>PARTITIONS</value>
+  </data>
+  <data name="CiterneColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="CiterneDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="CiterneEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="CiterneDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="NouveauCiterneTitle" xml:space="preserve">
+    <value>Nouvelle citerne</value>
+  </data>
+  <data name="NouveauCiterneCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="NouveauCiterneMatricule" xml:space="preserve">
+    <value>Matricule *</value>
+  </data>
+  <data name="NouveauCiterneCardTechnique" xml:space="preserve">
+    <value>Données techniques</value>
+  </data>
+  <data name="NouveauCiterneCapacite" xml:space="preserve">
+    <value>Capacité (L)</value>
+  </data>
+  <data name="NouveauCiternePartitions" xml:space="preserve">
+    <value>Partitions</value>
+  </data>
+  <data name="NouveauCiterneSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauCiterneSaving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+  <data name="NouveauCiterneCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="NouveauCiterneValidationMatricule" xml:space="preserve">
+    <value>Le matricule de la citerne est obligatoire.</value>
+  </data>
+  <data name="NouveauCiterneSaveError" xml:space="preserve">
+    <value>Impossible d'enregistrer la citerne. Vérifiez votre connexion.</value>
+  </data>
+  <data name="EditCiterneTitle" xml:space="preserve">
+    <value>Modifier la citerne</value>
+  </data>
+  <data name="EditCiterneCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="EditCiterneMatricule" xml:space="preserve">
+    <value>Matricule *</value>
+  </data>
+  <data name="EditCiterneCardTechnique" xml:space="preserve">
+    <value>Données techniques</value>
+  </data>
+  <data name="EditCiterneCapacite" xml:space="preserve">
+    <value>Capacité (L)</value>
+  </data>
+  <data name="EditCiternePartitions" xml:space="preserve">
+    <value>Partitions</value>
+  </data>
+  <data name="EditCiterneSave" xml:space="preserve">
+    <value>Enregistrer les modifications</value>
+  </data>
+  <data name="EditCiterneSaving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+  <data name="EditCiterneCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="EditCiterneValidationMatricule" xml:space="preserve">
+    <value>Le matricule de la citerne est obligatoire.</value>
+  </data>
+  <data name="EditCiterneSaveError" xml:space="preserve">
+    <value>Impossible de mettre à jour la citerne. Vérifiez votre connexion.</value>
+  </data>
+  <data name="DetailCiterneTitle" xml:space="preserve">
+    <value>Détails de la citerne</value>
+  </data>
+  <data name="DetailCiterneCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="DetailCiterneMatricule" xml:space="preserve">
+    <value>MATRICULE</value>
+  </data>
+  <data name="DetailCiterneCardTechnique" xml:space="preserve">
+    <value>Données techniques</value>
+  </data>
+  <data name="DetailCiterneCapacite" xml:space="preserve">
+    <value>CAPACITÉ</value>
+  </data>
+  <data name="DetailCiternePartitions" xml:space="preserve">
+    <value>PARTITIONS</value>
+  </data>
+  <data name="DetailCiterneCardAudit" xml:space="preserve">
+    <value>Audit</value>
+  </data>
+  <data name="DetailCiterneCreatedBy" xml:space="preserve">
+    <value>AJOUTÉ PAR</value>
+  </data>
+  <data name="DetailCiterneCreatedAt" xml:space="preserve">
+    <value>DATE DE CRÉATION</value>
+  </data>
+  <data name="DetailCiterneEditedBy" xml:space="preserve">
+    <value>MODIFIÉ PAR</value>
+  </data>
+  <data name="DetailCiterneEditedAt" xml:space="preserve">
+    <value>DATE DE MODIFICATION</value>
+  </data>
+  <data name="DetailCiterneClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailCiterneEdit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="InfraCamions" xml:space="preserve">
+    <value>Camions</value>
+  </data>
+  <data name="InfraCardDescCamions" xml:space="preserve">
+    <value>Gérer les camions</value>
+  </data>
+  <data name="CamionBreadcrumb" xml:space="preserve">
+    <value>Camions</value>
+  </data>
+  <data name="CamionPageSubtitle" xml:space="preserve">
+    <value>Liste et gestion des camions</value>
+  </data>
+  <data name="CamionAddButton" xml:space="preserve">
+    <value>Nouveau camion</value>
+  </data>
+  <data name="CamionTableTitle" xml:space="preserve">
+    <value>Camions</value>
+  </data>
+  <data name="CamionTableSubtitle" xml:space="preserve">
+    <value>Tous les camions enregistrés</value>
+  </data>
+  <data name="CamionCountBadge" xml:space="preserve">
+    <value>camion(s)</value>
+  </data>
+  <data name="CamionEmpty" xml:space="preserve">
+    <value>Aucun camion trouvé.</value>
+  </data>
+  <data name="CamionColNumero" xml:space="preserve">
+    <value>N° CAMION</value>
+  </data>
+  <data name="CamionColMatricule" xml:space="preserve">
+    <value>MATRICULE</value>
+  </data>
+  <data name="CamionColMarque" xml:space="preserve">
+    <value>MARQUE</value>
+  </data>
+  <data name="CamionColConsommation" xml:space="preserve">
+    <value>CONSOMMATION (L/100)</value>
+  </data>
+  <data name="CamionColKilometrage" xml:space="preserve">
+    <value>KILOMÉTRAGE</value>
+  </data>
+  <data name="CamionColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="CamionDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="CamionEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="CamionDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="NouveauCamionTitle" xml:space="preserve">
+    <value>Nouveau camion</value>
+  </data>
+  <data name="NouveauCamionCardVehicule" xml:space="preserve">
+    <value>Informations du véhicule</value>
+  </data>
+  <data name="NouveauCamionMatricule" xml:space="preserve">
+    <value>Matricule</value>
+  </data>
+  <data name="NouveauCamionMarque" xml:space="preserve">
+    <value>Marque</value>
+  </data>
+  <data name="NouveauCamionCardTechnique" xml:space="preserve">
+    <value>Données techniques</value>
+  </data>
+  <data name="NouveauCamionConsommation" xml:space="preserve">
+    <value>Consommation (L/100 km)</value>
+  </data>
+  <data name="NouveauCamionKilometrage" xml:space="preserve">
+    <value>Kilométrage (km)</value>
+  </data>
+  <data name="NouveauCamionSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauCamionCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="EditCamionTitle" xml:space="preserve">
+    <value>Modifier le camion</value>
+  </data>
+  <data name="EditCamionCardVehicule" xml:space="preserve">
+    <value>Informations du véhicule</value>
+  </data>
+  <data name="EditCamionMatricule" xml:space="preserve">
+    <value>Matricule</value>
+  </data>
+  <data name="EditCamionMarque" xml:space="preserve">
+    <value>Marque</value>
+  </data>
+  <data name="EditCamionCardTechnique" xml:space="preserve">
+    <value>Données techniques</value>
+  </data>
+  <data name="EditCamionConsommation" xml:space="preserve">
+    <value>Consommation (L/100 km)</value>
+  </data>
+  <data name="EditCamionKilometrage" xml:space="preserve">
+    <value>Kilométrage (km)</value>
+  </data>
+  <data name="EditCamionSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="EditCamionCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="DetailCamionTitle" xml:space="preserve">
+    <value>Détails du camion</value>
+  </data>
+  <data name="DetailCamionCardVehicule" xml:space="preserve">
+    <value>Informations du véhicule</value>
+  </data>
+  <data name="DetailCamionMatricule" xml:space="preserve">
+    <value>MATRICULE</value>
+  </data>
+  <data name="DetailCamionMarque" xml:space="preserve">
+    <value>MARQUE</value>
+  </data>
+  <data name="DetailCamionCardTechnique" xml:space="preserve">
+    <value>Données techniques</value>
+  </data>
+  <data name="DetailCamionConsommation" xml:space="preserve">
+    <value>CONSOMMATION</value>
+  </data>
+  <data name="DetailCamionKilometrage" xml:space="preserve">
+    <value>KILOMÉTRAGE</value>
+  </data>
+  <data name="DetailCamionCardAudit" xml:space="preserve">
+    <value>Audit</value>
+  </data>
+  <data name="DetailCamionCreatedBy" xml:space="preserve">
+    <value>AJOUTÉ PAR</value>
+  </data>
+  <data name="DetailCamionEditedBy" xml:space="preserve">
+    <value>MODIFIÉ PAR</value>
+  </data>
+  <data name="DetailCamionClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailCamionEdit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="InfraAchats" xml:space="preserve">
+    <value>Achats</value>
+  </data>
+  <data name="InfraCardDescAchats" xml:space="preserve">
+    <value>Gérer les achats fournisseurs</value>
+  </data>
+  <data name="AchatBreadcrumb" xml:space="preserve">
+    <value>Achats</value>
+  </data>
+  <data name="AchatPageSubtitle" xml:space="preserve">
+    <value>Liste de tous les achats enregistrés</value>
+  </data>
+  <data name="AchatAddButton" xml:space="preserve">
+    <value>Nouvel achat</value>
+  </data>
+  <data name="AchatTableTitle" xml:space="preserve">
+    <value>Achats</value>
+  </data>
+  <data name="AchatTableSubtitle" xml:space="preserve">
+    <value>Tous les achats fournisseurs</value>
+  </data>
+  <data name="AchatCountBadge" xml:space="preserve">
+    <value>achats</value>
+  </data>
+  <data name="AchatColNumero" xml:space="preserve">
+    <value>N°</value>
+  </data>
+  <data name="AchatColDate" xml:space="preserve">
+    <value>DATE</value>
+  </data>
+  <data name="AchatColFournisseur" xml:space="preserve">
+    <value>FOURNISSEUR</value>
+  </data>
+  <data name="AchatColProduit" xml:space="preserve">
+    <value>PRODUIT</value>
+  </data>
+  <data name="AchatColQuantite" xml:space="preserve">
+    <value>QTÉ</value>
+  </data>
+  <data name="AchatColCout" xml:space="preserve">
+    <value>COÛT</value>
+  </data>
+  <data name="AchatColDefectueuse" xml:space="preserve">
+    <value>DÉFECTUEUSE</value>
+  </data>
+  <data name="AchatColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="AchatDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="AchatEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="AchatDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="AchatEmpty" xml:space="preserve">
+    <value>Aucun achat enregistré.</value>
+  </data>
+  <data name="NouveauAchatTitle" xml:space="preserve">
+    <value>Nouvel achat</value>
+  </data>
+  <data name="NouveauAchatCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="NouveauAchatNumero" xml:space="preserve">
+    <value>Numéro d'achat</value>
+  </data>
+  <data name="NouveauAchatDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="NouveauAchatFournisseur" xml:space="preserve">
+    <value>Fournisseur</value>
+  </data>
+  <data name="NouveauAchatProduit" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="NouveauAchatCardFinancier" xml:space="preserve">
+    <value>Données financières</value>
+  </data>
+  <data name="NouveauAchatQuantite" xml:space="preserve">
+    <value>Quantité</value>
+  </data>
+  <data name="NouveauAchatCout" xml:space="preserve">
+    <value>Coût total (DH)</value>
+  </data>
+  <data name="NouveauAchatPrixUnitaire" xml:space="preserve">
+    <value>Prix d'achat unitaire (DH)</value>
+  </data>
+  <data name="NouveauAchatCardLivraison" xml:space="preserve">
+    <value>Livraison</value>
+  </data>
+  <data name="NouveauAchatLivraisonDefectueuse" xml:space="preserve">
+    <value>Livraison défectueuse</value>
+  </data>
+  <data name="NouveauAchatDescription" xml:space="preserve">
+    <value>Description / Remarques</value>
+  </data>
+  <data name="NouveauAchatValidationNumero" xml:space="preserve">
+    <value>Le numéro d'achat est obligatoire.</value>
+  </data>
+  <data name="NouveauAchatValidationFournisseur" xml:space="preserve">
+    <value>Veuillez sélectionner un fournisseur.</value>
+  </data>
+  <data name="NouveauAchatValidationProduit" xml:space="preserve">
+    <value>Veuillez sélectionner un produit.</value>
+  </data>
+  <data name="NouveauAchatSaveError" xml:space="preserve">
+    <value>Erreur lors de l'enregistrement. Vérifiez les données et réessayez.</value>
+  </data>
+  <data name="NouveauAchatSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauAchatCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+
+  <!-- ── NouveauVente popup ── -->
+  <data name="NouveauVenteTitle" xml:space="preserve">
+    <value>Nouvelle Vente</value>
+  </data>
+  <data name="NouveauVenteCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="NouveauVenteDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="NouveauVenteCardCommercial" xml:space="preserve">
+    <value>Commercial</value>
+  </data>
+  <data name="NouveauVenteClient" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="NouveauVenteProduit" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="NouveauVenteCardFinancier" xml:space="preserve">
+    <value>Financier</value>
+  </data>
+  <data name="NouveauVenteQuantite" xml:space="preserve">
+    <value>Quantité</value>
+  </data>
+  <data name="NouveauVentePrixUnitaire" xml:space="preserve">
+    <value>Prix unitaire (DH)</value>
+  </data>
+  <data name="NouveauVenteRemise" xml:space="preserve">
+    <value>Remise (%)</value>
+  </data>
+  <data name="NouveauVenteMontantTotal" xml:space="preserve">
+    <value>Montant total</value>
+  </data>
+  <data name="NouveauVentePaymentMethod" xml:space="preserve">
+    <value>Mode de paiement</value>
+  </data>
+  <data name="NouveauVenteCardInformations" xml:space="preserve">
+    <value>Informations</value>
+  </data>
+  <data name="NouveauVenteReference" xml:space="preserve">
+    <value>Référence</value>
+  </data>
+  <data name="NouveauVenteReferenceFile" xml:space="preserve">
+    <value>Fichier référence</value>
+  </data>
+  <data name="NouveauVenteNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="NouveauVenteValidationClient" xml:space="preserve">
+    <value>Veuillez sélectionner un client.</value>
+  </data>
+  <data name="NouveauVenteValidationProduit" xml:space="preserve">
+    <value>Veuillez sélectionner un produit.</value>
+  </data>
+  <data name="NouveauVenteValidationQuantite" xml:space="preserve">
+    <value>La quantité doit être supérieure à zéro.</value>
+  </data>
+  <data name="NouveauVenteSaveError" xml:space="preserve">
+    <value>Erreur lors de l'enregistrement de la vente.</value>
+  </data>
+  <data name="NouveauVenteSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauVenteCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+
+  <!-- ── EditVente popup ── -->
+  <data name="EditVenteTitle" xml:space="preserve">
+    <value>Modifier la Vente</value>
+  </data>
+  <data name="EditVenteCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="EditVenteNumero" xml:space="preserve">
+    <value>N° Vente</value>
+  </data>
+  <data name="EditVenteDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="EditVenteCardCommercial" xml:space="preserve">
+    <value>Commercial</value>
+  </data>
+  <data name="EditVenteClient" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="EditVenteProduit" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="EditVenteCardFinancier" xml:space="preserve">
+    <value>Financier</value>
+  </data>
+  <data name="EditVenteQuantite" xml:space="preserve">
+    <value>Quantité</value>
+  </data>
+  <data name="EditVentePrixUnitaire" xml:space="preserve">
+    <value>Prix unitaire (DH)</value>
+  </data>
+  <data name="EditVenteRemise" xml:space="preserve">
+    <value>Remise (%)</value>
+  </data>
+  <data name="EditVenteMontantTotal" xml:space="preserve">
+    <value>Montant total</value>
+  </data>
+  <data name="EditVentePaymentMethod" xml:space="preserve">
+    <value>Mode de paiement</value>
+  </data>
+  <data name="EditVenteCardInformations" xml:space="preserve">
+    <value>Informations</value>
+  </data>
+  <data name="EditVenteReference" xml:space="preserve">
+    <value>Référence</value>
+  </data>
+  <data name="EditVenteReferenceFile" xml:space="preserve">
+    <value>Fichier référence</value>
+  </data>
+  <data name="EditVenteNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="EditVenteValidationClient" xml:space="preserve">
+    <value>Veuillez sélectionner un client.</value>
+  </data>
+  <data name="EditVenteValidationProduit" xml:space="preserve">
+    <value>Veuillez sélectionner un produit.</value>
+  </data>
+  <data name="EditVenteValidationQuantite" xml:space="preserve">
+    <value>La quantité doit être supérieure à zéro.</value>
+  </data>
+  <data name="EditVenteSaveError" xml:space="preserve">
+    <value>Erreur lors de la mise à jour de la vente.</value>
+  </data>
+  <data name="EditVenteSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="EditVenteCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+
+  <data name="EditAchatTitle" xml:space="preserve">
+    <value>Modifier l'achat</value>
+  </data>
+  <data name="EditAchatSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="EditAchatCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="EditAchatSaveError" xml:space="preserve">
+    <value>Une erreur est survenue lors de la mise à jour.</value>
+  </data>
+  <data name="EditAchatValidationNumero" xml:space="preserve">
+    <value>Le numéro est obligatoire.</value>
+  </data>
+  <data name="EditAchatValidationFournisseur" xml:space="preserve">
+    <value>Veuillez sélectionner un fournisseur.</value>
+  </data>
+  <data name="EditAchatValidationProduit" xml:space="preserve">
+    <value>Veuillez sélectionner un produit.</value>
+  </data>
+  <!-- ── DetailVente popup ── -->
+  <data name="DetailVenteTitle" xml:space="preserve">
+    <value>Détail de la vente</value>
+  </data>
+  <data name="DetailVenteCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="DetailVenteLabelNumero" xml:space="preserve">
+    <value>N° Vente</value>
+  </data>
+  <data name="DetailVenteLabelDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="DetailVenteLabelClient" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="DetailVenteLabelProduit" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="DetailVenteCardFinancier" xml:space="preserve">
+    <value>Financier</value>
+  </data>
+  <data name="DetailVenteLabelQuantite" xml:space="preserve">
+    <value>Quantité</value>
+  </data>
+  <data name="DetailVenteLabelMontantTotal" xml:space="preserve">
+    <value>Montant total</value>
+  </data>
+  <data name="DetailVenteLabelPrixUnitaire" xml:space="preserve">
+    <value>Prix unitaire (DH)</value>
+  </data>
+  <data name="DetailVenteLabelRemise" xml:space="preserve">
+    <value>Remise</value>
+  </data>
+  <data name="DetailVenteLabelPaymentMethod" xml:space="preserve">
+    <value>Mode de paiement</value>
+  </data>
+  <data name="DetailVenteCardInformations" xml:space="preserve">
+    <value>Informations</value>
+  </data>
+  <data name="DetailVenteLabelReference" xml:space="preserve">
+    <value>Référence</value>
+  </data>
+  <data name="DetailVenteLabelReferenceFile" xml:space="preserve">
+    <value>Fichier référence</value>
+  </data>
+  <data name="DetailVenteLabelNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="DetailVenteCardAudit" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="DetailVenteLabelCreePar" xml:space="preserve">
+    <value>Créé par</value>
+  </data>
+  <data name="DetailVenteLabelModifiePar" xml:space="preserve">
+    <value>Modifié par</value>
+  </data>
+  <data name="DetailVenteClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailVenteEditButton" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+
+  <data name="DetailAchatTitle" xml:space="preserve">
+    <value>Détail de l'achat</value>
+  </data>
+  <data name="DetailAchatCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="DetailAchatCardFinancier" xml:space="preserve">
+    <value>Données financières</value>
+  </data>
+  <data name="DetailAchatCardLivraison" xml:space="preserve">
+    <value>Livraison</value>
+  </data>
+  <data name="DetailAchatCardAudit" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="DetailAchatLabelNumero" xml:space="preserve">
+    <value>NUMÉRO</value>
+  </data>
+  <data name="DetailAchatLabelDate" xml:space="preserve">
+    <value>DATE</value>
+  </data>
+  <data name="DetailAchatLabelFournisseur" xml:space="preserve">
+    <value>FOURNISSEUR</value>
+  </data>
+  <data name="DetailAchatLabelProduit" xml:space="preserve">
+    <value>PRODUIT</value>
+  </data>
+  <data name="DetailAchatLabelQuantite" xml:space="preserve">
+    <value>QUANTITÉ</value>
+  </data>
+  <data name="DetailAchatLabelCout" xml:space="preserve">
+    <value>COÛT TOTAL</value>
+  </data>
+  <data name="DetailAchatLabelPrixUnitaire" xml:space="preserve">
+    <value>PRIX UNITAIRE</value>
+  </data>
+  <data name="DetailAchatLabelLivraisonDefectueuse" xml:space="preserve">
+    <value>LIVRAISON DÉFECTUEUSE</value>
+  </data>
+  <data name="DetailAchatLabelDescription" xml:space="preserve">
+    <value>DESCRIPTION</value>
+  </data>
+  <data name="DetailAchatLabelCreePar" xml:space="preserve">
+    <value>CRÉÉ PAR</value>
+  </data>
+  <data name="DetailAchatLabelModifiePar" xml:space="preserve">
+    <value>MODIFIÉ PAR</value>
+  </data>
+  <data name="DetailAchatClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailAchatEditButton" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+
+  <!-- ═══════════════════════ Ventes ═══════════════════════ -->
+  <data name="InfraVentes" xml:space="preserve">
+    <value>Ventes</value>
+  </data>
+  <data name="InfraCardDescVentes" xml:space="preserve">
+    <value>Gérer les ventes clients</value>
+  </data>
+  <data name="VenteBreadcrumb" xml:space="preserve">
+    <value>Ventes</value>
+  </data>
+  <data name="VentePageSubtitle" xml:space="preserve">
+    <value>Liste de toutes les ventes enregistrées</value>
+  </data>
+  <data name="VenteAddButton" xml:space="preserve">
+    <value>Nouvelle vente</value>
+  </data>
+  <data name="VenteTableTitle" xml:space="preserve">
+    <value>Ventes</value>
+  </data>
+  <data name="VenteTableSubtitle" xml:space="preserve">
+    <value>Toutes les ventes clients</value>
+  </data>
+  <data name="VenteCountBadge" xml:space="preserve">
+    <value>ventes</value>
+  </data>
+  <data name="VenteColNumero" xml:space="preserve">
+    <value>N°</value>
+  </data>
+  <data name="VenteColDate" xml:space="preserve">
+    <value>DATE</value>
+  </data>
+  <data name="VenteColClient" xml:space="preserve">
+    <value>CLIENT</value>
+  </data>
+  <data name="VenteColProduit" xml:space="preserve">
+    <value>PRODUIT</value>
+  </data>
+  <data name="VenteColQuantite" xml:space="preserve">
+    <value>QTÉ</value>
+  </data>
+  <data name="VenteColMontant" xml:space="preserve">
+    <value>MONTANT</value>
+  </data>
+  <data name="VenteColPaiement" xml:space="preserve">
+    <value>PAIEMENT</value>
+  </data>
+  <data name="VenteColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="VenteDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="VenteEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="VenteDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="VenteEmpty" xml:space="preserve">
+    <value>Aucune vente enregistrée.</value>
+  </data>
+</root>

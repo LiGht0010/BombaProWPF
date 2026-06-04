@@ -1,0 +1,326 @@
+<UserControl x:Class="FourniPro.Views.InfrastructurePages.Sections.Camions.CamionsSection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:FourniPro.Localization"
+             xmlns:vm="clr-namespace:FourniPro.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:CamionsSectionViewModel}"
+             Background="Transparent">
+
+    <UserControl.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+        <Style x:Key="CamionIconButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuActionIconBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="Transparent"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource NeuActionBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuActionHoverFillBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CamionDeleteBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="Transparent"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource NeuActionDeleteBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuDangerBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CamionColHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="CamionCellTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <!-- Row template -->
+        <DataTemplate x:Key="CamionRowTemplate">
+            <Border Padding="0,12,0,12"
+                    BorderBrush="{DynamicResource NeuInputFillBrush}"
+                    BorderThickness="0,0,0,1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="96" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- N° Camion badge -->
+                    <Border Grid.Column="0" Background="{DynamicResource NeuInputFillBrush}"
+                            CornerRadius="6" Padding="8,3" HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{Binding CamionId}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuAccentBrush}" />
+                    </Border>
+
+                    <!-- Matricule -->
+                    <TextBlock Grid.Column="1" Text="{Binding Matricule}"
+                               Style="{StaticResource CamionCellTextStyle}"
+                               HorizontalAlignment="Left" />
+
+                    <!-- Marque -->
+                    <TextBlock Grid.Column="2" Text="{Binding Marque}"
+                               Style="{StaticResource CamionCellTextStyle}"
+                               HorizontalAlignment="Left" Margin="0,0,8,0" />
+
+                    <!-- Consommation -->
+                    <TextBlock Grid.Column="3"
+                               Style="{StaticResource CamionCellTextStyle}"
+                               HorizontalAlignment="Left">
+                        <Run Text="{Binding Consommation, StringFormat='{}{0:F1}'}" />
+                        <Run Text=" L/100" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    </TextBlock>
+
+                    <!-- Kilométrage -->
+                    <TextBlock Grid.Column="4"
+                               Style="{StaticResource CamionCellTextStyle}"
+                               HorizontalAlignment="Left">
+                        <Run Text="{Binding Kilometrage, StringFormat='{}{0:N0}'}" />
+                        <Run Text=" km" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    </TextBlock>
+
+                    <!-- Actions -->
+                    <StackPanel Grid.Column="5" Orientation="Horizontal"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Style="{StaticResource CamionIconButtonStyle}"
+                                ToolTip="{Binding [CamionDetailTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DetailCamionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Eye24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource CamionIconButtonStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [CamionEditTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.EditCamionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Edit24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource CamionDeleteBtnStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [CamionDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DeleteCamionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Delete24" FontSize="14" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- ─── Header: breadcrumb + Add button ─── -->
+            <Grid Grid.Row="0" Margin="0,0,0,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding [ProdBreadcrumbInfra], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuAccentBrush}" />
+                        <TextBlock Text=" › " FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                        <TextBlock Text="{Binding [CamionBreadcrumb], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuAccentBrush}" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding [CamionPageSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="13" Margin="0,4,0,0"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Style="{StaticResource NeuButtonStyle}"
+                        Background="{DynamicResource NeuAccentBrush}"
+                        Foreground="White"
+                        Padding="16,10"
+                        FontWeight="SemiBold"
+                        Command="{Binding AddCamionCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="AddCircle24" FontSize="16" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding [CamionAddButton], Source={x:Static loc:LanguageManager.Instance}}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- ─── Table card ─── -->
+            <ContentControl Grid.Row="1"
+                            Style="{StaticResource NeuDashCardStyle}"
+                            Margin="8,0,8,18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Card header -->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding [CamionTableTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                            <TextBlock Text="{Binding [CamionTableSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="11" Margin="0,2,0,0"
+                                       Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Background="{DynamicResource NeuInputFillBrush}"
+                                    CornerRadius="10" Padding="12,5" Margin="0,0,12,0">
+                                <TextBlock FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource NeuAccentBrush}">
+                                    <Run Text="{Binding Camions.Count, Mode=OneWay}" />
+                                    <Run Text=" " />
+                                    <Run Text="{Binding [CamionCountBadge], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
+                                </TextBlock>
+                            </Border>
+                            <Button Style="{StaticResource NeuButtonStyle}"
+                                    Padding="10,8"
+                                    Command="{Binding RefreshCommand}">
+                                <ui:SymbolIcon Symbol="ArrowSync24" FontSize="15" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Column headers -->
+                    <Grid Grid.Row="1" Margin="0,16,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="96" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding [CamionColNumero],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CamionColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="1" Text="{Binding [CamionColMatricule],    Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CamionColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="2" Text="{Binding [CamionColMarque],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CamionColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="3" Text="{Binding [CamionColConsommation], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CamionColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="4" Text="{Binding [CamionColKilometrage],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CamionColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="5" Text="{Binding [CamionColActions],      Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CamionColHeaderStyle}" HorizontalAlignment="Center" />
+                    </Grid>
+
+                    <!-- Rows -->
+                    <Grid Grid.Row="2" MinHeight="120">
+                        <ItemsControl ItemsSource="{Binding Camions}"
+                                      ItemTemplate="{StaticResource CamionRowTemplate}"
+                                      AlternationCount="2" />
+
+                        <!-- Loading overlay -->
+                        <Border Background="#33000000" CornerRadius="8"
+                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <ui:ProgressRing IsIndeterminate="True"
+                                             Width="40" Height="40"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             Foreground="{DynamicResource NeuAccentBrush}" />
+                        </Border>
+
+                        <!-- Empty state -->
+                        <TextBlock Text="{Binding [CamionEmpty], Source={x:Static loc:LanguageManager.Instance}}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Margin="0,40,0,0"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsLoading}" Value="False" />
+                                                <Condition Binding="{Binding Camions.Count}" Value="0" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+            </ContentControl>
+        </Grid>
+    </ScrollViewer>
+
+</UserControl>

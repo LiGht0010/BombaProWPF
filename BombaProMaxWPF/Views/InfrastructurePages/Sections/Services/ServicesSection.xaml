@@ -38,6 +38,32 @@
             </Setter>
         </Style>
 
+        <Style x:Key="SrvDeleteBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="Transparent"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource NeuActionDeleteBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuDangerBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="SrvColHeaderStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="10" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -116,7 +142,7 @@
                                 CommandParameter="{Binding}">
                             <ui:SymbolIcon Symbol="Edit24" FontSize="14" />
                         </Button>
-                        <Button Style="{StaticResource SrvIconButtonStyle}"
+                        <Button Style="{StaticResource SrvDeleteBtnStyle}"
                                 Margin="4,0,0,0"
                                 ToolTip="{Binding [SrvDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
                                 Command="{Binding DataContext.DeleteServiceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"

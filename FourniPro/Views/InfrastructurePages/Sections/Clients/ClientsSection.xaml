@@ -1,0 +1,367 @@
+<UserControl x:Class="FourniPro.Views.InfrastructurePages.Sections.Clients.ClientsSection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:FourniPro.Localization"
+             xmlns:vm="clr-namespace:FourniPro.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:ClientsSectionViewModel}"
+             Background="Transparent">
+
+    <UserControl.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+        <Style x:Key="CliIconButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuActionIconBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="Transparent"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource NeuActionBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuActionHoverFillBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CliDeleteBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6"
+                                Background="Transparent"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource NeuActionDeleteBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"
+                                        Value="{DynamicResource NeuDangerBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CliColHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="CliCellTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <!-- Row template -->
+        <DataTemplate x:Key="ClientRowTemplate">
+            <Border Padding="0,12,0,12"
+                    BorderBrush="{DynamicResource NeuInputFillBrush}"
+                    BorderThickness="0,0,0,1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="110" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="96" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- N° Client badge -->
+                    <Border Grid.Column="0" Background="{DynamicResource NeuInputFillBrush}"
+                            CornerRadius="6" Padding="8,3" HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{Binding NumeroClient}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuAccentBrush}" />
+                    </Border>
+
+                    <!-- Nom -->
+                    <TextBlock Grid.Column="1" Text="{Binding Nom}"
+                               Style="{StaticResource CliCellTextStyle}"
+                               Margin="0,0,8,0" />
+
+                    <!-- Société -->
+                    <TextBlock Grid.Column="2" Text="{Binding NomSociete}"
+                               Style="{StaticResource CliCellTextStyle}" />
+
+                    <!-- CIN -->
+                    <TextBlock Grid.Column="3" Text="{Binding CIN}"
+                               Style="{StaticResource CliCellTextStyle}" />
+
+                    <!-- Contact -->
+                    <TextBlock Grid.Column="4" Text="{Binding Contact}"
+                               Style="{StaticResource CliCellTextStyle}" />
+
+                    <!-- Personel -->
+                    <TextBlock Grid.Column="5" Text="{Binding Personel}"
+                               Style="{StaticResource CliCellTextStyle}" />
+
+                    <!-- Actions -->
+                    <StackPanel Grid.Column="6" Orientation="Horizontal"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Style="{StaticResource CliIconButtonStyle}"
+                                ToolTip="{Binding [CliDetailTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DetailClientCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Eye24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource CliIconButtonStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [CliEditTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.EditClientCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Edit24" FontSize="14" />
+                        </Button>
+                        <Button Style="{StaticResource CliDeleteBtnStyle}"
+                                Margin="4,0,0,0"
+                                ToolTip="{Binding [CliDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DeleteClientCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Delete24" FontSize="14" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- ─── Header ─── -->
+        <Grid Grid.Row="0" Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding [ProdBreadcrumbInfra], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                    <TextBlock Text=" › " FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    <TextBlock Text="{Binding [CliBreadcrumb], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                </StackPanel>
+                <TextBlock Text="{Binding [CliPageSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                           FontSize="13" Margin="0,4,0,0"
+                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    Style="{StaticResource NeuButtonStyle}"
+                    Background="{DynamicResource NeuAccentBrush}"
+                    Foreground="White"
+                    Padding="16,10"
+                    FontWeight="SemiBold"
+                    Command="{Binding AddClientCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="AddCircle24" FontSize="16" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding [CliAddButton], Source={x:Static loc:LanguageManager.Instance}}"
+                               Margin="8,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- ─── Table card ─── -->
+        <ContentControl Grid.Row="1"
+                        Style="{StaticResource NeuDashCardStyle}"
+                        Margin="8,0,8,18">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Card header -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding [CliTableTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="16" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                        <TextBlock Text="{Binding [CliTableSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11" Margin="0,2,0,0"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Background="{DynamicResource NeuInputFillBrush}"
+                                CornerRadius="10" Padding="12,5" Margin="0,0,12,0">
+                            <TextBlock FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource NeuAccentBrush}">
+                                <Run Text="{Binding Clients.Count, Mode=OneWay}" />
+                                <Run Text=" " />
+                                <Run Text="{Binding [CliCountBadge], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
+                            </TextBlock>
+                        </Border>
+                        <Button Style="{StaticResource NeuButtonStyle}"
+                                Padding="10,8"
+                                Command="{Binding RefreshCommand}">
+                            <ui:SymbolIcon Symbol="ArrowSync24" FontSize="15" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Column headers -->
+                <Grid Grid.Row="1" Margin="0,16,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="110" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="96" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding [CliColNumero],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CliColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="1" Text="{Binding [CliColNom],      Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CliColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="2" Text="{Binding [CliColSociete],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CliColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="3" Text="{Binding [CliColCIN],      Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CliColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="4" Text="{Binding [CliColContact],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CliColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="5" Text="{Binding [CliColPersonel], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CliColHeaderStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Column="6" Text="{Binding [CliColActions],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource CliColHeaderStyle}" HorizontalAlignment="Center" />
+                </Grid>
+
+                <!-- Rows -->
+                <Grid Grid.Row="2" MinHeight="120">
+                        <ItemsControl ItemsSource="{Binding Clients}"
+                                      ItemTemplate="{StaticResource ClientRowTemplate}"
+                                      AlternationCount="2" />
+
+                        <Border Background="#33000000" CornerRadius="8"
+                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <ui:ProgressRing IsIndeterminate="True"
+                                             Width="40" Height="40"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             Foreground="{DynamicResource NeuAccentBrush}" />
+                        </Border>
+
+                        <TextBlock Text="{Binding [CliEmpty], Source={x:Static loc:LanguageManager.Instance}}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                   Margin="0,32,0,32">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsLoading}" Value="False" />
+                                                <Condition Binding="{Binding Clients.Count}" Value="0" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                            </Grid>
+                        </Grid>
+                    </ContentControl>
+
+        <!-- ─── Status bar ─── -->
+        <Border Grid.Row="2" Margin="8,0,8,0">
+            <StackPanel Orientation="Horizontal">
+                <Border CornerRadius="8" Padding="12,6" Background="#1FE05555">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ErrorMessage}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ErrorCircle24" FontSize="14"
+                                       Foreground="#E05555" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   FontSize="12" Foreground="#E05555"
+                                   VerticalAlignment="Center" Margin="6,0,0,0" />
+                    </StackPanel>
+                </Border>
+                <Border CornerRadius="8" Padding="12,6" Background="#1F3FD46A">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SuccessMessage}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="14"
+                                       Foreground="#3FD46A" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding SuccessMessage}"
+                                   FontSize="12" Foreground="#3FD46A"
+                                   VerticalAlignment="Center" Margin="6,0,0,0" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,1730 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppName" xml:space="preserve">
+    <value>فورني برو</value>
+  </data>
+  <data name="ThemeLabel" xml:space="preserve">
+    <value>المظهر</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>فاتح</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>داكن</value>
+  </data>
+  <data name="SignInTitle" xml:space="preserve">
+    <value>تسجيل الدخول إلى حسابك</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+  <data name="SignInButton" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>هل نسيت كلمة المرور؟</value>
+  </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>جارٍ الاتصال…</value>
+  </data>
+  <data name="InvalidCredentials" xml:space="preserve">
+    <value>البريد الإلكتروني أو كلمة المرور غير صحيحة.</value>
+  </data>
+  <data name="TogglePaneTooltip" xml:space="preserve">
+    <value>طيّ / توسيع</value>
+  </data>
+  <data name="LogoutTooltip" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+  <data name="NavDashboard" xml:space="preserve">
+    <value>لوحة القيادة</value>
+  </data>
+  <data name="NavVentes" xml:space="preserve">
+    <value>المبيعات</value>
+  </data>
+  <data name="NavAchats" xml:space="preserve">
+    <value>المشتريات</value>
+  </data>
+  <data name="NavCaisse" xml:space="preserve">
+    <value>الصندوق</value>
+  </data>
+  <data name="NavClients" xml:space="preserve">
+    <value>العملاء</value>
+  </data>
+  <data name="NavInfrastructure" xml:space="preserve">
+    <value>البنية التحتية</value>
+  </data>
+  <data name="NavRessources" xml:space="preserve">
+    <value>الموارد البشرية</value>
+  </data>
+  <data name="NavRapports" xml:space="preserve">
+    <value>التقارير</value>
+  </data>
+  <data name="NavParametres" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="InfraTitle" xml:space="preserve">
+    <value>البنية التحتية</value>
+  </data>
+  <data name="InfraSubtitle" xml:space="preserve">
+    <value>إدارة الموارد والمعدات</value>
+  </data>
+  <data name="InfraBackButton" xml:space="preserve">
+    <value>رجوع</value>
+  </data>
+  <data name="InfraBackTooltip" xml:space="preserve">
+    <value>العودة إلى الصفحة الرئيسية</value>
+  </data>
+  <data name="InfraProduits" xml:space="preserve">
+    <value>المنتجات</value>
+  </data>
+  <data name="InfraCardDescProduits" xml:space="preserve">
+    <value>الكتالوج والأسعار والمخزون</value>
+  </data>
+  <data name="InfraFournisseurs" xml:space="preserve">
+    <value>الموردون</value>
+  </data>
+  <data name="InfraCardDescFournisseurs" xml:space="preserve">
+    <value>إدارة الموردين</value>
+  </data>
+  <data name="FourBreadcrumbFournisseurs" xml:space="preserve">
+    <value>الموردون</value>
+  </data>
+  <data name="FourPageSubtitle" xml:space="preserve">
+    <value>قائمة وإدارة الموردين</value>
+  </data>
+  <data name="FourAddButton" xml:space="preserve">
+    <value>مورد جديد</value>
+  </data>
+  <data name="FourTableTitle" xml:space="preserve">
+    <value>قائمة الموردين</value>
+  </data>
+  <data name="FourTableSubtitle" xml:space="preserve">
+    <value>جميع الموردين المسجلين</value>
+  </data>
+  <data name="FourCountBadge" xml:space="preserve">
+    <value>موردون</value>
+  </data>
+  <data name="FourEmpty" xml:space="preserve">
+    <value>لم يتم العثور على موردين.</value>
+  </data>
+  <data name="FourColNom" xml:space="preserve">
+    <value>الاسم / اللقب</value>
+  </data>
+  <data name="FourColSociete" xml:space="preserve">
+    <value>الشركة</value>
+  </data>
+  <data name="FourColContact" xml:space="preserve">
+    <value>جهة الاتصال</value>
+  </data>
+  <data name="FourColTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="FourColEmail" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="FourColStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="FourColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="FourDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="FourEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="FourDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="FourDeleteSuccess" xml:space="preserve">
+    <value>تم حذف المورد بنجاح.</value>
+  </data>
+  <data name="FourDeleteError" xml:space="preserve">
+    <value>فشل حذف المورد.</value>
+  </data>
+  <data name="FourBadgeActif" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="FourBadgeInactif" xml:space="preserve">
+    <value>غير نشط</value>
+  </data>
+  <data name="NouveauFourTitle" xml:space="preserve">
+    <value>مورد جديد</value>
+  </data>
+  <data name="NouveauFourInfoSection" xml:space="preserve">
+    <value>معلومات عامة</value>
+  </data>
+  <data name="NouveauFourContactSection" xml:space="preserve">
+    <value>الاتصال والتنسيق</value>
+  </data>
+  <data name="NouveauFourFinanceSection" xml:space="preserve">
+    <value>المالية والشروط</value>
+  </data>
+  <data name="NouveauFourLabelPrenom" xml:space="preserve">
+    <value>الاسم الأول</value>
+  </data>
+  <data name="NouveauFourLabelNom" xml:space="preserve">
+    <value>اللقب</value>
+  </data>
+  <data name="NouveauFourLabelSociete" xml:space="preserve">
+    <value>الشركة *</value>
+  </data>
+  <data name="NouveauFourLabelAdresse" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="NouveauFourLabelTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="NouveauFourLabelEmail" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="NouveauFourLabelContact" xml:space="preserve">
+    <value>شخص الاتصال</value>
+  </data>
+  <data name="NouveauFourLabelRIB" xml:space="preserve">
+    <value>RIB</value>
+  </data>
+  <data name="NouveauFourLabelConditions" xml:space="preserve">
+    <value>شروط الدفع</value>
+  </data>
+  <data name="NouveauFourLabelStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="NouveauFourCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauFourSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauFourSaving" xml:space="preserve">
+    <value>جارٍ الحفظ…</value>
+  </data>
+  <data name="NouveauFourValidationSociete" xml:space="preserve">
+    <value>اسم الشركة إلزامي.</value>
+  </data>
+  <data name="NouveauFourSaveError" xml:space="preserve">
+    <value>تعذّر حفظ المورد. تحقق من اتصالك.</value>
+  </data>
+  <data name="EditFourTitle" xml:space="preserve">
+    <value>تعديل المورد</value>
+  </data>
+  <data name="EditFourSave" xml:space="preserve">
+    <value>حفظ التعديلات</value>
+  </data>
+  <data name="EditFourSaving" xml:space="preserve">
+    <value>جارٍ الحفظ…</value>
+  </data>
+  <data name="EditFourValidationSociete" xml:space="preserve">
+    <value>اسم الشركة إلزامي.</value>
+  </data>
+  <data name="EditFourSaveError" xml:space="preserve">
+    <value>تعذّر تحديث بيانات المورد. تحقق من اتصالك.</value>
+  </data>
+  <data name="DetailFourTitle" xml:space="preserve">
+    <value>بطاقة المورد</value>
+  </data>
+  <data name="DetailFourInfoSection" xml:space="preserve">
+    <value>المعلومات العامة</value>
+  </data>
+  <data name="DetailFourContactSection" xml:space="preserve">
+    <value>التواصل والعنوان</value>
+  </data>
+  <data name="DetailFourFinanceSection" xml:space="preserve">
+    <value>المالية والشروط</value>
+  </data>
+  <data name="DetailFourAuditSection" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="DetailFourLabelPrenom" xml:space="preserve">
+    <value>الاسم الكامل</value>
+  </data>
+  <data name="DetailFourLabelNom" xml:space="preserve">
+    <value>اللقب</value>
+  </data>
+  <data name="DetailFourLabelSociete" xml:space="preserve">
+    <value>الشركة</value>
+  </data>
+  <data name="DetailFourLabelStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="DetailFourLabelTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="DetailFourLabelEmail" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="DetailFourLabelContact" xml:space="preserve">
+    <value>جهة الاتصال</value>
+  </data>
+  <data name="DetailFourLabelAdresse" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="DetailFourLabelRIB" xml:space="preserve">
+    <value>رقم الحساب</value>
+  </data>
+  <data name="DetailFourLabelConditions" xml:space="preserve">
+    <value>شروط الدفع</value>
+  </data>
+  <data name="DetailFourLabelCreePar" xml:space="preserve">
+    <value>أُنشئ بواسطة</value>
+  </data>
+  <data name="DetailFourLabelModifiePar" xml:space="preserve">
+    <value>عُدِّل بواسطة</value>
+  </data>
+  <data name="DetailFourClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailFourEditButton" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="ProdBreadcrumbInfra" xml:space="preserve">
+    <value>البنية التحتية</value>
+  </data>
+  <data name="ProdBreadcrumbProduits" xml:space="preserve">
+    <value>المنتجات</value>
+  </data>
+  <data name="ProdPageSubtitle" xml:space="preserve">
+    <value>إدارة كتالوج المنتجات والأسعار ومستويات المخزون</value>
+  </data>
+  <data name="ProdAddButton" xml:space="preserve">
+    <value>منتج جديد</value>
+  </data>
+  <data name="ProdTableTitle" xml:space="preserve">
+    <value>كتالوج المنتجات</value>
+  </data>
+  <data name="ProdTableSubtitle" xml:space="preserve">
+    <value>جميع المنتجات المسجلة</value>
+  </data>
+  <data name="ProdCountBadge" xml:space="preserve">
+    <value>منتج</value>
+  </data>
+  <data name="ProdColNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="ProdColDescription" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="ProdColPrixAchat" xml:space="preserve">
+    <value>سعر الشراء</value>
+  </data>
+  <data name="ProdColPrixTTC" xml:space="preserve">
+    <value>السعر الكلي</value>
+  </data>
+  <data name="ProdColMarge" xml:space="preserve">
+    <value>الهامش</value>
+  </data>
+  <data name="ProdColStock" xml:space="preserve">
+    <value>المخزون</value>
+  </data>
+  <data name="ProdColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="ProdBadgeStockOk" xml:space="preserve">
+    <value>متوفر</value>
+  </data>
+  <data name="ProdBadgeStockBas" xml:space="preserve">
+    <value>منخفض</value>
+  </data>
+  <data name="ProdBadgeRupture" xml:space="preserve">
+    <value>نفاد</value>
+  </data>
+  <data name="ProdEmpty" xml:space="preserve">
+    <value>لا توجد منتجات.</value>
+  </data>
+  <data name="DetailProdTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="DetailProdTitle" xml:space="preserve">
+    <value>بطاقة المنتج</value>
+  </data>
+  <data name="DetailProdInfoSection" xml:space="preserve">
+    <value>معلومات عامة</value>
+  </data>
+  <data name="DetailProdPricingSection" xml:space="preserve">
+    <value>التسعير</value>
+  </data>
+  <data name="DetailProdStockSection" xml:space="preserve">
+    <value>المخزون والخدمات اللوجستية</value>
+  </data>
+  <data name="DetailProdLabelDescription" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="DetailProdLabelPrixAchat" xml:space="preserve">
+    <value>سعر الشراء</value>
+  </data>
+  <data name="DetailProdLabelPrixHT" xml:space="preserve">
+    <value>السعر بدون ضريبة</value>
+  </data>
+  <data name="DetailProdLabelTVA" xml:space="preserve">
+    <value>الضريبة على القيمة المضافة</value>
+  </data>
+  <data name="DetailProdLabelPrixTTC" xml:space="preserve">
+    <value>السعر شامل الضريبة</value>
+  </data>
+  <data name="DetailProdLabelMarge" xml:space="preserve">
+    <value>هامش الربح</value>
+  </data>
+  <data name="DetailProdLabelMargePct" xml:space="preserve">
+    <value>هامش %</value>
+  </data>
+  <data name="DetailProdLabelStock" xml:space="preserve">
+    <value>المخزون</value>
+  </data>
+  <data name="DetailProdLabelStockMin" xml:space="preserve">
+    <value>الحد الأدنى</value>
+  </data>
+  <data name="DetailProdLabelDelai" xml:space="preserve">
+    <value>المهلة (يوم)</value>
+  </data>
+  <data name="DetailProdClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailProdEditButton" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="DetailProdAuditSection" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="DetailProdLabelCreePar" xml:space="preserve">
+    <value>أنشئ بواسطة</value>
+  </data>
+  <data name="DetailProdLabelModifiePar" xml:space="preserve">
+    <value>عدّل بواسطة</value>
+  </data>
+  <data name="ProdEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="ProdDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="ProdDeleteSuccess" xml:space="preserve">
+    <value>تم حذف المنتج بنجاح.</value>
+  </data>
+  <data name="ProdDeleteError" xml:space="preserve">
+    <value>فشل الحذف. قد يكون المنتج مرتبطاً بعناصر أخرى.</value>
+  </data>
+  <data name="NouveauProdTitle" xml:space="preserve">
+    <value>منتج جديد</value>
+  </data>
+  <data name="NouveauProdInfoSection" xml:space="preserve">
+    <value>المعلومات العامة</value>
+  </data>
+  <data name="NouveauProdPricingSection" xml:space="preserve">
+    <value>التسعير</value>
+  </data>
+  <data name="NouveauProdStockSection" xml:space="preserve">
+    <value>المخزون والتوريد</value>
+  </data>
+  <data name="NouveauProdLabelNumero" xml:space="preserve">
+    <value>رقم المنتج *</value>
+  </data>
+  <data name="NouveauProdLabelDescription" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="NouveauProdLabelPrixAchat" xml:space="preserve">
+    <value>سعر الشراء (DH)</value>
+  </data>
+  <data name="NouveauProdLabelPrixHT" xml:space="preserve">
+    <value>السعر قبل الضريبة (DH)</value>
+  </data>
+  <data name="NouveauProdLabelTVA" xml:space="preserve">
+    <value>نسبة الضريبة (%)</value>
+  </data>
+  <data name="NouveauProdLabelPrixTTC" xml:space="preserve">
+    <value>السعر الكلي (DH)</value>
+  </data>
+  <data name="NouveauProdLabelMarge" xml:space="preserve">
+    <value>هامش الربح (DH)</value>
+  </data>
+  <data name="NouveauProdLabelStock" xml:space="preserve">
+    <value>المخزون الأولي</value>
+  </data>
+  <data name="NouveauProdLabelStockMin" xml:space="preserve">
+    <value>الحد الأدنى للمخزون</value>
+  </data>
+  <data name="NouveauProdLabelDelai" xml:space="preserve">
+    <value>مهلة التوريد (أيام)</value>
+  </data>
+  <data name="NouveauProdCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauProdSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauProdValidationNumero" xml:space="preserve">
+    <value>رقم المنتج إلزامي.</value>
+  </data>
+  <data name="NouveauProdSaveError" xml:space="preserve">
+    <value>تعذّر حفظ المنتج. تحقق من الاتصال.</value>
+  </data>
+  <data name="EditProdTitle" xml:space="preserve">
+    <value>تعديل المنتج</value>
+  </data>
+  <data name="EditProdSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="EditProdSaveError" xml:space="preserve">
+    <value>تعذّر تحديث المنتج. تحقق من الاتصال.</value>
+  </data>
+  <data name="NouveauProdSaving" xml:space="preserve">
+    <value>جارٍ الحفظ…</value>
+  </data>
+
+  <!-- Clients — hub card -->
+  <data name="InfraClients" xml:space="preserve">
+    <value>العملاء</value>
+  </data>
+  <data name="InfraCardDescClients" xml:space="preserve">
+    <value>إدارة بطاقات العملاء</value>
+  </data>
+
+  <!-- Clients section -->
+  <data name="CliBreadcrumb" xml:space="preserve">
+    <value>العملاء</value>
+  </data>
+  <data name="CliPageSubtitle" xml:space="preserve">
+    <value>استعرض عملاءك وأدِرهم</value>
+  </data>
+  <data name="CliAddButton" xml:space="preserve">
+    <value>عميل جديد</value>
+  </data>
+  <data name="CliTableTitle" xml:space="preserve">
+    <value>قائمة العملاء</value>
+  </data>
+  <data name="CliTableSubtitle" xml:space="preserve">
+    <value>جميع العملاء المسجّلين</value>
+  </data>
+  <data name="CliCountBadge" xml:space="preserve">
+    <value>عميل</value>
+  </data>
+  <data name="CliEmpty" xml:space="preserve">
+    <value>لا يوجد عملاء.</value>
+  </data>
+  <data name="CliColNom" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="CliColNumero" xml:space="preserve">
+    <value>رقم العميل</value>
+  </data>
+  <data name="CliColSociete" xml:space="preserve">
+    <value>الشركة</value>
+  </data>
+  <data name="CliColCIN" xml:space="preserve">
+    <value>رقم الهوية</value>
+  </data>
+  <data name="CliColContact" xml:space="preserve">
+    <value>جهة الاتصال</value>
+  </data>
+  <data name="CliColPersonel" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="CliColActions" xml:space="preserve">
+    <value>إجراءات</value>
+  </data>
+  <data name="CliDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="CliEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="CliDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="ClientNotFound" xml:space="preserve">
+    <value>العميل غير موجود.</value>
+  </data>
+  <data name="ClientDeleteSuccess" xml:space="preserve">
+    <value>تم حذف العميل بنجاح.</value>
+  </data>
+  <data name="ClientDeleteError" xml:space="preserve">
+    <value>تعذّر حذف العميل.</value>
+  </data>
+
+  <!-- NouveauClient dialog -->
+  <data name="NouveauCliTitle" xml:space="preserve">
+    <value>عميل جديد</value>
+  </data>
+  <data name="NouveauCliInfoSection" xml:space="preserve">
+    <value>معلومات عامة</value>
+  </data>
+  <data name="NouveauCliContactSection" xml:space="preserve">
+    <value>الاتصال والإحداثيات</value>
+  </data>
+  <data name="NouveauCliLabelNom" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="NouveauCliLabelNumero" xml:space="preserve">
+    <value>رقم العميل</value>
+  </data>
+  <data name="NouveauCliLabelCIN" xml:space="preserve">
+    <value>رقم الهوية</value>
+  </data>
+  <data name="NouveauCliLabelSociete" xml:space="preserve">
+    <value>الشركة</value>
+  </data>
+  <data name="NouveauCliLabelContact" xml:space="preserve">
+    <value>جهة الاتصال</value>
+  </data>
+  <data name="NouveauCliLabelPersonel" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="NouveauCliLabelAdresse" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="NouveauCliSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauCliSaving" xml:space="preserve">
+    <value>جارٍ الحفظ…</value>
+  </data>
+  <data name="NouveauCliCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauCliValidationNom" xml:space="preserve">
+    <value>اسم العميل إلزامي.</value>
+  </data>
+  <data name="NouveauCliValidationNumero" xml:space="preserve">
+    <value>رقم العميل إلزامي.</value>
+  </data>
+  <data name="NouveauCliSaveError" xml:space="preserve">
+    <value>تعذّر حفظ العميل. تحقق من الاتصال.</value>
+  </data>
+
+  <!-- EditClient dialog -->
+  <data name="EditCliTitle" xml:space="preserve">
+    <value>تعديل العميل</value>
+  </data>
+  <data name="EditCliSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="EditCliSaving" xml:space="preserve">
+    <value>جارٍ الحفظ…</value>
+  </data>
+  <data name="EditCliValidationNom" xml:space="preserve">
+    <value>اسم العميل إلزامي.</value>
+  </data>
+  <data name="EditCliValidationNumero" xml:space="preserve">
+    <value>رقم العميل إلزامي.</value>
+  </data>
+  <data name="EditCliSaveError" xml:space="preserve">
+    <value>تعذّر تحديث العميل. تحقق من الاتصال.</value>
+  </data>
+
+  <!-- DetailClient dialog -->
+  <data name="DetailCliTitle" xml:space="preserve">
+    <value>بطاقة العميل</value>
+  </data>
+  <data name="DetailCliInfoSection" xml:space="preserve">
+    <value>معلومات عامة</value>
+  </data>
+  <data name="DetailCliContactSection" xml:space="preserve">
+    <value>الاتصال والإحداثيات</value>
+  </data>
+  <data name="DetailCliAuditSection" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="DetailCliLabelNom" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="DetailCliLabelNumero" xml:space="preserve">
+    <value>رقم العميل</value>
+  </data>
+  <data name="DetailCliLabelCIN" xml:space="preserve">
+    <value>رقم الهوية</value>
+  </data>
+  <data name="DetailCliLabelSociete" xml:space="preserve">
+    <value>الشركة</value>
+  </data>
+  <data name="DetailCliLabelContact" xml:space="preserve">
+    <value>جهة الاتصال</value>
+  </data>
+  <data name="DetailCliLabelPersonel" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="DetailCliLabelAdresse" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="DetailCliLabelCreePar" xml:space="preserve">
+    <value>أضافه</value>
+  </data>
+  <data name="DetailCliLabelModifiePar" xml:space="preserve">
+    <value>عدّله</value>
+  </data>
+  <data name="DetailCliClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailCliEditButton" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+
+  <!-- ═══════════════════════════════ CHAUFFEURS ═══════════════════════════════ -->
+  <data name="InfraChauffeurs" xml:space="preserve">
+    <value>السائقون</value>
+  </data>
+  <data name="InfraCardDescChauffeurs" xml:space="preserve">
+    <value>إدارة السائقين</value>
+  </data>
+  <data name="ChaufBreadcrumb" xml:space="preserve">
+    <value>السائقون</value>
+  </data>
+  <data name="ChaufPageSubtitle" xml:space="preserve">
+    <value>قائمة وإدارة السائقين</value>
+  </data>
+  <data name="ChaufAddButton" xml:space="preserve">
+    <value>سائق جديد</value>
+  </data>
+  <data name="ChaufTableTitle" xml:space="preserve">
+    <value>السائقون</value>
+  </data>
+  <data name="ChaufTableSubtitle" xml:space="preserve">
+    <value>جميع السائقين المسجلين</value>
+  </data>
+  <data name="ChaufCountBadge" xml:space="preserve">
+    <value>سائق</value>
+  </data>
+  <data name="ChaufEmpty" xml:space="preserve">
+    <value>لا يوجد سائقون.</value>
+  </data>
+  <data name="ChaufColNumero" xml:space="preserve">
+    <value>رقم السائق</value>
+  </data>
+  <data name="ChaufColNom" xml:space="preserve">
+    <value>الاسم / اللقب</value>
+  </data>
+  <data name="ChaufColCIN" xml:space="preserve">
+    <value>رقم البطاقة</value>
+  </data>
+  <data name="ChaufColTel" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="ChaufColPermis" xml:space="preserve">
+    <value>رقم الرخصة</value>
+  </data>
+  <data name="ChaufColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="ChaufDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="ChaufEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="ChaufDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="NouveauChaufTitle" xml:space="preserve">
+    <value>سائق جديد</value>
+  </data>
+  <data name="NouveauChaufCardIdentity" xml:space="preserve">
+    <value>الهوية</value>
+  </data>
+  <data name="NouveauChaufNom" xml:space="preserve">
+    <value>اللقب *</value>
+  </data>
+  <data name="NouveauChaufPrenom" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="NouveauChaufCIN" xml:space="preserve">
+    <value>رقم البطاقة</value>
+  </data>
+  <data name="NouveauChaufCardContact" xml:space="preserve">
+    <value>الاتصال والرخصة</value>
+  </data>
+  <data name="NouveauChaufTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="NouveauChaufPermis" xml:space="preserve">
+    <value>رقم الرخصة</value>
+  </data>
+  <data name="NouveauChaufSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauChaufCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="EditChaufTitle" xml:space="preserve">
+    <value>تعديل السائق</value>
+  </data>
+  <data name="EditChaufCardIdentity" xml:space="preserve">
+    <value>الهوية</value>
+  </data>
+  <data name="EditChaufNom" xml:space="preserve">
+    <value>اللقب *</value>
+  </data>
+  <data name="EditChaufPrenom" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="EditChaufCIN" xml:space="preserve">
+    <value>رقم البطاقة</value>
+  </data>
+  <data name="EditChaufCardContact" xml:space="preserve">
+    <value>الاتصال والرخصة</value>
+  </data>
+  <data name="EditChaufTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="EditChaufPermis" xml:space="preserve">
+    <value>رقم الرخصة</value>
+  </data>
+  <data name="EditChaufSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="EditChaufCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="DetailChaufTitle" xml:space="preserve">
+    <value>تفاصيل السائق</value>
+  </data>
+  <data name="DetailChaufCardIdentity" xml:space="preserve">
+    <value>الهوية</value>
+  </data>
+  <data name="DetailChaufNom" xml:space="preserve">
+    <value>اللقب</value>
+  </data>
+  <data name="DetailChaufPrenom" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="DetailChaufCIN" xml:space="preserve">
+    <value>رقم البطاقة</value>
+  </data>
+  <data name="DetailChaufCardContact" xml:space="preserve">
+    <value>الاتصال والرخصة</value>
+  </data>
+  <data name="DetailChaufTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="DetailChaufPermis" xml:space="preserve">
+    <value>رقم الرخصة</value>
+  </data>
+  <data name="DetailChaufCardAudit" xml:space="preserve">
+    <value>المراجعة</value>
+  </data>
+  <data name="DetailChaufCreatedBy" xml:space="preserve">
+    <value>أضيف بواسطة</value>
+  </data>
+  <data name="DetailChaufCreatedAt" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+  <data name="DetailChaufEditedBy" xml:space="preserve">
+    <value>عُدِّل بواسطة</value>
+  </data>
+  <data name="DetailChaufEditedAt" xml:space="preserve">
+    <value>تاريخ التعديل</value>
+  </data>
+  <data name="DetailChaufClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailChaufEdit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+
+  <!-- ═══════════════════════════════ CITERNES ════════════════════════════ -->
+  <data name="InfraCiternes" xml:space="preserve">
+    <value>الخزانات</value>
+  </data>
+  <data name="InfraCardDescCiternes" xml:space="preserve">
+    <value>إدارة الخزانات</value>
+  </data>
+  <data name="CiterneBreadcrumb" xml:space="preserve">
+    <value>الخزانات</value>
+  </data>
+  <data name="CiternePageSubtitle" xml:space="preserve">
+    <value>قائمة وإدارة الخزانات</value>
+  </data>
+  <data name="CiterneAddButton" xml:space="preserve">
+    <value>خزان جديد</value>
+  </data>
+  <data name="CiterneTableTitle" xml:space="preserve">
+    <value>الخزانات</value>
+  </data>
+  <data name="CiterneTableSubtitle" xml:space="preserve">
+    <value>جميع الخزانات المسجلة</value>
+  </data>
+  <data name="CiterneCountBadge" xml:space="preserve">
+    <value>خزان (خزانات)</value>
+  </data>
+  <data name="CiterneEmpty" xml:space="preserve">
+    <value>لا توجد خزانات.</value>
+  </data>
+  <data name="CiterneColNumero" xml:space="preserve">
+    <value>رقم الخزان</value>
+  </data>
+  <data name="CiterneColMatricule" xml:space="preserve">
+    <value>رقم اللوحة</value>
+  </data>
+  <data name="CiterneColCapacite" xml:space="preserve">
+    <value>السعة (ل)</value>
+  </data>
+  <data name="CiterneColPartitions" xml:space="preserve">
+    <value>الأقسام</value>
+  </data>
+  <data name="CiterneColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="CiterneDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="CiterneEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="CiterneDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+
+  <!-- Nouveau Citerne dialog -->
+  <data name="NouveauCiterneTitle" xml:space="preserve">
+    <value>خزان جديد</value>
+  </data>
+  <data name="NouveauCiterneCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="NouveauCiterneMatricule" xml:space="preserve">
+    <value>رقم اللوحة *</value>
+  </data>
+  <data name="NouveauCiterneCardTechnique" xml:space="preserve">
+    <value>البيانات التقنية</value>
+  </data>
+  <data name="NouveauCiterneCapacite" xml:space="preserve">
+    <value>السعة (ل)</value>
+  </data>
+  <data name="NouveauCiternePartitions" xml:space="preserve">
+    <value>الأقسام</value>
+  </data>
+  <data name="NouveauCiterneSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauCiterneSaving" xml:space="preserve">
+    <value>جارٍ الحفظ…</value>
+  </data>
+  <data name="NouveauCiterneCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauCiterneValidationMatricule" xml:space="preserve">
+    <value>رقم لوحة الخزان إلزامي.</value>
+  </data>
+  <data name="NouveauCiterneSaveError" xml:space="preserve">
+    <value>تعذّر حفظ الخزان. تحقق من الاتصال.</value>
+  </data>
+
+  <!-- Edit Citerne dialog -->
+  <data name="EditCiterneTitle" xml:space="preserve">
+    <value>تعديل الخزان</value>
+  </data>
+  <data name="EditCiterneCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="EditCiterneMatricule" xml:space="preserve">
+    <value>رقم اللوحة *</value>
+  </data>
+  <data name="EditCiterneCardTechnique" xml:space="preserve">
+    <value>البيانات التقنية</value>
+  </data>
+  <data name="EditCiterneCapacite" xml:space="preserve">
+    <value>السعة (ل)</value>
+  </data>
+  <data name="EditCiternePartitions" xml:space="preserve">
+    <value>الأقسام</value>
+  </data>
+  <data name="EditCiterneSave" xml:space="preserve">
+    <value>حفظ التعديلات</value>
+  </data>
+  <data name="EditCiterneSaving" xml:space="preserve">
+    <value>جارٍ الحفظ…</value>
+  </data>
+  <data name="EditCiterneCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="EditCiterneValidationMatricule" xml:space="preserve">
+    <value>رقم لوحة الخزان إلزامي.</value>
+  </data>
+  <data name="EditCiterneSaveError" xml:space="preserve">
+    <value>تعذّر تحديث الخزان. تحقق من الاتصال.</value>
+  </data>
+
+  <!-- Detail Citerne dialog -->
+  <data name="DetailCiterneTitle" xml:space="preserve">
+    <value>تفاصيل الخزان</value>
+  </data>
+  <data name="DetailCiterneCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="DetailCiterneMatricule" xml:space="preserve">
+    <value>رقم اللوحة</value>
+  </data>
+  <data name="DetailCiterneCardTechnique" xml:space="preserve">
+    <value>البيانات التقنية</value>
+  </data>
+  <data name="DetailCiterneCapacite" xml:space="preserve">
+    <value>السعة</value>
+  </data>
+  <data name="DetailCiternePartitions" xml:space="preserve">
+    <value>الأقسام</value>
+  </data>
+  <data name="DetailCiterneCardAudit" xml:space="preserve">
+    <value>المراجعة</value>
+  </data>
+  <data name="DetailCiterneCreatedBy" xml:space="preserve">
+    <value>أضيف بواسطة</value>
+  </data>
+  <data name="DetailCiterneCreatedAt" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+  <data name="DetailCiterneEditedBy" xml:space="preserve">
+    <value>عُدِّل بواسطة</value>
+  </data>
+  <data name="DetailCiterneEditedAt" xml:space="preserve">
+    <value>تاريخ التعديل</value>
+  </data>
+  <data name="DetailCiterneClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailCiterneEdit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+
+  <!-- ═══════════════════════════════ CAMIONS ═══════════════════════════════ -->
+  <data name="InfraCamions" xml:space="preserve">
+    <value>الشاحنات</value>
+  </data>
+  <data name="InfraCardDescCamions" xml:space="preserve">
+    <value>إدارة الشاحنات</value>
+  </data>
+  <data name="CamionBreadcrumb" xml:space="preserve">
+    <value>الشاحنات</value>
+  </data>
+  <data name="CamionPageSubtitle" xml:space="preserve">
+    <value>قائمة وإدارة الشاحنات</value>
+  </data>
+  <data name="CamionAddButton" xml:space="preserve">
+    <value>شاحنة جديدة</value>
+  </data>
+  <data name="CamionTableTitle" xml:space="preserve">
+    <value>الشاحنات</value>
+  </data>
+  <data name="CamionTableSubtitle" xml:space="preserve">
+    <value>جميع الشاحنات المسجلة</value>
+  </data>
+  <data name="CamionCountBadge" xml:space="preserve">
+    <value>شاحنة (شاحنات)</value>
+  </data>
+  <data name="CamionEmpty" xml:space="preserve">
+    <value>لا توجد شاحنات.</value>
+  </data>
+  <data name="CamionColNumero" xml:space="preserve">
+    <value>رقم الشاحنة</value>
+  </data>
+  <data name="CamionColMatricule" xml:space="preserve">
+    <value>رقم اللوحة</value>
+  </data>
+  <data name="CamionColMarque" xml:space="preserve">
+    <value>الماركة</value>
+  </data>
+  <data name="CamionColConsommation" xml:space="preserve">
+    <value>الاستهلاك (ل/100)</value>
+  </data>
+  <data name="CamionColKilometrage" xml:space="preserve">
+    <value>المسافة المقطوعة</value>
+  </data>
+  <data name="CamionColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="CamionDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="CamionEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="CamionDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+
+  <!-- Nouveau Camion dialog -->
+  <data name="NouveauCamionTitle" xml:space="preserve">
+    <value>شاحنة جديدة</value>
+  </data>
+  <data name="NouveauCamionCardVehicule" xml:space="preserve">
+    <value>معلومات المركبة</value>
+  </data>
+  <data name="NouveauCamionMatricule" xml:space="preserve">
+    <value>رقم اللوحة</value>
+  </data>
+  <data name="NouveauCamionMarque" xml:space="preserve">
+    <value>الماركة</value>
+  </data>
+  <data name="NouveauCamionCardTechnique" xml:space="preserve">
+    <value>البيانات التقنية</value>
+  </data>
+  <data name="NouveauCamionConsommation" xml:space="preserve">
+    <value>الاستهلاك (ل/100 كم)</value>
+  </data>
+  <data name="NouveauCamionKilometrage" xml:space="preserve">
+    <value>المسافة المقطوعة (كم)</value>
+  </data>
+  <data name="NouveauCamionSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauCamionCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+
+  <!-- Edit Camion dialog -->
+  <data name="EditCamionTitle" xml:space="preserve">
+    <value>تعديل الشاحنة</value>
+  </data>
+  <data name="EditCamionCardVehicule" xml:space="preserve">
+    <value>معلومات المركبة</value>
+  </data>
+  <data name="EditCamionMatricule" xml:space="preserve">
+    <value>رقم اللوحة</value>
+  </data>
+  <data name="EditCamionMarque" xml:space="preserve">
+    <value>الماركة</value>
+  </data>
+  <data name="EditCamionCardTechnique" xml:space="preserve">
+    <value>البيانات التقنية</value>
+  </data>
+  <data name="EditCamionConsommation" xml:space="preserve">
+    <value>الاستهلاك (ل/100 كم)</value>
+  </data>
+  <data name="EditCamionKilometrage" xml:space="preserve">
+    <value>المسافة المقطوعة (كم)</value>
+  </data>
+  <data name="EditCamionSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="EditCamionCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+
+  <!-- Detail Camion dialog -->
+  <data name="DetailCamionTitle" xml:space="preserve">
+    <value>تفاصيل الشاحنة</value>
+  </data>
+  <data name="DetailCamionCardVehicule" xml:space="preserve">
+    <value>معلومات المركبة</value>
+  </data>
+  <data name="DetailCamionMatricule" xml:space="preserve">
+    <value>رقم اللوحة</value>
+  </data>
+  <data name="DetailCamionMarque" xml:space="preserve">
+    <value>الماركة</value>
+  </data>
+  <data name="DetailCamionCardTechnique" xml:space="preserve">
+    <value>البيانات التقنية</value>
+  </data>
+  <data name="DetailCamionConsommation" xml:space="preserve">
+    <value>الاستهلاك</value>
+  </data>
+  <data name="DetailCamionKilometrage" xml:space="preserve">
+    <value>المسافة المقطوعة</value>
+  </data>
+  <data name="DetailCamionCardAudit" xml:space="preserve">
+    <value>المراجعة</value>
+  </data>
+  <data name="DetailCamionCreatedBy" xml:space="preserve">
+    <value>أضيف بواسطة</value>
+  </data>
+  <data name="DetailCamionEditedBy" xml:space="preserve">
+    <value>عُدِّل بواسطة</value>
+  </data>
+  <data name="DetailCamionClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailCamionEdit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+
+  <!-- ═══════════ Achats section ═══════════ -->
+  <!-- Hub card -->
+  <data name="InfraAchats" xml:space="preserve">
+    <value>المشتريات</value>
+  </data>
+  <data name="InfraCardDescAchats" xml:space="preserve">
+    <value>إدارة مشتريات الموردين</value>
+  </data>
+  <!-- Section page -->
+  <data name="AchatBreadcrumb" xml:space="preserve">
+    <value>المشتريات</value>
+  </data>
+  <data name="AchatPageSubtitle" xml:space="preserve">
+    <value>قائمة جميع المشتريات المسجلة</value>
+  </data>
+  <data name="AchatAddButton" xml:space="preserve">
+    <value>شراء جديد</value>
+  </data>
+  <!-- Table -->
+  <data name="AchatTableTitle" xml:space="preserve">
+    <value>المشتريات</value>
+  </data>
+  <data name="AchatTableSubtitle" xml:space="preserve">
+    <value>جميع مشتريات الموردين</value>
+  </data>
+  <data name="AchatCountBadge" xml:space="preserve">
+    <value>مشتريات</value>
+  </data>
+  <!-- Column headers -->
+  <data name="AchatColNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="AchatColDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="AchatColFournisseur" xml:space="preserve">
+    <value>المورد</value>
+  </data>
+  <data name="AchatColProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="AchatColQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="AchatColCout" xml:space="preserve">
+    <value>التكلفة</value>
+  </data>
+  <data name="AchatColDefectueuse" xml:space="preserve">
+    <value>معيب</value>
+  </data>
+  <data name="AchatColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <!-- Row tooltips -->
+  <data name="AchatDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="AchatEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="AchatDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <!-- Empty state -->
+  <data name="AchatEmpty" xml:space="preserve">
+    <value>لا توجد مشتريات مسجلة.</value>
+  </data>
+
+  <!-- ═══════════ Nouveau Achat dialog ═══════════ -->
+  <data name="NouveauAchatTitle" xml:space="preserve">
+    <value>شراء جديد</value>
+  </data>
+  <data name="NouveauAchatCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="NouveauAchatNumero" xml:space="preserve">
+    <value>رقم الشراء</value>
+  </data>
+  <data name="NouveauAchatDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="NouveauAchatFournisseur" xml:space="preserve">
+    <value>المورد</value>
+  </data>
+  <data name="NouveauAchatProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="NouveauAchatCardFinancier" xml:space="preserve">
+    <value>البيانات المالية</value>
+  </data>
+  <data name="NouveauAchatQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="NouveauAchatCout" xml:space="preserve">
+    <value>التكلفة الإجمالية (د.ج)</value>
+  </data>
+  <data name="NouveauAchatPrixUnitaire" xml:space="preserve">
+    <value>سعر الشراء للوحدة (د.م)</value>
+  </data>
+  <data name="NouveauAchatCardLivraison" xml:space="preserve">
+    <value>التسليم</value>
+  </data>
+  <data name="NouveauAchatLivraisonDefectueuse" xml:space="preserve">
+    <value>تسليم معيب</value>
+  </data>
+  <data name="NouveauAchatDescription" xml:space="preserve">
+    <value>الوصف / الملاحظات</value>
+  </data>
+  <data name="NouveauAchatValidationNumero" xml:space="preserve">
+    <value>رقم الشراء إلزامي.</value>
+  </data>
+  <data name="NouveauAchatValidationFournisseur" xml:space="preserve">
+    <value>يرجى اختيار مورد.</value>
+  </data>
+  <data name="NouveauAchatValidationProduit" xml:space="preserve">
+    <value>يرجى اختيار منتج.</value>
+  </data>
+  <data name="NouveauAchatSaveError" xml:space="preserve">
+    <value>خطأ أثناء الحفظ. تحقق من البيانات وأعد المحاولة.</value>
+  </data>
+  <data name="NouveauAchatSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauAchatCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+
+  <!-- ── NouveauVente popup ── -->
+  <data name="NouveauVenteTitle" xml:space="preserve">
+    <value>بيع جديد</value>
+  </data>
+  <data name="NouveauVenteCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="NouveauVenteDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="NouveauVenteCardCommercial" xml:space="preserve">
+    <value>التجاري</value>
+  </data>
+  <data name="NouveauVenteClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="NouveauVenteProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="NouveauVenteCardFinancier" xml:space="preserve">
+    <value>المالية</value>
+  </data>
+  <data name="NouveauVenteQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="NouveauVentePrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة (DH)</value>
+  </data>
+  <data name="NouveauVenteRemise" xml:space="preserve">
+    <value>الخصم (%)</value>
+  </data>
+  <data name="NouveauVenteMontantTotal" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="NouveauVentePaymentMethod" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="NouveauVenteCardInformations" xml:space="preserve">
+    <value>معلومات</value>
+  </data>
+  <data name="NouveauVenteReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="NouveauVenteReferenceFile" xml:space="preserve">
+    <value>ملف المرجع</value>
+  </data>
+  <data name="NouveauVenteNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="NouveauVenteValidationClient" xml:space="preserve">
+    <value>الرجاء تحديد عميل.</value>
+  </data>
+  <data name="NouveauVenteValidationProduit" xml:space="preserve">
+    <value>الرجاء تحديد منتج.</value>
+  </data>
+  <data name="NouveauVenteValidationQuantite" xml:space="preserve">
+    <value>يجب أن تكون الكمية أكبر من صفر.</value>
+  </data>
+  <data name="NouveauVenteSaveError" xml:space="preserve">
+    <value>حدث خطأ أثناء حفظ البيع.</value>
+  </data>
+  <data name="NouveauVenteSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauVenteCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+
+  <!-- ── EditVente popup ── -->
+  <data name="EditVenteTitle" xml:space="preserve">
+    <value>تعديل البيع</value>
+  </data>
+  <data name="EditVenteCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="EditVenteNumero" xml:space="preserve">
+    <value>رقم البيع</value>
+  </data>
+  <data name="EditVenteDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="EditVenteCardCommercial" xml:space="preserve">
+    <value>تجاري</value>
+  </data>
+  <data name="EditVenteClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="EditVenteProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="EditVenteCardFinancier" xml:space="preserve">
+    <value>مالي</value>
+  </data>
+  <data name="EditVenteQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="EditVentePrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة (DH)</value>
+  </data>
+  <data name="EditVenteRemise" xml:space="preserve">
+    <value>الخصم (%)</value>
+  </data>
+  <data name="EditVenteMontantTotal" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="EditVentePaymentMethod" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="EditVenteCardInformations" xml:space="preserve">
+    <value>معلومات</value>
+  </data>
+  <data name="EditVenteReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="EditVenteReferenceFile" xml:space="preserve">
+    <value>ملف المرجع</value>
+  </data>
+  <data name="EditVenteNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="EditVenteValidationClient" xml:space="preserve">
+    <value>يرجى اختيار عميل.</value>
+  </data>
+  <data name="EditVenteValidationProduit" xml:space="preserve">
+    <value>يرجى اختيار منتج.</value>
+  </data>
+  <data name="EditVenteValidationQuantite" xml:space="preserve">
+    <value>يجب أن تكون الكمية أكبر من صفر.</value>
+  </data>
+  <data name="EditVenteSaveError" xml:space="preserve">
+    <value>خطأ أثناء تحديث البيع.</value>
+  </data>
+  <data name="EditVenteSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="EditVenteCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+
+  <!-- ── DetailVente popup ── -->
+  <data name="DetailVenteTitle" xml:space="preserve">
+    <value>تفاصيل البيع</value>
+  </data>
+  <data name="DetailVenteCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="DetailVenteLabelNumero" xml:space="preserve">
+    <value>رقم البيع</value>
+  </data>
+  <data name="DetailVenteLabelDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="DetailVenteLabelClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="DetailVenteLabelProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="DetailVenteCardFinancier" xml:space="preserve">
+    <value>مالي</value>
+  </data>
+  <data name="DetailVenteLabelQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="DetailVenteLabelMontantTotal" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="DetailVenteLabelPrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة (DH)</value>
+  </data>
+  <data name="DetailVenteLabelRemise" xml:space="preserve">
+    <value>الخصم</value>
+  </data>
+  <data name="DetailVenteLabelPaymentMethod" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="DetailVenteCardInformations" xml:space="preserve">
+    <value>معلومات</value>
+  </data>
+  <data name="DetailVenteLabelReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="DetailVenteLabelReferenceFile" xml:space="preserve">
+    <value>ملف المرجع</value>
+  </data>
+  <data name="DetailVenteLabelNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="DetailVenteCardAudit" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="DetailVenteLabelCreePar" xml:space="preserve">
+    <value>أنشئ بواسطة</value>
+  </data>
+  <data name="DetailVenteLabelModifiePar" xml:space="preserve">
+    <value>عُدِّل بواسطة</value>
+  </data>
+  <data name="DetailVenteClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailVenteEditButton" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+
+  <data name="EditAchatTitle" xml:space="preserve">
+    <value>تعديل الشراء</value>
+  </data>
+  <data name="EditAchatSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="EditAchatCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="EditAchatSaveError" xml:space="preserve">
+    <value>حدث خطأ أثناء التحديث.</value>
+  </data>
+  <data name="EditAchatValidationNumero" xml:space="preserve">
+    <value>الرقم إلزامي.</value>
+  </data>
+  <data name="EditAchatValidationFournisseur" xml:space="preserve">
+    <value>يرجى اختيار مورد.</value>
+  </data>
+  <data name="EditAchatValidationProduit" xml:space="preserve">
+    <value>يرجى اختيار منتج.</value>
+  </data>
+  <data name="DetailAchatTitle" xml:space="preserve">
+    <value>تفاصيل الشراء</value>
+  </data>
+  <data name="DetailAchatCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="DetailAchatCardFinancier" xml:space="preserve">
+    <value>البيانات المالية</value>
+  </data>
+  <data name="DetailAchatCardLivraison" xml:space="preserve">
+    <value>التسليم</value>
+  </data>
+  <data name="DetailAchatCardAudit" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="DetailAchatLabelNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="DetailAchatLabelDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="DetailAchatLabelFournisseur" xml:space="preserve">
+    <value>المورد</value>
+  </data>
+  <data name="DetailAchatLabelProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="DetailAchatLabelQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="DetailAchatLabelCout" xml:space="preserve">
+    <value>التكلفة الإجمالية</value>
+  </data>
+  <data name="DetailAchatLabelPrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة</value>
+  </data>
+  <data name="DetailAchatLabelLivraisonDefectueuse" xml:space="preserve">
+    <value>تسليم معيب</value>
+  </data>
+  <data name="DetailAchatLabelDescription" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="DetailAchatLabelCreePar" xml:space="preserve">
+    <value>أضيف بواسطة</value>
+  </data>
+  <data name="DetailAchatLabelModifiePar" xml:space="preserve">
+    <value>عدّل بواسطة</value>
+  </data>
+  <data name="DetailAchatClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailAchatEditButton" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+
+  <!-- ═══════════════════════ Ventes ═══════════════════════ -->
+  <data name="InfraVentes" xml:space="preserve">
+    <value>المبيعات</value>
+  </data>
+  <data name="InfraCardDescVentes" xml:space="preserve">
+    <value>إدارة مبيعات العملاء</value>
+  </data>
+  <data name="VenteBreadcrumb" xml:space="preserve">
+    <value>المبيعات</value>
+  </data>
+  <data name="VentePageSubtitle" xml:space="preserve">
+    <value>قائمة بجميع المبيعات المسجلة</value>
+  </data>
+  <data name="VenteAddButton" xml:space="preserve">
+    <value>بيع جديد</value>
+  </data>
+  <data name="VenteTableTitle" xml:space="preserve">
+    <value>المبيعات</value>
+  </data>
+  <data name="VenteTableSubtitle" xml:space="preserve">
+    <value>جميع مبيعات العملاء</value>
+  </data>
+  <data name="VenteCountBadge" xml:space="preserve">
+    <value>مبيعات</value>
+  </data>
+  <data name="VenteColNumero" xml:space="preserve">
+    <value>رقم</value>
+  </data>
+  <data name="VenteColDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="VenteColClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="VenteColProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="VenteColQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="VenteColMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="VenteColPaiement" xml:space="preserve">
+    <value>الدفع</value>
+  </data>
+  <data name="VenteColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="VenteDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="VenteEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="VenteDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="VenteEmpty" xml:space="preserve">
+    <value>لا توجد مبيعات مسجلة.</value>
+  </data>
+</root>
