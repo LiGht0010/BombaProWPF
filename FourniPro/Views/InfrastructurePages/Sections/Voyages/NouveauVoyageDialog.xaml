@@ -9,7 +9,7 @@
                  mc:Ignorable="d"
                  d:DataContext="{d:DesignInstance Type=vm:NouveauVoyageViewModel}"
                  Title="{Binding [NouveauVoyageTitle], Source={x:Static loc:LanguageManager.Instance}}"
-                 Width="1200" Height="820"
+                 Width="1380" Height="800"
                  WindowStartupLocation="CenterOwner"
                  ResizeMode="NoResize"
                  ShowInTaskbar="False"
@@ -25,60 +25,62 @@
             <Setter Property="BorderBrush"     Value="{DynamicResource NeuInputFillBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius"    Value="12" />
-            <Setter Property="Padding"         Value="16,14" />
+            <Setter Property="Padding"         Value="20,18" />
         </Style>
         <Style x:Key="DlgCardTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontSize"          Value="13" />
+            <Setter Property="FontSize"          Value="14" />
             <Setter Property="FontWeight"        Value="SemiBold" />
             <Setter Property="Foreground"        Value="{DynamicResource NeuTextPrimaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="DlgFieldLabelStyle" TargetType="TextBlock">
-            <Setter Property="FontSize"   Value="10" />
+            <Setter Property="FontSize"   Value="11" />
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
-            <Setter Property="Margin"     Value="0,0,0,4" />
+            <Setter Property="Margin"     Value="0,0,0,6" />
         </Style>
         <Style x:Key="DlgInputBorderStyle" TargetType="Border">
             <Setter Property="Background"      Value="{DynamicResource NeuInputFillBrush}" />
             <Setter Property="BorderBrush"     Value="{DynamicResource NeuInputFillBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius"    Value="8" />
-            <Setter Property="Padding"         Value="10,5" />
-            <Setter Property="MinHeight"       Value="34" />
+            <Setter Property="Padding"         Value="10,6" />
+            <Setter Property="MinHeight"       Value="36" />
         </Style>
         <Style x:Key="DlgComputedBorderStyle" TargetType="Border">
             <Setter Property="Background"      Value="{DynamicResource NeuInputFillBrush}" />
             <Setter Property="BorderBrush"     Value="{DynamicResource NeuAccentBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius"    Value="8" />
-            <Setter Property="Padding"         Value="10,5" />
-            <Setter Property="MinHeight"       Value="34" />
+            <Setter Property="Padding"         Value="10,6" />
+            <Setter Property="MinHeight"       Value="36" />
         </Style>
         <Style x:Key="DlgInputTextBoxStyle" TargetType="TextBox">
             <Setter Property="BorderThickness"          Value="0" />
             <Setter Property="Background"               Value="Transparent" />
             <Setter Property="Foreground"               Value="{DynamicResource NeuTextPrimaryBrush}" />
-            <Setter Property="FontSize"                 Value="12" />
+            <Setter Property="FontSize"                 Value="13" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
         <Style x:Key="DlgIconCircleStyle" TargetType="Border">
-            <Setter Property="Width"             Value="26" />
-            <Setter Property="Height"            Value="26" />
-            <Setter Property="CornerRadius"      Value="13" />
+            <Setter Property="Width"             Value="28" />
+            <Setter Property="Height"            Value="28" />
+            <Setter Property="CornerRadius"      Value="14" />
             <Setter Property="Background"        Value="{DynamicResource NeuInputFillBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin"            Value="0,0,8,0" />
+            <Setter Property="Margin"            Value="0,0,10,0" />
         </Style>
         <Style x:Key="DlgCloseButtonStyle" TargetType="Button">
-            <Setter Property="Width"             Value="32" />
-            <Setter Property="Height"            Value="32" />
-            <Setter Property="Cursor"            Value="Hand" />
-            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Width"           Value="32" />
+            <Setter Property="Height"          Value="32" />
+            <Setter Property="Cursor"          Value="Hand" />
+            <Setter Property="Background"      Value="Transparent" />
+            <Setter Property="Foreground"      Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="bd" CornerRadius="8" Background="Transparent">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="16">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -91,16 +93,18 @@
             </Setter>
         </Style>
         <Style x:Key="DlgPrimaryButtonStyle" TargetType="Button">
-            <Setter Property="Padding"    Value="20,10" />
-            <Setter Property="Cursor"     Value="Hand" />
-            <Setter Property="FontSize"   Value="13" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="{DynamicResource NeuAccentBrush}" />
+            <Setter Property="Background"      Value="{DynamicResource NeuAccentBrush}" />
+            <Setter Property="Foreground"      Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding"         Value="20,10" />
+            <Setter Property="FontSize"        Value="13" />
+            <Setter Property="FontWeight"      Value="SemiBold" />
+            <Setter Property="Cursor"          Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="bd" CornerRadius="10" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -108,7 +112,7 @@
                                 <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuAccentHoverBrush}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="bd" Property="Opacity" Value="0.5" />
+                                <Setter TargetName="bd" Property="Opacity" Value="0.55" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -116,21 +120,23 @@
             </Setter>
         </Style>
         <Style x:Key="DlgSecondaryButtonStyle" TargetType="Button">
-            <Setter Property="Padding"    Value="20,10" />
-            <Setter Property="Cursor"     Value="Hand" />
-            <Setter Property="FontSize"   Value="13" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
-            <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="Background"      Value="Transparent" />
+            <Setter Property="Foreground"      Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding"         Value="14,10" />
+            <Setter Property="FontSize"        Value="13" />
+            <Setter Property="FontWeight"      Value="SemiBold" />
+            <Setter Property="Cursor"          Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="bd" CornerRadius="10" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd" Property="Opacity" Value="0.8" />
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -183,8 +189,8 @@
         </Style>
         <Style x:Key="BadgeStyle" TargetType="Border">
             <Setter Property="Background"        Value="{DynamicResource NeuInputFillBrush}" />
-            <Setter Property="CornerRadius"      Value="6" />
-            <Setter Property="Padding"           Value="8,3" />
+            <Setter Property="CornerRadius"      Value="10" />
+            <Setter Property="Padding"           Value="10,4" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="DisabledInputBorderStyle" TargetType="Border">
@@ -192,8 +198,8 @@
             <Setter Property="BorderBrush"     Value="{DynamicResource NeuInputFillBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius"    Value="8" />
-            <Setter Property="Padding"         Value="10,5" />
-            <Setter Property="MinHeight"       Value="34" />
+            <Setter Property="Padding"         Value="10,6" />
+            <Setter Property="MinHeight"       Value="36" />
             <Setter Property="Opacity"         Value="0.55" />
         </Style>
         <Style x:Key="DlgComboStyle" TargetType="ComboBox">
@@ -250,16 +256,16 @@
             <Border Padding="0,6,0,6" BorderBrush="{DynamicResource NeuInputFillBrush}" BorderThickness="0,0,0,1">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="28" />
-                        <ColumnDefinition Width="55" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="55" />
-                        <ColumnDefinition Width="70" />
-                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="30" />
-                        <ColumnDefinition Width="32" />
                     </Grid.ColumnDefinitions>
                     <Border Grid.Column="1" CornerRadius="6" Padding="5,2" VerticalAlignment="Center" HorizontalAlignment="Left">
                         <Border.Style>
@@ -267,7 +273,7 @@
                                 <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Type}" Value="Vente">
-                                        <Setter Property="Background" Value="{DynamicResource NeuJaugAccentBrush}" />
+                                        <Setter Property="Background" Value="{DynamicResource NeuAccentBrush}" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Type}" Value="Credit">
                                         <Setter Property="Background" Value="#E8A838" />
@@ -306,7 +312,7 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding HasCheque}" Value="True">
                                         <Setter Property="Text"       Value="&#x2713;" />
-                                        <Setter Property="Foreground" Value="{DynamicResource NeuJaugAccentBrush}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource NeuAccentBrush}" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -323,9 +329,13 @@
     </ui:FluentWindow.Resources>
 
     <!-- Outer shell -->
-    <Border CornerRadius="14" BorderBrush="{DynamicResource NeuInputFillBrush}" BorderThickness="1">
+    <Border CornerRadius="14"
+            Background="{DynamicResource NeuBackgroundBrush}"
+            BorderBrush="{DynamicResource NeuInputFillBrush}"
+            BorderThickness="1"
+            SnapsToDevicePixels="True">
         <Border.Effect>
-            <DropShadowEffect Opacity="0.18" BlurRadius="24" ShadowDepth="0" />
+            <DropShadowEffect Color="#000000" Opacity="0.18" BlurRadius="24" ShadowDepth="0" />
         </Border.Effect>
         <Grid>
             <Grid.RowDefinitions>
@@ -335,21 +345,21 @@
             </Grid.RowDefinitions>
 
             <!-- HEADER -->
-            <Grid Grid.Row="0" Margin="18,14,18,14">
+            <Grid Grid.Row="0" Margin="22,18,18,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Style="{StaticResource DlgCloseButtonStyle}" Click="OnCloseClick" Margin="0,0,12,0">
-                    <ui:SymbolIcon Symbol="Dismiss24" FontSize="16" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    <ui:SymbolIcon Symbol="Dismiss24" FontSize="14" />
                 </Button>
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <ui:SymbolIcon Symbol="VehicleTruck24" FontSize="22" Foreground="{DynamicResource NeuAccentBrush}"
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0,0,0">
+                    <ui:SymbolIcon Symbol="VehicleTruck24" FontSize="20" Foreground="{DynamicResource NeuAccentBrush}"
                                    VerticalAlignment="Center" Margin="0,0,10,0" />
                     <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="{Binding [NouveauVoyageTitle], Source={x:Static loc:LanguageManager.Instance}}"
-                                   FontSize="17" FontWeight="Bold" Foreground="{DynamicResource NeuJaugAccentBrush}" />
+                                   FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}" />
                         <TextBlock Text="{Binding [NouveauVoyageSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
                                    FontSize="11" Foreground="{DynamicResource NeuTextSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
@@ -372,11 +382,11 @@
                     <!-- 3-column area -->
                     <Grid Grid.Row="0" Margin="0,0,0,14">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="520" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="520" />
                         </Grid.ColumnDefinitions>
 
                         <!-- COL 1: Détails -->
@@ -390,23 +400,36 @@
                                                Style="{StaticResource DlgCardTitleStyle}" />
                                 </StackPanel>
 
-                                <TextBlock Text="{Binding [NouveauVoyageChauffeur], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
-                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Chauffeurs}"
-                                              SelectedItem="{Binding SelectedChauffeur}" DisplayMemberPath="Nom" />
-                                </Border>
-
-                                <TextBlock Text="{Binding [NouveauVoyageCamion], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
-                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Camions}"
-                                              SelectedItem="{Binding SelectedCamion}" DisplayMemberPath="Matricule" />
-                                </Border>
-
-                                <TextBlock Text="{Binding [NouveauVoyageCiterne], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,14">
-                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Citernes}"
-                                              SelectedItem="{Binding SelectedCiterne}" DisplayMemberPath="MatriculeCiterne" />
-                                </Border>
+                                <Grid Margin="0,0,0,14">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding [NouveauVoyageChauffeur], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}">
+                                            <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Chauffeurs}"
+                                                      SelectedItem="{Binding SelectedChauffeur}" DisplayMemberPath="Nom" />
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="{Binding [NouveauVoyageCamion], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}">
+                                            <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Camions}"
+                                                      SelectedItem="{Binding SelectedCamion}" DisplayMemberPath="Matricule" />
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4">
+                                        <TextBlock Text="{Binding [NouveauVoyageCiterne], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}">
+                                            <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Citernes}"
+                                                      SelectedItem="{Binding SelectedCiterne}" DisplayMemberPath="MatriculeCiterne" />
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
 
                                 <Separator Background="{DynamicResource NeuInputFillBrush}" Margin="0,0,0,14" />
 
@@ -441,10 +464,8 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0">
                                         <TextBlock Text="{Binding [NouveauVoyageDateDepart], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                        <Border Style="{StaticResource DlgInputBorderStyle}">
-                                            <DatePicker SelectedDate="{Binding DateDepart}" BorderThickness="0" Background="Transparent"
-                                                        Foreground="{DynamicResource NeuTextPrimaryBrush}" FontSize="12" />
-                                        </Border>
+                                        <DatePicker SelectedDate="{Binding DateDepart}"
+                                                    Style="{DynamicResource NeuDatePickerStyle}" />
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
                                         <TextBlock Text="{Binding [NouveauVoyageDateFinal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
@@ -812,16 +833,16 @@
                             <!-- Headers -->
                             <Grid Grid.Row="0" Margin="0,0,0,4">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="28" />
-                                    <ColumnDefinition Width="55" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="55" />
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition Width="55" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="80" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="30" />
-                                    <ColumnDefinition Width="32" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0"  Text="#"
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
@@ -839,7 +860,7 @@
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <TextBlock Grid.Column="7"  Text="{Binding [NouveauVoyageSumMontant], Source={x:Static loc:LanguageManager.Instance}}"
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="8"  Text="Chq"
+                                <TextBlock Grid.Column="8"  Text="Cheque"
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                             </Grid>
                             <Separator Grid.Row="1" Background="{DynamicResource NeuInputFillBrush}" Margin="0,0,0,4" />
@@ -852,13 +873,14 @@
             </ScrollViewer>
 
             <!-- FOOTER -->
-            <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource NeuInputFillBrush}" Padding="18,12">
+            <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource NeuInputFillBrush}" Padding="22,14">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <!-- Counters -->
+                    <!-- Counters + Error -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Style="{StaticResource BadgeStyle}" Margin="0,0,8,0">
                             <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}">
@@ -867,32 +889,74 @@
                                 <Run Text="{Binding [NouveauVoyageFooterTransactions], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
                             </TextBlock>
                         </Border>
-                        <Border Style="{StaticResource BadgeStyle}">
+                        <Border Style="{StaticResource BadgeStyle}" Margin="0,0,14,0">
                             <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}">
                                 <Run Text="{Binding StockItems.Count, Mode=OneWay}" />
                                 <Run Text=" " />
                                 <Run Text="{Binding [NouveauVoyageFooterStocks], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
                             </TextBlock>
                         </Border>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
+                                                     Value="Visible">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <ui:SymbolIcon Symbol="ErrorCircle24" FontSize="13"
+                                           Foreground="{DynamicResource NeuDangerBrush}"
+                                           VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBlock Text="{Binding ErrorMessage}"
+                                       FontSize="12" Foreground="{DynamicResource NeuDangerBrush}"
+                                       TextWrapping="Wrap" VerticalAlignment="Center" />
+                        </StackPanel>
                     </StackPanel>
-                    <!-- Actions -->
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource NeuDangerBrush}"
-                                   FontSize="12" VerticalAlignment="Center" Margin="0,0,14,0"
-                                   Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
-                        <Button Style="{StaticResource DlgSecondaryButtonStyle}" Margin="0,0,8,0" Click="OnCancelClick">
-                            <TextBlock Text="{Binding [NouveauVoyageBtnCancel], Source={x:Static loc:LanguageManager.Instance}}" />
-                        </Button>
-                        <Button Style="{StaticResource DlgPrimaryButtonStyle}" Command="{Binding SaveCommand}">
-                            <StackPanel Orientation="Horizontal">
-                                <ui:ProgressRing IsIndeterminate="True" Width="16" Height="16" Margin="0,0,8,0"
-                                                 Foreground="White" Visibility="{Binding IsSaving, Converter={StaticResource BoolToVis}}" />
-                                <ui:SymbolIcon Symbol="Save24" FontSize="15" VerticalAlignment="Center" />
-                                <TextBlock Text="{Binding [NouveauVoyageBtnCreate], Source={x:Static loc:LanguageManager.Instance}}"
-                                           Margin="8,0,0,0" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
+                    <!-- Cancel -->
+                    <Button Grid.Column="1"
+                            Style="{StaticResource DlgSecondaryButtonStyle}"
+                            Margin="0,0,10,0"
+                            Click="OnCancelClick"
+                            Content="{Binding [NouveauVoyageBtnCancel], Source={x:Static loc:LanguageManager.Instance}}" />
+                    <!-- Save -->
+                    <Button Grid.Column="2"
+                            Style="{StaticResource DlgPrimaryButtonStyle}"
+                            IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBoolConverter}}"
+                            Command="{Binding SaveCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:ProgressRing Width="14" Height="14" IsIndeterminate="True"
+                                             Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0">
+                                <ui:ProgressRing.Style>
+                                    <Style TargetType="ui:ProgressRing">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSaving}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:ProgressRing.Style>
+                            </ui:ProgressRing>
+                            <ui:SymbolIcon Symbol="Save24" FontSize="14" VerticalAlignment="Center">
+                                <ui:SymbolIcon.Style>
+                                    <Style TargetType="ui:SymbolIcon">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSaving}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:SymbolIcon.Style>
+                            </ui:SymbolIcon>
+                            <TextBlock Text="{Binding [NouveauVoyageBtnCreate], Source={x:Static loc:LanguageManager.Instance}}"
+                                       Margin="8,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
                 </Grid>
             </Border>
         </Grid>
