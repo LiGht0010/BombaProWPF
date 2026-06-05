@@ -27,11 +27,14 @@ public class Vente
     public int? ProduitID { get; set; }
     public int? ClientID { get; set; }
 
-    /// <summary>FK to Voyage (model not yet in this API — stored as plain int).</summary>
     public int? VoyageID { get; set; }
 
-    /// <summary>FK to Employer/Employee (model not yet in this API — stored as plain int).</summary>
-    public int? EmployerID { get; set; }
+    public int? EmployeId { get; set; }
+
+    // ── Navigation ────────────────────────────────────────────────────────────
+
+    public virtual Voyage? Voyage { get; set; }
+    public virtual Employe? Employe { get; set; }
 
     // ── Financial ─────────────────────────────────────────────────────────────
 

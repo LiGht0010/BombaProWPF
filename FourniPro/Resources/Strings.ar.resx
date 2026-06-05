@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1259,6 +1259,304 @@
     <value>تعديل</value>
   </data>
 
+  <!-- ═══════════ Credits section ═══════════ -->
+  <!-- Section page -->
+  <data name="CreditBreadcrumb" xml:space="preserve">
+    <value>الائتمانات</value>
+  </data>
+  <data name="CreditPageSubtitle" xml:space="preserve">
+    <value>قائمة جميع الائتمانات المسجلة</value>
+  </data>
+  <data name="CreditAddButton" xml:space="preserve">
+    <value>ائتمان جديد</value>
+  </data>
+  <!-- Table -->
+  <data name="CreditTableTitle" xml:space="preserve">
+    <value>الائتمانات</value>
+  </data>
+  <data name="CreditTableSubtitle" xml:space="preserve">
+    <value>جميع ائتمانات العملاء</value>
+  </data>
+  <data name="CreditCountBadge" xml:space="preserve">
+    <value>ائتمانات</value>
+  </data>
+  <!-- Column headers -->
+  <data name="CreditColNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="CreditColDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="CreditColClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="CreditColProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="CreditColEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="CreditColQte" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="CreditColMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="CreditColPrix" xml:space="preserve">
+    <value>سعر الوحدة</value>
+  </data>
+  <data name="CreditColStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="CreditColCheque" xml:space="preserve">
+    <value>الشيك</value>
+  </data>
+  <data name="CreditColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <!-- Row tooltips -->
+  <data name="CreditDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="CreditEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="CreditDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <!-- Empty state -->
+  <data name="CreditEmpty" xml:space="preserve">
+    <value>لا توجد ائتمانات مسجلة.</value>
+  </data>
+
+  <!-- ═══════════ Nouveau Credit dialog ═══════════ -->
+  <data name="NouveauCreditTitle" xml:space="preserve">
+    <value>ائتمان جديد</value>
+  </data>
+  <data name="NouveauCreditCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="NouveauCreditNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="NouveauCreditDate" xml:space="preserve">
+    <value>تاريخ الائتمان</value>
+  </data>
+  <data name="NouveauCreditCardCommercial" xml:space="preserve">
+    <value>المعلومات التجارية</value>
+  </data>
+  <data name="NouveauCreditClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="NouveauCreditProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="NouveauCreditEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
+  <data name="NouveauCreditCardFinancier" xml:space="preserve">
+    <value>البيانات المالية</value>
+  </data>
+  <data name="NouveauCreditQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="NouveauCreditPrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة</value>
+  </data>
+  <data name="NouveauCreditRemise" xml:space="preserve">
+    <value>الخصم</value>
+  </data>
+  <data name="NouveauCreditMontantTotal" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="NouveauCreditCardInformations" xml:space="preserve">
+    <value>المعلومات والشيك</value>
+  </data>
+  <data name="NouveauCreditStatut" xml:space="preserve">
+    <value>حالة الائتمان</value>
+  </data>
+  <data name="NouveauCreditHasCheque" xml:space="preserve">
+    <value>دفع بالشيك</value>
+  </data>
+  <data name="NouveauCreditChequeReference" xml:space="preserve">
+    <value>مرجع الشيك</value>
+  </data>
+  <data name="NouveauCreditStatutCheque" xml:space="preserve">
+    <value>حالة الشيك</value>
+  </data>
+  <data name="NouveauCreditNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="NouveauCreditCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauCreditSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauCreditValidationClient" xml:space="preserve">
+    <value>يرجى اختيار عميل.</value>
+  </data>
+  <data name="NouveauCreditValidationProduit" xml:space="preserve">
+    <value>يرجى اختيار منتج.</value>
+  </data>
+  <data name="NouveauCreditValidationQuantite" xml:space="preserve">
+    <value>يرجى إدخال كمية صحيحة.</value>
+  </data>
+  <data name="NouveauCreditSaveError" xml:space="preserve">
+    <value>حدث خطأ أثناء حفظ الائتمان.</value>
+  </data>
+
+  <!-- ── DetailCredit dialog popup ── -->
+  <data name="DetailCreditTitle" xml:space="preserve">
+    <value>تفاصيل الائتمان</value>
+  </data>
+  <data name="DetailCreditCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="DetailCreditLabelNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="DetailCreditLabelDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="DetailCreditLabelStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="DetailCreditLabelReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="DetailCreditCardCommercial" xml:space="preserve">
+    <value>المعلومات التجارية</value>
+  </data>
+  <data name="DetailCreditLabelClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="DetailCreditLabelProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="DetailCreditLabelEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="DetailCreditLabelQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="DetailCreditCardFinancier" xml:space="preserve">
+    <value>البيانات المالية</value>
+  </data>
+  <data name="DetailCreditLabelPrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة</value>
+  </data>
+  <data name="DetailCreditLabelRemise" xml:space="preserve">
+    <value>الخصم</value>
+  </data>
+  <data name="DetailCreditLabelMontantTotal" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="DetailCreditLabelMontantSub" xml:space="preserve">
+    <value>السعر × الكمية − الخصم</value>
+  </data>
+  <data name="DetailCreditCardCheque" xml:space="preserve">
+    <value>الشيك والمراجعة</value>
+  </data>
+  <data name="DetailCreditLabelChequeRef" xml:space="preserve">
+    <value>مرجع الشيك</value>
+  </data>
+  <data name="DetailCreditLabelStatutCheque" xml:space="preserve">
+    <value>حالة الشيك</value>
+  </data>
+  <data name="DetailCreditLabelAjoutePar" xml:space="preserve">
+    <value>أنشئ بواسطة</value>
+  </data>
+  <data name="DetailCreditLabelModifiePar" xml:space="preserve">
+    <value>عُدِّل بواسطة</value>
+  </data>
+  <data name="DetailCreditLabelNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="DetailCreditClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailCreditEdit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+
+  <!-- ═══════════ Edit Credit dialog ═══════════ -->
+  <data name="EditCreditTitle" xml:space="preserve">
+    <value>تعديل الائتمان</value>
+  </data>
+  <data name="EditCreditCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="EditCreditNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="EditCreditDate" xml:space="preserve">
+    <value>تاريخ الائتمان</value>
+  </data>
+  <data name="EditCreditCardCommercial" xml:space="preserve">
+    <value>المعلومات التجارية</value>
+  </data>
+  <data name="EditCreditClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="EditCreditProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="EditCreditEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
+  <data name="EditCreditCardFinancier" xml:space="preserve">
+    <value>البيانات المالية</value>
+  </data>
+  <data name="EditCreditQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="EditCreditPrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة</value>
+  </data>
+  <data name="EditCreditRemise" xml:space="preserve">
+    <value>الخصم</value>
+  </data>
+  <data name="EditCreditMontantTotal" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="EditCreditCardInformations" xml:space="preserve">
+    <value>المعلومات والشيك</value>
+  </data>
+  <data name="EditCreditStatut" xml:space="preserve">
+    <value>حالة الائتمان</value>
+  </data>
+  <data name="EditCreditHasCheque" xml:space="preserve">
+    <value>دفع بالشيك</value>
+  </data>
+  <data name="EditCreditChequeReference" xml:space="preserve">
+    <value>مرجع الشيك</value>
+  </data>
+  <data name="EditCreditStatutCheque" xml:space="preserve">
+    <value>حالة الشيك</value>
+  </data>
+  <data name="EditCreditNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="EditCreditCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="EditCreditSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="EditCreditValidationClient" xml:space="preserve">
+    <value>يرجى اختيار عميل.</value>
+  </data>
+  <data name="EditCreditValidationProduit" xml:space="preserve">
+    <value>يرجى اختيار منتج.</value>
+  </data>
+  <data name="EditCreditValidationQuantite" xml:space="preserve">
+    <value>يرجى إدخال كمية صحيحة.</value>
+  </data>
+  <data name="EditCreditSaveError" xml:space="preserve">
+    <value>حدث خطأ أثناء تحديث الائتمان.</value>
+  </data>
+
   <!-- ═══════════ Achats section ═══════════ -->
   <!-- Hub card -->
   <data name="InfraAchats" xml:space="preserve">
@@ -1300,11 +1598,17 @@
   <data name="AchatColProduit" xml:space="preserve">
     <value>المنتج</value>
   </data>
+  <data name="AchatColEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
   <data name="AchatColQuantite" xml:space="preserve">
     <value>الكمية</value>
   </data>
   <data name="AchatColCout" xml:space="preserve">
     <value>التكلفة</value>
+  </data>
+  <data name="AchatColPrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة</value>
   </data>
   <data name="AchatColDefectueuse" xml:space="preserve">
     <value>معيب</value>
@@ -1346,6 +1650,9 @@
   <data name="NouveauAchatProduit" xml:space="preserve">
     <value>المنتج</value>
   </data>
+  <data name="NouveauAchatEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
   <data name="NouveauAchatCardFinancier" xml:space="preserve">
     <value>البيانات المالية</value>
   </data>
@@ -1386,6 +1693,158 @@
     <value>إلغاء</value>
   </data>
 
+  <!-- ── NouveauVoyage popup ── -->
+  <data name="NouveauVoyageTitle" xml:space="preserve">
+    <value>إنشاء رحلة</value>
+  </data>
+  <data name="NouveauVoyageSubtitle" xml:space="preserve">
+    <value>أدخل تفاصيل الرحلة والمخزون والمعاملات</value>
+  </data>
+  <data name="NouveauVoyageStatutBadge" xml:space="preserve">
+    <value>جارية</value>
+  </data>
+  <data name="NouveauVoyageColDetails" xml:space="preserve">
+    <value>تفاصيل الرحلة</value>
+  </data>
+  <data name="NouveauVoyageColStock" xml:space="preserve">
+    <value>مخزون الرحلة</value>
+  </data>
+  <data name="NouveauVoyageColTransaction" xml:space="preserve">
+    <value>المعاملات</value>
+  </data>
+  <data name="NouveauVoyageChauffeur" xml:space="preserve">
+    <value>السائق *</value>
+  </data>
+  <data name="NouveauVoyageCamion" xml:space="preserve">
+    <value>الشاحنة</value>
+  </data>
+  <data name="NouveauVoyageCiterne" xml:space="preserve">
+    <value>الصهريج</value>
+  </data>
+  <data name="NouveauVoyageLieuDepart" xml:space="preserve">
+    <value>مكان المغادرة</value>
+  </data>
+  <data name="NouveauVoyageLieuTerminal" xml:space="preserve">
+    <value>مكان الوصول</value>
+  </data>
+  <data name="NouveauVoyageDateDepart" xml:space="preserve">
+    <value>تاريخ المغادرة</value>
+  </data>
+  <data name="NouveauVoyageDateFinal" xml:space="preserve">
+    <value>تاريخ الوصول</value>
+  </data>
+  <data name="NouveauVoyageKmDepart" xml:space="preserve">
+    <value>كم المغادرة</value>
+  </data>
+  <data name="NouveauVoyageKmFinal" xml:space="preserve">
+    <value>كم الوصول</value>
+  </data>
+  <data name="NouveauVoyageFillOnClose" xml:space="preserve">
+    <value>يُملأ عند الإغلاق</value>
+  </data>
+  <data name="NouveauVoyageTabVente" xml:space="preserve">
+    <value>بيع</value>
+  </data>
+  <data name="NouveauVoyageTabCredit" xml:space="preserve">
+    <value>دين</value>
+  </data>
+  <data name="NouveauVoyageTabAchat" xml:space="preserve">
+    <value>شراء</value>
+  </data>
+  <data name="NouveauVoyageTabFrais" xml:space="preserve">
+    <value>مصاريف</value>
+  </data>
+  <data name="NouveauVoyageClient" xml:space="preserve">
+    <value>العميل *</value>
+  </data>
+  <data name="NouveauVoyageFournisseur" xml:space="preserve">
+    <value>المورد *</value>
+  </data>
+  <data name="NouveauVoyageProduit" xml:space="preserve">
+    <value>المنتج *</value>
+  </data>
+  <data name="NouveauVoyageQuantite" xml:space="preserve">
+    <value>الكمية *</value>
+  </data>
+  <data name="NouveauVoyagePrixU" xml:space="preserve">
+    <value>سعر الوحدة *</value>
+  </data>
+  <data name="NouveauVoyagePrixAchat" xml:space="preserve">
+    <value>سعر الشراء *</value>
+  </data>
+  <data name="NouveauVoyageCout" xml:space="preserve">
+    <value>التكلفة الإجمالية</value>
+  </data>
+  <data name="NouveauVoyageRemise" xml:space="preserve">
+    <value>الخصم %</value>
+  </data>
+  <data name="NouveauVoyageMontantTotal" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="NouveauVoyagePayment" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="NouveauVoyageChequeRef" xml:space="preserve">
+    <value>مرجع الشيك</value>
+  </data>
+  <data name="NouveauVoyageFraisType" xml:space="preserve">
+    <value>نوع المصروف *</value>
+  </data>
+  <data name="NouveauVoyageFraisMontant" xml:space="preserve">
+    <value>المبلغ *</value>
+  </data>
+  <data name="NouveauVoyageNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="NouveauVoyageDescription" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="NouveauVoyageLivraisonDefectueuse" xml:space="preserve">
+    <value>تسليم معيب</value>
+  </data>
+  <data name="NouveauVoyageAddTransaction" xml:space="preserve">
+    <value>إضافة</value>
+  </data>
+  <data name="NouveauVoyageSumType" xml:space="preserve">
+    <value>النوع</value>
+  </data>
+  <data name="NouveauVoyageSumPartie" xml:space="preserve">
+    <value>الطرف</value>
+  </data>
+  <data name="NouveauVoyageSumProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="NouveauVoyageSumQte" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="NouveauVoyageSumPrixU" xml:space="preserve">
+    <value>سعر/و</value>
+  </data>
+  <data name="NouveauVoyageSumRemise" xml:space="preserve">
+    <value>خصم</value>
+  </data>
+  <data name="NouveauVoyageSumMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="NouveauVoyageFooterTransactions" xml:space="preserve">
+    <value>معاملة/معاملات</value>
+  </data>
+  <data name="NouveauVoyageFooterStocks" xml:space="preserve">
+    <value>منتج/منتجات</value>
+  </data>
+  <data name="NouveauVoyageBtnCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauVoyageBtnCreate" xml:space="preserve">
+    <value>إنشاء الرحلة</value>
+  </data>
+  <data name="NouveauVoyageValidationChauffeur" xml:space="preserve">
+    <value>يرجى اختيار سائق.</value>
+  </data>
+  <data name="NouveauVoyageSaveError" xml:space="preserve">
+    <value>خطأ في إنشاء الرحلة. تحقق من الاتصال.</value>
+  </data>
+
   <!-- ── NouveauVente popup ── -->
   <data name="NouveauVenteTitle" xml:space="preserve">
     <value>بيع جديد</value>
@@ -1404,6 +1863,9 @@
   </data>
   <data name="NouveauVenteProduit" xml:space="preserve">
     <value>المنتج</value>
+  </data>
+  <data name="NouveauVenteEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
   </data>
   <data name="NouveauVenteCardFinancier" xml:space="preserve">
     <value>المالية</value>
@@ -1476,6 +1938,9 @@
   <data name="EditVenteProduit" xml:space="preserve">
     <value>المنتج</value>
   </data>
+  <data name="EditVenteEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
   <data name="EditVenteCardFinancier" xml:space="preserve">
     <value>مالي</value>
   </data>
@@ -1543,6 +2008,9 @@
   </data>
   <data name="DetailVenteLabelProduit" xml:space="preserve">
     <value>المنتج</value>
+  </data>
+  <data name="DetailVenteLabelEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
   </data>
   <data name="DetailVenteCardFinancier" xml:space="preserve">
     <value>مالي</value>
@@ -1638,6 +2106,9 @@
   <data name="DetailAchatLabelProduit" xml:space="preserve">
     <value>المنتج</value>
   </data>
+  <data name="DetailAchatLabelEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
   <data name="DetailAchatLabelQuantite" xml:space="preserve">
     <value>الكمية</value>
   </data>
@@ -1673,6 +2144,342 @@
   <data name="InfraCardDescVentes" xml:space="preserve">
     <value>إدارة مبيعات العملاء</value>
   </data>
+  <!-- ── Employes infra card ── -->
+  <data name="InfraEmployes" xml:space="preserve">
+    <value>الموظفون</value>
+  </data>
+  <data name="InfraCardDescEmployes" xml:space="preserve">
+    <value>إدارة الموظفين</value>
+  </data>
+  <!-- ── Credits infra card ── -->
+  <data name="InfraCredits" xml:space="preserve">
+    <value>الديون</value>
+  </data>
+  <data name="InfraCardDescCredits" xml:space="preserve">
+    <value>إدارة ديون العملاء</value>
+  </data>
+  <!-- ── Voyages infra card ── -->
+  <data name="InfraVoyages" xml:space="preserve">
+    <value>الرحلات</value>
+  </data>
+  <data name="InfraCardDescVoyages" xml:space="preserve">
+    <value>إدارة الرحلات والمخزون والمصاريف</value>
+  </data>
+  <!-- ── Voyages section ── -->
+  <data name="VoyageBreadcrumb" xml:space="preserve">
+    <value>الرحلات</value>
+  </data>
+  <data name="VoyagePageSubtitle" xml:space="preserve">
+    <value>قائمة جميع الرحلات المسجلة</value>
+  </data>
+  <data name="VoyageAddButton" xml:space="preserve">
+    <value>رحلة جديدة</value>
+  </data>
+  <data name="VoyageTableTitle" xml:space="preserve">
+    <value>الرحلات</value>
+  </data>
+  <data name="VoyageTableSubtitle" xml:space="preserve">
+    <value>جميع الرحلات المسجلة</value>
+  </data>
+  <data name="VoyageCountBadge" xml:space="preserve">
+    <value>رحلة</value>
+  </data>
+  <data name="VoyageEmpty" xml:space="preserve">
+    <value>لا توجد رحلات مسجلة</value>
+  </data>
+  <data name="VoyageColCamion" xml:space="preserve">
+    <value>الشاحنة</value>
+  </data>
+  <data name="VoyageColChauffeur" xml:space="preserve">
+    <value>السائق</value>
+  </data>
+  <data name="VoyageColCiterne" xml:space="preserve">
+    <value>الخزان</value>
+  </data>
+  <data name="VoyageColDepart" xml:space="preserve">
+    <value>تاريخ الانطلاق</value>
+  </data>
+  <data name="VoyageColArrivee" xml:space="preserve">
+    <value>تاريخ الوصول</value>
+  </data>
+  <data name="VoyageColLieuDepart" xml:space="preserve">
+    <value>مكان الانطلاق</value>
+  </data>
+  <data name="VoyageColLieuTerminal" xml:space="preserve">
+    <value>المحطة</value>
+  </data>
+  <data name="VoyageColStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="VoyageColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="VoyageDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="VoyageEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="VoyageDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <!-- StockVoyage table -->
+  <data name="StockVoyageTableTitle" xml:space="preserve">
+    <value>مخزون الرحلات</value>
+  </data>
+  <data name="StockVoyageTableSubtitle" xml:space="preserve">
+    <value>المنتجات المشحونة في كل رحلة</value>
+  </data>
+  <data name="StockVoyageEmpty" xml:space="preserve">
+    <value>لا يوجد مخزون مسجل</value>
+  </data>
+  <data name="StockVoyageColVoyage" xml:space="preserve">
+    <value>الرحلة</value>
+  </data>
+  <data name="StockVoyageColProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="StockVoyageColQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="StockVoyageColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <!-- FraisVoyage table -->
+  <data name="FraisVoyageTableTitle" xml:space="preserve">
+    <value>مصاريف الرحلات</value>
+  </data>
+  <data name="FraisVoyageTableSubtitle" xml:space="preserve">
+    <value>النفقات المرتبطة بالرحلات</value>
+  </data>
+  <data name="FraisVoyageEmpty" xml:space="preserve">
+    <value>لا توجد مصاريف مسجلة</value>
+  </data>
+  <data name="FraisVoyageColVoyage" xml:space="preserve">
+    <value>الرحلة</value>
+  </data>
+  <data name="FraisVoyageColType" xml:space="preserve">
+    <value>النوع</value>
+  </data>
+  <data name="FraisVoyageColMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="FraisVoyageColDescription" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="FraisVoyageColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <!-- ── Employes section ── -->
+  <data name="EmployeBreadcrumb" xml:space="preserve">
+    <value>الموظفون</value>
+  </data>
+  <data name="EmployePageSubtitle" xml:space="preserve">
+    <value>قائمة جميع الموظفين المسجلين</value>
+  </data>
+  <data name="EmployeAddButton" xml:space="preserve">
+    <value>موظف جديد</value>
+  </data>
+  <data name="EmployeTableTitle" xml:space="preserve">
+    <value>الموظفون</value>
+  </data>
+  <data name="EmployeTableSubtitle" xml:space="preserve">
+    <value>جميع الموظفين المسجلين في النظام</value>
+  </data>
+  <data name="EmployeCountBadge" xml:space="preserve">
+    <value>موظفون</value>
+  </data>
+  <data name="EmployeColPrenom" xml:space="preserve">
+    <value>الاسم الأول</value>
+  </data>
+  <data name="EmployeColNom" xml:space="preserve">
+    <value>اللقب</value>
+  </data>
+  <data name="EmployeColCIN" xml:space="preserve">
+    <value>رقم الهوية</value>
+  </data>
+  <data name="EmployeColTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="EmployeColPoste" xml:space="preserve">
+    <value>المنصب</value>
+  </data>
+  <data name="EmployeColSalaire" xml:space="preserve">
+    <value>الراتب</value>
+  </data>
+  <data name="EmployeColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="EmployeDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="EmployeEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="EmployeDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="EmployeEmpty" xml:space="preserve">
+    <value>لا يوجد موظفون مسجلون.</value>
+  </data>
+  <!-- ── NouveauEmployeDialog popup ── -->
+  <data name="NouveauEmployeTitle" xml:space="preserve">
+    <value>موظف جديد</value>
+  </data>
+  <data name="NouveauEmployeSubtitle" xml:space="preserve">
+    <value>أدخل معلومات الموظف الجديد</value>
+  </data>
+  <data name="NouveauEmployeIdentiteSection" xml:space="preserve">
+    <value>الهوية</value>
+  </data>
+  <data name="NouveauEmployeContactSection" xml:space="preserve">
+    <value>التواصل</value>
+  </data>
+  <data name="NouveauEmployePosteSection" xml:space="preserve">
+    <value>المنصب</value>
+  </data>
+  <data name="NouveauEmployeSalaireSection" xml:space="preserve">
+    <value>الأجر</value>
+  </data>
+  <data name="NouveauEmployeLabelPrenom" xml:space="preserve">
+    <value>الاسم الأول *</value>
+  </data>
+  <data name="NouveauEmployeLabelNom" xml:space="preserve">
+    <value>اللقب *</value>
+  </data>
+  <data name="NouveauEmployeLabelCIN" xml:space="preserve">
+    <value>رقم الهوية</value>
+  </data>
+  <data name="NouveauEmployeLabelTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="NouveauEmployeLabelAdresse" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="NouveauEmployeLabelPoste" xml:space="preserve">
+    <value>المسمى الوظيفي</value>
+  </data>
+  <data name="NouveauEmployeLabelSalaire" xml:space="preserve">
+    <value>الراتب الشهري</value>
+  </data>
+  <data name="NouveauEmployeSalaireHint" xml:space="preserve">
+    <value>المبلغ بالدرهم</value>
+  </data>
+  <data name="NouveauEmployeCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauEmployeSave" xml:space="preserve">
+    <value>  حفظ</value>
+  </data>
+  <data name="NouveauEmployeSaving" xml:space="preserve">
+    <value>جارٍ الحفظ…</value>
+  </data>
+  <!-- ── EditEmployeDialog popup ── -->
+  <data name="EditEmployeTitle" xml:space="preserve">
+    <value>تعديل الموظف</value>
+  </data>
+  <data name="EditEmployeIdentiteSection" xml:space="preserve">
+    <value>الهوية</value>
+  </data>
+  <data name="EditEmployeContactSection" xml:space="preserve">
+    <value>التواصل</value>
+  </data>
+  <data name="EditEmployePosteSection" xml:space="preserve">
+    <value>المنصب</value>
+  </data>
+  <data name="EditEmployeSalaireSection" xml:space="preserve">
+    <value>الأجر</value>
+  </data>
+  <data name="EditEmployeLabelPrenom" xml:space="preserve">
+    <value>الاسم الأول *</value>
+  </data>
+  <data name="EditEmployeLabelNom" xml:space="preserve">
+    <value>اللقب *</value>
+  </data>
+  <data name="EditEmployeLabelCIN" xml:space="preserve">
+    <value>رقم الهوية</value>
+  </data>
+  <data name="EditEmployeLabelTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="EditEmployeLabelAdresse" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="EditEmployeLabelPoste" xml:space="preserve">
+    <value>المسمى الوظيفي</value>
+  </data>
+  <data name="EditEmployeLabelSalaire" xml:space="preserve">
+    <value>الراتب الشهري</value>
+  </data>
+  <data name="EditEmployeSalaireHint" xml:space="preserve">
+    <value>المبلغ بالدرهم</value>
+  </data>
+  <data name="EditEmployeCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="EditEmployeSave" xml:space="preserve">
+    <value>  حفظ</value>
+  </data>
+  <data name="EditEmployeSaving" xml:space="preserve">
+    <value>جارٍ الحفظ…</value>
+  </data>
+
+  <!-- ── DetailEmployeDialog popup ── -->
+  <data name="DetailEmployeTitle" xml:space="preserve">
+    <value>تفاصيل الموظف</value>
+  </data>
+  <data name="DetailEmployeIdentiteSection" xml:space="preserve">
+    <value>الهوية</value>
+  </data>
+  <data name="DetailEmployeLabelPrenom" xml:space="preserve">
+    <value>الاسم الأول</value>
+  </data>
+  <data name="DetailEmployeLabelNom" xml:space="preserve">
+    <value>اسم العائلة</value>
+  </data>
+  <data name="DetailEmployeLabelCIN" xml:space="preserve">
+    <value>رقم البطاقة</value>
+  </data>
+  <data name="DetailEmployeContactSection" xml:space="preserve">
+    <value>التواصل</value>
+  </data>
+  <data name="DetailEmployeLabelTelephone" xml:space="preserve">
+    <value>الهاتف</value>
+  </data>
+  <data name="DetailEmployeLabelAdresse" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="DetailEmployePosteSection" xml:space="preserve">
+    <value>المنصب</value>
+  </data>
+  <data name="DetailEmployeLabelPoste" xml:space="preserve">
+    <value>المنصب الوظيفي</value>
+  </data>
+  <data name="DetailEmployeSalaireSection" xml:space="preserve">
+    <value>الراتب</value>
+  </data>
+  <data name="DetailEmployeLabelSalaire" xml:space="preserve">
+    <value>الراتب الشهري</value>
+  </data>
+  <data name="DetailEmployeSalaireHint" xml:space="preserve">
+    <value>المبلغ الإجمالي / الشهر</value>
+  </data>
+  <data name="DetailEmployeAuditSection" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="DetailEmployeLabelCreePar" xml:space="preserve">
+    <value>أضافه</value>
+  </data>
+  <data name="DetailEmployeLabelModifiePar" xml:space="preserve">
+    <value>عدّله</value>
+  </data>
+  <data name="DetailEmployeClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailEmployeEdit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+
   <data name="VenteBreadcrumb" xml:space="preserve">
     <value>المبيعات</value>
   </data>
@@ -1703,8 +2510,14 @@
   <data name="VenteColProduit" xml:space="preserve">
     <value>المنتج</value>
   </data>
+  <data name="VenteColEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
   <data name="VenteColQuantite" xml:space="preserve">
     <value>الكمية</value>
+  </data>
+  <data name="VenteColPrix" xml:space="preserve">
+    <value>سعر الوحدة</value>
   </data>
   <data name="VenteColMontant" xml:space="preserve">
     <value>المبلغ</value>

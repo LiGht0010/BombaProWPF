@@ -71,7 +71,11 @@ public class VentesSectionViewModel : ObservableObject
                     DateVente     = d.DateVente,
                     ClientNom     = d.ClientNom,
                     ProduitNom    = d.ProduitNom,
+                    EmployeNom    = d.EmployeNom,
+                    VoyageID      = d.VoyageID,
+                    VoyageNumero  = d.VoyageNumero,
                     Quantite      = d.Quantite,
+                    PrixUnitaire  = d.PrixUnitaire,
                     MontantTotal  = d.MontantTotal,
                     PaymentMethod = d.PaymentMethod
                 }));

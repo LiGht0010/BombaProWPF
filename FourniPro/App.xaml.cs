@@ -27,10 +27,20 @@ namespace FourniPro
             ApiConfig.Initialize();
             LanguageManager.Instance.SetLanguage(settings.LanguageCode);
 
-            var login = new LoginWindow();
-            MainWindow = login;
-            login.Show();
-        }
-    }
+                    DispatcherUnhandledException += (_, args) =>
+                    {
+                        args.Handled = true;
+                        System.Windows.MessageBox.Show(
+                            $"Unhandled exception:\n\n{args.Exception.GetType().Name}: {args.Exception.Message}\n\n{args.Exception.StackTrace}",
+                            "Fatal Error",
+                            System.Windows.MessageBoxButton.OK,
+                            System.Windows.MessageBoxImage.Error);
+                    };
+
+                    var login = new LoginWindow();
+                    MainWindow = login;
+                    login.Show();
+                }
+            }
 }
 

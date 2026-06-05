@@ -247,7 +247,7 @@
                             </StackPanel>
 
                             <!-- Produit -->
-                            <StackPanel>
+                            <StackPanel Margin="0,0,0,12">
                                 <TextBlock Text="{Binding [NouveauAchatProduit], Source={x:Static loc:LanguageManager.Instance}}"
                                            Style="{StaticResource DlgLabelStyle}" />
                                 <ComboBox ItemsSource="{Binding Produits}"
@@ -260,6 +260,25 @@
                                                 <TextBlock Text=" (" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
                                                 <TextBlock Text="{Binding NumeroProduit}" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
                                                 <TextBlock Text=")" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <!-- Employé responsable -->
+                            <StackPanel>
+                                <TextBlock Text="{Binding [NouveauAchatEmploye], Source={x:Static loc:LanguageManager.Instance}}"
+                                           Style="{StaticResource DlgLabelStyle}" />
+                                <ComboBox ItemsSource="{Binding Employes}"
+                                          SelectedItem="{Binding SelectedEmploye, Mode=TwoWay}"
+                                          Style="{DynamicResource NeuComboBoxStyle}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Prenom}" />
+                                                <TextBlock Text=" " />
+                                                <TextBlock Text="{Binding Nom}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>

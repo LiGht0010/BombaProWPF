@@ -14,6 +14,7 @@ public class EditVenteViewModel : ObservableObject
     private readonly VenteService   _venteService   = new();
     private readonly ClientService  _clientService  = new();
     private readonly ProduitService _produitService = new();
+    private readonly EmployeService _employeService = new();
 
     private readonly int  _venteId;
     private readonly int? _originalQty;
@@ -23,6 +24,7 @@ public class EditVenteViewModel : ObservableObject
     // FK ids to restore after lookups load
     private readonly int? _pendingClientId;
     private readonly int? _pendingProduitId;
+    private readonly int? _pendingEmployeId;
 
     // ── Fields ───────────────────────────────────────────────────────────────
 
@@ -56,6 +58,13 @@ public class EditVenteViewModel : ObservableObject
             // In edit mode we do NOT auto-overwrite the snapshotted price
             SetProperty(ref _selectedProduit, value);
         }
+    }
+
+    private EmployeDto? _selectedEmploye;
+    public EmployeDto? SelectedEmploye
+    {
+        get => _selectedEmploye;
+        set => SetProperty(ref _selectedEmploye, value);
     }
 
     private int? _quantite;
@@ -118,6 +127,7 @@ public class EditVenteViewModel : ObservableObject
 
     public ObservableCollection<ClientDto>  Clients  { get; } = [];
     public ObservableCollection<ProduitDto> Produits { get; } = [];
+    public ObservableCollection<EmployeDto> Employes { get; } = [];
 
     public IReadOnlyList<string> PaymentMethods { get; } =
         ["TPE", "Virement", "Especes"];
@@ -158,6 +168,7 @@ public class EditVenteViewModel : ObservableObject
         _originalDateCreation = vente.DateCreation;
         _pendingClientId   = vente.ClientID;
         _pendingProduitId  = vente.ProduitID;
+        _pendingEmployeId  = vente.EmployeId;
 
         // Pre-fill all fields from the existing DTO
         NumeroVente           = string.IsNullOrWhiteSpace(vente.NumeroVente)
@@ -203,10 +214,14 @@ public class EditVenteViewModel : ObservableObject
             var produits = await _produitService.GetAllProduitsAsync();
             foreach (var p in produits) Produits.Add(p);
 
+            var employes = await _employeService.GetAllEmployesAsync();
+            foreach (var e in employes) Employes.Add(e);
+
             // Restore FK selections without touching the snapshotted price
             SelectedClient = Clients.FirstOrDefault(c => c.ClientId == _pendingClientId);
             _selectedProduit = Produits.FirstOrDefault(p => p.ProduitId == _pendingProduitId);
             OnPropertyChanged(nameof(SelectedProduit));
+            SelectedEmploye = Employes.FirstOrDefault(e => e.EmployeId == _pendingEmployeId);
         }
         finally { IsLoading = false; }
     }
@@ -256,6 +271,7 @@ public class EditVenteViewModel : ObservableObject
                 DateVente     = DateOnly.FromDateTime(DateVente),
                 ClientID      = SelectedClient.ClientId,
                 ProduitID     = SelectedProduit.ProduitId,
+                EmployeId     = SelectedEmploye?.EmployeId,
                 Quantite      = Quantite,
                 PrixUnitaire  = PrixUnitaire,
                 Remise        = Remise,

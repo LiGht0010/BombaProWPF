@@ -19,6 +19,7 @@ public class EditAchatViewModel : ObservableObject
     private readonly AchatService _achatService = new();
     private readonly FournisseurService _fournisseurService = new();
     private readonly ProduitService _produitService = new();
+    private readonly EmployeService _employeService = new();
 
     private readonly int _achatId;
     private readonly int? _originalQty;
@@ -43,6 +44,14 @@ public class EditAchatViewModel : ObservableObject
 
     public ObservableCollection<FournisseurDto> Fournisseurs { get; } = [];
     public ObservableCollection<ProduitDto> Produits { get; } = [];
+    public ObservableCollection<EmployeDto> Employes { get; } = [];
+
+    private EmployeDto? _selectedEmploye;
+    public EmployeDto? SelectedEmploye
+    {
+        get => _selectedEmploye;
+        set => SetProperty(ref _selectedEmploye, value);
+    }
 
     private FournisseurDto? _selectedFournisseur;
     public FournisseurDto? SelectedFournisseur
@@ -161,6 +170,7 @@ public class EditAchatViewModel : ObservableObject
         // Store IDs so we can pre-select combos after lookups load
         _pendingFournisseurId = achat.FournisseurID;
         _pendingProduitId     = achat.ProduitID;
+        _pendingEmployeId     = achat.EmployeId;
 
         SaveCommand = new AsyncRelayCommand(SaveAsync);
     }
@@ -168,6 +178,7 @@ public class EditAchatViewModel : ObservableObject
     // Pending IDs to resolve once lookup collections are populated
     private readonly int? _pendingFournisseurId;
     private readonly int? _pendingProduitId;
+    private readonly int? _pendingEmployeId;
 
     /// <summary>Loads combo-box data and pre-selects the existing FK values.</summary>
     public async Task LoadLookupsAsync()
@@ -188,6 +199,11 @@ public class EditAchatViewModel : ObservableObject
             // Pre-select without auto-filling the price again (it's already set)
             _selectedProduit = Produits.FirstOrDefault(p => p.ProduitId == _pendingProduitId);
             OnPropertyChanged(nameof(SelectedProduit));
+
+            var employes = await _employeService.GetAllEmployesAsync();
+            foreach (var e in employes)
+                Employes.Add(e);
+            SelectedEmploye = Employes.FirstOrDefault(e => e.EmployeId == _pendingEmployeId);
         }
         finally { IsLoading = false; }
     }
@@ -231,6 +247,7 @@ public class EditAchatViewModel : ObservableObject
                 Date                 = DateOnly.FromDateTime(Date),
                 FournisseurID        = SelectedFournisseur.FournisseurId,
                 ProduitID            = SelectedProduit.ProduitId,
+                EmployeId            = SelectedEmploye?.EmployeId,
                 Quantite             = Quantite,
                 PrixAchatUnitaire    = PrixAchatUnitaire,
                 Cout                 = Cout,

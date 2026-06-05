@@ -49,6 +49,9 @@ namespace FourniProApi.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<int?>("EmployeId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("FournisseurID")
                         .HasColumnType("integer");
 
@@ -59,8 +62,8 @@ namespace FourniProApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Numero")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<decimal?>("PrixAchatUnitaire")
                         .HasColumnType("decimal(18,2)");
@@ -71,7 +74,14 @@ namespace FourniProApi.Migrations
                     b.Property<int?>("Quantite")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("VoyageID")
+                        .HasColumnType("integer");
+
                     b.HasKey("AchatId");
+
+                    b.HasIndex("EmployeId");
+
+                    b.HasIndex("VoyageID");
 
                     b.ToTable("Achats");
                 });
@@ -253,6 +263,143 @@ namespace FourniProApi.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("FourniProApi.Models.Credit", b =>
+                {
+                    b.Property<int>("CreditId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CreditId"));
+
+                    b.Property<int?>("AjoutePar")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ChequeReference")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("ClientID")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("DateCreation")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("DateCredit")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("DateModification")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("EmployeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ModifiePar")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal?>("MontantTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroCredit")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<decimal?>("PrixUnitaire")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("ProduitID")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Quantite")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ReferenceFile")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<decimal?>("Remise")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Statut")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("StatutCheque")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int?>("VoyageID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CreditId");
+
+                    b.HasIndex("EmployeId");
+
+                    b.HasIndex("VoyageID");
+
+                    b.ToTable("Credits");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.Employe", b =>
+                {
+                    b.Property<int>("EmployeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EmployeId"));
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int?>("AjoutePar")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CIN")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime?>("DateCreation")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateModification")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ModifiePar")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Poste")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Prenom")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<decimal?>("Salaire")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Telephone")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
+
+                    b.HasKey("EmployeId");
+
+                    b.ToTable("Employes");
+                });
+
             modelBuilder.Entity("FourniProApi.Models.Fournisseur", b =>
                 {
                     b.Property<int>("FournisseurId")
@@ -317,6 +464,35 @@ namespace FourniProApi.Migrations
                     b.HasKey("FournisseurId");
 
                     b.ToTable("Fournisseurs");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.FraisVoyage", b =>
+                {
+                    b.Property<int>("FraisVoyageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FraisVoyageId"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<decimal?>("Montant")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("VoyageId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("FraisVoyageId");
+
+                    b.HasIndex("VoyageId");
+
+                    b.ToTable("FraisVoyages");
                 });
 
             modelBuilder.Entity("FourniProApi.Models.Permission", b =>
@@ -392,6 +568,32 @@ namespace FourniProApi.Migrations
                     b.HasKey("ProduitId");
 
                     b.ToTable("Produits");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.StockVoyage", b =>
+                {
+                    b.Property<int>("StockVoyageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StockVoyageId"));
+
+                    b.Property<int?>("ProduitId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Quantite")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("VoyageId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("StockVoyageId");
+
+                    b.HasIndex("ProduitId");
+
+                    b.HasIndex("VoyageId");
+
+                    b.ToTable("StockVoyages");
                 });
 
             modelBuilder.Entity("FourniProApi.Models.User", b =>
@@ -497,7 +699,7 @@ namespace FourniProApi.Migrations
                     b.Property<DateOnly>("DateVente")
                         .HasColumnType("date");
 
-                    b.Property<int?>("EmployerID")
+                    b.Property<int?>("EmployeId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("ModifiePar")
@@ -543,7 +745,138 @@ namespace FourniProApi.Migrations
 
                     b.HasKey("VenteId");
 
+                    b.HasIndex("EmployeId");
+
+                    b.HasIndex("VoyageID");
+
                     b.ToTable("Ventes");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.Voyage", b =>
+                {
+                    b.Property<int>("VoyageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VoyageId"));
+
+                    b.Property<int?>("AjoutePar")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CamionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ChauffeurId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CiterneId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("DateCreation")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateDepart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateFinal")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateModification")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal?>("KilometrageDepart")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal?>("KilometrageFinal")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("LieuDepart")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("LieuTerminal")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int?>("ModifiePar")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Statut")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("VoyageId");
+
+                    b.HasIndex("CamionId");
+
+                    b.HasIndex("ChauffeurId");
+
+                    b.HasIndex("CiterneId");
+
+                    b.ToTable("Voyages");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.Achat", b =>
+                {
+                    b.HasOne("FourniProApi.Models.Employe", "Employe")
+                        .WithMany("Achats")
+                        .HasForeignKey("EmployeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("FourniProApi.Models.Voyage", "Voyage")
+                        .WithMany()
+                        .HasForeignKey("VoyageID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Employe");
+
+                    b.Navigation("Voyage");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.Credit", b =>
+                {
+                    b.HasOne("FourniProApi.Models.Employe", "Employe")
+                        .WithMany("Credits")
+                        .HasForeignKey("EmployeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("FourniProApi.Models.Voyage", "Voyage")
+                        .WithMany()
+                        .HasForeignKey("VoyageID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Employe");
+
+                    b.Navigation("Voyage");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.FraisVoyage", b =>
+                {
+                    b.HasOne("FourniProApi.Models.Voyage", "Voyage")
+                        .WithMany("Frais")
+                        .HasForeignKey("VoyageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Voyage");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.StockVoyage", b =>
+                {
+                    b.HasOne("FourniProApi.Models.Produit", "Produit")
+                        .WithMany()
+                        .HasForeignKey("ProduitId");
+
+                    b.HasOne("FourniProApi.Models.Voyage", "Voyage")
+                        .WithMany("Stocks")
+                        .HasForeignKey("VoyageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produit");
+
+                    b.Navigation("Voyage");
                 });
 
             modelBuilder.Entity("FourniProApi.Models.UserPermission", b =>
@@ -565,6 +898,56 @@ namespace FourniProApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FourniProApi.Models.Vente", b =>
+                {
+                    b.HasOne("FourniProApi.Models.Employe", "Employe")
+                        .WithMany("Ventes")
+                        .HasForeignKey("EmployeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("FourniProApi.Models.Voyage", "Voyage")
+                        .WithMany()
+                        .HasForeignKey("VoyageID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Employe");
+
+                    b.Navigation("Voyage");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.Voyage", b =>
+                {
+                    b.HasOne("FourniProApi.Models.Camion", "Camion")
+                        .WithMany()
+                        .HasForeignKey("CamionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("FourniProApi.Models.Chauffeur", "Chauffeur")
+                        .WithMany()
+                        .HasForeignKey("ChauffeurId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("FourniProApi.Models.Citerne", "Citerne")
+                        .WithMany()
+                        .HasForeignKey("CiterneId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Camion");
+
+                    b.Navigation("Chauffeur");
+
+                    b.Navigation("Citerne");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.Employe", b =>
+                {
+                    b.Navigation("Achats");
+
+                    b.Navigation("Credits");
+
+                    b.Navigation("Ventes");
+                });
+
             modelBuilder.Entity("FourniProApi.Models.Permission", b =>
                 {
                     b.Navigation("UserPermissions");
@@ -573,6 +956,13 @@ namespace FourniProApi.Migrations
             modelBuilder.Entity("FourniProApi.Models.User", b =>
                 {
                     b.Navigation("UserPermissions");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.Voyage", b =>
+                {
+                    b.Navigation("Frais");
+
+                    b.Navigation("Stocks");
                 });
 #pragma warning restore 612, 618
         }

@@ -299,6 +299,23 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
+
+                                <!-- Employé responsable (optional) -->
+                                <TextBlock Text="{Binding [NouveauVenteEmploye], Source={x:Static loc:LanguageManager.Instance}}"
+                                           Style="{StaticResource DlgFieldLabelStyle}" Margin="0,14,0,6" />
+                                <ComboBox ItemsSource="{Binding Employes}"
+                                          SelectedItem="{Binding SelectedEmploye, Mode=TwoWay}"
+                                          Style="{DynamicResource NeuComboBoxStyle}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Prenom}" />
+                                                <TextBlock Text=" " />
+                                                <TextBlock Text="{Binding Nom}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                             </StackPanel>
                         </Border>
                     </Grid>

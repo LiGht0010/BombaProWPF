@@ -16,6 +16,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Citerne> Citernes => Set<Citerne>();
     public DbSet<Achat> Achats => Set<Achat>();
     public DbSet<Vente> Ventes => Set<Vente>();
+    public DbSet<Credit> Credits => Set<Credit>();
+    public DbSet<Employe> Employes => Set<Employe>();
+    public DbSet<Voyage> Voyages => Set<Voyage>();
+    public DbSet<StockVoyage> StockVoyages => Set<StockVoyage>();
+    public DbSet<FraisVoyage> FraisVoyages => Set<FraisVoyage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,6 +44,72 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
+
+        modelBuilder.Entity<Vente>()
+            .HasOne(v => v.Employe)
+            .WithMany(e => e.Ventes)
+            .HasForeignKey(v => v.EmployeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Achat>()
+            .HasOne(a => a.Employe)
+            .WithMany(e => e.Achats)
+            .HasForeignKey(a => a.EmployeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Credit>()
+            .HasOne(c => c.Employe)
+            .WithMany(e => e.Credits)
+            .HasForeignKey(c => c.EmployeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Vente>()
+            .HasOne(v => v.Voyage)
+            .WithMany()
+            .HasForeignKey(v => v.VoyageID)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Achat>()
+            .HasOne(a => a.Voyage)
+            .WithMany()
+            .HasForeignKey(a => a.VoyageID)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Credit>()
+            .HasOne(c => c.Voyage)
+            .WithMany()
+            .HasForeignKey(c => c.VoyageID)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<StockVoyage>()
+            .HasOne(s => s.Voyage)
+            .WithMany(v => v.Stocks)
+            .HasForeignKey(s => s.VoyageId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<FraisVoyage>()
+            .HasOne(f => f.Voyage)
+            .WithMany(v => v.Frais)
+            .HasForeignKey(f => f.VoyageId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Voyage>()
+            .HasOne(v => v.Camion)
+            .WithMany()
+            .HasForeignKey(v => v.CamionId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Voyage>()
+            .HasOne(v => v.Chauffeur)
+            .WithMany()
+            .HasForeignKey(v => v.ChauffeurId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Voyage>()
+            .HasOne(v => v.Citerne)
+            .WithMany()
+            .HasForeignKey(v => v.CiterneId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         // Seed data
         modelBuilder.Entity<User>().HasData(new User

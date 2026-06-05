@@ -12,6 +12,9 @@ public class AchatDto
     public int? ProduitID { get; set; }
     public string? ProduitNom { get; set; }
 
+    public int? EmployeId { get; set; }
+    public string? EmployeNom { get; set; }
+
     public int? Quantite { get; set; }
     public decimal? Cout { get; set; }
     public decimal? PrixAchatUnitaire { get; set; }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1230,6 +1230,300 @@
   <data name="DetailCamionEdit" xml:space="preserve">
     <value>Modifier</value>
   </data>
+
+  <!-- ── Credits section page ── -->
+  <data name="CreditBreadcrumb" xml:space="preserve">
+    <value>Crédits</value>
+  </data>
+  <data name="CreditPageSubtitle" xml:space="preserve">
+    <value>Liste de tous les crédits enregistrés</value>
+  </data>
+  <data name="CreditAddButton" xml:space="preserve">
+    <value>Nouveau crédit</value>
+  </data>
+  <data name="CreditTableTitle" xml:space="preserve">
+    <value>Crédits</value>
+  </data>
+  <data name="CreditTableSubtitle" xml:space="preserve">
+    <value>Tous les crédits clients</value>
+  </data>
+  <data name="CreditCountBadge" xml:space="preserve">
+    <value>crédits</value>
+  </data>
+  <data name="CreditColNumero" xml:space="preserve">
+    <value>N°</value>
+  </data>
+  <data name="CreditColDate" xml:space="preserve">
+    <value>DATE</value>
+  </data>
+  <data name="CreditColClient" xml:space="preserve">
+    <value>CLIENT</value>
+  </data>
+  <data name="CreditColProduit" xml:space="preserve">
+    <value>PRODUIT</value>
+  </data>
+  <data name="CreditColEmploye" xml:space="preserve">
+    <value>EMPLOYÉ</value>
+  </data>
+  <data name="CreditColQte" xml:space="preserve">
+    <value>QTÉ</value>
+  </data>
+  <data name="CreditColMontant" xml:space="preserve">
+    <value>MONTANT</value>
+  </data>
+  <data name="CreditColPrix" xml:space="preserve">
+    <value>PRIX UNIT.</value>
+  </data>
+  <data name="CreditColStatut" xml:space="preserve">
+    <value>STATUT</value>
+  </data>
+  <data name="CreditColCheque" xml:space="preserve">
+    <value>CHÈQUE</value>
+  </data>
+  <data name="CreditColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="CreditDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="CreditEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="CreditDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="CreditEmpty" xml:space="preserve">
+    <value>Aucun crédit enregistré.</value>
+  </data>
+
+  <!-- ── NouveauCredit dialog popup ── -->
+  <data name="NouveauCreditTitle" xml:space="preserve">
+    <value>Nouveau crédit</value>
+  </data>
+  <data name="NouveauCreditCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="NouveauCreditNumero" xml:space="preserve">
+    <value>Numéro</value>
+  </data>
+  <data name="NouveauCreditDate" xml:space="preserve">
+    <value>Date du crédit</value>
+  </data>
+  <data name="NouveauCreditCardCommercial" xml:space="preserve">
+    <value>Informations commerciales</value>
+  </data>
+  <data name="NouveauCreditClient" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="NouveauCreditProduit" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="NouveauCreditEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
+  </data>
+  <data name="NouveauCreditCardFinancier" xml:space="preserve">
+    <value>Données financières</value>
+  </data>
+  <data name="NouveauCreditQuantite" xml:space="preserve">
+    <value>Quantité</value>
+  </data>
+  <data name="NouveauCreditPrixUnitaire" xml:space="preserve">
+    <value>Prix unitaire</value>
+  </data>
+  <data name="NouveauCreditRemise" xml:space="preserve">
+    <value>Remise</value>
+  </data>
+  <data name="NouveauCreditMontantTotal" xml:space="preserve">
+    <value>Montant total</value>
+  </data>
+  <data name="NouveauCreditCardInformations" xml:space="preserve">
+    <value>Informations &amp; Chèque</value>
+  </data>
+  <data name="NouveauCreditStatut" xml:space="preserve">
+    <value>Statut du crédit</value>
+  </data>
+  <data name="NouveauCreditHasCheque" xml:space="preserve">
+    <value>Paiement par chèque</value>
+  </data>
+  <data name="NouveauCreditChequeReference" xml:space="preserve">
+    <value>Référence du chèque</value>
+  </data>
+  <data name="NouveauCreditStatutCheque" xml:space="preserve">
+    <value>Statut du chèque</value>
+  </data>
+  <data name="NouveauCreditNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="NouveauCreditCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="NouveauCreditSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauCreditValidationClient" xml:space="preserve">
+    <value>Veuillez sélectionner un client.</value>
+  </data>
+  <data name="NouveauCreditValidationProduit" xml:space="preserve">
+    <value>Veuillez sélectionner un produit.</value>
+  </data>
+  <data name="NouveauCreditValidationQuantite" xml:space="preserve">
+    <value>Veuillez saisir une quantité valide.</value>
+  </data>
+  <data name="NouveauCreditSaveError" xml:space="preserve">
+    <value>Erreur lors de l'enregistrement du crédit.</value>
+  </data>
+
+  <!-- ── DetailCredit dialog popup ── -->
+  <data name="DetailCreditTitle" xml:space="preserve">
+    <value>Détail du crédit</value>
+  </data>
+  <data name="DetailCreditCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="DetailCreditLabelNumero" xml:space="preserve">
+    <value>NUMÉRO</value>
+  </data>
+  <data name="DetailCreditLabelDate" xml:space="preserve">
+    <value>DATE</value>
+  </data>
+  <data name="DetailCreditLabelStatut" xml:space="preserve">
+    <value>STATUT</value>
+  </data>
+  <data name="DetailCreditLabelReference" xml:space="preserve">
+    <value>RÉFÉRENCE</value>
+  </data>
+  <data name="DetailCreditCardCommercial" xml:space="preserve">
+    <value>Informations commerciales</value>
+  </data>
+  <data name="DetailCreditLabelClient" xml:space="preserve">
+    <value>CLIENT</value>
+  </data>
+  <data name="DetailCreditLabelProduit" xml:space="preserve">
+    <value>PRODUIT</value>
+  </data>
+  <data name="DetailCreditLabelEmploye" xml:space="preserve">
+    <value>EMPLOYÉ</value>
+  </data>
+  <data name="DetailCreditLabelQuantite" xml:space="preserve">
+    <value>QUANTITÉ</value>
+  </data>
+  <data name="DetailCreditCardFinancier" xml:space="preserve">
+    <value>Données financières</value>
+  </data>
+  <data name="DetailCreditLabelPrixUnitaire" xml:space="preserve">
+    <value>PRIX UNITAIRE</value>
+  </data>
+  <data name="DetailCreditLabelRemise" xml:space="preserve">
+    <value>REMISE</value>
+  </data>
+  <data name="DetailCreditLabelMontantTotal" xml:space="preserve">
+    <value>Montant total</value>
+  </data>
+  <data name="DetailCreditLabelMontantSub" xml:space="preserve">
+    <value>Prix × Qté − Remise</value>
+  </data>
+  <data name="DetailCreditCardCheque" xml:space="preserve">
+    <value>Chèque &amp; Audit</value>
+  </data>
+  <data name="DetailCreditLabelChequeRef" xml:space="preserve">
+    <value>RÉF. CHÈQUE</value>
+  </data>
+  <data name="DetailCreditLabelStatutCheque" xml:space="preserve">
+    <value>STATUT CHÈQUE</value>
+  </data>
+  <data name="DetailCreditLabelAjoutePar" xml:space="preserve">
+    <value>CRÉÉ PAR</value>
+  </data>
+  <data name="DetailCreditLabelModifiePar" xml:space="preserve">
+    <value>MODIFIÉ PAR</value>
+  </data>
+  <data name="DetailCreditLabelNote" xml:space="preserve">
+    <value>NOTE</value>
+  </data>
+  <data name="DetailCreditClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailCreditEdit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+
+  <!-- ── EditCredit dialog popup ── -->
+  <data name="EditCreditTitle" xml:space="preserve">
+    <value>Modifier le crédit</value>
+  </data>
+  <data name="EditCreditCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="EditCreditNumero" xml:space="preserve">
+    <value>Numéro</value>
+  </data>
+  <data name="EditCreditDate" xml:space="preserve">
+    <value>Date du crédit</value>
+  </data>
+  <data name="EditCreditCardCommercial" xml:space="preserve">
+    <value>Informations commerciales</value>
+  </data>
+  <data name="EditCreditClient" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="EditCreditProduit" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="EditCreditEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
+  </data>
+  <data name="EditCreditCardFinancier" xml:space="preserve">
+    <value>Données financières</value>
+  </data>
+  <data name="EditCreditQuantite" xml:space="preserve">
+    <value>Quantité</value>
+  </data>
+  <data name="EditCreditPrixUnitaire" xml:space="preserve">
+    <value>Prix unitaire</value>
+  </data>
+  <data name="EditCreditRemise" xml:space="preserve">
+    <value>Remise</value>
+  </data>
+  <data name="EditCreditMontantTotal" xml:space="preserve">
+    <value>Montant total</value>
+  </data>
+  <data name="EditCreditCardInformations" xml:space="preserve">
+    <value>Informations &amp; Chèque</value>
+  </data>
+  <data name="EditCreditStatut" xml:space="preserve">
+    <value>Statut du crédit</value>
+  </data>
+  <data name="EditCreditHasCheque" xml:space="preserve">
+    <value>Paiement par chèque</value>
+  </data>
+  <data name="EditCreditChequeReference" xml:space="preserve">
+    <value>Référence du chèque</value>
+  </data>
+  <data name="EditCreditStatutCheque" xml:space="preserve">
+    <value>Statut du chèque</value>
+  </data>
+  <data name="EditCreditNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="EditCreditCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="EditCreditSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="EditCreditValidationClient" xml:space="preserve">
+    <value>Veuillez sélectionner un client.</value>
+  </data>
+  <data name="EditCreditValidationProduit" xml:space="preserve">
+    <value>Veuillez sélectionner un produit.</value>
+  </data>
+  <data name="EditCreditValidationQuantite" xml:space="preserve">
+    <value>Veuillez saisir une quantité valide.</value>
+  </data>
+  <data name="EditCreditSaveError" xml:space="preserve">
+    <value>Erreur lors de la mise à jour du crédit.</value>
+  </data>
+
   <data name="InfraAchats" xml:space="preserve">
     <value>Achats</value>
   </data>
@@ -1266,11 +1560,17 @@
   <data name="AchatColProduit" xml:space="preserve">
     <value>PRODUIT</value>
   </data>
+  <data name="AchatColEmploye" xml:space="preserve">
+    <value>EMPLOYÉ</value>
+  </data>
   <data name="AchatColQuantite" xml:space="preserve">
     <value>QTÉ</value>
   </data>
   <data name="AchatColCout" xml:space="preserve">
     <value>COÛT</value>
+  </data>
+  <data name="AchatColPrixUnitaire" xml:space="preserve">
+    <value>PRIX UNIT.</value>
   </data>
   <data name="AchatColDefectueuse" xml:space="preserve">
     <value>DÉFECTUEUSE</value>
@@ -1307,6 +1607,9 @@
   </data>
   <data name="NouveauAchatProduit" xml:space="preserve">
     <value>Produit</value>
+  </data>
+  <data name="NouveauAchatEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
   </data>
   <data name="NouveauAchatCardFinancier" xml:space="preserve">
     <value>Données financières</value>
@@ -1348,6 +1651,158 @@
     <value>Annuler</value>
   </data>
 
+  <!-- ── NouveauVoyage popup ── -->
+  <data name="NouveauVoyageTitle" xml:space="preserve">
+    <value>Créer un Voyage</value>
+  </data>
+  <data name="NouveauVoyageSubtitle" xml:space="preserve">
+    <value>Saisissez les détails, le stock et les transactions du voyage</value>
+  </data>
+  <data name="NouveauVoyageStatutBadge" xml:space="preserve">
+    <value>En cours</value>
+  </data>
+  <data name="NouveauVoyageColDetails" xml:space="preserve">
+    <value>Détails du Voyage</value>
+  </data>
+  <data name="NouveauVoyageColStock" xml:space="preserve">
+    <value>Stock de Voyage</value>
+  </data>
+  <data name="NouveauVoyageColTransaction" xml:space="preserve">
+    <value>Transactions</value>
+  </data>
+  <data name="NouveauVoyageChauffeur" xml:space="preserve">
+    <value>Chauffeur *</value>
+  </data>
+  <data name="NouveauVoyageCamion" xml:space="preserve">
+    <value>Camion</value>
+  </data>
+  <data name="NouveauVoyageCiterne" xml:space="preserve">
+    <value>Citerne</value>
+  </data>
+  <data name="NouveauVoyageLieuDepart" xml:space="preserve">
+    <value>Lieu de départ</value>
+  </data>
+  <data name="NouveauVoyageLieuTerminal" xml:space="preserve">
+    <value>Lieu terminal</value>
+  </data>
+  <data name="NouveauVoyageDateDepart" xml:space="preserve">
+    <value>Date de départ</value>
+  </data>
+  <data name="NouveauVoyageDateFinal" xml:space="preserve">
+    <value>Date d'arrivée</value>
+  </data>
+  <data name="NouveauVoyageKmDepart" xml:space="preserve">
+    <value>Km départ</value>
+  </data>
+  <data name="NouveauVoyageKmFinal" xml:space="preserve">
+    <value>Km final</value>
+  </data>
+  <data name="NouveauVoyageFillOnClose" xml:space="preserve">
+    <value>Rempli à la clôture</value>
+  </data>
+  <data name="NouveauVoyageTabVente" xml:space="preserve">
+    <value>Vente</value>
+  </data>
+  <data name="NouveauVoyageTabCredit" xml:space="preserve">
+    <value>Crédit</value>
+  </data>
+  <data name="NouveauVoyageTabAchat" xml:space="preserve">
+    <value>Achat</value>
+  </data>
+  <data name="NouveauVoyageTabFrais" xml:space="preserve">
+    <value>Frais</value>
+  </data>
+  <data name="NouveauVoyageClient" xml:space="preserve">
+    <value>Client *</value>
+  </data>
+  <data name="NouveauVoyageFournisseur" xml:space="preserve">
+    <value>Fournisseur *</value>
+  </data>
+  <data name="NouveauVoyageProduit" xml:space="preserve">
+    <value>Produit *</value>
+  </data>
+  <data name="NouveauVoyageQuantite" xml:space="preserve">
+    <value>Quantité *</value>
+  </data>
+  <data name="NouveauVoyagePrixU" xml:space="preserve">
+    <value>Prix/U *</value>
+  </data>
+  <data name="NouveauVoyagePrixAchat" xml:space="preserve">
+    <value>Prix achat *</value>
+  </data>
+  <data name="NouveauVoyageCout" xml:space="preserve">
+    <value>Coût total</value>
+  </data>
+  <data name="NouveauVoyageRemise" xml:space="preserve">
+    <value>Remise %</value>
+  </data>
+  <data name="NouveauVoyageMontantTotal" xml:space="preserve">
+    <value>Montant total</value>
+  </data>
+  <data name="NouveauVoyagePayment" xml:space="preserve">
+    <value>Mode de paiement</value>
+  </data>
+  <data name="NouveauVoyageChequeRef" xml:space="preserve">
+    <value>Référence chèque</value>
+  </data>
+  <data name="NouveauVoyageFraisType" xml:space="preserve">
+    <value>Type de frais *</value>
+  </data>
+  <data name="NouveauVoyageFraisMontant" xml:space="preserve">
+    <value>Montant *</value>
+  </data>
+  <data name="NouveauVoyageNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="NouveauVoyageDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="NouveauVoyageLivraisonDefectueuse" xml:space="preserve">
+    <value>Livraison défectueuse</value>
+  </data>
+  <data name="NouveauVoyageAddTransaction" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="NouveauVoyageSumType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="NouveauVoyageSumPartie" xml:space="preserve">
+    <value>Partie</value>
+  </data>
+  <data name="NouveauVoyageSumProduit" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="NouveauVoyageSumQte" xml:space="preserve">
+    <value>Qté</value>
+  </data>
+  <data name="NouveauVoyageSumPrixU" xml:space="preserve">
+    <value>Prix/U</value>
+  </data>
+  <data name="NouveauVoyageSumRemise" xml:space="preserve">
+    <value>Remise</value>
+  </data>
+  <data name="NouveauVoyageSumMontant" xml:space="preserve">
+    <value>Montant</value>
+  </data>
+  <data name="NouveauVoyageFooterTransactions" xml:space="preserve">
+    <value>transaction(s)</value>
+  </data>
+  <data name="NouveauVoyageFooterStocks" xml:space="preserve">
+    <value>produit(s)</value>
+  </data>
+  <data name="NouveauVoyageBtnCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="NouveauVoyageBtnCreate" xml:space="preserve">
+    <value>Créer le Voyage</value>
+  </data>
+  <data name="NouveauVoyageValidationChauffeur" xml:space="preserve">
+    <value>Veuillez sélectionner un chauffeur.</value>
+  </data>
+  <data name="NouveauVoyageSaveError" xml:space="preserve">
+    <value>Erreur lors de la création du voyage. Vérifiez la connexion.</value>
+  </data>
+
   <!-- ── NouveauVente popup ── -->
   <data name="NouveauVenteTitle" xml:space="preserve">
     <value>Nouvelle Vente</value>
@@ -1366,6 +1821,9 @@
   </data>
   <data name="NouveauVenteProduit" xml:space="preserve">
     <value>Produit</value>
+  </data>
+  <data name="NouveauVenteEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
   </data>
   <data name="NouveauVenteCardFinancier" xml:space="preserve">
     <value>Financier</value>
@@ -1437,6 +1895,9 @@
   </data>
   <data name="EditVenteProduit" xml:space="preserve">
     <value>Produit</value>
+  </data>
+  <data name="EditVenteEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
   </data>
   <data name="EditVenteCardFinancier" xml:space="preserve">
     <value>Financier</value>
@@ -1527,6 +1988,9 @@
   <data name="DetailVenteLabelProduit" xml:space="preserve">
     <value>Produit</value>
   </data>
+  <data name="DetailVenteLabelEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
+  </data>
   <data name="DetailVenteCardFinancier" xml:space="preserve">
     <value>Financier</value>
   </data>
@@ -1600,6 +2064,9 @@
   <data name="DetailAchatLabelProduit" xml:space="preserve">
     <value>PRODUIT</value>
   </data>
+  <data name="DetailAchatLabelEmploye" xml:space="preserve">
+    <value>EMPLOYÉ</value>
+  </data>
   <data name="DetailAchatLabelQuantite" xml:space="preserve">
     <value>QUANTITÉ</value>
   </data>
@@ -1635,6 +2102,342 @@
   <data name="InfraCardDescVentes" xml:space="preserve">
     <value>Gérer les ventes clients</value>
   </data>
+  <!-- ── Employes infra card ── -->
+  <data name="InfraEmployes" xml:space="preserve">
+    <value>Employés</value>
+  </data>
+  <data name="InfraCardDescEmployes" xml:space="preserve">
+    <value>Gérer les employés</value>
+  </data>
+  <!-- ── Credits infra card ── -->
+  <data name="InfraCredits" xml:space="preserve">
+    <value>Crédits</value>
+  </data>
+  <data name="InfraCardDescCredits" xml:space="preserve">
+    <value>Gérer les crédits clients</value>
+  </data>
+  <!-- ── Voyages infra card ── -->
+  <data name="InfraVoyages" xml:space="preserve">
+    <value>Voyages</value>
+  </data>
+  <data name="InfraCardDescVoyages" xml:space="preserve">
+    <value>Gérer les voyages, stocks et frais</value>
+  </data>
+  <!-- ── Voyages section ── -->
+  <data name="VoyageBreadcrumb" xml:space="preserve">
+    <value>Voyages</value>
+  </data>
+  <data name="VoyagePageSubtitle" xml:space="preserve">
+    <value>Liste de tous les voyages enregistrés</value>
+  </data>
+  <data name="VoyageAddButton" xml:space="preserve">
+    <value>Nouveau voyage</value>
+  </data>
+  <data name="VoyageTableTitle" xml:space="preserve">
+    <value>Voyages</value>
+  </data>
+  <data name="VoyageTableSubtitle" xml:space="preserve">
+    <value>Tous les voyages enregistrés</value>
+  </data>
+  <data name="VoyageCountBadge" xml:space="preserve">
+    <value>voyage(s)</value>
+  </data>
+  <data name="VoyageEmpty" xml:space="preserve">
+    <value>Aucun voyage enregistré</value>
+  </data>
+  <data name="VoyageColCamion" xml:space="preserve">
+    <value>Camion</value>
+  </data>
+  <data name="VoyageColChauffeur" xml:space="preserve">
+    <value>Chauffeur</value>
+  </data>
+  <data name="VoyageColCiterne" xml:space="preserve">
+    <value>Citerne</value>
+  </data>
+  <data name="VoyageColDepart" xml:space="preserve">
+    <value>Départ</value>
+  </data>
+  <data name="VoyageColArrivee" xml:space="preserve">
+    <value>Arrivée</value>
+  </data>
+  <data name="VoyageColLieuDepart" xml:space="preserve">
+    <value>Lieu départ</value>
+  </data>
+  <data name="VoyageColLieuTerminal" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="VoyageColStatut" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="VoyageColActions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="VoyageDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="VoyageEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="VoyageDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <!-- StockVoyage table -->
+  <data name="StockVoyageTableTitle" xml:space="preserve">
+    <value>Stocks des voyages</value>
+  </data>
+  <data name="StockVoyageTableSubtitle" xml:space="preserve">
+    <value>Produits chargés par voyage</value>
+  </data>
+  <data name="StockVoyageEmpty" xml:space="preserve">
+    <value>Aucun stock enregistré</value>
+  </data>
+  <data name="StockVoyageColVoyage" xml:space="preserve">
+    <value>Voyage</value>
+  </data>
+  <data name="StockVoyageColProduit" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="StockVoyageColQuantite" xml:space="preserve">
+    <value>Quantité</value>
+  </data>
+  <data name="StockVoyageColActions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <!-- FraisVoyage table -->
+  <data name="FraisVoyageTableTitle" xml:space="preserve">
+    <value>Frais des voyages</value>
+  </data>
+  <data name="FraisVoyageTableSubtitle" xml:space="preserve">
+    <value>Dépenses associées aux voyages</value>
+  </data>
+  <data name="FraisVoyageEmpty" xml:space="preserve">
+    <value>Aucun frais enregistré</value>
+  </data>
+  <data name="FraisVoyageColVoyage" xml:space="preserve">
+    <value>Voyage</value>
+  </data>
+  <data name="FraisVoyageColType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="FraisVoyageColMontant" xml:space="preserve">
+    <value>Montant</value>
+  </data>
+  <data name="FraisVoyageColDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="FraisVoyageColActions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <!-- ── Employes section ── -->
+  <data name="EmployeBreadcrumb" xml:space="preserve">
+    <value>Employés</value>
+  </data>
+  <data name="EmployePageSubtitle" xml:space="preserve">
+    <value>Liste de tous les employés enregistrés</value>
+  </data>
+  <data name="EmployeAddButton" xml:space="preserve">
+    <value>Nouvel employé</value>
+  </data>
+  <data name="EmployeTableTitle" xml:space="preserve">
+    <value>Employés</value>
+  </data>
+  <data name="EmployeTableSubtitle" xml:space="preserve">
+    <value>Tous les employés enregistrés dans le système</value>
+  </data>
+  <data name="EmployeCountBadge" xml:space="preserve">
+    <value>employés</value>
+  </data>
+  <data name="EmployeColPrenom" xml:space="preserve">
+    <value>PRÉNOM</value>
+  </data>
+  <data name="EmployeColNom" xml:space="preserve">
+    <value>NOM</value>
+  </data>
+  <data name="EmployeColCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="EmployeColTelephone" xml:space="preserve">
+    <value>TÉLÉPHONE</value>
+  </data>
+  <data name="EmployeColPoste" xml:space="preserve">
+    <value>POSTE</value>
+  </data>
+  <data name="EmployeColSalaire" xml:space="preserve">
+    <value>SALAIRE</value>
+  </data>
+  <data name="EmployeColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="EmployeDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="EmployeEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="EmployeDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="EmployeEmpty" xml:space="preserve">
+    <value>Aucun employé enregistré.</value>
+  </data>
+  <!-- ── NouveauEmployeDialog popup ── -->
+  <data name="NouveauEmployeTitle" xml:space="preserve">
+    <value>Nouvel employé</value>
+  </data>
+  <data name="NouveauEmployeSubtitle" xml:space="preserve">
+    <value>Remplissez les informations du nouvel employé</value>
+  </data>
+  <data name="NouveauEmployeIdentiteSection" xml:space="preserve">
+    <value>Identité</value>
+  </data>
+  <data name="NouveauEmployeContactSection" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="NouveauEmployePosteSection" xml:space="preserve">
+    <value>Poste</value>
+  </data>
+  <data name="NouveauEmployeSalaireSection" xml:space="preserve">
+    <value>Rémunération</value>
+  </data>
+  <data name="NouveauEmployeLabelPrenom" xml:space="preserve">
+    <value>PRÉNOM *</value>
+  </data>
+  <data name="NouveauEmployeLabelNom" xml:space="preserve">
+    <value>NOM *</value>
+  </data>
+  <data name="NouveauEmployeLabelCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="NouveauEmployeLabelTelephone" xml:space="preserve">
+    <value>TÉLÉPHONE</value>
+  </data>
+  <data name="NouveauEmployeLabelAdresse" xml:space="preserve">
+    <value>ADRESSE</value>
+  </data>
+  <data name="NouveauEmployeLabelPoste" xml:space="preserve">
+    <value>INTITULÉ DU POSTE</value>
+  </data>
+  <data name="NouveauEmployeLabelSalaire" xml:space="preserve">
+    <value>Salaire mensuel</value>
+  </data>
+  <data name="NouveauEmployeSalaireHint" xml:space="preserve">
+    <value>Montant en DH</value>
+  </data>
+  <data name="NouveauEmployeCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="NouveauEmployeSave" xml:space="preserve">
+    <value>  Enregistrer</value>
+  </data>
+  <data name="NouveauEmployeSaving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+  <!-- ── EditEmployeDialog popup ── -->
+  <data name="EditEmployeTitle" xml:space="preserve">
+    <value>Modifier l'employé</value>
+  </data>
+  <data name="EditEmployeIdentiteSection" xml:space="preserve">
+    <value>Identité</value>
+  </data>
+  <data name="EditEmployeContactSection" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="EditEmployePosteSection" xml:space="preserve">
+    <value>Poste</value>
+  </data>
+  <data name="EditEmployeSalaireSection" xml:space="preserve">
+    <value>Rémunération</value>
+  </data>
+  <data name="EditEmployeLabelPrenom" xml:space="preserve">
+    <value>PRÉNOM *</value>
+  </data>
+  <data name="EditEmployeLabelNom" xml:space="preserve">
+    <value>NOM *</value>
+  </data>
+  <data name="EditEmployeLabelCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="EditEmployeLabelTelephone" xml:space="preserve">
+    <value>TÉLÉPHONE</value>
+  </data>
+  <data name="EditEmployeLabelAdresse" xml:space="preserve">
+    <value>ADRESSE</value>
+  </data>
+  <data name="EditEmployeLabelPoste" xml:space="preserve">
+    <value>INTITULÉ DU POSTE</value>
+  </data>
+  <data name="EditEmployeLabelSalaire" xml:space="preserve">
+    <value>Salaire mensuel</value>
+  </data>
+  <data name="EditEmployeSalaireHint" xml:space="preserve">
+    <value>Montant en DH</value>
+  </data>
+  <data name="EditEmployeCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="EditEmployeSave" xml:space="preserve">
+    <value>  Enregistrer</value>
+  </data>
+  <data name="EditEmployeSaving" xml:space="preserve">
+    <value>Enregistrement…</value>
+  </data>
+
+  <!-- ── DetailEmployeDialog popup ── -->
+  <data name="DetailEmployeTitle" xml:space="preserve">
+    <value>Détail Employé</value>
+  </data>
+  <data name="DetailEmployeIdentiteSection" xml:space="preserve">
+    <value>Identité</value>
+  </data>
+  <data name="DetailEmployeLabelPrenom" xml:space="preserve">
+    <value>PRÉNOM</value>
+  </data>
+  <data name="DetailEmployeLabelNom" xml:space="preserve">
+    <value>NOM</value>
+  </data>
+  <data name="DetailEmployeLabelCIN" xml:space="preserve">
+    <value>CIN</value>
+  </data>
+  <data name="DetailEmployeContactSection" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="DetailEmployeLabelTelephone" xml:space="preserve">
+    <value>TÉLÉPHONE</value>
+  </data>
+  <data name="DetailEmployeLabelAdresse" xml:space="preserve">
+    <value>ADRESSE</value>
+  </data>
+  <data name="DetailEmployePosteSection" xml:space="preserve">
+    <value>Poste</value>
+  </data>
+  <data name="DetailEmployeLabelPoste" xml:space="preserve">
+    <value>POSTE</value>
+  </data>
+  <data name="DetailEmployeSalaireSection" xml:space="preserve">
+    <value>Salaire</value>
+  </data>
+  <data name="DetailEmployeLabelSalaire" xml:space="preserve">
+    <value>Salaire mensuel</value>
+  </data>
+  <data name="DetailEmployeSalaireHint" xml:space="preserve">
+    <value>Montant brut / mois</value>
+  </data>
+  <data name="DetailEmployeAuditSection" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="DetailEmployeLabelCreePar" xml:space="preserve">
+    <value>CRÉÉ PAR</value>
+  </data>
+  <data name="DetailEmployeLabelModifiePar" xml:space="preserve">
+    <value>MODIFIÉ PAR</value>
+  </data>
+  <data name="DetailEmployeClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailEmployeEdit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+
   <data name="VenteBreadcrumb" xml:space="preserve">
     <value>Ventes</value>
   </data>
@@ -1665,8 +2468,14 @@
   <data name="VenteColProduit" xml:space="preserve">
     <value>PRODUIT</value>
   </data>
+  <data name="VenteColEmploye" xml:space="preserve">
+    <value>EMPLOYÉ</value>
+  </data>
   <data name="VenteColQuantite" xml:space="preserve">
     <value>QTÉ</value>
+  </data>
+  <data name="VenteColPrix" xml:space="preserve">
+    <value>PRIX UNIT.</value>
   </data>
   <data name="VenteColMontant" xml:space="preserve">
     <value>MONTANT</value>

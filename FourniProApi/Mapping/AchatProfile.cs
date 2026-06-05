@@ -10,11 +10,15 @@ public class AchatProfile : Profile
     {
         CreateMap<Achat, AchatDto>()
             .ForMember(d => d.FournisseurNom, opt => opt.Ignore())
-            .ForMember(d => d.ProduitNom, opt => opt.Ignore())
-            .ForMember(d => d.AjouteParNom, opt => opt.Ignore())
-            .ForMember(d => d.ModifieParNom, opt => opt.Ignore());
+            .ForMember(d => d.ProduitNom,     opt => opt.Ignore())
+            .ForMember(d => d.EmployeNom,     opt => opt.Ignore())
+            .ForMember(d => d.VoyageNumero,   opt => opt.Ignore())
+            .ForMember(d => d.AjouteParNom,   opt => opt.Ignore())
+            .ForMember(d => d.ModifieParNom,  opt => opt.Ignore());
 
         CreateMap<AchatDto, Achat>()
-            .ForMember(d => d.AchatId, opt => opt.Ignore());
+            .ForMember(d => d.AchatId, opt => opt.Ignore())
+            .ForMember(d => d.Voyage,  opt => opt.Ignore())
+            .ForMember(d => d.Employe, opt => opt.Ignore());
     }
 }

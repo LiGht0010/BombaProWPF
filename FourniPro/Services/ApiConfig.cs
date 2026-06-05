@@ -48,6 +48,21 @@ public static class ApiConfig
     /// <summary>Endpoint for vente management.</summary>
     public static string Ventes => $"{_baseUrl}/Ventes";
 
+    /// <summary>Endpoint for employe management.</summary>
+    public static string Employes => $"{_baseUrl}/Employes";
+
+    /// <summary>Endpoint for credit management.</summary>
+    public static string Credits => $"{_baseUrl}/Credits";
+
+    /// <summary>Endpoint for voyage management.</summary>
+    public static string Voyages => $"{_baseUrl}/Voyages";
+
+    /// <summary>Endpoint for stock-voyage management.</summary>
+    public static string StockVoyages => $"{_baseUrl}/StockVoyages";
+
+    /// <summary>Endpoint for frais-voyage management.</summary>
+    public static string FraisVoyages => $"{_baseUrl}/FraisVoyages";
+
     /// <summary>Initializes the API configuration from saved settings or defaults.</summary>
     public static void Initialize()
     {

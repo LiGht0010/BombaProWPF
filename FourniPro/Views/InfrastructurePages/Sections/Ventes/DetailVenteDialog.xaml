@@ -253,10 +253,16 @@
                                                Style="{StaticResource DetailValueStyle}" />
                                 </StackPanel>
                             </Grid>
+
+                            <!-- Employé responsable -->
+                            <TextBlock Text="{Binding [DetailVenteLabelEmploye], Source={x:Static loc:LanguageManager.Instance}}"
+                                       Style="{StaticResource DetailLabelStyle}" Margin="0,14,0,4" />
+                            <TextBlock Text="{Binding EmployeNom, TargetNullValue='—', FallbackValue='—'}"
+                                       Style="{StaticResource DetailAccentValueStyle}" />
                         </StackPanel>
                     </Border>
 
-                    <!-- ── Card 2 : Financier (row 0, col 2) ── -->
+                    <!-- Card 2 : Financier (row 0, col 2) -->
                     <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource DlgCardStyle}">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">

@@ -22,6 +22,12 @@ public class AchatDto
     public bool? LivraisonDefectueuse { get; set; }
     public string? Description { get; set; }
 
+    public int? EmployeId { get; set; }
+    public string? EmployeNom { get; set; }
+
+    public int? VoyageID { get; set; }
+    public string? VoyageNumero { get; set; }
+
     // Audit
     public int? AjoutePar { get; set; }
     public string? AjouteParNom { get; set; }

@@ -13,7 +13,9 @@ public class VenteDto
     public string? ClientNom { get; set; }
 
     public int? VoyageID { get; set; }
-    public int? EmployerID { get; set; }
+    public string? VoyageNumero { get; set; }
+    public int? EmployeId { get; set; }
+    public string? EmployeNom { get; set; }
 
     public int? Quantite { get; set; }
     public decimal? PrixUnitaire { get; set; }

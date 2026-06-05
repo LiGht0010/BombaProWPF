@@ -101,9 +101,11 @@
                         <ColumnDefinition Width="90" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="120" />
-                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="110" />
+                        <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="96" />
                     </Grid.ColumnDefinitions>
 
@@ -127,23 +129,33 @@
                     <TextBlock Grid.Column="3" Text="{Binding ProduitNom}"
                                Style="{StaticResource VenteCellTextStyle}" HorizontalAlignment="Left" />
 
-                    <!-- QuantitÃ© -->
-                    <TextBlock Grid.Column="4" Text="{Binding Quantite}"
+                    <!-- Employé -->
+                    <TextBlock Grid.Column="4" Text="{Binding EmployeNom, TargetNullValue='—'}"
                                Style="{StaticResource VenteCellTextStyle}" HorizontalAlignment="Left" />
 
+                    <!-- Quantité -->
+                    <TextBlock Grid.Column="5" Text="{Binding Quantite}"
+                               Style="{StaticResource VenteCellTextStyle}" HorizontalAlignment="Left" />
+
+                    <!-- Prix unitaire -->
+                    <TextBlock Grid.Column="6" Style="{StaticResource VenteCellTextStyle}" HorizontalAlignment="Left">
+                        <Run Text="{Binding PrixUnitaire, StringFormat='{}{0:N2}'}" />
+                        <Run Text=" DH" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    </TextBlock>
+
                     <!-- Montant total -->
-                    <TextBlock Grid.Column="5" Style="{StaticResource VenteCellTextStyle}" HorizontalAlignment="Left"
+                    <TextBlock Grid.Column="7" Style="{StaticResource VenteCellTextStyle}" HorizontalAlignment="Left"
                                FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}">
                         <Run Text="{Binding MontantTotal, StringFormat='{}{0:F2}'}" />
                         <Run Text=" DH" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
                     </TextBlock>
 
                     <!-- Mode de paiement -->
-                    <TextBlock Grid.Column="6" Text="{Binding PaymentMethod}"
+                    <TextBlock Grid.Column="8" Text="{Binding PaymentMethod}"
                                Style="{StaticResource VenteCellTextStyle}" HorizontalAlignment="Left" />
 
                     <!-- Actions -->
-                    <StackPanel Grid.Column="7" Orientation="Horizontal"
+                    <StackPanel Grid.Column="9" Orientation="Horizontal"
                                 HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Button Style="{StaticResource VenteIconButtonStyle}"
                                 ToolTip="{Binding [VenteDetailTooltip], Source={x:Static loc:LanguageManager.Instance}}"
@@ -267,23 +279,27 @@
                     <!-- Column headers -->
                     <Grid Grid.Row="1" Margin="0,16,0,4">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="160" />
-                            <ColumnDefinition Width="90" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition Width="120" />
-                            <ColumnDefinition Width="90" />
-                            <ColumnDefinition Width="96" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding [VenteColNumero],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="1" Text="{Binding [VenteColDate],     Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="2" Text="{Binding [VenteColClient],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="3" Text="{Binding [VenteColProduit],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="4" Text="{Binding [VenteColQuantite], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="5" Text="{Binding [VenteColMontant],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="6" Text="{Binding [VenteColPaiement], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="7" Text="{Binding [VenteColActions],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Center" />
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="55" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="110" />
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition Width="96" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding [VenteColNumero],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
+                            <TextBlock Grid.Column="1" Text="{Binding [VenteColDate],     Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
+                            <TextBlock Grid.Column="2" Text="{Binding [VenteColClient],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
+                            <TextBlock Grid.Column="3" Text="{Binding [VenteColProduit],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
+                            <TextBlock Grid.Column="4" Text="{Binding [VenteColEmploye],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
+                            <TextBlock Grid.Column="5" Text="{Binding [VenteColQuantite], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
+                            <TextBlock Grid.Column="6" Text="{Binding [VenteColPrix],     Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
+                            <TextBlock Grid.Column="7" Text="{Binding [VenteColMontant],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
+                            <TextBlock Grid.Column="8" Text="{Binding [VenteColPaiement], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Left" />
+                            <TextBlock Grid.Column="9" Text="{Binding [VenteColActions],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource VenteColHeaderStyle}" HorizontalAlignment="Center" />
                     </Grid>
 
                     <!-- Rows -->

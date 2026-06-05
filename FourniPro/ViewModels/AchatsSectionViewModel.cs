@@ -71,7 +71,9 @@ public class AchatsSectionViewModel : ObservableObject
                     Date                 = d.Date,
                     FournisseurNom       = d.FournisseurNom,
                     ProduitNom           = d.ProduitNom,
+                    EmployeNom           = d.EmployeNom,
                     Quantite             = d.Quantite,
+                    PrixAchatUnitaire    = d.PrixAchatUnitaire,
                     Cout                 = d.Cout,
                     LivraisonDefectueuse = d.LivraisonDefectueuse
                 }));

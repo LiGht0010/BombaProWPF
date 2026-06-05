@@ -8,7 +8,7 @@ public class Achat
     [Key]
     public int AchatId { get; set; }
 
-    [StringLength(20)]
+    [StringLength(30)]
     public string? Numero { get; set; }
 
     public DateOnly Date { get; set; }
@@ -29,6 +29,15 @@ public class Achat
 
     [StringLength(500)]
     public string? Description { get; set; }
+
+    public int? VoyageID { get; set; }
+
+    public int? EmployeId { get; set; }
+
+    // ── Navigation ────────────────────────────────────────────────────────────
+
+    public virtual Voyage? Voyage { get; set; }
+    public virtual Employe? Employe { get; set; }
 
     // Audit
     public int? AjoutePar { get; set; }

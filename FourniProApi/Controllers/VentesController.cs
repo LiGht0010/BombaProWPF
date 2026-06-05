@@ -121,6 +121,16 @@ public class VentesController(AppDbContext context, IMapper mapper, ILogger<Vent
             .Select(d => d.ClientID!.Value)
             .Distinct().ToList();
 
+        var employeIds = dtos
+            .Where(d => d.EmployeId.HasValue)
+            .Select(d => d.EmployeId!.Value)
+            .Distinct().ToList();
+
+        var voyageIds = dtos
+            .Where(d => d.VoyageID.HasValue)
+            .Select(d => d.VoyageID!.Value)
+            .Distinct().ToList();
+
         var userIds = dtos
             .SelectMany(d => new[] { d.AjoutePar, d.ModifiePar })
             .Where(id => id.HasValue)
@@ -142,6 +152,20 @@ public class VentesController(AppDbContext context, IMapper mapper, ILogger<Vent
                 .ToDictionaryAsync(c => c.ClientId, c => c.Nom)
             : [];
 
+        var employeNames = employeIds.Count > 0
+            ? await context.Employes
+                .AsNoTracking()
+                .Where(e => employeIds.Contains(e.EmployeId))
+                .ToDictionaryAsync(e => e.EmployeId, e => $"{e.Prenom} {e.Nom}")
+            : [];
+
+        var voyageLabels = voyageIds.Count > 0
+            ? await context.Voyages
+                .AsNoTracking()
+                .Where(v => voyageIds.Contains(v.VoyageId))
+                .ToDictionaryAsync(v => v.VoyageId, v => $"VOY-{v.VoyageId:D5}")
+            : [];
+
         var userNames = userIds.Count > 0
             ? await context.Users
                 .AsNoTracking()
@@ -155,6 +179,10 @@ public class VentesController(AppDbContext context, IMapper mapper, ILogger<Vent
                 dto.ProduitNom = pNom;
             if (dto.ClientID.HasValue && clientNames.TryGetValue(dto.ClientID.Value, out var cNom))
                 dto.ClientNom = cNom;
+            if (dto.EmployeId.HasValue && employeNames.TryGetValue(dto.EmployeId.Value, out var eNom))
+                dto.EmployeNom = eNom;
+            if (dto.VoyageID.HasValue && voyageLabels.TryGetValue(dto.VoyageID.Value, out var vLabel))
+                dto.VoyageNumero = vLabel;
             if (dto.AjoutePar.HasValue && userNames.TryGetValue(dto.AjoutePar.Value, out var ajouteNom))
                 dto.AjouteParNom = ajouteNom;
             if (dto.ModifiePar.HasValue && userNames.TryGetValue(dto.ModifiePar.Value, out var modNom))

@@ -3,9 +3,12 @@ using FourniPro.Views.InfrastructurePages.Sections.Camions;
 using FourniPro.Views.InfrastructurePages.Sections.Citernes;
 using FourniPro.Views.InfrastructurePages.Sections.Chauffeurs;
 using FourniPro.Views.InfrastructurePages.Sections.Clients;
+using FourniPro.Views.InfrastructurePages.Sections.Credits;
 using FourniPro.Views.InfrastructurePages.Sections.Fournisseurs;
 using FourniPro.Views.InfrastructurePages.Sections.Ventes;
 using FourniPro.Views.InfrastructurePages.Sections.Produits;
+using FourniPro.Views.InfrastructurePages.Sections.Employes;
+using FourniPro.Views.InfrastructurePages.Sections.Voyages;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -82,6 +85,9 @@ public partial class InfrastructureView : UserControl
                 "citernes"      => new CiternesSection(),
                 "achats"        => new AchatsSection(),
                 "ventes"        => new VentesSection(),
+                "employes"      => new EmployesSection(),
+                "credits"       => new CreditsSection(),
+                "voyages"       => new VoyagesSection(),
                 _ => throw new ArgumentOutOfRangeException(nameof(key), key, "Unknown infrastructure section.")
             };
             _sectionCache[key] = section;
@@ -112,6 +118,15 @@ public partial class InfrastructureView : UserControl
 
         if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.VentesSectionViewModel vcvm })
             return vcvm.EnsureLoadedAsync();
+
+        if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.EmployesSectionViewModel ecvm })
+            return ecvm.EnsureLoadedAsync();
+
+        if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.CreditsSectionViewModel crvm })
+            return crvm.EnsureLoadedAsync();
+
+        if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.VoyagesSectionViewModel vgsvm })
+            return vgsvm.EnsureLoadedAsync();
 
         return Task.CompletedTask;
     }

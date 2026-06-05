@@ -223,7 +223,7 @@
                             </Grid>
 
                             <!-- Fournisseur | Produit -->
-                            <Grid>
+                            <Grid Margin="0,0,0,16">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="1" />
@@ -245,6 +245,26 @@
                                     <TextBlock Text="{Binding ProduitNom, TargetNullValue='—'}"
                                                Style="{StaticResource DetailValueStyle}" />
                                 </StackPanel>
+                            </Grid>
+
+                            <!-- Employé responsable -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="1" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                                    <TextBlock Text="{Binding [DetailAchatLabelEmploye], Source={x:Static loc:LanguageManager.Instance}}"
+                                               Style="{StaticResource DetailLabelStyle}" />
+                                    <TextBlock Text="{Binding EmployeNom, TargetNullValue='—'}"
+                                               Style="{StaticResource DetailValueStyle}" />
+                                </StackPanel>
+
+                                <Border Grid.Column="1" Background="{DynamicResource NeuInputFillBrush}" />
+
+                                <StackPanel Grid.Column="2" Margin="12,0,0,0" />
                             </Grid>
                         </StackPanel>
                     </Border>

@@ -16,6 +16,7 @@ public class NouveauVenteViewModel : ObservableObject
     private readonly VenteService   _venteService   = new();
     private readonly ClientService  _clientService  = new();
     private readonly ProduitService _produitService = new();
+    private readonly EmployeService _employeService = new();
 
     // ── Form fields ──────────────────────────────────────────────────────────
 
@@ -49,6 +50,13 @@ public class NouveauVenteViewModel : ObservableObject
             if (SetProperty(ref _selectedProduit, value) && value is not null)
                 PrixUnitaire = value.PrixTTC;   // snapshot the current selling price
         }
+    }
+
+    private EmployeDto? _selectedEmploye;
+    public EmployeDto? SelectedEmploye
+    {
+        get => _selectedEmploye;
+        set => SetProperty(ref _selectedEmploye, value);
     }
 
     private int? _quantite;
@@ -111,6 +119,7 @@ public class NouveauVenteViewModel : ObservableObject
 
     public ObservableCollection<ClientDto>  Clients  { get; } = [];
     public ObservableCollection<ProduitDto> Produits { get; } = [];
+    public ObservableCollection<EmployeDto> Employes { get; } = [];
 
     public IReadOnlyList<string> PaymentMethods { get; } =
         ["TPE", "Virement", "Especes"];
@@ -174,6 +183,9 @@ public class NouveauVenteViewModel : ObservableObject
 
             var produits = await _produitService.GetAllProduitsAsync();
             foreach (var p in produits) Produits.Add(p);
+
+            var employes = await _employeService.GetAllEmployesAsync();
+            foreach (var e in employes) Employes.Add(e);
         }
         finally { IsLoading = false; }
     }
@@ -222,6 +234,7 @@ public class NouveauVenteViewModel : ObservableObject
                 DateVente     = DateOnly.FromDateTime(DateVente),
                 ClientID      = SelectedClient.ClientId,
                 ProduitID     = SelectedProduit.ProduitId,
+                EmployeId     = SelectedEmploye?.EmployeId,
                 Quantite      = Quantite,
                 PrixUnitaire  = PrixUnitaire,
                 Remise        = Remise,

@@ -15,6 +15,7 @@ public class NouveauAchatViewModel : ObservableObject
     private readonly AchatService _achatService = new();
     private readonly FournisseurService _fournisseurService = new();
     private readonly ProduitService _produitService = new();
+    private readonly EmployeService _employeService = new();
 
     // ── Form fields ───────────────────────────────────────────────────────────
 
@@ -95,6 +96,14 @@ public class NouveauAchatViewModel : ObservableObject
 
     public ObservableCollection<FournisseurDto> Fournisseurs { get; } = [];
     public ObservableCollection<ProduitDto> Produits { get; } = [];
+    public ObservableCollection<EmployeDto> Employes { get; } = [];
+
+    private EmployeDto? _selectedEmploye;
+    public EmployeDto? SelectedEmploye
+    {
+        get => _selectedEmploye;
+        set => SetProperty(ref _selectedEmploye, value);
+    }
 
     // ── State ─────────────────────────────────────────────────────────────────
 
@@ -141,6 +150,10 @@ public class NouveauAchatViewModel : ObservableObject
             var produits = await _produitService.GetAllProduitsAsync();
             foreach (var p in produits)
                 Produits.Add(p);
+
+            var employes = await _employeService.GetAllEmployesAsync();
+            foreach (var e in employes)
+                Employes.Add(e);
         }
         finally { IsLoading = false; }
     }
@@ -174,6 +187,7 @@ public class NouveauAchatViewModel : ObservableObject
                 Date                 = DateOnly.FromDateTime(Date),
                 FournisseurID        = SelectedFournisseur.FournisseurId,
                 ProduitID            = SelectedProduit.ProduitId,
+                EmployeId            = SelectedEmploye?.EmployeId,
                 Quantite             = Quantite,
                 Cout                 = Cout,
                 PrixAchatUnitaire    = PrixAchatUnitaire,

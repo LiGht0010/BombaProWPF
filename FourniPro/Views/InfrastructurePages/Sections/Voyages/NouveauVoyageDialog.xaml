@@ -1,0 +1,901 @@
+<ui:FluentWindow x:Class="FourniPro.Views.InfrastructurePages.Sections.Voyages.NouveauVoyageDialog"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:loc="clr-namespace:FourniPro.Localization"
+                 xmlns:vm="clr-namespace:FourniPro.ViewModels"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 mc:Ignorable="d"
+                 d:DataContext="{d:DesignInstance Type=vm:NouveauVoyageViewModel}"
+                 Title="{Binding [NouveauVoyageTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                 Width="1200" Height="820"
+                 WindowStartupLocation="CenterOwner"
+                 ResizeMode="NoResize"
+                 ShowInTaskbar="False"
+                 WindowBackdropType="None"
+                 ExtendsContentIntoTitleBar="True"
+                 Background="{DynamicResource NeuBackgroundBrush}">
+
+    <ui:FluentWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <Style x:Key="DlgCardBorderStyle" TargetType="Border">
+            <Setter Property="Background"      Value="{DynamicResource NeuBackgroundBrush}" />
+            <Setter Property="BorderBrush"     Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="12" />
+            <Setter Property="Padding"         Value="16,14" />
+        </Style>
+        <Style x:Key="DlgCardTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"          Value="13" />
+            <Setter Property="FontWeight"        Value="SemiBold" />
+            <Setter Property="Foreground"        Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="DlgFieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="10" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="Margin"     Value="0,0,0,4" />
+        </Style>
+        <Style x:Key="DlgInputBorderStyle" TargetType="Border">
+            <Setter Property="Background"      Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="BorderBrush"     Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="8" />
+            <Setter Property="Padding"         Value="10,5" />
+            <Setter Property="MinHeight"       Value="34" />
+        </Style>
+        <Style x:Key="DlgComputedBorderStyle" TargetType="Border">
+            <Setter Property="Background"      Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="BorderBrush"     Value="{DynamicResource NeuAccentBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="8" />
+            <Setter Property="Padding"         Value="10,5" />
+            <Setter Property="MinHeight"       Value="34" />
+        </Style>
+        <Style x:Key="DlgInputTextBoxStyle" TargetType="TextBox">
+            <Setter Property="BorderThickness"          Value="0" />
+            <Setter Property="Background"               Value="Transparent" />
+            <Setter Property="Foreground"               Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="FontSize"                 Value="12" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="DlgIconCircleStyle" TargetType="Border">
+            <Setter Property="Width"             Value="26" />
+            <Setter Property="Height"            Value="26" />
+            <Setter Property="CornerRadius"      Value="13" />
+            <Setter Property="Background"        Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin"            Value="0,0,8,0" />
+        </Style>
+        <Style x:Key="DlgCloseButtonStyle" TargetType="Button">
+            <Setter Property="Width"             Value="32" />
+            <Setter Property="Height"            Value="32" />
+            <Setter Property="Cursor"            Value="Hand" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="8" Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="DlgPrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Padding"    Value="20,10" />
+            <Setter Property="Cursor"     Value="Hand" />
+            <Setter Property="FontSize"   Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="{DynamicResource NeuAccentBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="10" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuAccentHoverBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="bd" Property="Opacity" Value="0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="DlgSecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Padding"    Value="20,10" />
+            <Setter Property="Cursor"     Value="Hand" />
+            <Setter Property="FontSize"   Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="10" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Opacity" Value="0.8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SmallAddBtnStyle" TargetType="Button">
+            <Setter Property="Width"      Value="34" />
+            <Setter Property="Height"     Value="34" />
+            <Setter Property="Cursor"     Value="Hand" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="{DynamicResource NeuAccentBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="8" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuAccentHoverBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="MiniDeleteBtnStyle" TargetType="Button">
+            <Setter Property="Width"      Value="26" />
+            <Setter Property="Height"     Value="26" />
+            <Setter Property="Cursor"     Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6" Background="{TemplateBinding Background}"
+                                BorderThickness="1" BorderBrush="{DynamicResource NeuActionDeleteBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuDangerBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="BadgeStyle" TargetType="Border">
+            <Setter Property="Background"        Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="CornerRadius"      Value="6" />
+            <Setter Property="Padding"           Value="8,3" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="DisabledInputBorderStyle" TargetType="Border">
+            <Setter Property="Background"      Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="BorderBrush"     Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="8" />
+            <Setter Property="Padding"         Value="10,5" />
+            <Setter Property="MinHeight"       Value="34" />
+            <Setter Property="Opacity"         Value="0.55" />
+        </Style>
+        <Style x:Key="DlgComboStyle" TargetType="ComboBox">
+            <Setter Property="Background"               Value="Transparent" />
+            <Setter Property="BorderThickness"          Value="0" />
+            <Setter Property="Foreground"               Value="{DynamicResource NeuTextPrimaryBrush}" />
+            <Setter Property="FontSize"                 Value="12" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding"                  Value="0" />
+        </Style>
+        <Style x:Key="TabBtnStyle" TargetType="Button">
+            <Setter Property="Padding"    Value="12,7" />
+            <Setter Property="Cursor"     Value="Hand" />
+            <Setter Property="FontSize"   Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="8" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="StockItemTemplate">
+            <Grid Margin="0,3,0,3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="28" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding ProduitNom}" FontSize="12"
+                           Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{Binding Quantite}" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{DynamicResource NeuAccentBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <Button Grid.Column="2" Style="{StaticResource MiniDeleteBtnStyle}"
+                        Command="{Binding DataContext.RemoveStockCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                        CommandParameter="{Binding}">
+                    <ui:SymbolIcon Symbol="Delete24" FontSize="12" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TransactionRowTemplate">
+            <Border Padding="0,6,0,6" BorderBrush="{DynamicResource NeuInputFillBrush}" BorderThickness="0,0,0,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="28" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="70" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="32" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="1" CornerRadius="6" Padding="5,2" VerticalAlignment="Center" HorizontalAlignment="Left">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="Vente">
+                                        <Setter Property="Background" Value="{DynamicResource NeuJaugAccentBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Credit">
+                                        <Setter Property="Background" Value="#E8A838" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Achat">
+                                        <Setter Property="Background" Value="{DynamicResource NeuAccentBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Frais">
+                                        <Setter Property="Background" Value="{DynamicResource NeuDangerBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="{Binding Type}" FontSize="10" FontWeight="SemiBold" Foreground="White" />
+                    </Border>
+                    <TextBlock Grid.Column="2" Text="{Binding Partie,     TargetNullValue=_}" FontSize="11"
+                               Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="3" Text="{Binding ProduitNom, TargetNullValue=_}" FontSize="11"
+                               Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="4" Text="{Binding Quantite,   TargetNullValue=_}" FontSize="11"
+                               Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Column="5" FontSize="11" Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center">
+                        <Run Text="{Binding PrixUnitaire, StringFormat={}{0:N2}, TargetNullValue=_}" />
+                    </TextBlock>
+                    <TextBlock Grid.Column="6" Text="{Binding Remise, StringFormat={}{0:N1}, TargetNullValue=_}" FontSize="11"
+                               Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Column="7" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" VerticalAlignment="Center">
+                        <Run Text="{Binding MontantTotal, StringFormat={}{0:N2}, TargetNullValue=_}" /><Run Text=" DH" />
+                    </TextBlock>
+                    <TextBlock Grid.Column="8" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text"       Value="" />
+                                <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasCheque}" Value="True">
+                                        <Setter Property="Text"       Value="&#x2713;" />
+                                        <Setter Property="Foreground" Value="{DynamicResource NeuJaugAccentBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Button Grid.Column="9" Style="{StaticResource MiniDeleteBtnStyle}"
+                            Command="{Binding DataContext.RemoveTransactionCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
+                            CommandParameter="{Binding}">
+                        <ui:SymbolIcon Symbol="Delete24" FontSize="11" />
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </ui:FluentWindow.Resources>
+
+    <!-- Outer shell -->
+    <Border CornerRadius="14" BorderBrush="{DynamicResource NeuInputFillBrush}" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Opacity="0.18" BlurRadius="24" ShadowDepth="0" />
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- HEADER -->
+            <Grid Grid.Row="0" Margin="18,14,18,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Style="{StaticResource DlgCloseButtonStyle}" Click="OnCloseClick" Margin="0,0,12,0">
+                    <ui:SymbolIcon Symbol="Dismiss24" FontSize="16" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                </Button>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="VehicleTruck24" FontSize="22" Foreground="{DynamicResource NeuAccentBrush}"
+                                   VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding [NouveauVoyageTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="17" FontWeight="Bold" Foreground="{DynamicResource NeuJaugAccentBrush}" />
+                        <TextBlock Text="{Binding [NouveauVoyageSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11" Foreground="{DynamicResource NeuTextSecondaryBrush}" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <Border Style="{StaticResource BadgeStyle}" Margin="14,0,0,0">
+                        <TextBlock Text="{Binding [NouveauVoyageStatutBadge], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+            <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource NeuInputFillBrush}" VerticalAlignment="Bottom" />
+
+            <!-- CONTENT -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="18,14,18,14">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- 3-column area -->
+                    <Grid Grid.Row="0" Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- COL 1: Détails -->
+                        <Border Grid.Column="0" Style="{StaticResource DlgCardBorderStyle}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Border Style="{StaticResource DlgIconCircleStyle}">
+                                        <ui:SymbolIcon Symbol="Map24" FontSize="13" Foreground="{DynamicResource NeuAccentBrush}" />
+                                    </Border>
+                                    <TextBlock Text="{Binding [NouveauVoyageColDetails], Source={x:Static loc:LanguageManager.Instance}}"
+                                               Style="{StaticResource DlgCardTitleStyle}" />
+                                </StackPanel>
+
+                                <TextBlock Text="{Binding [NouveauVoyageChauffeur], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
+                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Chauffeurs}"
+                                              SelectedItem="{Binding SelectedChauffeur}" DisplayMemberPath="Nom" />
+                                </Border>
+
+                                <TextBlock Text="{Binding [NouveauVoyageCamion], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
+                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Camions}"
+                                              SelectedItem="{Binding SelectedCamion}" DisplayMemberPath="Matricule" />
+                                </Border>
+
+                                <TextBlock Text="{Binding [NouveauVoyageCiterne], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,14">
+                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Citernes}"
+                                              SelectedItem="{Binding SelectedCiterne}" DisplayMemberPath="MatriculeCiterne" />
+                                </Border>
+
+                                <Separator Background="{DynamicResource NeuInputFillBrush}" Margin="0,0,0,14" />
+
+                                <!-- LieuDepart / LieuTerminal (start editable, end disabled) -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="6" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding [NouveauVoyageLieuDepart], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}">
+                                            <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding LieuDepart, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="{Binding [NouveauVoyageLieuTerminal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DisabledInputBorderStyle}">
+                                            <TextBlock FontSize="11" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center"
+                                                       Text="{Binding [NouveauVoyageFillOnClose], Source={x:Static loc:LanguageManager.Instance}}" FontStyle="Italic" />
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- DateDepart / DateFinal -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="6" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding [NouveauVoyageDateDepart], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}">
+                                            <DatePicker SelectedDate="{Binding DateDepart}" BorderThickness="0" Background="Transparent"
+                                                        Foreground="{DynamicResource NeuTextPrimaryBrush}" FontSize="12" />
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="{Binding [NouveauVoyageDateFinal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DisabledInputBorderStyle}">
+                                            <TextBlock FontSize="11" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center"
+                                                       Text="{Binding [NouveauVoyageFillOnClose], Source={x:Static loc:LanguageManager.Instance}}" FontStyle="Italic" />
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- KmDepart / KmFinal -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="6" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding [NouveauVoyageKmDepart], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}">
+                                            <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding KilometrageDepart, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="{Binding [NouveauVoyageKmFinal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DisabledInputBorderStyle}">
+                                            <TextBlock FontSize="11" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center"
+                                                       Text="{Binding [NouveauVoyageFillOnClose], Source={x:Static loc:LanguageManager.Instance}}" FontStyle="Italic" />
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- COL 2: Stock de Voyage -->
+                        <Border Grid.Column="2" Style="{StaticResource DlgCardBorderStyle}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Border Style="{StaticResource DlgIconCircleStyle}">
+                                        <ui:SymbolIcon Symbol="Box24" FontSize="13" Foreground="{DynamicResource NeuAccentBrush}" />
+                                    </Border>
+                                    <TextBlock Text="{Binding [NouveauVoyageColStock], Source={x:Static loc:LanguageManager.Instance}}"
+                                               Style="{StaticResource DlgCardTitleStyle}" />
+                                </StackPanel>
+                                <!-- Add row -->
+                                <Grid Grid.Row="1" Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="6" />
+                                        <ColumnDefinition Width="70" />
+                                        <ColumnDefinition Width="6" />
+                                        <ColumnDefinition Width="34" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Style="{StaticResource DlgInputBorderStyle}">
+                                        <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Produits}"
+                                                  SelectedItem="{Binding StockProduit}" DisplayMemberPath="Designation" />
+                                    </Border>
+                                    <Border Grid.Column="2" Style="{StaticResource DlgInputBorderStyle}">
+                                        <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding StockQuantite, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Border>
+                                    <Button Grid.Column="4" Style="{StaticResource SmallAddBtnStyle}" Command="{Binding AddStockCommand}">
+                                        <ui:SymbolIcon Symbol="Add24" FontSize="14" />
+                                    </Button>
+                                </Grid>
+                                <!-- List -->
+                                <ScrollViewer Grid.Row="2" MaxHeight="260" VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl ItemsSource="{Binding StockItems}" ItemTemplate="{StaticResource StockItemTemplate}" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+
+                        <!-- COL 3: Transactions -->
+                        <Border Grid.Column="4" Style="{StaticResource DlgCardBorderStyle}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!-- Card header -->
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                                    <Border Style="{StaticResource DlgIconCircleStyle}">
+                                        <ui:SymbolIcon Symbol="ArrowSwap24" FontSize="13" Foreground="{DynamicResource NeuAccentBrush}" />
+                                    </Border>
+                                    <TextBlock Text="{Binding [NouveauVoyageColTransaction], Source={x:Static loc:LanguageManager.Instance}}"
+                                               Style="{StaticResource DlgCardTitleStyle}" />
+                                </StackPanel>
+
+                                <!-- Tab bar (managed in code-behind) -->
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10" x:Name="TabBar">
+                                    <Button x:Name="TabBtn0" Content="{Binding [NouveauVoyageTabVente],  Source={x:Static loc:LanguageManager.Instance}}"
+                                            Style="{StaticResource TabBtnStyle}" Margin="0,0,4,0" Click="OnTabClick" Tag="0"
+                                            Background="{DynamicResource NeuAccentBrush}" Foreground="White" />
+                                    <Button x:Name="TabBtn1" Content="{Binding [NouveauVoyageTabCredit], Source={x:Static loc:LanguageManager.Instance}}"
+                                            Style="{StaticResource TabBtnStyle}" Margin="0,0,4,0" Click="OnTabClick" Tag="1" />
+                                    <Button x:Name="TabBtn2" Content="{Binding [NouveauVoyageTabAchat],  Source={x:Static loc:LanguageManager.Instance}}"
+                                            Style="{StaticResource TabBtnStyle}" Margin="0,0,4,0" Click="OnTabClick" Tag="2" />
+                                    <Button x:Name="TabBtn3" Content="{Binding [NouveauVoyageTabFrais],  Source={x:Static loc:LanguageManager.Instance}}"
+                                            Style="{StaticResource TabBtnStyle}" Click="OnTabClick" Tag="3" />
+                                </StackPanel>
+
+                                <!-- Tab panels (visibility toggled in code-behind) -->
+                                <Grid Grid.Row="2">
+                                    <!-- VENTE -->
+                                    <StackPanel x:Name="PanelVente">
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageClient], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Clients}" SelectedItem="{Binding VenteClient}" DisplayMemberPath="Nom" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="{Binding [NouveauVoyageProduit], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Produits}" SelectedItem="{Binding VenteProduit}" DisplayMemberPath="Designation" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageQuantite], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding VenteQuantite, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="{Binding [NouveauVoyagePrixU], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding VentePrix, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="4">
+                                                <TextBlock Text="{Binding [NouveauVoyageRemise], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding VenteRemise, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyagePayment], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding PaymentMethods}" SelectedItem="{Binding VentePayment}" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="{Binding [NouveauVoyageMontantTotal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgComputedBorderStyle}">
+                                                                    <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}" VerticalAlignment="Center">
+                                                                        <Run Text="{Binding VenteTotal, StringFormat={}{0:N2}, TargetNullValue=_, Mode=OneWay}" /><Run Text=" DH" />
+                                                    </TextBlock>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock Text="{Binding [NouveauVoyageNote], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
+                                            <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding VenteNote, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="Auto" Padding="12,0" Height="34" Command="{Binding AddVenteCommand}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Add24" FontSize="13" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding [NouveauVoyageAddTransaction], Source={x:Static loc:LanguageManager.Instance}}" Margin="6,0,0,0" FontSize="12" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+
+                                    <!-- CREDIT -->
+                                    <StackPanel x:Name="PanelCredit" Visibility="Collapsed">
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageClient], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Clients}" SelectedItem="{Binding CreditClient}" DisplayMemberPath="Nom" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="{Binding [NouveauVoyageProduit], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Produits}" SelectedItem="{Binding CreditProduit}" DisplayMemberPath="Designation" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageQuantite], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding CreditQuantite, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="{Binding [NouveauVoyagePrixU], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding CreditPrix, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="4">
+                                                <TextBlock Text="{Binding [NouveauVoyageRemise], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding CreditRemise, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageChequeRef], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding CreditChequeRef, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="{Binding [NouveauVoyageMontantTotal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgComputedBorderStyle}">
+                                                                    <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}" VerticalAlignment="Center">
+                                                                        <Run Text="{Binding CreditTotal, StringFormat={}{0:N2}, TargetNullValue=_, Mode=OneWay}" /><Run Text=" DH" />
+                                                    </TextBlock>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                            <Border Style="{StaticResource BadgeStyle}" Margin="0,0,8,0">
+                                                <TextBlock Text="Statut : Impay&#233;" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                            </Border>
+                                            <Border Style="{StaticResource BadgeStyle}" Visibility="{Binding CreditHasCheque, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock Text="Ch&#232;que : D&#233;tenu" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding [NouveauVoyageNote], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
+                                            <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding CreditNote, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="Auto" Padding="12,0" Height="34" Command="{Binding AddCreditCommand}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Add24" FontSize="13" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding [NouveauVoyageAddTransaction], Source={x:Static loc:LanguageManager.Instance}}" Margin="6,0,0,0" FontSize="12" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+
+                                    <!-- ACHAT -->
+                                    <StackPanel x:Name="PanelAchat" Visibility="Collapsed">
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageFournisseur], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Fournisseurs}" SelectedItem="{Binding AchatFournisseur}" DisplayMemberPath="DisplayName" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="{Binding [NouveauVoyageProduit], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Produits}" SelectedItem="{Binding AchatProduit}" DisplayMemberPath="Designation" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageQuantite], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding AchatQuantite, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="{Binding [NouveauVoyagePrixAchat], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding AchatPrix, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="4">
+                                                <TextBlock Text="{Binding [NouveauVoyageCout], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgComputedBorderStyle}">
+                                                                    <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}" VerticalAlignment="Center">
+                                                                        <Run Text="{Binding AchatCout, StringFormat={}{0:N2}, TargetNullValue=_, Mode=OneWay}" /><Run Text=" DH" />
+                                                    </TextBlock>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <CheckBox Content="{Binding [NouveauVoyageLivraisonDefectueuse], Source={x:Static loc:LanguageManager.Instance}}"
+                                                  IsChecked="{Binding AchatDefectueux}" Foreground="{DynamicResource NeuTextPrimaryBrush}" FontSize="12" Margin="0,0,0,8" />
+                                        <TextBlock Text="{Binding [NouveauVoyageDescription], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
+                                            <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding AchatDescription, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="Auto" Padding="12,0" Height="34" Command="{Binding AddAchatCommand}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Add24" FontSize="13" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding [NouveauVoyageAddTransaction], Source={x:Static loc:LanguageManager.Instance}}" Margin="6,0,0,0" FontSize="12" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+
+                                    <!-- FRAIS -->
+                                    <StackPanel x:Name="PanelFrais" Visibility="Collapsed">
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageFraisType], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding FraisTypes}" SelectedItem="{Binding FraisType}" />
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="{Binding [NouveauVoyageFraisMontant], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <Border Style="{StaticResource DlgInputBorderStyle}">
+                                                    <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding FraisMontant, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock Text="{Binding [NouveauVoyageDescription], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
+                                            <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding FraisDescription, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="Auto" Padding="12,0" Height="34" Command="{Binding AddFraisCommand}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Add24" FontSize="13" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding [NouveauVoyageAddTransaction], Source={x:Static loc:LanguageManager.Instance}}" Margin="6,0,0,0" FontSize="12" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- Summary grid -->
+                    <Border Grid.Row="1" Style="{StaticResource DlgCardBorderStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <!-- Headers -->
+                            <Grid Grid.Row="0" Margin="0,0,0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="28" />
+                                    <ColumnDefinition Width="55" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="55" />
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="55" />
+                                    <ColumnDefinition Width="80" />
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="32" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"  Text="#"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="1"  Text="{Binding [NouveauVoyageSumType],    Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="2"  Text="{Binding [NouveauVoyageSumPartie],  Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="3"  Text="{Binding [NouveauVoyageSumProduit], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="4"  Text="{Binding [NouveauVoyageSumQte],     Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="5"  Text="{Binding [NouveauVoyageSumPrixU],   Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="6"  Text="{Binding [NouveauVoyageSumRemise],  Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="7"  Text="{Binding [NouveauVoyageSumMontant], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="8"  Text="Chq"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </Grid>
+                            <Separator Grid.Row="1" Background="{DynamicResource NeuInputFillBrush}" Margin="0,0,0,4" />
+                            <ScrollViewer Grid.Row="2" MaxHeight="150" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding Transactions}" ItemTemplate="{StaticResource TransactionRowTemplate}" />
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </ScrollViewer>
+
+            <!-- FOOTER -->
+            <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource NeuInputFillBrush}" Padding="18,12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <!-- Counters -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Style="{StaticResource BadgeStyle}" Margin="0,0,8,0">
+                            <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}">
+                                <Run Text="{Binding Transactions.Count, Mode=OneWay}" />
+                                <Run Text=" " />
+                                <Run Text="{Binding [NouveauVoyageFooterTransactions], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
+                            </TextBlock>
+                        </Border>
+                        <Border Style="{StaticResource BadgeStyle}">
+                            <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}">
+                                <Run Text="{Binding StockItems.Count, Mode=OneWay}" />
+                                <Run Text=" " />
+                                <Run Text="{Binding [NouveauVoyageFooterStocks], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                    <!-- Actions -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource NeuDangerBrush}"
+                                   FontSize="12" VerticalAlignment="Center" Margin="0,0,14,0"
+                                   Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
+                        <Button Style="{StaticResource DlgSecondaryButtonStyle}" Margin="0,0,8,0" Click="OnCancelClick">
+                            <TextBlock Text="{Binding [NouveauVoyageBtnCancel], Source={x:Static loc:LanguageManager.Instance}}" />
+                        </Button>
+                        <Button Style="{StaticResource DlgPrimaryButtonStyle}" Command="{Binding SaveCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:ProgressRing IsIndeterminate="True" Width="16" Height="16" Margin="0,0,8,0"
+                                                 Foreground="White" Visibility="{Binding IsSaving, Converter={StaticResource BoolToVis}}" />
+                                <ui:SymbolIcon Symbol="Save24" FontSize="15" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding [NouveauVoyageBtnCreate], Source={x:Static loc:LanguageManager.Instance}}"
+                                           Margin="8,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+
+</ui:FluentWindow>

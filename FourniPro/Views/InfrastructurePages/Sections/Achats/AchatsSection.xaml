@@ -101,8 +101,10 @@
                         <ColumnDefinition Width="90" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="110" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="96" />
                     </Grid.ColumnDefinitions>
@@ -127,18 +129,29 @@
                     <TextBlock Grid.Column="3" Text="{Binding ProduitNom}"
                                Style="{StaticResource AchatCellTextStyle}" HorizontalAlignment="Left" />
 
-                    <!-- Quantité -->
-                    <TextBlock Grid.Column="4" Text="{Binding Quantite}"
+                    <!-- Employé -->
+                    <TextBlock Grid.Column="4" Text="{Binding EmployeNom, TargetNullValue='—'}"
                                Style="{StaticResource AchatCellTextStyle}" HorizontalAlignment="Left" />
 
-                    <!-- Coût -->
-                    <TextBlock Grid.Column="5" Style="{StaticResource AchatCellTextStyle}" HorizontalAlignment="Left">
-                        <Run Text="{Binding Cout, StringFormat='{}{0:F2}'}" />
+                    <!-- Quantité -->
+                    <TextBlock Grid.Column="5" Text="{Binding Quantite}"
+                               Style="{StaticResource AchatCellTextStyle}" HorizontalAlignment="Left" />
+
+                    <!-- Coût total -->
+                    <TextBlock Grid.Column="6" Style="{StaticResource AchatCellTextStyle}" HorizontalAlignment="Left">
+                        <Run Text="{Binding Cout, StringFormat='{}{0:N2}'}" />
                         <Run Text=" DH" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
                     </TextBlock>
 
+                    <!-- Prix unitaire -->
+                    <TextBlock Grid.Column="7" Style="{StaticResource AchatCellTextStyle}" HorizontalAlignment="Left"
+                               Foreground="{DynamicResource NeuAccentBrush}" FontWeight="SemiBold">
+                        <Run Text="{Binding PrixAchatUnitaire, StringFormat='{}{0:N2}', TargetNullValue='—'}" />
+                        <Run Text=" DH" Foreground="{DynamicResource NeuTextSecondaryBrush}" FontWeight="Normal" />
+                    </TextBlock>
+
                     <!-- Livraison défectueuse -->
-                    <ui:SymbolIcon Grid.Column="6"
+                    <ui:SymbolIcon Grid.Column="8"
                                    HorizontalAlignment="Center" VerticalAlignment="Center"
                                    FontSize="16">
                         <ui:SymbolIcon.Style>
@@ -156,7 +169,7 @@
                     </ui:SymbolIcon>
 
                     <!-- Actions -->
-                    <StackPanel Grid.Column="7" Orientation="Horizontal"
+                    <StackPanel Grid.Column="9" Orientation="Horizontal"
                                 HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Button Style="{StaticResource AchatIconButtonStyle}"
                                 ToolTip="{Binding [AchatDetailTooltip], Source={x:Static loc:LanguageManager.Instance}}"
@@ -284,19 +297,23 @@
                             <ColumnDefinition Width="90" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="110" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="80" />
                             <ColumnDefinition Width="96" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding [AchatColNumero],      Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="1" Text="{Binding [AchatColDate],        Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="2" Text="{Binding [AchatColFournisseur], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="3" Text="{Binding [AchatColProduit],     Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="4" Text="{Binding [AchatColQuantite],    Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="5" Text="{Binding [AchatColCout],        Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
-                        <TextBlock Grid.Column="6" Text="{Binding [AchatColDefectueuse], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Center" />
-                        <TextBlock Grid.Column="7" Text="{Binding [AchatColActions],     Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Center" />
+                        <TextBlock Grid.Column="0" Text="{Binding [AchatColNumero],        Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="1" Text="{Binding [AchatColDate],          Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="2" Text="{Binding [AchatColFournisseur],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="3" Text="{Binding [AchatColProduit],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="4" Text="{Binding [AchatColEmploye],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="5" Text="{Binding [AchatColQuantite],      Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="6" Text="{Binding [AchatColCout],          Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="7" Text="{Binding [AchatColPrixUnitaire],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="8" Text="{Binding [AchatColDefectueuse],   Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Center" />
+                        <TextBlock Grid.Column="9" Text="{Binding [AchatColActions],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource AchatColHeaderStyle}" HorizontalAlignment="Center" />
                     </Grid>
 
                     <!-- Rows -->
