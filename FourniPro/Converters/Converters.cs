@@ -56,3 +56,27 @@ public sealed class InverseBoolConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => value is not true;
 }
+
+/// <summary>
+/// Converts a 0-based AlternationIndex to a 1-based row number string.
+/// </summary>
+public sealed class AlternationIndexToRowNumberConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is int i ? (i + 1).ToString() : string.Empty;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotSupportedException();
+}
+
+/// <summary>
+/// Converts between DateOnly (VM) and DateTime? (DatePicker.SelectedDate).
+/// </summary>
+public sealed class DateOnlyToDateTimeConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is DateOnly d ? (DateTime?)d.ToDateTime(TimeOnly.MinValue) : null;
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is DateTime dt ? DateOnly.FromDateTime(dt) : DateOnly.FromDateTime(DateTime.Today);
+}

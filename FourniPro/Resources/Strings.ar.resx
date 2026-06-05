@@ -1826,6 +1826,12 @@
   <data name="NouveauVoyageSumMontant" xml:space="preserve">
     <value>المبلغ</value>
   </data>
+  <data name="NouveauVoyageSumDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="NouveauVoyageDateTransaction" xml:space="preserve">
+    <value>تاريخ المعاملة</value>
+  </data>
   <data name="NouveauVoyageFooterTransactions" xml:space="preserve">
     <value>معاملة/معاملات</value>
   </data>

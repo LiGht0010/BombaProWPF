@@ -202,14 +202,7 @@
             <Setter Property="MinHeight"       Value="36" />
             <Setter Property="Opacity"         Value="0.55" />
         </Style>
-        <Style x:Key="DlgComboStyle" TargetType="ComboBox">
-            <Setter Property="Background"               Value="Transparent" />
-            <Setter Property="BorderThickness"          Value="0" />
-            <Setter Property="Foreground"               Value="{DynamicResource NeuTextPrimaryBrush}" />
-            <Setter Property="FontSize"                 Value="12" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding"                  Value="0" />
-        </Style>
+
         <Style x:Key="TabBtnStyle" TargetType="Button">
             <Setter Property="Padding"    Value="12,7" />
             <Setter Property="Cursor"     Value="Hand" />
@@ -257,6 +250,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="90" />
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="80" />
@@ -264,10 +258,15 @@
                         <ColumnDefinition Width="40" />
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="52" />
+                        <ColumnDefinition Width="32" />
                     </Grid.ColumnDefinitions>
-                    <Border Grid.Column="1" CornerRadius="6" Padding="5,2" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(ItemsControl.AlternationIndex), Converter={StaticResource AlternationIndexToRowNumberConverter}}"
+                               FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="{Binding Date, StringFormat={}{0:dd/MM/yy}, TargetNullValue=_}" FontSize="11"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <Border Grid.Column="2" CornerRadius="6" Padding="5,2" VerticalAlignment="Center" HorizontalAlignment="Left">
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
@@ -289,22 +288,22 @@
                         </Border.Style>
                         <TextBlock Text="{Binding Type}" FontSize="10" FontWeight="SemiBold" Foreground="White" />
                     </Border>
-                    <TextBlock Grid.Column="2" Text="{Binding Partie,     TargetNullValue=_}" FontSize="11"
+                    <TextBlock Grid.Column="3" Text="{Binding Partie,     TargetNullValue=_}" FontSize="11"
                                Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                    <TextBlock Grid.Column="3" Text="{Binding ProduitNom, TargetNullValue=_}" FontSize="11"
+                    <TextBlock Grid.Column="4" Text="{Binding ProduitNom, TargetNullValue=_}" FontSize="11"
                                Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                    <TextBlock Grid.Column="4" Text="{Binding Quantite,   TargetNullValue=_}" FontSize="11"
+                    <TextBlock Grid.Column="5" Text="{Binding Quantite,   TargetNullValue=_}" FontSize="11"
                                Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <TextBlock Grid.Column="5" FontSize="11" Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center">
+                    <TextBlock Grid.Column="6" FontSize="11" Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center">
                         <Run Text="{Binding PrixUnitaire, StringFormat={}{0:N2}, TargetNullValue=_}" />
                     </TextBlock>
-                    <TextBlock Grid.Column="6" Text="{Binding Remise, StringFormat={}{0:N1}, TargetNullValue=_}" FontSize="11"
+                    <TextBlock Grid.Column="7" Text="{Binding Remise, StringFormat={}{0:N1}, TargetNullValue=_}" FontSize="11"
                                Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <TextBlock Grid.Column="7" FontSize="11" FontWeight="SemiBold"
+                    <TextBlock Grid.Column="8" FontSize="11" FontWeight="SemiBold"
                                Foreground="{DynamicResource NeuAccentBrush}" VerticalAlignment="Center">
                         <Run Text="{Binding MontantTotal, StringFormat={}{0:N2}, TargetNullValue=_}" /><Run Text=" DH" />
                     </TextBlock>
-                    <TextBlock Grid.Column="8" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Grid.Column="9" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text"       Value="" />
@@ -318,7 +317,7 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <Button Grid.Column="9" Style="{StaticResource MiniDeleteBtnStyle}"
+                    <Button Grid.Column="10" Style="{StaticResource MiniDeleteBtnStyle}"
                             Command="{Binding DataContext.RemoveTransactionCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
                             CommandParameter="{Binding}">
                         <ui:SymbolIcon Symbol="Delete24" FontSize="11" />
@@ -410,24 +409,36 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0">
                                         <TextBlock Text="{Binding [NouveauVoyageChauffeur], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                        <Border Style="{StaticResource DlgInputBorderStyle}">
-                                            <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Chauffeurs}"
-                                                      SelectedItem="{Binding SelectedChauffeur}" DisplayMemberPath="Nom" />
-                                        </Border>
+                                        <ComboBox Style="{DynamicResource NeuComboBoxStyle}" MinWidth="0" ItemsSource="{Binding Chauffeurs}"
+                                                  SelectedItem="{Binding SelectedChauffeur}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Nom}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
                                         <TextBlock Text="{Binding [NouveauVoyageCamion], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                        <Border Style="{StaticResource DlgInputBorderStyle}">
-                                            <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Camions}"
-                                                      SelectedItem="{Binding SelectedCamion}" DisplayMemberPath="Matricule" />
-                                        </Border>
+                                        <ComboBox Style="{DynamicResource NeuComboBoxStyle}" MinWidth="0" ItemsSource="{Binding Camions}"
+                                                  SelectedItem="{Binding SelectedCamion}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Matricule}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
                                     </StackPanel>
                                     <StackPanel Grid.Column="4">
                                         <TextBlock Text="{Binding [NouveauVoyageCiterne], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                        <Border Style="{StaticResource DlgInputBorderStyle}">
-                                            <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Citernes}"
-                                                      SelectedItem="{Binding SelectedCiterne}" DisplayMemberPath="MatriculeCiterne" />
-                                        </Border>
+                                        <ComboBox Style="{DynamicResource NeuComboBoxStyle}" MinWidth="0" ItemsSource="{Binding Citernes}"
+                                                  SelectedItem="{Binding SelectedCiterne}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding MatriculeCiterne}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
                                     </StackPanel>
                                 </Grid>
 
@@ -524,10 +535,14 @@
                                         <ColumnDefinition Width="6" />
                                         <ColumnDefinition Width="34" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Style="{StaticResource DlgInputBorderStyle}">
-                                        <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Produits}"
-                                                  SelectedItem="{Binding StockProduit}" DisplayMemberPath="Designation" />
-                                    </Border>
+                                    <ComboBox Grid.Column="0" Style="{DynamicResource NeuComboBoxStyle}" MinWidth="0" ItemsSource="{Binding Produits}"
+                                              SelectedItem="{Binding StockProduit}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Description}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                     <Border Grid.Column="2" Style="{StaticResource DlgInputBorderStyle}">
                                         <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding StockQuantite, UpdateSourceTrigger=PropertyChanged}" />
                                     </Border>
@@ -583,15 +598,23 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="{Binding [NouveauVoyageClient], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                                <Border Style="{StaticResource DlgInputBorderStyle}">
-                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Clients}" SelectedItem="{Binding VenteClient}" DisplayMemberPath="Nom" />
-                                                </Border>
+                                                <ComboBox Style="{DynamicResource NeuComboBoxStyle}" ItemsSource="{Binding Clients}" SelectedItem="{Binding VenteClient}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Nom}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
                                             </StackPanel>
                                             <StackPanel Grid.Column="2">
                                                 <TextBlock Text="{Binding [NouveauVoyageProduit], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                                <Border Style="{StaticResource DlgInputBorderStyle}">
-                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Produits}" SelectedItem="{Binding VenteProduit}" DisplayMemberPath="Designation" />
-                                                </Border>
+                                                <ComboBox Style="{DynamicResource NeuComboBoxStyle}" ItemsSource="{Binding Produits}" SelectedItem="{Binding VenteProduit}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Description}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
                                             </StackPanel>
                                         </Grid>
                                         <Grid Margin="0,0,0,8">
@@ -623,9 +646,7 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="{Binding [NouveauVoyagePayment], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                                <Border Style="{StaticResource DlgInputBorderStyle}">
-                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding PaymentMethods}" SelectedItem="{Binding VentePayment}" />
-                                                </Border>
+                                                <ComboBox Style="{DynamicResource NeuComboBoxStyle}" ItemsSource="{Binding PaymentMethods}" SelectedItem="{Binding VentePayment}" />
                                             </StackPanel>
                                             <StackPanel Grid.Column="2">
                                                 <TextBlock Text="{Binding [NouveauVoyageMontantTotal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
@@ -634,6 +655,16 @@
                                                                         <Run Text="{Binding VenteTotal, StringFormat={}{0:N2}, TargetNullValue=_, Mode=OneWay}" /><Run Text=" DH" />
                                                     </TextBlock>
                                                 </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageDateTransaction], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <DatePicker SelectedDate="{Binding VenteDate, Converter={StaticResource DateOnlyToDateTimeConverter}, Mode=TwoWay}"
+                                                            Style="{DynamicResource NeuDatePickerStyle}" />
                                             </StackPanel>
                                         </Grid>
                                         <TextBlock Text="{Binding [NouveauVoyageNote], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
@@ -656,15 +687,23 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="{Binding [NouveauVoyageClient], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                                <Border Style="{StaticResource DlgInputBorderStyle}">
-                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Clients}" SelectedItem="{Binding CreditClient}" DisplayMemberPath="Nom" />
-                                                </Border>
+                                                <ComboBox Style="{DynamicResource NeuComboBoxStyle}" ItemsSource="{Binding Clients}" SelectedItem="{Binding CreditClient}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Nom}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
                                             </StackPanel>
                                             <StackPanel Grid.Column="2">
                                                 <TextBlock Text="{Binding [NouveauVoyageProduit], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                                <Border Style="{StaticResource DlgInputBorderStyle}">
-                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Produits}" SelectedItem="{Binding CreditProduit}" DisplayMemberPath="Designation" />
-                                                </Border>
+                                                <ComboBox Style="{DynamicResource NeuComboBoxStyle}" ItemsSource="{Binding Produits}" SelectedItem="{Binding CreditProduit}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Description}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
                                             </StackPanel>
                                         </Grid>
                                         <Grid Margin="0,0,0,8">
@@ -717,11 +756,21 @@
                                                 <TextBlock Text="Ch&#232;que : D&#233;tenu" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
                                             </Border>
                                         </StackPanel>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageDateTransaction], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <DatePicker SelectedDate="{Binding CreditDate, Converter={StaticResource DateOnlyToDateTimeConverter}, Mode=TwoWay}"
+                                                            Style="{DynamicResource NeuDatePickerStyle}" />
+                                            </StackPanel>
+                                        </Grid>
                                         <TextBlock Text="{Binding [NouveauVoyageNote], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
                                         <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
                                             <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding CreditNote, UpdateSourceTrigger=PropertyChanged}" />
                                         </Border>
-                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="Auto" Padding="12,0" Height="34" Command="{Binding AddCreditCommand}">
+                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="100" Padding="12,0" Height="34"  Command="{Binding AddCreditCommand}">
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon Symbol="Add24" FontSize="13" VerticalAlignment="Center" />
                                                 <TextBlock Text="{Binding [NouveauVoyageAddTransaction], Source={x:Static loc:LanguageManager.Instance}}" Margin="6,0,0,0" FontSize="12" VerticalAlignment="Center" />
@@ -737,15 +786,23 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="{Binding [NouveauVoyageFournisseur], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                                <Border Style="{StaticResource DlgInputBorderStyle}">
-                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Fournisseurs}" SelectedItem="{Binding AchatFournisseur}" DisplayMemberPath="DisplayName" />
-                                                </Border>
+                                                <ComboBox Style="{DynamicResource NeuComboBoxStyle}" ItemsSource="{Binding Fournisseurs}" SelectedItem="{Binding AchatFournisseur}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding DisplayName}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
                                             </StackPanel>
                                             <StackPanel Grid.Column="2">
                                                 <TextBlock Text="{Binding [NouveauVoyageProduit], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                                <Border Style="{StaticResource DlgInputBorderStyle}">
-                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding Produits}" SelectedItem="{Binding AchatProduit}" DisplayMemberPath="Designation" />
-                                                </Border>
+                                                <ComboBox Style="{DynamicResource NeuComboBoxStyle}" ItemsSource="{Binding Produits}" SelectedItem="{Binding AchatProduit}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Description}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
                                             </StackPanel>
                                         </Grid>
                                         <Grid Margin="0,0,0,8">
@@ -775,6 +832,16 @@
                                         </Grid>
                                         <CheckBox Content="{Binding [NouveauVoyageLivraisonDefectueuse], Source={x:Static loc:LanguageManager.Instance}}"
                                                   IsChecked="{Binding AchatDefectueux}" Foreground="{DynamicResource NeuTextPrimaryBrush}" FontSize="12" Margin="0,0,0,8" />
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="6" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding [NouveauVoyageDateTransaction], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                                <DatePicker SelectedDate="{Binding AchatDate, Converter={StaticResource DateOnlyToDateTimeConverter}, Mode=TwoWay}"
+                                                            Style="{DynamicResource NeuDatePickerStyle}" />
+                                            </StackPanel>
+                                        </Grid>
                                         <TextBlock Text="{Binding [NouveauVoyageDescription], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
                                         <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
                                             <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding AchatDescription, UpdateSourceTrigger=PropertyChanged}" />
@@ -795,9 +862,7 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="{Binding [NouveauVoyageFraisType], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                                <Border Style="{StaticResource DlgInputBorderStyle}">
-                                                    <ComboBox Style="{StaticResource DlgComboStyle}" ItemsSource="{Binding FraisTypes}" SelectedItem="{Binding FraisType}" />
-                                                </Border>
+                                                <ComboBox Style="{DynamicResource NeuComboBoxStyle}" ItemsSource="{Binding FraisTypes}" SelectedItem="{Binding FraisType}" />
                                             </StackPanel>
                                             <StackPanel Grid.Column="2">
                                                 <TextBlock Text="{Binding [NouveauVoyageFraisMontant], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
@@ -834,6 +899,7 @@
                             <Grid Grid.Row="0" Margin="0,0,0,4">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="90" />
                                     <ColumnDefinition Width="100" />
                                     <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="80" />
@@ -841,31 +907,34 @@
                                     <ColumnDefinition Width="40" />
                                     <ColumnDefinition Width="100" />
                                     <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="150" />
-                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="52" />
+                                    <ColumnDefinition Width="32" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0"  Text="#"
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBlock Grid.Column="1"  Text="{Binding [NouveauVoyageSumType],    Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="2"  Text="{Binding [NouveauVoyageSumPartie],  Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="3"  Text="{Binding [NouveauVoyageSumProduit], Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="4"  Text="{Binding [NouveauVoyageSumQte],     Source={x:Static loc:LanguageManager.Instance}}"
+                                <TextBlock Grid.Column="1"  Text="{Binding [NouveauVoyageSumDate], Source={x:Static loc:LanguageManager.Instance}}"
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBlock Grid.Column="5"  Text="{Binding [NouveauVoyageSumPrixU],   Source={x:Static loc:LanguageManager.Instance}}"
+                                <TextBlock Grid.Column="2"  Text="{Binding [NouveauVoyageSumType],    Source={x:Static loc:LanguageManager.Instance}}"
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="6"  Text="{Binding [NouveauVoyageSumRemise],  Source={x:Static loc:LanguageManager.Instance}}"
+                                <TextBlock Grid.Column="3"  Text="{Binding [NouveauVoyageSumPartie],  Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="4"  Text="{Binding [NouveauVoyageSumProduit], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="5"  Text="{Binding [NouveauVoyageSumQte],     Source={x:Static loc:LanguageManager.Instance}}"
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBlock Grid.Column="7"  Text="{Binding [NouveauVoyageSumMontant], Source={x:Static loc:LanguageManager.Instance}}"
+                                <TextBlock Grid.Column="6"  Text="{Binding [NouveauVoyageSumPrixU],   Source={x:Static loc:LanguageManager.Instance}}"
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="8"  Text="Cheque"
+                                <TextBlock Grid.Column="7"  Text="{Binding [NouveauVoyageSumRemise],  Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="8"  Text="{Binding [NouveauVoyageSumMontant], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="9"  Text="Chq"
                                            FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                             </Grid>
                             <Separator Grid.Row="1" Background="{DynamicResource NeuInputFillBrush}" Margin="0,0,0,4" />
                             <ScrollViewer Grid.Row="2" MaxHeight="150" VerticalScrollBarVisibility="Auto">
-                                <ItemsControl ItemsSource="{Binding Transactions}" ItemTemplate="{StaticResource TransactionRowTemplate}" />
+                                <ItemsControl ItemsSource="{Binding Transactions}" ItemTemplate="{StaticResource TransactionRowTemplate}"
+                                              AlternationCount="1000" />
                             </ScrollViewer>
                         </Grid>
                     </Border>

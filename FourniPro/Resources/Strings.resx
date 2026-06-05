@@ -1784,6 +1784,12 @@
   <data name="NouveauVoyageSumMontant" xml:space="preserve">
     <value>Montant</value>
   </data>
+  <data name="NouveauVoyageSumDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="NouveauVoyageDateTransaction" xml:space="preserve">
+    <value>Date de la transaction</value>
+  </data>
   <data name="NouveauVoyageFooterTransactions" xml:space="preserve">
     <value>transaction(s)</value>
   </data>

@@ -20,6 +20,7 @@ public class VoyageTransactionItem
     public decimal? Remise        { get; set; }
     public decimal? MontantTotal  { get; set; }
     public bool    HasCheque      { get; set; }
+    public DateOnly? Date          { get; set; }
 
     // raw form data kept for POST
     public int?    ClientId       { get; set; }
@@ -199,6 +200,13 @@ public class NouveauVoyageViewModel : ObservableObject
         set => SetProperty(ref _venteNote, value);
     }
 
+    private DateOnly _venteDate = DateOnly.FromDateTime(DateTime.Today);
+    public DateOnly VenteDate
+    {
+        get => _venteDate;
+        set => SetProperty(ref _venteDate, value);
+    }
+
     // ── Crédit tab form ───────────────────────────────────────────────────────
 
     private ClientDto? _creditClient;
@@ -267,6 +275,13 @@ public class NouveauVoyageViewModel : ObservableObject
         set => SetProperty(ref _creditNote, value);
     }
 
+    private DateOnly _creditDate = DateOnly.FromDateTime(DateTime.Today);
+    public DateOnly CreditDate
+    {
+        get => _creditDate;
+        set => SetProperty(ref _creditDate, value);
+    }
+
     // ── Achat tab form ────────────────────────────────────────────────────────
 
     private FournisseurDto? _achatFournisseur;
@@ -316,6 +331,13 @@ public class NouveauVoyageViewModel : ObservableObject
     {
         get => _achatDescription;
         set => SetProperty(ref _achatDescription, value);
+    }
+
+    private DateOnly _achatDate = DateOnly.FromDateTime(DateTime.Today);
+    public DateOnly AchatDate
+    {
+        get => _achatDate;
+        set => SetProperty(ref _achatDate, value);
     }
 
     // ── Frais tab form ────────────────────────────────────────────────────────
@@ -478,6 +500,7 @@ public class NouveauVoyageViewModel : ObservableObject
             PrixUnitaire  = VentePrix,
             Remise        = VenteRemise,
             MontantTotal  = VenteTotal,
+            Date          = VenteDate,
             ClientId      = VenteClient.ClientId,
             ProduitId     = VenteProduit.ProduitId,
             PaymentMethod = VentePayment,
@@ -499,6 +522,7 @@ public class NouveauVoyageViewModel : ObservableObject
             PrixUnitaire   = CreditPrix,
             Remise         = CreditRemise,
             MontantTotal   = CreditTotal,
+            Date           = CreditDate,
             HasCheque      = hasChq,
             ClientId       = CreditClient.ClientId,
             ProduitId      = CreditProduit.ProduitId,
@@ -519,6 +543,7 @@ public class NouveauVoyageViewModel : ObservableObject
             Quantite            = AchatQuantite,
             PrixUnitaire        = AchatPrix,
             MontantTotal        = AchatCout,
+            Date                = AchatDate,
             FournisseurId       = AchatFournisseur.FournisseurId,
             ProduitId           = AchatProduit.ProduitId,
             LivraisonDefectueuse = AchatDefectueux,
@@ -553,6 +578,7 @@ public class NouveauVoyageViewModel : ObservableObject
         VenteClient = null; VenteProduit = null; VenteQuantite = null;
         VentePrix   = null; VenteRemise  = null; VenteTotal    = null;
         VentePayment = null; VenteNote   = null;
+        VenteDate = DateOnly.FromDateTime(DateTime.Today);
     }
 
     private void ResetCreditForm()
@@ -560,12 +586,14 @@ public class NouveauVoyageViewModel : ObservableObject
         CreditClient = null; CreditProduit = null; CreditQuantite = null;
         CreditPrix   = null; CreditRemise  = null; CreditTotal    = null;
         CreditChequeRef = null; CreditNote = null;
+        CreditDate = DateOnly.FromDateTime(DateTime.Today);
     }
 
     private void ResetAchatForm()
     {
         AchatFournisseur = null; AchatProduit = null; AchatQuantite = null;
         AchatPrix = null; AchatDefectueux = false; AchatDescription = null;
+        AchatDate = DateOnly.FromDateTime(DateTime.Today);
     }
 
     private void ResetFraisForm()
@@ -631,7 +659,7 @@ public class NouveauVoyageViewModel : ObservableObject
                         await _venteService.CreateVenteAsync(new VenteDto
                         {
                             NumeroVente   = $"V-{num:yyyy-MM-dd-HH-mm-ss}",
-                            DateVente     = today,
+                            DateVente     = t.Date ?? today,
                             VoyageID      = voyageId,
                             ClientID      = t.ClientId,
                             ProduitID     = t.ProduitId,
@@ -648,7 +676,7 @@ public class NouveauVoyageViewModel : ObservableObject
                         await _creditService.CreateCreditAsync(new CreditDto
                         {
                             NumeroCredit    = $"C-{num:yyyy-MM-dd-HH-mm-ss}",
-                            DateCredit      = today,
+                            DateCredit      = t.Date ?? today,
                             VoyageID        = voyageId,
                             ClientID        = t.ClientId,
                             ProduitID       = t.ProduitId,
@@ -667,7 +695,7 @@ public class NouveauVoyageViewModel : ObservableObject
                         await _achatService.CreateAchatAsync(new AchatDto
                         {
                             Numero               = $"A-{num:yyyy-MM-dd-HH-mm-ss}",
-                            Date                 = today,
+                            Date                 = t.Date ?? today,
                             FournisseurID        = t.FournisseurId,
                             ProduitID            = t.ProduitId,
                             Quantite             = t.Quantite,

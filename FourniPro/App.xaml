@@ -17,6 +17,8 @@
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
             <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <conv:DateOnlyToDateTimeConverter x:Key="DateOnlyToDateTimeConverter" />
+            <conv:AlternationIndexToRowNumberConverter x:Key="AlternationIndexToRowNumberConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
