@@ -46,7 +46,6 @@ public class VentesController(AppDbContext context, IMapper mapper, ILogger<Vent
     public async Task<ActionResult<VenteDto>> CreateVente(VenteDto dto)
     {
         var vente = mapper.Map<Vente>(dto);
-        vente.VenteId        = 0;
         vente.DateCreation   = DateTime.UtcNow;
         vente.DateModification = DateTime.UtcNow;
         vente.MontantTotal   = ComputeTotal(dto);

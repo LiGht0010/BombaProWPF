@@ -1,9 +1,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FourniPro.Automation;
+using FourniPro.Automation.Voyage;
 using FourniPro.Localization;
 using FourniPro.Models;
 using FourniPro.Services;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace FourniPro.ViewModels;
 
@@ -12,6 +15,11 @@ namespace FourniPro.ViewModels;
 /// <summary>A staged transaction row added inside the voyage create dialog.</summary>
 public class VoyageTransactionItem
 {
+    /// <summary>PK of the persisted record (VenteId / CreditId / AchatId / FraisVoyageId). 0 = new.</summary>
+    public int  Id         { get; set; }
+    /// <summary>True when the row was loaded from the API (edit mode); false = staged locally.</summary>
+    public bool IsExisting { get; set; }
+
     public string Type            { get; set; } = string.Empty;  // Vente | Crédit | Achat | Frais
     public string Partie          { get; set; } = string.Empty;  // Client / Fournisseur name
     public string? ProduitNom     { get; set; }
@@ -22,24 +30,68 @@ public class VoyageTransactionItem
     public bool    HasCheque      { get; set; }
     public DateOnly? Date          { get; set; }
 
-    // raw form data kept for POST
+    // raw form data kept for POST/PUT
     public int?    ClientId       { get; set; }
     public int?    FournisseurId  { get; set; }
     public int?    ProduitId      { get; set; }
     public string? PaymentMethod  { get; set; }
     public string? Note           { get; set; }
     public string? ChequeReference { get; set; }
-    public bool    LivraisonDefectueuse { get; set; }
+    public bool    LivraisonDefectueux { get; set; }
     public string? Description    { get; set; }
     public string? FraisType      { get; set; }
+
+    // originals preserved for PUT
+    public int?      AjoutePar      { get; set; }
+    public DateTime? DateCreation   { get; set; }
+    public string?   NumeroRef      { get; set; }  // NumeroVente / NumeroCredit / Numero(Achat)
 }
 
 /// <summary>A staged stock row (produit + quantite) for the voyage.</summary>
 public class VoyageStockItem
 {
+    /// <summary>PK of the persisted StockVoyage record. 0 = new.</summary>
+    public int  Id         { get; set; }
+    /// <summary>True when loaded from the API (edit mode).</summary>
+    public bool IsExisting { get; set; }
+
     public int?   ProduitId  { get; set; }
     public string ProduitNom { get; set; } = string.Empty;
     public int?   Quantite   { get; set; }
+}
+
+/// <summary>Live in-memory stock remaining for a product during voyage creation.</summary>
+public class StockRestantItem : ObservableObject
+{
+    public int ProduitId { get; init; }
+
+    private string _produitNom = string.Empty;
+    public string ProduitNom
+    {
+        get => _produitNom;
+        set => SetProperty(ref _produitNom, value);
+    }
+
+    private int _quantiteInitiale;
+    public int QuantiteInitiale
+    {
+        get => _quantiteInitiale;
+        set => SetProperty(ref _quantiteInitiale, value);
+    }
+
+    private int _quantiteRestante;
+    public int QuantiteRestante
+    {
+        get => _quantiteRestante;
+        set
+        {
+            if (SetProperty(ref _quantiteRestante, value))
+                OnPropertyChanged(nameof(IsWarning));
+        }
+    }
+
+    /// <summary>True when QuantiteRestante is negative — triggers warning styling in the UI.</summary>
+    public bool IsWarning => QuantiteRestante < 0;
 }
 
 // ── ViewModel ─────────────────────────────────────────────────────────────────
@@ -58,6 +110,7 @@ public class NouveauVoyageViewModel : ObservableObject
     private readonly ProduitService     _produitService = new();
     private readonly CamionService      _camionService  = new();
     private readonly ChauffeurService   _chauffeurService = new();
+    private readonly AutomationRunner   _automationRunner = new();
     private readonly CiterneService     _citerneService   = new();
     private readonly ClientService      _clientService    = new();
     private readonly FournisseurService _fournisseurService = new();
@@ -68,7 +121,12 @@ public class NouveauVoyageViewModel : ObservableObject
     public CamionDto? SelectedCamion
     {
         get => _selectedCamion;
-        set => SetProperty(ref _selectedCamion, value);
+        set
+        {
+            if (SetProperty(ref _selectedCamion, value) && value is not null)
+                KilometrageDepart = value.Kilometrage.HasValue
+                    ? (decimal)value.Kilometrage.Value : (decimal?)null;
+        }
     }
 
     private ChauffeurDto? _selectedChauffeur;
@@ -113,7 +171,22 @@ public class NouveauVoyageViewModel : ObservableObject
         set => SetProperty(ref _kilometrageDepart, value);
     }
 
-    // ── Stock tab form ────────────────────────────────────────────────────────
+    private DateTime? _dateFinal;
+    public DateTime? DateFinal
+    {
+        get => _dateFinal;
+        set => SetProperty(ref _dateFinal, value.HasValue
+            ? DateTime.SpecifyKind(value.Value, DateTimeKind.Utc) : null);
+    }
+
+    private decimal? _kilometrageFinal;
+    public decimal? KilometrageFinal
+    {
+        get => _kilometrageFinal;
+        set => SetProperty(ref _kilometrageFinal, value);
+    }
+
+    // ── Stock tab form
 
     private ProduitDto? _stockProduit;
     public ProduitDto? StockProduit
@@ -365,8 +438,17 @@ public class NouveauVoyageViewModel : ObservableObject
 
     // ── Staged collections ────────────────────────────────────────────────────
 
-    public ObservableCollection<VoyageStockItem>       StockItems   { get; } = [];
-    public ObservableCollection<VoyageTransactionItem> Transactions { get; } = [];
+    public ObservableCollection<VoyageStockItem>       StockItems        { get; } = [];
+    public ObservableCollection<VoyageTransactionItem> Transactions      { get; } = [];
+    public ObservableCollection<StockRestantItem>      StockRestantItems { get; } = [];
+
+    private decimal _fraisTotal;
+    /// <summary>Running total of all Frais transactions added to this voyage.</summary>
+    public decimal FraisTotal
+    {
+        get => _fraisTotal;
+        private set => SetProperty(ref _fraisTotal, value);
+    }
 
     // ── Lookup lists ──────────────────────────────────────────────────────────
 
@@ -468,6 +550,47 @@ public class NouveauVoyageViewModel : ObservableObject
         CreditTotal = Math.Round((decimal)CreditQuantite.Value * CreditPrix.Value * (1 - r / 100m), 2);
     }
 
+    /// <summary>Rebuilds StockRestantItems from the current StockItems list, then applies all transactions.</summary>
+    private void RecalculateStockRestant()
+    {
+        StockRestantItems.Clear();
+
+        foreach (var s in StockItems)
+        {
+            if (s.ProduitId is null) continue;
+            StockRestantItems.Add(new StockRestantItem
+            {
+                ProduitId        = s.ProduitId.Value,
+                ProduitNom       = s.ProduitNom,
+                QuantiteInitiale = s.Quantite ?? 0,
+                QuantiteRestante = s.Quantite ?? 0
+            });
+        }
+
+        foreach (var t in Transactions)
+        {
+            if (t.ProduitId is null || t.Quantite is null) continue;
+            var row = StockRestantItems.FirstOrDefault(r => r.ProduitId == t.ProduitId.Value);
+            if (row is null) continue;
+
+            row.QuantiteRestante += t.Type switch
+            {
+                "Vente"  => -t.Quantite.Value,
+                "Crédit" => -t.Quantite.Value,
+                "Achat"  => +t.Quantite.Value,
+                _        => 0
+            };
+        }
+    }
+
+    /// <summary>Recomputes FraisTotal from all Frais transactions.</summary>
+    private void RecalculateFraisTotal()
+    {
+        FraisTotal = Transactions
+            .Where(t => t.Type == "Frais")
+            .Sum(t => t.MontantTotal ?? 0m);
+    }
+
     // ── Add/Remove staged rows ────────────────────────────────────────────────
 
     private void AddStock()
@@ -481,11 +604,14 @@ public class NouveauVoyageViewModel : ObservableObject
         });
         StockProduit  = null;
         StockQuantite = null;
+        RecalculateStockRestant();
     }
 
     private void RemoveStock(VoyageStockItem? item)
     {
-        if (item is not null) StockItems.Remove(item);
+        if (item is null) return;
+        StockItems.Remove(item);
+        RecalculateStockRestant();
     }
 
     private void AddVente()
@@ -506,6 +632,7 @@ public class NouveauVoyageViewModel : ObservableObject
             PaymentMethod = VentePayment,
             Note          = NullIfBlank(VenteNote)
         });
+        RecalculateStockRestant();
         ResetVenteForm();
     }
 
@@ -529,6 +656,7 @@ public class NouveauVoyageViewModel : ObservableObject
             ChequeReference = hasChq ? NullIfBlank(CreditChequeRef) : null,
             Note           = NullIfBlank(CreditNote)
         });
+        RecalculateStockRestant();
         ResetCreditForm();
     }
 
@@ -546,9 +674,10 @@ public class NouveauVoyageViewModel : ObservableObject
             Date                = AchatDate,
             FournisseurId       = AchatFournisseur.FournisseurId,
             ProduitId           = AchatProduit.ProduitId,
-            LivraisonDefectueuse = AchatDefectueux,
+            LivraisonDefectueux  = AchatDefectueux,
             Description         = NullIfBlank(AchatDescription)
         });
+        RecalculateStockRestant();
         ResetAchatForm();
     }
 
@@ -563,12 +692,16 @@ public class NouveauVoyageViewModel : ObservableObject
             FraisType    = FraisType,
             Description  = NullIfBlank(FraisDescription)
         });
+        RecalculateFraisTotal();
         ResetFraisForm();
     }
 
     private void RemoveTransaction(VoyageTransactionItem? item)
     {
-        if (item is not null) Transactions.Remove(item);
+        if (item is null) return;
+        Transactions.Remove(item);
+        RecalculateStockRestant();
+        RecalculateFraisTotal();
     }
 
     // ── Form resets ───────────────────────────────────────────────────────────
@@ -623,9 +756,11 @@ public class NouveauVoyageViewModel : ObservableObject
                 ChauffeurId       = SelectedChauffeur.ChauffeurId,
                 CiterneId         = SelectedCiterne?.CiterneId,
                 DateDepart        = DateDepart,
+                DateFinal         = DateFinal,
                 LieuDepart        = NullIfBlank(LieuDepart),
                 LieuTerminal      = NullIfBlank(LieuTerminal),
                 KilometrageDepart = KilometrageDepart,
+                KilometrageFinal  = KilometrageFinal,
                 Statut            = "InProgress"
             };
 
@@ -701,7 +836,7 @@ public class NouveauVoyageViewModel : ObservableObject
                             Quantite             = t.Quantite,
                             PrixAchatUnitaire    = t.PrixUnitaire,
                             Cout                 = t.MontantTotal,
-                            LivraisonDefectueuse = t.LivraisonDefectueuse,
+                            LivraisonDefectueuse = t.LivraisonDefectueux,
                             Description          = t.Description
                         });
                         break;
@@ -719,6 +854,11 @@ public class NouveauVoyageViewModel : ObservableObject
             }
 
             Saved = true;
+
+            // AutomationHook: post-submit stock deduction plugs in here
+            await _automationRunner.RunAsync(
+                AutomationTrigger.VoyageSubmitted,
+                new VoyageStockContext(StockRestantItems));
         }
         finally { IsSaving = false; }
     }

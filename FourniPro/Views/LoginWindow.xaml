@@ -155,26 +155,7 @@
                     <PasswordBox x:Name="PasswordBox"
                                  Style="{StaticResource NeuPasswordBoxStyle}"
                                  PasswordChanged="PasswordBox_PasswordChanged"
-                                 Margin="0,0,0,10" />
-
-                    <!-- Forgot link -->
-                    <Button Content="{Binding [ForgotPassword], Source={x:Static loc:LanguageManager.Instance}}"
-                            Style="{StaticResource NeuLinkButtonStyle}"
-                            Command="{Binding ForgotPasswordCommand}"
-                            HorizontalAlignment="Right"
-                            Margin="0,0,0,16" />
-
-                    <!-- Error banner -->
-                    <Border Background="#33D32F2F"
-                            CornerRadius="8"
-                            Padding="12,8"
-                            Margin="0,0,0,12"
-                            Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
-                        <TextBlock Text="{Binding ErrorMessage}"
-                                   Foreground="#FFE57373"
-                                   FontSize="12"
-                                   TextWrapping="Wrap" />
-                    </Border>
+                                 Margin="0,0,0,24" />
 
                     <!-- Sign in button -->
                     <Button Content="{Binding [SignInButton], Source={x:Static loc:LanguageManager.Instance}}"
@@ -183,7 +164,7 @@
                             HorizontalAlignment="Stretch"
                             FontSize="15"
                             Padding="0,14"
-                            Margin="0,4,0,0" />
+                            Margin="0,0,0,0" />
 
                     <!-- Busy indicator -->
                     <TextBlock Text="{Binding [Connecting], Source={x:Static loc:LanguageManager.Instance}}"
@@ -194,6 +175,42 @@
                                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </StackPanel>
             </ContentControl>
+
+            <!-- ── Floating error toast — rendered above the card, never shifts layout ── -->
+            <Border HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Margin="0,0,0,32"
+                    Width="380"
+                    CornerRadius="10"
+                    Padding="14,10"
+                    Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                <Border.Background>
+                    <SolidColorBrush Color="#D32F2F" Opacity="0.92" />
+                </Border.Background>
+                <Border.Effect>
+                    <DropShadowEffect Color="#D32F2F" BlurRadius="18" ShadowDepth="0" Opacity="0.45" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ui:SymbolIcon Grid.Column="0"
+                                   Symbol="ErrorCircle24"
+                                   FontSize="16"
+                                   Foreground="White"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding ErrorMessage}"
+                               Foreground="White"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+
         </Grid>
     </Grid>
 </ui:FluentWindow>

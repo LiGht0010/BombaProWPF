@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FourniPro.Automation;
+using FourniPro.Automation.Vente;
 using FourniPro.Models;
 using FourniPro.Services;
 using FourniPro.Views.InfrastructurePages.Sections.Ventes;
@@ -14,7 +16,8 @@ namespace FourniPro.ViewModels;
 /// </summary>
 public class VentesSectionViewModel : ObservableObject
 {
-    private readonly VenteService _service = new();
+    private readonly VenteService     _service          = new();
+    private readonly AutomationRunner _automationRunner = new();
     private bool _loaded;
 
     private ObservableCollection<VenteCardItem> _ventes = [];
@@ -152,9 +155,27 @@ public class VentesSectionViewModel : ObservableObject
 
         if (result != MessageBoxResult.Yes) return;
 
+        // Fetch full DTO to get ClientId and ProduitId before the record is removed.
+        var dto = await _service.GetVenteByIdAsync(item.VenteId);
+
         var ok = await _service.DeleteVenteAsync(item.VenteId);
         if (ok)
+        {
             Ventes.Remove(item);
+
+            if (dto is not null)
+            {
+                await _automationRunner.RunAsync(
+                    AutomationTrigger.VenteDeleted,
+                    new VenteDeletedContext(
+                        VenteId:      dto.VenteId,
+                        ClientId:     dto.ClientID     ?? 0,
+                        ProduitId:    dto.ProduitID    ?? 0,
+                        Quantite:     dto.Quantite     ?? 0,
+                        PrixUnitaire: dto.PrixUnitaire ?? 0m,
+                        MontantTotal: dto.MontantTotal ?? 0m));
+            }
+        }
         else
             MessageBox.Show("Erreur lors de la suppression.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
     }

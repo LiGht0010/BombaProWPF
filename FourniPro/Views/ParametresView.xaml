@@ -1,0 +1,209 @@
+<UserControl x:Class="FourniPro.Views.ParametresView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:FourniPro.Localization"
+             xmlns:vm="clr-namespace:FourniPro.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="Transparent"
+             d:DataContext="{d:DesignInstance Type=vm:ParametresViewModel}">
+
+    <UserControl.Resources>
+
+        <!-- Automation row: hover highlight, bottom divider -->
+        <Style x:Key="AutomationRowBorderStyle" TargetType="Border">
+            <Setter Property="Background"      Value="Transparent" />
+            <Setter Property="BorderBrush"     Value="{DynamicResource NeuInputFillBrush}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding"         Value="4,14" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="0,0,0,32">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />   <!-- breadcrumb + page title -->
+                <RowDefinition Height="Auto" />   <!-- hero accent banner -->
+                <RowDefinition Height="Auto" />   <!-- automations card -->
+            </Grid.RowDefinitions>
+
+            <!-- ── Page header ─────────────────────────────────────────── -->
+            <Grid Grid.Row="0" Margin="8,0,8,20">
+                <StackPanel>
+                    <TextBlock Text="{Binding [ParametresBreadcrumb], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuAccentBrush}" />
+                    <TextBlock Text="{Binding [ParametresTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="22" FontWeight="Bold"
+                               Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                               Margin="0,2,0,0" />
+                    <TextBlock Text="{Binding [ParametresSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="13" Margin="0,4,0,0"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                </StackPanel>
+            </Grid>
+
+            <!-- ── Hero accent banner ──────────────────────────────────── -->
+            <Border Grid.Row="1"
+                    Margin="8,0,8,18"
+                    CornerRadius="16"
+                    Background="{DynamicResource NeuAccentGradientBrush}"
+                    Padding="24,20">
+                <Border.Effect>
+                    <DropShadowEffect Color="#B8C4D6" BlurRadius="18" ShadowDepth="5"
+                                      Direction="270" Opacity="0.38" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Icon + title + subtitle -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="44" Height="44" CornerRadius="22"
+                                Background="#33FFFFFF"
+                                Margin="0,0,16,0" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Flash24" FontSize="20" Foreground="White" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding [ParametresHeroTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="16" FontWeight="Bold" Foreground="White" />
+                            <TextBlock Text="{Binding [ParametresHeroSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="12" Foreground="#CCFFFFFF" Margin="0,3,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Rule-count stat pill -->
+                    <Border Grid.Column="1"
+                            Background="#33FFFFFF" CornerRadius="12"
+                            Padding="22,12" VerticalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding Automations.Count}"
+                                       FontSize="28" FontWeight="Bold" Foreground="White"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding [ParametresAutoCount], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="10" Foreground="#CCFFFFFF"
+                                       HorizontalAlignment="Center" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- ── Automations card ────────────────────────────────────── -->
+            <ContentControl Grid.Row="2"
+                            Style="{StaticResource NeuDashCardStyle}"
+                            Margin="8,0,8,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />   <!-- card header -->
+                        <RowDefinition Height="Auto" />   <!-- rows -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Card header: icon + title/subtitle + count badge -->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <Border Width="28" Height="28" CornerRadius="14"
+                                    Background="{DynamicResource NeuInputFillBrush}"
+                                    VerticalAlignment="Center" Margin="0,0,10,0">
+                                <ui:SymbolIcon Symbol="Flash24" FontSize="13"
+                                               Foreground="{DynamicResource NeuAccentBrush}" />
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{Binding [ParametresAutomationsSectionTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="14" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                                <TextBlock Text="{Binding [ParametresAutomationsSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="11" Margin="0,2,0,0"
+                                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Border Grid.Column="1"
+                                Background="{DynamicResource NeuInputFillBrush}"
+                                CornerRadius="10" Padding="12,5" VerticalAlignment="Center">
+                            <TextBlock FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource NeuAccentBrush}">
+                                <Run Text="{Binding Automations.Count, Mode=OneWay}" />
+                                <Run Text=" " />
+                                <Run Text="{Binding [ParametresAutoCount], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}" />
+                            </TextBlock>
+                        </Border>
+                    </Grid>
+
+                    <!-- One row per automation -->
+                    <ItemsControl Grid.Row="1" Margin="0,16,0,0"
+                                  ItemsSource="{Binding Automations}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:AutomationToggleItem}">
+                                <Border Style="{StaticResource AutomationRowBorderStyle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />   <!-- status dot -->
+                                            <ColumnDefinition Width="*" />      <!-- name + id badge -->
+                                            <ColumnDefinition Width="Auto" />   <!-- toggle -->
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Live status dot: green = enabled, muted = off -->
+                                        <Ellipse Grid.Column="0"
+                                                 Width="8" Height="8"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,14,0">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill" Value="{DynamicResource NeuInputFillBrush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsEnabled}" Value="True">
+                                                            <Setter Property="Fill" Value="{DynamicResource NeuJaugAccentBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+
+                                        <!-- Display name + automation ID badge -->
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding DisplayName}"
+                                                       FontSize="13"
+                                                       Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                                                       TextWrapping="Wrap" />
+                                            <Border Background="{DynamicResource NeuInputFillBrush}"
+                                                    CornerRadius="4" Padding="6,2"
+                                                    HorizontalAlignment="Left" Margin="0,5,0,0">
+                                                <TextBlock Text="{Binding Id}"
+                                                           FontSize="10"
+                                                           FontFamily="Consolas"
+                                                           Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                            </Border>
+                                        </StackPanel>
+
+                                        <!-- Toggle switch -->
+                                        <ToggleButton Grid.Column="2"
+                                                      IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                                                      Style="{DynamicResource NeuToggleSwitchStyle}"
+                                                      VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </ContentControl>
+
+        </Grid>
+    </ScrollViewer>
+</UserControl>

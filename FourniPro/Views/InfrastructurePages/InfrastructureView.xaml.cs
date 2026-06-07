@@ -1,9 +1,12 @@
+using FourniPro.Localization;
 using FourniPro.Views.InfrastructurePages.Sections.Achats;
+using FourniPro.Views.InfrastructurePages.Sections.Avoirs;
 using FourniPro.Views.InfrastructurePages.Sections.Camions;
 using FourniPro.Views.InfrastructurePages.Sections.Citernes;
 using FourniPro.Views.InfrastructurePages.Sections.Chauffeurs;
 using FourniPro.Views.InfrastructurePages.Sections.Clients;
 using FourniPro.Views.InfrastructurePages.Sections.Credits;
+using FourniPro.Views.InfrastructurePages.Sections.PaiementsCredit;
 using FourniPro.Views.InfrastructurePages.Sections.Fournisseurs;
 using FourniPro.Views.InfrastructurePages.Sections.Ventes;
 using FourniPro.Views.InfrastructurePages.Sections.Produits;
@@ -30,9 +33,25 @@ public partial class InfrastructureView : UserControl
     private readonly Dictionary<string, UserControl> _sectionCache = new(StringComparer.OrdinalIgnoreCase);
     private CancellationTokenSource? _loadCts;
 
-    public InfrastructureView()
+    /// <summary>
+    /// When non-null, only cards whose Tag is in this set are shown on the landing hub.
+    /// Pass null to show all cards (default behavior).
+    /// </summary>
+    private readonly HashSet<string>? _sectionFilter;
+
+    /// <summary>
+    /// Localization key prefix for the page header (e.g. "operations" → "NavTitle_operations" / "NavTip_operations").
+    /// When null the legacy InfraTitle/InfraSubtitle keys are used.
+    /// </summary>
+    private readonly string? _navKey;
+
+    public InfrastructureView(IEnumerable<string>? sectionFilter = null, string? navKey = null)
     {
         InitializeComponent();
+        _sectionFilter = sectionFilter is not null
+            ? new HashSet<string>(sectionFilter, StringComparer.OrdinalIgnoreCase)
+            : null;
+        _navKey = navKey;
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -41,10 +60,55 @@ public partial class InfrastructureView : UserControl
         SectionPanel.Visibility = Visibility.Collapsed;
         BackButton.Visibility   = Visibility.Collapsed;
         _loadCts = new CancellationTokenSource();
+
+        ApplySectionFilter();
+        UpdateHeader();
+        LanguageManager.Instance.LanguageChanged += OnLanguageChanged;
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e) => UpdateHeader();
+
+    private void UpdateHeader()
+    {
+        var loc = LanguageManager.Instance;
+        if (_navKey is not null)
+        {
+            PageTitleBlock.Text    = loc[$"Nav_{_navKey}"];
+            PageSubtitleBlock.Text = loc[$"NavTip_{_navKey}"];
+        }
+        else
+        {
+            PageTitleBlock.Text    = loc["InfraTitle"];
+            PageSubtitleBlock.Text = loc["InfraSubtitle"];
+        }
+    }
+
+    /// <summary>
+    /// Hides cards not in <see cref="_sectionFilter"/> and adjusts the column count
+    /// so the UniformGrid shows no empty gaps.
+    /// </summary>
+    private void ApplySectionFilter()
+    {
+        if (_sectionFilter is null) return;
+
+        int visibleCount = 0;
+        foreach (UIElement child in LandingPanel.Children)
+        {
+            if (child is FrameworkElement fe && fe.Tag is string tag)
+            {
+                bool visible = _sectionFilter.Contains(tag);
+                fe.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+                if (visible) visibleCount++;
+            }
+        }
+
+        if (visibleCount > 0)
+            LandingPanel.Columns = Math.Min(visibleCount, 4);
     }
 
     private void UserControl_Unloaded(object sender, RoutedEventArgs e)
     {
+        LanguageManager.Instance.LanguageChanged -= OnLanguageChanged;
         _loadCts?.Cancel();
         _loadCts?.Dispose();
         _loadCts = null;
@@ -87,6 +151,8 @@ public partial class InfrastructureView : UserControl
                 "ventes"        => new VentesSection(),
                 "employes"      => new EmployesSection(),
                 "credits"       => new CreditsSection(),
+                "paiements-credit" => new PaiementsCreditSection(),
+                "avoirs"           => new AvoirsSection(),
                 "voyages"       => new VoyagesSection(),
                 _ => throw new ArgumentOutOfRangeException(nameof(key), key, "Unknown infrastructure section.")
             };
@@ -124,6 +190,12 @@ public partial class InfrastructureView : UserControl
 
         if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.CreditsSectionViewModel crvm })
             return crvm.EnsureLoadedAsync();
+
+        if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.PaiementsCreditSectionViewModel pcvm })
+            return pcvm.EnsureLoadedAsync();
+
+        if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.AvoirsSectionViewModel avvm })
+            return avvm.EnsureLoadedAsync();
 
         if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.VoyagesSectionViewModel vgsvm })
             return vgsvm.EnsureLoadedAsync();

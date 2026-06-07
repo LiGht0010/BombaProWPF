@@ -38,6 +38,20 @@ public class VenteService
         }
     }
 
+    public async Task<List<VenteDto>> GetByVoyageAsync(int voyageId)
+    {
+        try
+        {
+            var list = await _httpClient.GetFromJsonAsync<List<VenteDto>>($"{BaseUrl}?voyageId={voyageId}");
+            return list ?? [];
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[VenteService] GetByVoyage error: {ex.Message}");
+            return [];
+        }
+    }
+
     public async Task<VenteDto?> CreateVenteAsync(VenteDto vente)
     {
         try

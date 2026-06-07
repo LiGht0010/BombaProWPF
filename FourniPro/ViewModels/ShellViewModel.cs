@@ -63,14 +63,12 @@ public partial class ShellViewModel : ObservableObject
     private static IEnumerable<NavItem> BuildItems()
     {
         var loc = LanguageManager.Instance;
-        yield return new NavItem("dashboard",      () => loc["NavDashboard"],      SymbolRegular.DataPie24);
-        yield return new NavItem("ventes",         () => loc["NavVentes"],         SymbolRegular.Cart24);
-        yield return new NavItem("achats",         () => loc["NavAchats"],         SymbolRegular.BoxArrowUp24);
-        yield return new NavItem("caisse",         () => loc["NavCaisse"],         SymbolRegular.Money24);
-        yield return new NavItem("clients",        () => loc["NavClients"],        SymbolRegular.People24);
-        yield return new NavItem("infrastructure", () => loc["NavInfrastructure"], SymbolRegular.Building24);
-        yield return new NavItem("ressources",     () => loc["NavRessources"],     SymbolRegular.PeopleTeam24);
-        yield return new NavItem("rapports",       () => loc["NavRapports"],       SymbolRegular.DocumentText24);
-        yield return new NavItem("parametres",     () => loc["NavParametres"],     SymbolRegular.Settings24);
+        yield return new NavItem("dashboard",   () => loc["Nav_Dashboard"],   SymbolRegular.DataPie24,        tooltipAccessor: () => loc["NavTip_Dashboard"]);
+        yield return new NavItem("operations",  () => loc["Nav_Operations"],  SymbolRegular.ArrowTrending24,  tooltipAccessor: () => loc["NavTip_Operations"]);
+        yield return new NavItem("partenaires", () => loc["Nav_Partenaires"], SymbolRegular.People24,         tooltipAccessor: () => loc["NavTip_Partenaires"]);
+        yield return new NavItem("ressources",  () => loc["Nav_Ressources"],  SymbolRegular.Box24,            tooltipAccessor: () => loc["NavTip_Ressources"]);
+        yield return new NavItem("caisse",      () => loc["Nav_Caisse"],      SymbolRegular.Money24,        isEnabled: false, tooltipAccessor: () => loc["NavTip_Caisse"]);
+        yield return new NavItem("rapports",    () => loc["Nav_Rapports"],    SymbolRegular.DocumentText24, isEnabled: false, tooltipAccessor: () => loc["NavTip_Rapports"]);
+        yield return new NavItem("parametres",  () => loc["Nav_Parametres"],  SymbolRegular.Settings24,       tooltipAccessor: () => loc["NavTip_Parametres"]);
     }
 }

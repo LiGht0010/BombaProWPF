@@ -8,7 +8,8 @@ public enum PaymentMethod
 {
     TPE,
     Virement,
-    Especes
+    Especes,
+    ChequeDepose
 }
 
 public class Vente
@@ -35,6 +36,7 @@ public class Vente
 
     public virtual Voyage? Voyage { get; set; }
     public virtual Employe? Employe { get; set; }
+    public virtual ICollection<Avoir> Avoirs { get; set; } = [];
 
     // ── Financial ─────────────────────────────────────────────────────────────
 

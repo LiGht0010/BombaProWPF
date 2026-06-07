@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FourniPro.Automation;
+using FourniPro.Automation.Vente;
 using FourniPro.Localization;
 using FourniPro.Models;
 using FourniPro.Services;
@@ -17,6 +19,7 @@ public class NouveauVenteViewModel : ObservableObject
     private readonly ClientService  _clientService  = new();
     private readonly ProduitService _produitService = new();
     private readonly EmployeService _employeService = new();
+    private readonly AutomationRunner _automationRunner = new();
 
     // ── Form fields ──────────────────────────────────────────────────────────
 
@@ -246,7 +249,12 @@ public class NouveauVenteViewModel : ObservableObject
 
             var result = await _venteService.CreateVenteAsync(dto);
             if (result is not null)
+            {
+                await _automationRunner.RunAsync(
+                    AutomationTrigger.VenteSaved,
+                    new VenteStockContext(SelectedProduit.ProduitId, Quantite!.Value, VoyageId: null));
                 Saved = true;
+            }
             else
                 ErrorMessage = LanguageManager.Instance["NouveauVenteSaveError"];
         }

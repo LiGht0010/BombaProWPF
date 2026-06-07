@@ -34,6 +34,8 @@ public class Employe
     public virtual ICollection<Achat> Achats { get; set; } = [];
     public virtual ICollection<Vente> Ventes { get; set; } = [];
     public virtual ICollection<Credit> Credits { get; set; } = [];
+    public virtual ICollection<PaiementCredit> PaiementsCredit { get; set; } = [];
+    public virtual ICollection<Avoir> Avoirs { get; set; } = [];
 
     // ── Audit ─────────────────────────────────────────────────────────────────
 

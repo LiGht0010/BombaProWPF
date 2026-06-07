@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using FourniPro.Automation;
 using FourniPro.Localization;
 using FourniPro.Models;
 using FourniPro.Services;
@@ -18,6 +19,7 @@ namespace FourniPro
 
             var settings = AppSettingsService.Instance;
             settings.Load();
+            AutomationSettings.Instance.Load();
 
             ThemePalette.Apply(dark: settings.IsDarkTheme);
             ApplicationThemeManager.Apply(settings.IsDarkTheme

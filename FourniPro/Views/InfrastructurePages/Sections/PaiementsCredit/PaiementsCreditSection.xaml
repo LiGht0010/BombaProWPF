@@ -1,0 +1,306 @@
+<UserControl x:Class="FourniPro.Views.InfrastructurePages.Sections.PaiementsCredit.PaiementsCreditSection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:FourniPro.Localization"
+             xmlns:vm="clr-namespace:FourniPro.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:PaiementsCreditSectionViewModel}"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <Style x:Key="PcIconBtnStyle" TargetType="Button">
+            <Setter Property="Width"  Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{DynamicResource NeuActionIconBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6" Background="Transparent"
+                                BorderThickness="1" BorderBrush="{DynamicResource NeuActionBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuActionHoverFillBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PcDeleteBtnStyle" TargetType="Button">
+            <Setter Property="Width"  Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6" Background="Transparent"
+                                BorderThickness="1" BorderBrush="{DynamicResource NeuActionDeleteBorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuDangerBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PcColHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource NeuTextSecondaryBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="PcCellStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"      Value="12"/>
+            <Setter Property="Foreground"    Value="{DynamicResource NeuTextPrimaryBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming"  Value="CharacterEllipsis"/>
+        </Style>
+
+        <DataTemplate x:Key="PcRowTemplate">
+            <Border Padding="0,10" BorderBrush="{DynamicResource NeuInputFillBrush}" BorderThickness="0,0,0,1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/><!-- Crédit N° -->
+                        <ColumnDefinition Width="*"/> <!-- Date -->
+                        <ColumnDefinition Width="*"/>  <!-- Employé -->
+                        <ColumnDefinition Width="*"/><!-- Montant -->
+                        <ColumnDefinition Width="*"/><!-- Mode -->
+                        <ColumnDefinition Width="*"/>  <!-- Référence -->
+                        <ColumnDefinition Width="*"/> <!-- Actions -->
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Crédit badge -->
+                    <Border Grid.Column="0" Background="{DynamicResource NeuInputFillBrush}"
+                            CornerRadius="6" Padding="7,3" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding NumeroCredit, TargetNullValue='—'}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuAccentBrush}"/>
+                    </Border>
+
+                    <!-- Date -->
+                    <TextBlock Grid.Column="1" Text="{Binding DatePaiement, StringFormat=dd/MM/yyyy}"
+                               Style="{StaticResource PcCellStyle}" HorizontalAlignment="Left"/>
+
+                    <!-- Employé -->
+                    <TextBlock Grid.Column="2" Text="{Binding EmployeNom, TargetNullValue='—'}"
+                               Style="{StaticResource PcCellStyle}" HorizontalAlignment="Left"/>
+
+                    <!-- Montant -->
+                    <TextBlock Grid.Column="3" Style="{StaticResource PcCellStyle}"
+                               FontWeight="SemiBold" Foreground="{DynamicResource NeuAccentBrush}"
+                               HorizontalAlignment="Left">
+                        <Run Text="{Binding Montant, StringFormat='{}{0:N2}', TargetNullValue='—'}"/>
+                        <Run Text=" DH" Foreground="{DynamicResource NeuTextSecondaryBrush}" FontWeight="Normal"/>
+                    </TextBlock>
+
+                    <!-- Mode paiement badge -->
+                    <Border Grid.Column="4" CornerRadius="6" Padding="7,3"
+                            Background="{DynamicResource NeuInputFillBrush}"
+                            HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding PaymentMethod, TargetNullValue='—'}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextPrimaryBrush}"/>
+                    </Border>
+
+                    <!-- Référence -->
+                    <TextBlock Grid.Column="5" Text="{Binding Reference, TargetNullValue='—'}"
+                               Style="{StaticResource PcCellStyle}" HorizontalAlignment="Left"/>
+
+                    <!-- Actions -->
+                    <StackPanel Grid.Column="6" Orientation="Horizontal"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Style="{StaticResource PcIconBtnStyle}"
+                                ToolTip="{Binding [PcDetailTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DetailPaiementCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Eye24" FontSize="14"/>
+                        </Button>
+                        <Button Style="{StaticResource PcIconBtnStyle}" Margin="4,0,0,0"
+                                ToolTip="{Binding [PcEditTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.EditPaiementCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Edit24" FontSize="14"/>
+                        </Button>
+                        <Button Style="{StaticResource PcDeleteBtnStyle}" Margin="4,0,0,0"
+                                ToolTip="{Binding [PcDeleteTooltip], Source={x:Static loc:LanguageManager.Instance}}"
+                                Command="{Binding DataContext.DeletePaiementCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}">
+                            <ui:SymbolIcon Symbol="Delete24" FontSize="14"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- ─── Header ─── -->
+            <Grid Grid.Row="0" Margin="0,0,0,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding [ProdBreadcrumbInfra], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuAccentBrush}"/>
+                        <TextBlock Text=" › " FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding [PcBreadcrumb], Source={x:Static loc:LanguageManager.Instance}}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource NeuAccentBrush}"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding [PcPageSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                               FontSize="13" Margin="0,4,0,0"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}"/>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Style="{StaticResource NeuButtonStyle}"
+                        Background="{DynamicResource NeuAccentBrush}"
+                        Foreground="White" Padding="16,10" FontWeight="SemiBold"
+                        Command="{Binding AddPaiementCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="AddCircle24" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding [PcAddButton], Source={x:Static loc:LanguageManager.Instance}}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- ─── Table card ─── -->
+            <ContentControl Grid.Row="1" Style="{StaticResource NeuDashCardStyle}" Margin="8,0,8,18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Card header -->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding [PcTableTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource NeuTextPrimaryBrush}"/>
+                            <TextBlock Text="{Binding [PcTableSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                                       FontSize="11" Margin="0,2,0,0"
+                                       Foreground="{DynamicResource NeuTextSecondaryBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Background="{DynamicResource NeuInputFillBrush}"
+                                    CornerRadius="10" Padding="12,5" Margin="0,0,12,0">
+                                <TextBlock FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource NeuAccentBrush}">
+                                    <Run Text="{Binding Paiements.Count, Mode=OneWay}"/>
+                                    <Run Text=" "/>
+                                    <Run Text="{Binding [PcCountBadge], Source={x:Static loc:LanguageManager.Instance}, Mode=OneWay}"/>
+                                </TextBlock>
+                            </Border>
+                            <Button Style="{StaticResource NeuButtonStyle}" Padding="10,8"
+                                    Command="{Binding RefreshCommand}">
+                                <ui:SymbolIcon Symbol="ArrowSync24" FontSize="15"/>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Column headers -->
+                    <Grid Grid.Row="1" Margin="0,16,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding [PcColCredit],     Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource PcColHeaderStyle}" HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Column="1" Text="{Binding [PcColDate],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource PcColHeaderStyle}" HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Column="2" Text="{Binding [PcColEmploye],    Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource PcColHeaderStyle}" HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Column="3" Text="{Binding [PcColMontant],    Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource PcColHeaderStyle}" HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Column="4" Text="{Binding [PcColMode],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource PcColHeaderStyle}" HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Column="5" Text="{Binding [PcColReference],  Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource PcColHeaderStyle}" HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Column="6" Text="{Binding [PcColActions],    Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource PcColHeaderStyle}" HorizontalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Rows -->
+                    <Grid Grid.Row="2" MinHeight="120">
+                        <ItemsControl ItemsSource="{Binding Paiements}"
+                                      ItemTemplate="{StaticResource PcRowTemplate}"
+                                      AlternationCount="2"/>
+
+                        <Border Background="#33000000" CornerRadius="8"
+                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <ui:ProgressRing IsIndeterminate="True" Width="40" Height="40"
+                                             HorizontalAlignment="Center" VerticalAlignment="Center"
+                                             Foreground="{DynamicResource NeuAccentBrush}"/>
+                        </Border>
+
+                        <TextBlock Text="{Binding [PcEmpty], Source={x:Static loc:LanguageManager.Instance}}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Margin="0,40,0,0" FontSize="13"
+                                   Foreground="{DynamicResource NeuTextSecondaryBrush}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsLoading}"       Value="False"/>
+                                                <Condition Binding="{Binding Paiements.Count}" Value="0"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+            </ContentControl>
+        </Grid>
+    </ScrollViewer>
+
+</UserControl>

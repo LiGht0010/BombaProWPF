@@ -38,6 +38,20 @@ public class CreditService
         }
     }
 
+    public async Task<List<CreditDto>> GetByVoyageAsync(int voyageId)
+    {
+        try
+        {
+            var list = await _httpClient.GetFromJsonAsync<List<CreditDto>>($"{BaseUrl}?voyageId={voyageId}");
+            return list ?? [];
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[CreditService] GetByVoyage error: {ex.Message}");
+            return [];
+        }
+    }
+
     public async Task<CreditDto?> CreateCreditAsync(CreditDto credit)
     {
         try

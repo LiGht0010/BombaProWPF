@@ -13,4 +13,10 @@ public class VoyageCardItem
     public decimal? KilometrageDepart { get; set; }
     public decimal? KilometrageFinal { get; set; }
     public string Statut { get; set; } = "InProgress";
+
+    /// <summary>Distance parcourue = KmFinal - KmDepart, null if either is missing.</summary>
+    public decimal? DistanceParcourue =>
+        KilometrageDepart.HasValue && KilometrageFinal.HasValue
+            ? KilometrageFinal.Value - KilometrageDepart.Value
+            : null;
 }

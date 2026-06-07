@@ -96,6 +96,8 @@
                                 <DataTemplate DataType="{x:Type models:NavItem}">
                                     <RadioButton Style="{DynamicResource NeuNavItemStyle}"
                                                  GroupName="ShellNav"
+                                                 IsEnabled="{Binding IsEnabled}"
+                                                 ToolTip="{Binding Tooltip}"
                                                  Checked="NavItem_Checked"
                                                  Tag="{Binding}">
                                         <Grid>

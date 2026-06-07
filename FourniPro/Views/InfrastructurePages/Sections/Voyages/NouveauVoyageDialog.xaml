@@ -246,27 +246,46 @@
         </DataTemplate>
 
         <DataTemplate x:Key="TransactionRowTemplate">
-            <Border Padding="0,6,0,6" BorderBrush="{DynamicResource NeuInputFillBrush}" BorderThickness="0,0,0,1">
+            <Border Padding="0,10,0,10"
+                    BorderBrush="{DynamicResource NeuInputFillBrush}"
+                    BorderThickness="0,0,0,1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="90" />
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="40" />
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="52" />
-                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+                    <!-- # -->
                     <TextBlock Grid.Column="0"
                                Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(ItemsControl.AlternationIndex), Converter={StaticResource AlternationIndexToRowNumberConverter}}"
-                               FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <TextBlock Grid.Column="1" Text="{Binding Date, StringFormat={}{0:dd/MM/yy}, TargetNullValue=_}" FontSize="11"
-                               Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <Border Grid.Column="2" CornerRadius="6" Padding="5,2" VerticalAlignment="Center" HorizontalAlignment="Left">
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <!-- Date -->
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Date, StringFormat={}{0:dd/MM/yy}, TargetNullValue=_}"
+                               FontSize="12" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <!-- Type badge -->
+                    <Border Grid.Column="2" CornerRadius="6" Padding="6,3" VerticalAlignment="Center" HorizontalAlignment="Left">
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Setter Property="Background" Value="{DynamicResource NeuInputFillBrush}" />
@@ -288,22 +307,35 @@
                         </Border.Style>
                         <TextBlock Text="{Binding Type}" FontSize="10" FontWeight="SemiBold" Foreground="White" />
                     </Border>
-                    <TextBlock Grid.Column="3" Text="{Binding Partie,     TargetNullValue=_}" FontSize="11"
-                               Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                    <TextBlock Grid.Column="4" Text="{Binding ProduitNom, TargetNullValue=_}" FontSize="11"
-                               Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                    <TextBlock Grid.Column="5" Text="{Binding Quantite,   TargetNullValue=_}" FontSize="11"
-                               Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <TextBlock Grid.Column="6" FontSize="11" Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center">
+                    <!-- Partie -->
+                    <TextBlock Grid.Column="3" Text="{Binding Partie, TargetNullValue=_}"
+                               FontSize="12" Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                    <!-- Produit -->
+                    <TextBlock Grid.Column="4" Text="{Binding ProduitNom, TargetNullValue=_}"
+                               FontSize="12" Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                    <!-- Qté -->
+                    <TextBlock Grid.Column="5" Text="{Binding Quantite, TargetNullValue=_}"
+                               FontSize="12" Foreground="{DynamicResource NeuTextPrimaryBrush}"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <!-- Prix U -->
+                    <TextBlock Grid.Column="6" FontSize="12"
+                               Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center">
                         <Run Text="{Binding PrixUnitaire, StringFormat={}{0:N2}, TargetNullValue=_}" />
                     </TextBlock>
-                    <TextBlock Grid.Column="7" Text="{Binding Remise, StringFormat={}{0:N1}, TargetNullValue=_}" FontSize="11"
-                               Foreground="{DynamicResource NeuTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <TextBlock Grid.Column="8" FontSize="11" FontWeight="SemiBold"
+                    <!-- Remise -->
+                    <TextBlock Grid.Column="7" Text="{Binding Remise, StringFormat={}{0:N1}, TargetNullValue=_}"
+                               FontSize="12" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <!-- Montant -->
+                    <TextBlock Grid.Column="8" FontSize="12" FontWeight="SemiBold"
                                Foreground="{DynamicResource NeuAccentBrush}" VerticalAlignment="Center">
-                        <Run Text="{Binding MontantTotal, StringFormat={}{0:N2}, TargetNullValue=_}" /><Run Text=" DH" />
+                        <Run Text="{Binding MontantTotal, StringFormat={}{0:N2}, TargetNullValue=_}" />
+                        <Run Text=" DH" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
                     </TextBlock>
-                    <TextBlock Grid.Column="9" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <!-- Chq -->
+                    <TextBlock Grid.Column="9" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text"       Value="" />
@@ -317,6 +349,7 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
+                    <!-- Delete -->
                     <Button Grid.Column="10" Style="{StaticResource MiniDeleteBtnStyle}"
                             Command="{Binding DataContext.RemoveTransactionCommand, RelativeSource={RelativeSource AncestorType=ui:FluentWindow}}"
                             CommandParameter="{Binding}">
@@ -344,16 +377,19 @@
             </Grid.RowDefinitions>
 
             <!-- HEADER -->
-            <Grid Grid.Row="0" Margin="22,18,18,8">
+            <Grid Grid.Row="0" Margin="22,10,18,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+
                 <Button Grid.Column="0" Style="{StaticResource DlgCloseButtonStyle}" Click="OnCloseClick" Margin="0,0,12,0">
                     <ui:SymbolIcon Symbol="Dismiss24" FontSize="14" />
                 </Button>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0,0,0">
+
+                <!-- Title + badge -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0,16,0">
                     <ui:SymbolIcon Symbol="VehicleTruck24" FontSize="20" Foreground="{DynamicResource NeuAccentBrush}"
                                    VerticalAlignment="Center" Margin="0,0,10,0" />
                     <StackPanel VerticalAlignment="Center">
@@ -365,6 +401,92 @@
                     <Border Style="{StaticResource BadgeStyle}" Margin="14,0,0,0">
                         <TextBlock Text="{Binding [NouveauVoyageStatutBadge], Source={x:Static loc:LanguageManager.Instance}}"
                                    FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                    </Border>
+                </StackPanel>
+
+                <!-- Stock Restant pills + Frais pill — compact row in header, right-aligned -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal"
+                            HorizontalAlignment="Right" VerticalAlignment="Center">
+
+                    <!-- One pill per StockRestantItem -->
+                    <ItemsControl ItemsSource="{Binding StockRestantItems}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,0,6,0"
+                                        Background="{DynamicResource NeuInputFillBrush}"
+                                        CornerRadius="8"
+                                        Padding="10,5">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="BorderThickness" Value="1" />
+                                            <Setter Property="BorderBrush"     Value="{DynamicResource NeuInputFillBrush}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsWarning}" Value="True">
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource NeuDangerBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="Box24" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0">
+                                            <ui:SymbolIcon.Style>
+                                                <Style TargetType="ui:SymbolIcon">
+                                                    <Setter Property="Foreground" Value="{DynamicResource NeuAccentBrush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsWarning}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ui:SymbolIcon.Style>
+                                        </ui:SymbolIcon>
+                                        <TextBlock Text="{Binding ProduitNom}" FontSize="11" FontWeight="SemiBold"
+                                                   VerticalAlignment="Center" MaxWidth="90" TextTrimming="CharacterEllipsis"
+                                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" Margin="0,0,4,0" />
+                                        <TextBlock FontSize="13" FontWeight="Bold" VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="{DynamicResource NeuAccentBrush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsWarning}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource NeuDangerBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                            <Run Text="{Binding QuantiteRestante, Mode=OneWay}" />
+                                        </TextBlock>
+                                        <TextBlock Text="/" FontSize="11" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                                   VerticalAlignment="Center" Margin="2,0" />
+                                        <TextBlock Text="{Binding QuantiteInitiale, Mode=OneWay}" FontSize="11"
+                                                   Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Frais total pill — always visible -->
+                    <Border Background="{DynamicResource NeuInputFillBrush}"
+                            BorderBrush="{DynamicResource NeuInputFillBrush}"
+                            BorderThickness="1" CornerRadius="8" Padding="10,5">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Money24" FontSize="11" Foreground="{DynamicResource NeuAccentBrush}"
+                                           VerticalAlignment="Center" Margin="0,0,5,0" />
+                            <TextBlock Text="Frais" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                       VerticalAlignment="Center" Margin="0,0,4,0" />
+                            <TextBlock FontSize="13" FontWeight="Bold"
+                                       Foreground="{DynamicResource NeuAccentBrush}" VerticalAlignment="Center">
+                                <Run Text="{Binding FraisTotal, StringFormat={}{0:N2}, Mode=OneWay}" />
+                                <Run Text=" DH" Foreground="{DynamicResource NeuTextSecondaryBrush}" FontSize="10" />
+                            </TextBlock>
+                        </StackPanel>
                     </Border>
                 </StackPanel>
             </Grid>
@@ -459,9 +581,8 @@
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
                                         <TextBlock Text="{Binding [NouveauVoyageLieuTerminal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                        <Border Style="{StaticResource DisabledInputBorderStyle}">
-                                            <TextBlock FontSize="11" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center"
-                                                       Text="{Binding [NouveauVoyageFillOnClose], Source={x:Static loc:LanguageManager.Instance}}" FontStyle="Italic" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}">
+                                            <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding LieuTerminal, UpdateSourceTrigger=PropertyChanged}" />
                                         </Border>
                                     </StackPanel>
                                 </Grid>
@@ -480,10 +601,8 @@
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
                                         <TextBlock Text="{Binding [NouveauVoyageDateFinal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                        <Border Style="{StaticResource DisabledInputBorderStyle}">
-                                            <TextBlock FontSize="11" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center"
-                                                       Text="{Binding [NouveauVoyageFillOnClose], Source={x:Static loc:LanguageManager.Instance}}" FontStyle="Italic" />
-                                        </Border>
+                                        <DatePicker SelectedDate="{Binding DateFinal}"
+                                                    Style="{DynamicResource NeuDatePickerStyle}" />
                                     </StackPanel>
                                 </Grid>
 
@@ -502,9 +621,8 @@
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
                                         <TextBlock Text="{Binding [NouveauVoyageKmFinal], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
-                                        <Border Style="{StaticResource DisabledInputBorderStyle}">
-                                            <TextBlock FontSize="11" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center"
-                                                       Text="{Binding [NouveauVoyageFillOnClose], Source={x:Static loc:LanguageManager.Instance}}" FontStyle="Italic" />
+                                        <Border Style="{StaticResource DlgInputBorderStyle}">
+                                            <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding KilometrageFinal, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" />
                                         </Border>
                                     </StackPanel>
                                 </Grid>
@@ -896,46 +1014,61 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <!-- Headers -->
-                            <Grid Grid.Row="0" Margin="0,0,0,4">
+                            <Grid Grid.Row="0" Margin="0,0,0,0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60" />
-                                    <ColumnDefinition Width="90" />
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="150" />
-                                    <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="40" />
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="52" />
-                                    <ColumnDefinition Width="32" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0"  Text="#"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBlock Grid.Column="1"  Text="{Binding [NouveauVoyageSumDate], Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBlock Grid.Column="2"  Text="{Binding [NouveauVoyageSumType],    Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="3"  Text="{Binding [NouveauVoyageSumPartie],  Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="4"  Text="{Binding [NouveauVoyageSumProduit], Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="5"  Text="{Binding [NouveauVoyageSumQte],     Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBlock Grid.Column="6"  Text="{Binding [NouveauVoyageSumPrixU],   Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="7"  Text="{Binding [NouveauVoyageSumRemise],  Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBlock Grid.Column="8"  Text="{Binding [NouveauVoyageSumMontant], Source={x:Static loc:LanguageManager.Instance}}"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="9"  Text="Chq"
-                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="1" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0"  Text="#"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,0,8" />
+                                <TextBlock Grid.Row="0" Grid.Column="1"  Text="{Binding [NouveauVoyageSumDate], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,0,8" />
+                                <TextBlock Grid.Row="0" Grid.Column="2"  Text="{Binding [NouveauVoyageSumType],    Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" Padding="0,0,0,8" />
+                                <TextBlock Grid.Row="0" Grid.Column="3"  Text="{Binding [NouveauVoyageSumPartie],  Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" Padding="0,0,0,8" />
+                                <TextBlock Grid.Row="0" Grid.Column="4"  Text="{Binding [NouveauVoyageSumProduit], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" Padding="0,0,0,8" />
+                                <TextBlock Grid.Row="0" Grid.Column="5"  Text="{Binding [NouveauVoyageSumQte],     Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,0,8" />
+                                <TextBlock Grid.Row="0" Grid.Column="6"  Text="{Binding [NouveauVoyageSumPrixU],   Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" Padding="0,0,0,8" />
+                                <TextBlock Grid.Row="0" Grid.Column="7"  Text="{Binding [NouveauVoyageSumRemise],  Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,0,8" />
+                                <TextBlock Grid.Row="0" Grid.Column="8"  Text="{Binding [NouveauVoyageSumMontant], Source={x:Static loc:LanguageManager.Instance}}"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" Padding="0,0,0,8" />
+                                <TextBlock Grid.Row="0" Grid.Column="9"  Text="Chq"
+                                           FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource NeuTextSecondaryBrush}"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,0,8" />
+                                <!-- 1px divider spanning all columns -->
+                                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="11"
+                                        Background="{DynamicResource NeuInputFillBrush}" Height="1" />
                             </Grid>
-                            <Separator Grid.Row="1" Background="{DynamicResource NeuInputFillBrush}" Margin="0,0,0,4" />
-                            <ScrollViewer Grid.Row="2" MaxHeight="150" VerticalScrollBarVisibility="Auto">
-                                <ItemsControl ItemsSource="{Binding Transactions}" ItemTemplate="{StaticResource TransactionRowTemplate}"
-                                              AlternationCount="1000" />
-                            </ScrollViewer>
+                            <ItemsControl Grid.Row="1" Margin="0,4,0,0"
+                                         ItemsSource="{Binding Transactions}" ItemTemplate="{StaticResource TransactionRowTemplate}"
+                                         AlternationCount="2" />
                         </Grid>
                     </Border>
                 </Grid>

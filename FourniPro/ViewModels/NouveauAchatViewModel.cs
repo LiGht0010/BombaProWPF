@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FourniPro.Automation;
+using FourniPro.Automation.Achat;
 using FourniPro.Localization;
 using FourniPro.Models;
 using FourniPro.Services;
@@ -16,6 +18,7 @@ public class NouveauAchatViewModel : ObservableObject
     private readonly FournisseurService _fournisseurService = new();
     private readonly ProduitService _produitService = new();
     private readonly EmployeService _employeService = new();
+    private readonly AutomationRunner _automationRunner = new();
 
     // ── Form fields ───────────────────────────────────────────────────────────
 
@@ -198,9 +201,11 @@ public class NouveauAchatViewModel : ObservableObject
             var result = await _achatService.CreateAchatAsync(dto);
             if (result is not null)
             {
-                // Update the product's stock by the purchased quantity
+                // AutomationHook: stock update is handled by AchatStockUpdateAutomation
                 if (Quantite.HasValue && Quantite.Value > 0)
-                    await _produitService.UpdateStockAsync(SelectedProduit.ProduitId, Quantite.Value);
+                    await _automationRunner.RunAsync(
+                        AutomationTrigger.AchatProduitChanged,
+                        new AchatStockContext(SelectedProduit.ProduitId, 0, Quantite.Value));
 
                 Saved = true;
             }

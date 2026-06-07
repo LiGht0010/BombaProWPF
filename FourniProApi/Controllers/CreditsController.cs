@@ -46,7 +46,6 @@ public class CreditsController(AppDbContext context, IMapper mapper, ILogger<Cre
     public async Task<ActionResult<CreditDto>> CreateCredit(CreditDto dto)
     {
         var credit = mapper.Map<Credit>(dto);
-        credit.CreditId         = 0;
         credit.DateCreation     = DateTime.UtcNow;
         credit.DateModification = DateTime.UtcNow;
         credit.MontantTotal     = ComputeTotal(dto);

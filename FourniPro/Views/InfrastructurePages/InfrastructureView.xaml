@@ -29,11 +29,11 @@
             <!-- ─── Page header ─── -->
             <Grid Margin="0,0,0,24">
                 <StackPanel HorizontalAlignment="Center">
-                    <TextBlock Text="{Binding [InfraTitle], Source={x:Static loc:LanguageManager.Instance}}"
+                    <TextBlock x:Name="PageTitleBlock"
                                FontSize="26" FontWeight="SemiBold"
                                HorizontalAlignment="Center" TextAlignment="Center"
                                Foreground="{DynamicResource NeuTextPrimaryBrush}" />
-                    <TextBlock Text="{Binding [InfraSubtitle], Source={x:Static loc:LanguageManager.Instance}}"
+                    <TextBlock x:Name="PageSubtitleBlock"
                                FontSize="13" Margin="0,4,0,0"
                                HorizontalAlignment="Center" TextAlignment="Center"
                                Foreground="{DynamicResource NeuTextSecondaryBrush}" />
@@ -620,6 +620,118 @@
                                                                             <Setter TargetName="CardDesc"  Property="Foreground" Value="White" />
                                                                         </Trigger>
                                                                     </ControlTemplate.Triggers>
+                                                                                            </ControlTemplate>
+                                                                                        </Setter.Value>
+                                                                                    </Setter>
+                                                                                </Style>
+                                                                            </Button.Style>
+                                                                        </Button>
+
+                                                                        <!-- Paiements Crédit -->
+                                                                        <Button Tag="paiements-credit"
+                                                                                Click="Card_Click"
+                                                                                Margin="12"
+                                                                                Cursor="Hand"
+                                                                                ToolTip="{Binding [InfraCardDescPaiementsCredit], Source={x:Static loc:LanguageManager.Instance}}">
+                                                                            <Button.Style>
+                                                                                <Style TargetType="Button">
+                                                                                    <Setter Property="BorderThickness" Value="0" />
+                                                                                    <Setter Property="Padding" Value="0" />
+                                                                                    <Setter Property="Background" Value="Transparent" />
+                                                                                    <Setter Property="Template">
+                                                                                        <Setter.Value>
+                                                                                            <ControlTemplate TargetType="Button">
+                                                                                                <Border CornerRadius="24" Effect="{DynamicResource NeuShadowCardDark}">
+                                                                                                    <Border x:Name="CardInner" CornerRadius="24"
+                                                                                                            Background="{DynamicResource NeuBackgroundBrush}"
+                                                                                                            BorderBrush="{DynamicResource NeuAccentBrush}"
+                                                                                                            BorderThickness="1.5"
+                                                                                                            Effect="{DynamicResource NeuShadowCardLight}">
+                                                                                                        <StackPanel Margin="28" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                                            <ui:SymbolIcon x:Name="CardIcon"
+                                                                                                                           Symbol="MoneyHand24"
+                                                                                                                           FontSize="48"
+                                                                                                                           HorizontalAlignment="Center"
+                                                                                                                           Foreground="{DynamicResource NeuAccentBrush}"
+                                                                                                                           Margin="0,0,0,12" />
+                                                                                                            <TextBlock x:Name="CardTitle"
+                                                                                                                       Text="{Binding [InfraPaiementsCredit], Source={x:Static loc:LanguageManager.Instance}}"
+                                                                                                                       FontSize="17" FontWeight="SemiBold"
+                                                                                                                       HorizontalAlignment="Center" TextAlignment="Center"
+                                                                                                                       Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                                                                                                            <TextBlock x:Name="CardDesc"
+                                                                                                                       Text="{Binding [InfraCardDescPaiementsCredit], Source={x:Static loc:LanguageManager.Instance}}"
+                                                                                                                       FontSize="14" Margin="0,5,0,0"
+                                                                                                                       TextWrapping="Wrap"
+                                                                                                                       HorizontalAlignment="Center" TextAlignment="Center"
+                                                                                                                       Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                                                                                        </StackPanel>
+                                                                                                    </Border>
+                                                                                                </Border>
+                                                                                                <ControlTemplate.Triggers>
+                                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                                        <Setter TargetName="CardInner" Property="Background" Value="{DynamicResource NeuAccentBrush}" />
+                                                                                                        <Setter TargetName="CardIcon"  Property="Foreground" Value="White" />
+                                                                                                        <Setter TargetName="CardTitle" Property="Foreground" Value="White" />
+                                                                                                        <Setter TargetName="CardDesc"  Property="Foreground" Value="White" />
+                                                                                                    </Trigger>
+                                                                                                </ControlTemplate.Triggers>
+                                                                                            </ControlTemplate>
+                                                                                        </Setter.Value>
+                                                                                    </Setter>
+                                                                                </Style>
+                                                                            </Button.Style>
+                                                                        </Button>
+
+                                                                        <!-- Avoirs -->
+                                                                        <Button Tag="avoirs"
+                                                                                Click="Card_Click"
+                                                                                Margin="12"
+                                                                                Cursor="Hand"
+                                                                                ToolTip="{Binding [InfraCardDescAvoirs], Source={x:Static loc:LanguageManager.Instance}}">
+                                                                            <Button.Style>
+                                                                                <Style TargetType="Button">
+                                                                                    <Setter Property="BorderThickness" Value="0" />
+                                                                                    <Setter Property="Padding" Value="0" />
+                                                                                    <Setter Property="Background" Value="Transparent" />
+                                                                                    <Setter Property="Template">
+                                                                                        <Setter.Value>
+                                                                                            <ControlTemplate TargetType="Button">
+                                                                                                <Border CornerRadius="24" Effect="{DynamicResource NeuShadowCardDark}">
+                                                                                                    <Border x:Name="CardInner" CornerRadius="24"
+                                                                                                            Background="{DynamicResource NeuBackgroundBrush}"
+                                                                                                            BorderBrush="{DynamicResource NeuAccentBrush}"
+                                                                                                            BorderThickness="1.5"
+                                                                                                            Effect="{DynamicResource NeuShadowCardLight}">
+                                                                                                        <StackPanel Margin="28" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                                            <ui:SymbolIcon x:Name="CardIcon"
+                                                                                                                           Symbol="ArrowCircleLeft24"
+                                                                                                                           FontSize="48"
+                                                                                                                           HorizontalAlignment="Center"
+                                                                                                                           Foreground="{DynamicResource NeuAccentBrush}"
+                                                                                                                           Margin="0,0,0,12" />
+                                                                                                            <TextBlock x:Name="CardTitle"
+                                                                                                                       Text="{Binding [InfraAvoirs], Source={x:Static loc:LanguageManager.Instance}}"
+                                                                                                                       FontSize="17" FontWeight="SemiBold"
+                                                                                                                       HorizontalAlignment="Center" TextAlignment="Center"
+                                                                                                                       Foreground="{DynamicResource NeuTextPrimaryBrush}" />
+                                                                                                            <TextBlock x:Name="CardDesc"
+                                                                                                                       Text="{Binding [InfraCardDescAvoirs], Source={x:Static loc:LanguageManager.Instance}}"
+                                                                                                                       FontSize="14" Margin="0,5,0,0"
+                                                                                                                       TextWrapping="Wrap"
+                                                                                                                       HorizontalAlignment="Center" TextAlignment="Center"
+                                                                                                                       Foreground="{DynamicResource NeuTextSecondaryBrush}" />
+                                                                                                        </StackPanel>
+                                                                                                    </Border>
+                                                                                                </Border>
+                                                                                                <ControlTemplate.Triggers>
+                                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                                        <Setter TargetName="CardInner" Property="Background" Value="{DynamicResource NeuAccentBrush}" />
+                                                                                                        <Setter TargetName="CardIcon"  Property="Foreground" Value="White" />
+                                                                                                        <Setter TargetName="CardTitle" Property="Foreground" Value="White" />
+                                                                                                        <Setter TargetName="CardDesc"  Property="Foreground" Value="White" />
+                                                                                                    </Trigger>
+                                                                                                </ControlTemplate.Triggers>
                                                                                             </ControlTemplate>
                                                                                         </Setter.Value>
                                                                                     </Setter>

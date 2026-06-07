@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FourniPro.Automation;
+using FourniPro.Automation.Achat;
 using FourniPro.Localization;
 using FourniPro.Models;
 using FourniPro.Services;
@@ -20,6 +22,7 @@ public class EditAchatViewModel : ObservableObject
     private readonly FournisseurService _fournisseurService = new();
     private readonly ProduitService _produitService = new();
     private readonly EmployeService _employeService = new();
+    private readonly AutomationRunner _automationRunner = new();
 
     private readonly int _achatId;
     private readonly int? _originalQty;
@@ -258,10 +261,13 @@ public class EditAchatViewModel : ObservableObject
             var ok = await _achatService.UpdateAchatAsync(dto).ConfigureAwait(false);
             if (ok)
             {
-                // Adjust product stock by the difference in quantity
-                var delta = (Quantite ?? 0) - (_originalQty ?? 0);
-                if (delta != 0)
-                    await _produitService.UpdateStockAsync(SelectedProduit.ProduitId, delta).ConfigureAwait(false);
+                // AutomationHook: stock delta is handled by AchatStockUpdateAutomation
+                var oldQty = _originalQty ?? 0;
+                var newQty = Quantite ?? 0;
+                if (oldQty != newQty)
+                    await _automationRunner.RunAsync(
+                        AutomationTrigger.AchatProduitChanged,
+                        new AchatStockContext(SelectedProduit.ProduitId, oldQty, newQty));
 
                 Saved = true;
             }

@@ -41,7 +41,6 @@ public class AchatsController(AppDbContext context, IMapper mapper, ILogger<Acha
     public async Task<ActionResult<AchatDto>> CreateAchat(AchatDto dto)
     {
         var achat = mapper.Map<Achat>(dto);
-        achat.AchatId = 0;
         achat.DateCreation = DateTime.UtcNow;
         achat.DateModification = DateTime.UtcNow;
 

@@ -36,6 +36,29 @@
             </Setter>
         </Style>
 
+        <Style x:Key="VoyageIconButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource NeuAccentBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="6" Background="Transparent"
+                                BorderThickness="1" BorderBrush="{DynamicResource NeuInputFillBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource NeuAccentBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="ColHeaderStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="10" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -73,8 +96,8 @@
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="52" />
+                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="68" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding CamionMatricule,  TargetNullValue=_}" Style="{StaticResource CellTextStyle}" />
                     <TextBlock Grid.Column="1" Text="{Binding ChauffeurNom,     TargetNullValue=_}" Style="{StaticResource CellTextStyle}" />
@@ -114,6 +137,12 @@
                         </TextBlock>
                     </Border>
                     <StackPanel Grid.Column="8" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Style="{StaticResource VoyageIconButtonStyle}"
+                                Command="{Binding DataContext.DetailVoyageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}"
+                                Margin="0,0,4,0">
+                            <ui:SymbolIcon Symbol="Eye24" FontSize="14" />
+                        </Button>
                         <Button Style="{StaticResource VoyageDeleteBtnStyle}"
                                 Command="{Binding DataContext.DeleteVoyageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                 CommandParameter="{Binding}">
@@ -199,8 +228,8 @@
                             <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="52" />
+                            <ColumnDefinition Width="90" />
+                            <ColumnDefinition Width="68" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="{Binding [VoyageColCamion],       Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource ColHeaderStyle}" />
                         <TextBlock Grid.Column="1" Text="{Binding [VoyageColChauffeur],    Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource ColHeaderStyle}" />

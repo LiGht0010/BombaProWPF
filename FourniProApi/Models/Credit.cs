@@ -43,6 +43,8 @@ public class Credit
 
     public virtual Voyage? Voyage { get; set; }
     public virtual Employe? Employe { get; set; }
+    public virtual ICollection<PaiementCredit> PaiementsCredit { get; set; } = [];
+    public virtual ICollection<Avoir> Avoirs { get; set; } = [];
 
     // ── Financial ─────────────────────────────────────────────────────────────
 

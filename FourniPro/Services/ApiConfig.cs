@@ -52,7 +52,11 @@ public static class ApiConfig
     public static string Employes => $"{_baseUrl}/Employes";
 
     /// <summary>Endpoint for credit management.</summary>
-    public static string Credits => $"{_baseUrl}/Credits";
+    public static string Credits        => $"{_baseUrl}/Credits";
+    public static string PaiementsCredit => $"{_baseUrl}/PaiementsCredit";
+
+    /// <summary>Endpoint for avoir (credit note) management.</summary>
+    public static string Avoirs => $"{_baseUrl}/Avoirs";
 
     /// <summary>Endpoint for voyage management.</summary>
     public static string Voyages => $"{_baseUrl}/Voyages";

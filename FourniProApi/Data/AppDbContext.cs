@@ -17,6 +17,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Achat> Achats => Set<Achat>();
     public DbSet<Vente> Ventes => Set<Vente>();
     public DbSet<Credit> Credits => Set<Credit>();
+    public DbSet<PaiementCredit> PaiementsCredit => Set<PaiementCredit>();
+    public DbSet<Avoir> Avoirs => Set<Avoir>();
     public DbSet<Employe> Employes => Set<Employe>();
     public DbSet<Voyage> Voyages => Set<Voyage>();
     public DbSet<StockVoyage> StockVoyages => Set<StockVoyage>();
@@ -79,6 +81,36 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(c => c.Voyage)
             .WithMany()
             .HasForeignKey(c => c.VoyageID)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<PaiementCredit>()
+            .HasOne(p => p.Credit)
+            .WithMany(c => c.PaiementsCredit)
+            .HasForeignKey(p => p.CreditId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PaiementCredit>()
+            .HasOne(p => p.Employe)
+            .WithMany(e => e.PaiementsCredit)
+            .HasForeignKey(p => p.EmployeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Avoir>()
+            .HasOne(a => a.Vente)
+            .WithMany(v => v.Avoirs)
+            .HasForeignKey(a => a.VenteId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Avoir>()
+            .HasOne(a => a.Credit)
+            .WithMany(c => c.Avoirs)
+            .HasForeignKey(a => a.CreditId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Avoir>()
+            .HasOne(a => a.Employe)
+            .WithMany(e => e.Avoirs)
+            .HasForeignKey(a => a.EmployeId)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<StockVoyage>()

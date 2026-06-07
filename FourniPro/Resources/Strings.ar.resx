@@ -186,6 +186,74 @@
   <data name="NavParametres" xml:space="preserve">
     <value>الإعدادات</value>
   </data>
+  <data name="Nav_Dashboard" xml:space="preserve">
+    <value>لوحة القيادة</value>
+  </data>
+  <data name="Nav_Operations" xml:space="preserve">
+    <value>العمليات</value>
+  </data>
+  <data name="Nav_Partenaires" xml:space="preserve">
+    <value>الشركاء</value>
+  </data>
+  <data name="Nav_Ressources" xml:space="preserve">
+    <value>الموارد</value>
+  </data>
+  <data name="Nav_Caisse" xml:space="preserve">
+    <value>الصندوق</value>
+  </data>
+  <data name="Nav_Rapports" xml:space="preserve">
+    <value>التقارير</value>
+  </data>
+  <data name="Nav_Parametres" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="NavTip_Dashboard" xml:space="preserve">
+    <value>نظرة عامة على النشاط</value>
+  </data>
+  <data name="NavTip_Operations" xml:space="preserve">
+    <value>المبيعات · المشتريات · الرحلات · الديون</value>
+  </data>
+  <data name="NavTip_Partenaires" xml:space="preserve">
+    <value>العملاء · الموردون · السائقون · الموظفون</value>
+  </data>
+  <data name="NavTip_Ressources" xml:space="preserve">
+    <value>المنتجات · الشاحنات · الخزانات</value>
+  </data>
+  <data name="NavTip_Caisse" xml:space="preserve">
+    <value>قريباً</value>
+  </data>
+  <data name="NavTip_Rapports" xml:space="preserve">
+    <value>قريباً</value>
+  </data>
+  <data name="NavTip_Parametres" xml:space="preserve">
+    <value>إعدادات التطبيق</value>
+  </data>
+  <!-- ── ParametresView page ── -->
+  <data name="ParametresBreadcrumb" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="ParametresTitle" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="ParametresSubtitle" xml:space="preserve">
+    <value>إعداد قواعد العمل وتكوين التطبيق</value>
+  </data>
+  <data name="ParametresHeroTitle" xml:space="preserve">
+    <value>الأتمتة</value>
+  </data>
+  <data name="ParametresHeroSubtitle" xml:space="preserve">
+    <value>تفعيل أو تعطيل قواعد العمل التلقائية</value>
+  </data>
+  <data name="ParametresAutoCount" xml:space="preserve">
+    <value>قواعد</value>
+  </data>
+  <data name="ParametresAutomationsSectionTitle" xml:space="preserve">
+    <value>القواعد التلقائية</value>
+  </data>
+  <data name="ParametresAutomationsSubtitle" xml:space="preserve">
+    <value>كل قاعدة تُنفَّذ تلقائياً عند وقوع الحدث المقابل</value>
+  </data>
+
   <data name="InfraTitle" xml:space="preserve">
     <value>البنية التحتية</value>
   </data>
@@ -2085,6 +2153,118 @@
   <data name="EditAchatValidationProduit" xml:space="preserve">
     <value>يرجى اختيار منتج.</value>
   </data>
+  <!-- ── DetailVoyageDialog popup ── -->
+  <data name="DetailVoyageTitle" xml:space="preserve">
+    <value>تفاصيل الرحلة</value>
+  </data>
+  <data name="DetailVoyageCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="DetailVoyageCardItineraire" xml:space="preserve">
+    <value>المسار والكيلومتراج</value>
+  </data>
+  <data name="DetailVoyageLabelNumero" xml:space="preserve">
+    <value>رقم الرحلة</value>
+  </data>
+  <data name="DetailVoyageLabelStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="DetailVoyageLabelChauffeur" xml:space="preserve">
+    <value>السائق</value>
+  </data>
+  <data name="DetailVoyageLabelCamion" xml:space="preserve">
+    <value>الشاحنة</value>
+  </data>
+  <data name="DetailVoyageLabelCiterne" xml:space="preserve">
+    <value>الخزان</value>
+  </data>
+  <data name="DetailVoyageLabelDateDepart" xml:space="preserve">
+    <value>تاريخ المغادرة</value>
+  </data>
+  <data name="DetailVoyageLabelDateFinal" xml:space="preserve">
+    <value>تاريخ الوصول</value>
+  </data>
+  <data name="DetailVoyageLabelLieuDepart" xml:space="preserve">
+    <value>مكان المغادرة</value>
+  </data>
+  <data name="DetailVoyageLabelLieuTerminal" xml:space="preserve">
+    <value>مكان الوصول</value>
+  </data>
+  <data name="DetailVoyageLabelKmDepart" xml:space="preserve">
+    <value>كم المغادرة</value>
+  </data>
+  <data name="DetailVoyageLabelKmFinal" xml:space="preserve">
+    <value>كم الوصول</value>
+  </data>
+  <data name="DetailVoyageLabelDistance" xml:space="preserve">
+    <value>المسافة</value>
+  </data>
+  <data name="DetailVoyageCloseButton" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailVoyageEditButton" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+
+  <!-- ── EditVoyageDialog popup ── -->
+  <data name="EditVoyageTitle" xml:space="preserve">
+    <value>تعديل الرحلة</value>
+  </data>
+  <data name="EditVoyageSubtitle" xml:space="preserve">
+    <value>تحديث معلومات الرحلة</value>
+  </data>
+  <data name="EditVoyageCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="EditVoyageCardItineraire" xml:space="preserve">
+    <value>المسار والمسافة</value>
+  </data>
+  <data name="EditVoyageLabelChauffeur" xml:space="preserve">
+    <value>السائق</value>
+  </data>
+  <data name="EditVoyageLabelCamion" xml:space="preserve">
+    <value>الشاحنة</value>
+  </data>
+  <data name="EditVoyageLabelCiterne" xml:space="preserve">
+    <value>الصهريج</value>
+  </data>
+  <data name="EditVoyageLabelStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="EditVoyageLabelDateDepart" xml:space="preserve">
+    <value>تاريخ المغادرة</value>
+  </data>
+  <data name="EditVoyageLabelDateFinal" xml:space="preserve">
+    <value>تاريخ الوصول</value>
+  </data>
+  <data name="EditVoyageLabelLieuDepart" xml:space="preserve">
+    <value>مكان المغادرة</value>
+  </data>
+  <data name="EditVoyageLabelLieuTerminal" xml:space="preserve">
+    <value>المحطة النهائية</value>
+  </data>
+  <data name="EditVoyageLabelKmDepart" xml:space="preserve">
+    <value>عداد المسافة عند الانطلاق</value>
+  </data>
+  <data name="EditVoyageLabelKmFinal" xml:space="preserve">
+    <value>عداد المسافة النهائي</value>
+  </data>
+  <data name="EditVoyageBtnCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="EditVoyageBtnSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="EditVoyageBtnUpdate" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="EditVoyageSaveError" xml:space="preserve">
+    <value>خطأ أثناء حفظ الرحلة.</value>
+  </data>
+  <data name="EditVoyageValidationChauffeur" xml:space="preserve">
+    <value>يرجى اختيار سائق.</value>
+  </data>
+
   <data name="DetailAchatTitle" xml:space="preserve">
     <value>تفاصيل الشراء</value>
   </data>
@@ -2164,6 +2344,476 @@
   <data name="InfraCardDescCredits" xml:space="preserve">
     <value>إدارة ديون العملاء</value>
   </data>
+  <!-- ── PaiementsCredit infra card ── -->
+  <data name="InfraPaiementsCredit" xml:space="preserve">
+    <value>مدفوعات الديون</value>
+  </data>
+  <data name="InfraCardDescPaiementsCredit" xml:space="preserve">
+    <value>متابعة مدفوعات الديون</value>
+  </data>
+  <data name="InfraAvoirs" xml:space="preserve">
+    <value>الأوفار</value>
+  </data>
+  <data name="InfraCardDescAvoirs" xml:space="preserve">
+    <value>إدارة الأوفار وملاحظات الائتمان</value>
+  </data>
+
+  <!-- ── Avoirs section ── -->
+  <data name="AvrBreadcrumb" xml:space="preserve">
+    <value>الأوفار</value>
+  </data>
+  <data name="AvrPageSubtitle" xml:space="preserve">
+    <value>قائمة جميع الأوفار وملاحظات الائتمان</value>
+  </data>
+  <data name="AvrAddButton" xml:space="preserve">
+    <value>أوفار جديد</value>
+  </data>
+  <data name="AvrTableTitle" xml:space="preserve">
+    <value>الأوفار</value>
+  </data>
+  <data name="AvrTableSubtitle" xml:space="preserve">
+    <value>سجل الأوفار الصادرة</value>
+  </data>
+  <data name="AvrCountBadge" xml:space="preserve">
+    <value>أوفار</value>
+  </data>
+  <data name="AvrColNumero" xml:space="preserve">
+    <value>رقم الأوفار</value>
+  </data>
+  <data name="AvrColSource" xml:space="preserve">
+    <value>المصدر</value>
+  </data>
+  <data name="AvrColDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="AvrColClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="AvrColMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="AvrColRaison" xml:space="preserve">
+    <value>السبب</value>
+  </data>
+  <data name="AvrColEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="AvrColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="AvrDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="AvrEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="AvrDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="AvrEmpty" xml:space="preserve">
+    <value>لا توجد أوفار.</value>
+  </data>
+
+  <!-- ── NouveauAvoir dialog ── -->
+  <data name="NouveauAvoirTitle" xml:space="preserve">
+    <value>أوفار جديد</value>
+  </data>
+  <data name="NouveauAvoirCardSource" xml:space="preserve">
+    <value>المصدر والتاريخ</value>
+  </data>
+  <data name="NouveauAvoirSourceType" xml:space="preserve">
+    <value>نوع المصدر</value>
+  </data>
+  <data name="NouveauAvoirSourceVente" xml:space="preserve">
+    <value>مبيعات</value>
+  </data>
+  <data name="NouveauAvoirSourceCredit" xml:space="preserve">
+    <value>دين</value>
+  </data>
+  <data name="NouveauAvoirVente" xml:space="preserve">
+    <value>المبيعة المعنية</value>
+  </data>
+  <data name="NouveauAvoirCredit" xml:space="preserve">
+    <value>الدين المعني</value>
+  </data>
+  <data name="NouveauAvoirDate" xml:space="preserve">
+    <value>تاريخ الأوفار</value>
+  </data>
+  <data name="NouveauAvoirCardFinancier" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="NouveauAvoirQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="NouveauAvoirPrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة</value>
+  </data>
+  <data name="NouveauAvoirMontant" xml:space="preserve">
+    <value>مبلغ الأوفار</value>
+  </data>
+  <data name="NouveauAvoirMontantHint" xml:space="preserve">
+    <value>يُحسب تلقائياً من المدفوعات المستلمة مقارنة بمبلغ الدين.</value>
+  </data>
+  <data name="NouveauAvoirCardPersonnes" xml:space="preserve">
+    <value>العميل والموظف</value>
+  </data>
+  <data name="NouveauAvoirClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="NouveauAvoirEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="NouveauAvoirCardInfo" xml:space="preserve">
+    <value>السبب والمعلومات</value>
+  </data>
+  <data name="NouveauAvoirRaison" xml:space="preserve">
+    <value>السبب</value>
+  </data>
+  <data name="NouveauAvoirNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="NouveauAvoirReference" xml:space="preserve">
+    <value>ملف مرجعي</value>
+  </data>
+  <data name="NouveauAvoirNoFile" xml:space="preserve">
+    <value>لم يتم اختيار ملف</value>
+  </data>
+  <data name="NouveauAvoirCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauAvoirSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauAvoirValidationVente" xml:space="preserve">
+    <value>يرجى اختيار مبيعة.</value>
+  </data>
+  <data name="NouveauAvoirValidationCredit" xml:space="preserve">
+    <value>يرجى اختيار دين.</value>
+  </data>
+  <data name="NouveauAvoirSaveError" xml:space="preserve">
+    <value>حدث خطأ أثناء حفظ الأوفار.</value>
+  </data>
+
+  <!-- ── EditAvoir dialog ── -->
+  <data name="EditAvoirTitle" xml:space="preserve">
+    <value>تعديل الأوفار</value>
+  </data>
+  <data name="EditAvoirCardSource" xml:space="preserve">
+    <value>المصدر والتاريخ</value>
+  </data>
+  <data name="EditAvoirVente" xml:space="preserve">
+    <value>المبيعة المرتبطة</value>
+  </data>
+  <data name="EditAvoirCredit" xml:space="preserve">
+    <value>الدين المرتبط</value>
+  </data>
+  <data name="EditAvoirSourceLocked" xml:space="preserve">
+    <value>لا يمكن تغيير المصدر بعد الإنشاء.</value>
+  </data>
+  <data name="EditAvoirDate" xml:space="preserve">
+    <value>تاريخ الأوفار</value>
+  </data>
+  <data name="EditAvoirCardFinancier" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="EditAvoirQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="EditAvoirPrixUnitaire" xml:space="preserve">
+    <value>سعر الوحدة</value>
+  </data>
+  <data name="EditAvoirMontant" xml:space="preserve">
+    <value>مبلغ الأوفار</value>
+  </data>
+  <data name="EditAvoirCardPersonnes" xml:space="preserve">
+    <value>العميل والموظف</value>
+  </data>
+  <data name="EditAvoirClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="EditAvoirEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="EditAvoirCardInfo" xml:space="preserve">
+    <value>السبب والمعلومات</value>
+  </data>
+  <data name="EditAvoirRaison" xml:space="preserve">
+    <value>السبب</value>
+  </data>
+  <data name="EditAvoirNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="EditAvoirReference" xml:space="preserve">
+    <value>ملف مرجعي</value>
+  </data>
+  <data name="EditAvoirNoFile" xml:space="preserve">
+    <value>لم يتم اختيار ملف</value>
+  </data>
+  <data name="EditAvoirCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="EditAvoirSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+
+  <!-- ── DetailAvoir dialog ── -->
+  <data name="DetailAvoirTitle" xml:space="preserve">
+    <value>تفاصيل الأوفار</value>
+  </data>
+  <data name="DetailAvoirCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="DetailAvoirLabelNumero" xml:space="preserve">
+    <value>رقم الأوفار</value>
+  </data>
+  <data name="DetailAvoirLabelDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="DetailAvoirLabelVente" xml:space="preserve">
+    <value>المبيعة</value>
+  </data>
+  <data name="DetailAvoirLabelCredit" xml:space="preserve">
+    <value>الدين</value>
+  </data>
+  <data name="DetailAvoirLabelClient" xml:space="preserve">
+    <value>العميل</value>
+  </data>
+  <data name="DetailAvoirCardMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="DetailAvoirLabelMontant" xml:space="preserve">
+    <value>مبلغ الأوفار</value>
+  </data>
+  <data name="DetailAvoirMontantSub" xml:space="preserve">
+    <value>صافي المبلغ المسترد</value>
+  </data>
+  <data name="DetailAvoirLabelRaison" xml:space="preserve">
+    <value>السبب</value>
+  </data>
+  <data name="DetailAvoirCardDetails" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="DetailAvoirLabelProduit" xml:space="preserve">
+    <value>المنتج</value>
+  </data>
+  <data name="DetailAvoirLabelQuantite" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="DetailAvoirLabelPrix" xml:space="preserve">
+    <value>سعر الوحدة</value>
+  </data>
+  <data name="DetailAvoirLabelEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="DetailAvoirCardAudit" xml:space="preserve">
+    <value>المراجعة والملاحظة</value>
+  </data>
+  <data name="DetailAvoirLabelAjoutePar" xml:space="preserve">
+    <value>أضافه</value>
+  </data>
+  <data name="DetailAvoirLabelDateCreation" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+  <data name="DetailAvoirLabelModifiePar" xml:space="preserve">
+    <value>عدّله</value>
+  </data>
+  <data name="DetailAvoirLabelDateModification" xml:space="preserve">
+    <value>تاريخ التعديل</value>
+  </data>
+  <data name="DetailAvoirLabelNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="DetailAvoirLabelFichier" xml:space="preserve">
+    <value>الملف</value>
+  </data>
+  <data name="DetailAvoirClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailAvoirEdit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <!-- ── PaiementsCredit validation ── -->
+  <data name="NouveauPaiementValidationCredit" xml:space="preserve">
+    <value>يرجى اختيار دين.</value>
+  </data>
+  <data name="NouveauPaiementValidationMontant" xml:space="preserve">
+    <value>يرجى إدخال مبلغ صحيح.</value>
+  </data>
+  <data name="NouveauPaiementSaveError" xml:space="preserve">
+    <value>حدث خطأ أثناء حفظ الدفعة.</value>
+  </data>
+
+  <!-- ── PaiementsCredit section ── -->
+  <data name="PcBreadcrumb" xml:space="preserve">
+    <value>مدفوعات الديون</value>
+  </data>
+  <data name="PcPageSubtitle" xml:space="preserve">
+    <value>قائمة جميع مدفوعات الديون</value>
+  </data>
+  <data name="PcAddButton" xml:space="preserve">
+    <value>دفعة جديدة</value>
+  </data>
+  <data name="PcTableTitle" xml:space="preserve">
+    <value>مدفوعات الديون</value>
+  </data>
+  <data name="PcTableSubtitle" xml:space="preserve">
+    <value>جميع التسويات المسجلة</value>
+  </data>
+  <data name="PcCountBadge" xml:space="preserve">
+    <value>دفعة</value>
+  </data>
+  <data name="PcColCredit" xml:space="preserve">
+    <value>رقم الدين</value>
+  </data>
+  <data name="PcColDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="PcColEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="PcColMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="PcColMode" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="PcColReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="PcColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="PcDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="PcEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="PcDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="PcEmpty" xml:space="preserve">
+    <value>لا توجد دفعات مسجلة.</value>
+  </data>
+
+  <!-- ── NouveauPaiementCredit dialog ── -->
+  <data name="NouveauPcTitle" xml:space="preserve">
+    <value>دفعة دين جديدة</value>
+  </data>
+  <data name="EditPcTitle" xml:space="preserve">
+    <value>تعديل الدفعة</value>
+  </data>
+  <data name="NouveauPcCardCredit" xml:space="preserve">
+    <value>الدين والتاريخ</value>
+  </data>
+  <data name="NouveauPcCredit" xml:space="preserve">
+    <value>الدين المعني</value>
+  </data>
+  <data name="NouveauPcDate" xml:space="preserve">
+    <value>تاريخ الدفع</value>
+  </data>
+  <data name="NouveauPcCardPaiement" xml:space="preserve">
+    <value>تفاصيل الدفع</value>
+  </data>
+  <data name="NouveauPcMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="NouveauPcMode" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="NouveauPcCardEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
+  <data name="NouveauPcEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="NouveauPcCardInfo" xml:space="preserve">
+    <value>المرجع والملاحظة</value>
+  </data>
+  <data name="NouveauPcReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="NouveauPcReferenceFile" xml:space="preserve">
+    <value>ملف المرجع</value>
+  </data>
+  <data name="NouveauPcNoFile" xml:space="preserve">
+    <value>لم يتم اختيار ملف</value>
+  </data>
+  <data name="NouveauPcNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="NouveauPcCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauPcSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="EditPcSave" xml:space="preserve">
+    <value>حفظ التعديلات</value>
+  </data>
+
+  <!-- ── DetailPaiementCredit dialog ── -->
+  <data name="DetailPcTitle" xml:space="preserve">
+    <value>تفاصيل الدفعة</value>
+  </data>
+  <data name="DetailPcCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="DetailPcLabelCredit" xml:space="preserve">
+    <value>رقم الدين</value>
+  </data>
+  <data name="DetailPcLabelDate" xml:space="preserve">
+    <value>تاريخ الدفع</value>
+  </data>
+  <data name="DetailPcLabelMode" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="DetailPcLabelEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
+  <data name="DetailPcCardMontant" xml:space="preserve">
+    <value>المبلغ المدفوع</value>
+  </data>
+  <data name="DetailPcLabelMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="DetailPcMontantSub" xml:space="preserve">
+    <value>المبلغ المحصَّل</value>
+  </data>
+  <data name="DetailPcCardReference" xml:space="preserve">
+    <value>المرجع والملف</value>
+  </data>
+  <data name="DetailPcLabelReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="DetailPcLabelFichier" xml:space="preserve">
+    <value>الملف المرفق</value>
+  </data>
+  <data name="DetailPcCardAudit" xml:space="preserve">
+    <value>المراجعة والملاحظة</value>
+  </data>
+  <data name="DetailPcLabelAjoutePar" xml:space="preserve">
+    <value>أضافه</value>
+  </data>
+  <data name="DetailPcLabelDateCreation" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+  <data name="DetailPcLabelModifiePar" xml:space="preserve">
+    <value>عدّله</value>
+  </data>
+  <data name="DetailPcLabelDateModification" xml:space="preserve">
+    <value>آخر تعديل</value>
+  </data>
+  <data name="DetailPcLabelNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="DetailPcClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailPcEdit" xml:space="preserve">
+    <value>  تعديل</value>
+  </data>
+
   <!-- ── Voyages infra card ── -->
   <data name="InfraVoyages" xml:space="preserve">
     <value>الرحلات</value>

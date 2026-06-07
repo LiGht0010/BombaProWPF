@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FourniPro.Automation;
+using FourniPro.Automation.Vente;
 using FourniPro.Localization;
 using FourniPro.Models;
 using FourniPro.Services;
@@ -15,6 +17,7 @@ public class EditVenteViewModel : ObservableObject
     private readonly ClientService  _clientService  = new();
     private readonly ProduitService _produitService = new();
     private readonly EmployeService _employeService = new();
+    private readonly AutomationRunner _automationRunner = new();
 
     private readonly int  _venteId;
     private readonly int? _originalQty;
@@ -286,7 +289,12 @@ public class EditVenteViewModel : ObservableObject
 
             var ok = await _venteService.UpdateVenteAsync(dto);
             if (ok)
+            {
+                await _automationRunner.RunAsync(
+                    AutomationTrigger.VenteSaved,
+                    new VenteStockContext(SelectedProduit.ProduitId, Quantite!.Value, VoyageId: null));
                 Saved = true;
+            }
             else
                 ErrorMessage = LanguageManager.Instance["EditVenteSaveError"];
         }

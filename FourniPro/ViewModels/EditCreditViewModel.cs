@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FourniPro.Automation;
+using FourniPro.Automation.Credit;
 using FourniPro.Localization;
 using FourniPro.Models;
 using FourniPro.Services;
@@ -15,6 +17,7 @@ public class EditCreditViewModel : ObservableObject
     private readonly ClientService  _clientService  = new();
     private readonly ProduitService _produitService = new();
     private readonly EmployeService _employeService = new();
+    private readonly AutomationRunner _automationRunner = new();
 
     private readonly int       _creditId;
     private readonly int?      _originalAjoutePar;
@@ -309,7 +312,12 @@ public class EditCreditViewModel : ObservableObject
 
             var ok = await _creditService.UpdateCreditAsync(dto);
             if (ok)
+            {
+                await _automationRunner.RunAsync(
+                    AutomationTrigger.CreditSaved,
+                    new CreditStockContext(SelectedProduit.ProduitId, Quantite!.Value, VoyageId: null));
                 Saved = true;
+            }
             else
                 ErrorMessage = LanguageManager.Instance["EditCreditSaveError"];
         }

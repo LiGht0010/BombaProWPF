@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FourniPro.Automation;
+using FourniPro.Automation.Credit;
 using FourniPro.Localization;
 using FourniPro.Models;
 using FourniPro.Services;
@@ -15,6 +17,7 @@ public class NouveauCreditViewModel : ObservableObject
     private readonly ClientService  _clientService  = new();
     private readonly ProduitService _produitService = new();
     private readonly EmployeService _employeService = new();
+    private readonly AutomationRunner _automationRunner = new();
 
     // ── Form fields ──────────────────────────────────────────────────────────
 
@@ -273,7 +276,12 @@ public class NouveauCreditViewModel : ObservableObject
 
             var result = await _creditService.CreateCreditAsync(dto);
             if (result is not null)
+            {
+                await _automationRunner.RunAsync(
+                    AutomationTrigger.CreditSaved,
+                    new CreditStockContext(SelectedProduit.ProduitId, Quantite!.Value, VoyageId: null));
                 Saved = true;
+            }
             else
                 ErrorMessage = LanguageManager.Instance["NouveauCreditSaveError"];
         }

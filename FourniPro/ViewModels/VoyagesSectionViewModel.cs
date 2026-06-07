@@ -58,6 +58,7 @@ public class VoyagesSectionViewModel : ObservableObject
 
     public IRelayCommand RefreshCommand              { get; }
     public IRelayCommand AddVoyageCommand             { get; }
+    public IRelayCommand<VoyageCardItem>      DetailVoyageCommand      { get; }
     public IRelayCommand<VoyageCardItem>      DeleteVoyageCommand      { get; }
     public IRelayCommand<StockVoyageCardItem> DeleteStockCommand       { get; }
     public IRelayCommand<FraisVoyageCardItem> DeleteFraisCommand       { get; }
@@ -66,6 +67,7 @@ public class VoyagesSectionViewModel : ObservableObject
     {
         RefreshCommand        = new AsyncRelayCommand(RefreshAsync);
         AddVoyageCommand      = new RelayCommand(OpenAddVoyageDialog);
+        DetailVoyageCommand   = new RelayCommand<VoyageCardItem>(item => OpenDetailDialog?.Invoke(item!));
         DeleteVoyageCommand   = new AsyncRelayCommand<VoyageCardItem>(DeleteVoyageAsync);
         DeleteStockCommand    = new AsyncRelayCommand<StockVoyageCardItem>(DeleteStockAsync);
         DeleteFraisCommand    = new AsyncRelayCommand<FraisVoyageCardItem>(DeleteFraisAsync);
@@ -79,6 +81,12 @@ public class VoyagesSectionViewModel : ObservableObject
 
     /// <summary>Set by VoyagesSection code-behind to open NouveauVoyageDialog on the UI thread.</summary>
     public Action? OpenAddDialog { get; set; }
+
+    /// <summary>Set by VoyagesSection code-behind to open DetailVoyageDialog on the UI thread.</summary>
+    public Action<VoyageCardItem>? OpenDetailDialog { get; set; }
+
+    /// <summary>Set by VoyagesSection code-behind to open EditVoyageDialog on the UI thread.</summary>
+    public Action<VoyageCardItem>? OpenEditDialog { get; set; }
 
     public async Task EnsureLoadedAsync()
     {
