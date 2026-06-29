@@ -126,6 +126,15 @@ public class EditAchatViewModel : ObservableObject
         set => SetProperty(ref _description, value);
     }
 
+    public IReadOnlyList<string> ModePaiementOptions { get; } = ["Immédiat", "Crédit"];
+
+    private string _modePaiement = "Immédiat";
+    public string ModePaiement
+    {
+        get => _modePaiement;
+        set => SetProperty(ref _modePaiement, value);
+    }
+
     // ── UI state ──────────────────────────────────────────────────────────────
 
     private bool _isLoading;
@@ -169,6 +178,7 @@ public class EditAchatViewModel : ObservableObject
         _cout                 = achat.Cout;
         _livraisonDefectueuse = achat.LivraisonDefectueuse ?? false;
         _description          = achat.Description;
+        _modePaiement         = achat.ModePaiement ?? "Immédiat";
 
         // Store IDs so we can pre-select combos after lookups load
         _pendingFournisseurId = achat.FournisseurID;
@@ -255,7 +265,8 @@ public class EditAchatViewModel : ObservableObject
                 PrixAchatUnitaire    = PrixAchatUnitaire,
                 Cout                 = Cout,
                 LivraisonDefectueuse = LivraisonDefectueuse,
-                Description          = NullIfBlank(Description)
+                Description          = NullIfBlank(Description),
+                ModePaiement         = ModePaiement
             };
 
             var ok = await _achatService.UpdateAchatAsync(dto).ConfigureAwait(false);
@@ -268,6 +279,17 @@ public class EditAchatViewModel : ObservableObject
                     await _automationRunner.RunAsync(
                         AutomationTrigger.AchatProduitChanged,
                         new AchatStockContext(SelectedProduit.ProduitId, oldQty, newQty));
+
+                // AutomationHook: IsNew=false — AchatCreditFournisseurAutomation will skip creation
+                await _automationRunner.RunAsync(
+                    AutomationTrigger.AchatSaved,
+                    new AchatSavedContext(
+                        AchatId:       _achatId,
+                        FournisseurId: SelectedFournisseur.FournisseurId,
+                        EmployeId:     SelectedEmploye?.EmployeId,
+                        ModePaiement:  ModePaiement,
+                        Cout:          Cout,
+                        IsNew:         false));
 
                 Saved = true;
             }

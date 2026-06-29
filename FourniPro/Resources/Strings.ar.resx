@@ -1625,6 +1625,433 @@
     <value>حدث خطأ أثناء تحديث الائتمان.</value>
   </data>
 
+  <!-- ═══════════ CréditsFournisseur section ═══════════ -->
+  <data name="InfraCreditsFournisseur" xml:space="preserve">
+    <value>قروض الموردين</value>
+  </data>
+  <data name="InfraCardDescCreditsFournisseur" xml:space="preserve">
+    <value>إدارة قروض الموردين</value>
+  </data>
+  <data name="CreditFournisseurBreadcrumb" xml:space="preserve">
+    <value>قروض الموردين</value>
+  </data>
+  <data name="CreditFournisseurPageSubtitle" xml:space="preserve">
+    <value>قائمة جميع قروض الموردين المسجلة</value>
+  </data>
+  <data name="CreditFournisseurAddButton" xml:space="preserve">
+    <value>قرض مورد جديد</value>
+  </data>
+  <data name="CreditFournisseurTableTitle" xml:space="preserve">
+    <value>قروض الموردين</value>
+  </data>
+  <data name="CreditFournisseurTableSubtitle" xml:space="preserve">
+    <value>سجل قروض الموردين</value>
+  </data>
+  <data name="CreditFournisseurColNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="CreditFournisseurColDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="CreditFournisseurColFournisseur" xml:space="preserve">
+    <value>المورد</value>
+  </data>
+  <data name="CreditFournisseurColAchat" xml:space="preserve">
+    <value>الشراء</value>
+  </data>
+  <data name="CreditFournisseurColMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="CreditFournisseurColStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="CreditFournisseurColEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="CreditFournisseurColCheque" xml:space="preserve">
+    <value>الشيك</value>
+  </data>
+  <data name="CreditFournisseurColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="CreditFournisseurCountBadge" xml:space="preserve">
+    <value>قروض</value>
+  </data>
+  <data name="CreditFournisseurDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="CreditFournisseurEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="CreditFournisseurDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="CreditFournisseurEmpty" xml:space="preserve">
+    <value>لا يوجد قرض مورد مسجل.</value>
+  </data>
+
+  <!-- ═══════════ PaiementsFournisseur section ═══════════ -->
+  <data name="InfraPaiementsFournisseur" xml:space="preserve">
+    <value>مدفوعات الموردين</value>
+  </data>
+  <data name="InfraCardDescPaiementsFournisseur" xml:space="preserve">
+    <value>إدارة مدفوعات قروض الموردين</value>
+  </data>
+  <data name="PaiementFournisseurBreadcrumb" xml:space="preserve">
+    <value>مدفوعات الموردين</value>
+  </data>
+  <data name="PaiementFournisseurPageSubtitle" xml:space="preserve">
+    <value>قائمة جميع مدفوعات الموردين المسجلة</value>
+  </data>
+  <data name="PaiementFournisseurAddButton" xml:space="preserve">
+    <value>دفعة مورد جديدة</value>
+  </data>
+  <data name="PaiementFournisseurTableTitle" xml:space="preserve">
+    <value>مدفوعات الموردين</value>
+  </data>
+  <data name="PaiementFournisseurTableSubtitle" xml:space="preserve">
+    <value>سجل مدفوعات الموردين</value>
+  </data>
+  <data name="PaiementFournisseurColNumero" xml:space="preserve">
+    <value>رقم القرض</value>
+  </data>
+  <data name="PaiementFournisseurColDate" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+  <data name="PaiementFournisseurColMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="PaiementFournisseurColMethode" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="PaiementFournisseurColReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="PaiementFournisseurColEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="PaiementFournisseurColActions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="PaiementFournisseurCountBadge" xml:space="preserve">
+    <value>دفعات</value>
+  </data>
+  <data name="PaiementFournisseurDetailTooltip" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="PaiementFournisseurEditTooltip" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="PaiementFournisseurDeleteTooltip" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="PaiementFournisseurEmpty" xml:space="preserve">
+    <value>لا يوجد دفعة مورد مسجلة.</value>
+  </data>
+
+  <!-- ── NouveauCreditFournisseur dialog popup ── -->
+  <data name="NouveauCreditFournisseurTitle" xml:space="preserve">
+    <value>قرض مورد جديد</value>
+  </data>
+  <data name="NouveauCreditFournisseurCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="NouveauCreditFournisseurNumero" xml:space="preserve">
+    <value>الرقم</value>
+  </data>
+  <data name="NouveauCreditFournisseurDate" xml:space="preserve">
+    <value>تاريخ القرض</value>
+  </data>
+  <data name="NouveauCreditFournisseurStatutBadge" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="NouveauCreditFournisseurCardCommercial" xml:space="preserve">
+    <value>معلومات المورد</value>
+  </data>
+  <data name="NouveauCreditFournisseurFournisseur" xml:space="preserve">
+    <value>المورد</value>
+  </data>
+  <data name="NouveauCreditFournisseurAchat" xml:space="preserve">
+    <value>الشراء (قرض)</value>
+  </data>
+  <data name="NouveauCreditFournisseurEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
+  <data name="NouveauCreditFournisseurCardFinancier" xml:space="preserve">
+    <value>البيانات المالية</value>
+  </data>
+  <data name="NouveauCreditFournisseurMontantTotal" xml:space="preserve">
+    <value>المبلغ الإجمالي (من الشراء)</value>
+  </data>
+  <data name="NouveauCreditFournisseurCardInformations" xml:space="preserve">
+    <value>معلومات والشيك</value>
+  </data>
+  <data name="NouveauCreditFournisseurChequeReference" xml:space="preserve">
+    <value>مرجع الشيك</value>
+  </data>
+  <data name="NouveauCreditFournisseurStatutCheque" xml:space="preserve">
+    <value>حالة الشيك</value>
+  </data>
+  <data name="NouveauCreditFournisseurNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="NouveauCreditFournisseurCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauCreditFournisseurSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauCreditFournisseurValidationFournisseur" xml:space="preserve">
+    <value>يرجى اختيار مورد.</value>
+  </data>
+  <data name="NouveauCreditFournisseurValidationAchat" xml:space="preserve">
+    <value>يرجى اختيار شراء.</value>
+  </data>
+  <data name="NouveauCreditFournisseurSaveError" xml:space="preserve">
+    <value>خطأ أثناء حفظ قرض المورد.</value>
+  </data>
+  <data name="NouveauCreditFournisseurLoadError" xml:space="preserve">
+    <value>تعذّر تحميل البيانات. تحقق من الاتصال بالخادم.</value>
+  </data>
+
+  <!-- ── EditCreditFournisseur dialog popup ── -->
+  <data name="EditCfTitle" xml:space="preserve">
+    <value>تعديل قرض المورد</value>
+  </data>
+  <data name="EditCfSave" xml:space="preserve">
+    <value>حفظ التعديلات</value>
+  </data>
+  <data name="EditCfStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="EditCfStatutCheque" xml:space="preserve">
+    <value>حالة الشيك</value>
+  </data>
+  <data name="EditCfValidationFournisseur" xml:space="preserve">
+    <value>يرجى اختيار مورد.</value>
+  </data>
+  <data name="EditCfValidationAchat" xml:space="preserve">
+    <value>يرجى اختيار شراء.</value>
+  </data>
+  <data name="EditCfSaveError" xml:space="preserve">
+    <value>خطأ أثناء تحديث قرض المورد.</value>
+  </data>
+  <data name="EditCfLoadError" xml:space="preserve">
+    <value>تعذّر تحميل البيانات. تحقق من الاتصال بالخادم.</value>
+  </data>
+
+  <!-- ── DetailCreditFournisseur dialog popup ── -->
+  <data name="DetailCfTitle" xml:space="preserve">
+    <value>تفاصيل قرض المورد</value>
+  </data>
+  <data name="DetailCfCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="DetailCfLabelNumero" xml:space="preserve">
+    <value>رقم القرض</value>
+  </data>
+  <data name="DetailCfLabelDate" xml:space="preserve">
+    <value>تاريخ القرض</value>
+  </data>
+  <data name="DetailCfLabelStatut" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="DetailCfLabelAchat" xml:space="preserve">
+    <value>الشراء المرتبط</value>
+  </data>
+  <data name="DetailCfCardMontant" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="DetailCfLabelMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="DetailCfMontantSub" xml:space="preserve">
+    <value>المبلغ المستحق للمورد</value>
+  </data>
+  <data name="DetailCfCardCommercial" xml:space="preserve">
+    <value>المورد والموظف</value>
+  </data>
+  <data name="DetailCfLabelFournisseur" xml:space="preserve">
+    <value>المورد</value>
+  </data>
+  <data name="DetailCfLabelEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
+  <data name="DetailCfCardAudit" xml:space="preserve">
+    <value>الشيك، المراجعة والملاحظة</value>
+  </data>
+  <data name="DetailCfLabelChequeReference" xml:space="preserve">
+    <value>مرجع الشيك</value>
+  </data>
+  <data name="DetailCfLabelStatutCheque" xml:space="preserve">
+    <value>حالة الشيك</value>
+  </data>
+  <data name="DetailCfLabelAjoutePar" xml:space="preserve">
+    <value>أضافه</value>
+  </data>
+  <data name="DetailCfLabelDateCreation" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+  <data name="DetailCfLabelModifiePar" xml:space="preserve">
+    <value>عدّله</value>
+  </data>
+  <data name="DetailCfLabelDateModification" xml:space="preserve">
+    <value>آخر تعديل</value>
+  </data>
+  <data name="DetailCfLabelNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="DetailCfClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailCfEdit" xml:space="preserve">
+    <value>  تعديل</value>
+  </data>
+
+  <!-- ── NouveauPaiementFournisseur dialog popup ── -->
+  <data name="NouveauPfTitle" xml:space="preserve">
+    <value>دفعة مورد جديدة</value>
+  </data>
+  <data name="NouveauPfCardCredit" xml:space="preserve">
+    <value>القرض والتاريخ</value>
+  </data>
+  <data name="NouveauPfCredit" xml:space="preserve">
+    <value>قرض المورد المعني</value>
+  </data>
+  <data name="NouveauPfDate" xml:space="preserve">
+    <value>تاريخ الدفع</value>
+  </data>
+  <data name="NouveauPfCardPaiement" xml:space="preserve">
+    <value>تفاصيل الدفعة</value>
+  </data>
+  <data name="NouveauPfMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="NouveauPfMode" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="NouveauPfCardEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
+  <data name="NouveauPfEmploye" xml:space="preserve">
+    <value>الموظف</value>
+  </data>
+  <data name="NouveauPfCardInfo" xml:space="preserve">
+    <value>المرجع والملاحظة</value>
+  </data>
+  <data name="NouveauPfReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="NouveauPfReferenceFile" xml:space="preserve">
+    <value>ملف المرجع</value>
+  </data>
+  <data name="NouveauPfNoFile" xml:space="preserve">
+    <value>لم يتم اختيار ملف</value>
+  </data>
+  <data name="NouveauPfNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="NouveauPfCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="NouveauPfSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="NouveauPfValidationCredit" xml:space="preserve">
+    <value>يرجى اختيار قرض مورد.</value>
+  </data>
+  <data name="NouveauPfValidationMontant" xml:space="preserve">
+    <value>يجب أن يكون المبلغ أكبر من الصفر.</value>
+  </data>
+  <data name="NouveauPfSaveError" xml:space="preserve">
+    <value>خطأ أثناء حفظ دفعة المورد.</value>
+  </data>
+  <data name="NouveauPfLoadError" xml:space="preserve">
+    <value>تعذّر تحميل البيانات. تحقق من الاتصال بالخادم.</value>
+  </data>
+
+  <!-- ── EditPaiementFournisseur dialog popup ── -->
+  <data name="EditPfTitle" xml:space="preserve">
+    <value>تعديل دفعة المورد</value>
+  </data>
+  <data name="EditPfSave" xml:space="preserve">
+    <value>حفظ التعديلات</value>
+  </data>
+  <data name="EditPfValidationCredit" xml:space="preserve">
+    <value>يرجى اختيار قرض مورد.</value>
+  </data>
+  <data name="EditPfValidationMontant" xml:space="preserve">
+    <value>يجب أن يكون المبلغ أكبر من الصفر.</value>
+  </data>
+  <data name="EditPfSaveError" xml:space="preserve">
+    <value>خطأ أثناء تحديث دفعة المورد.</value>
+  </data>
+  <data name="EditPfLoadError" xml:space="preserve">
+    <value>تعذّر تحميل البيانات. تحقق من الاتصال بالخادم.</value>
+  </data>
+
+  <!-- ── DetailPaiementFournisseur dialog popup ── -->
+  <data name="DetailPfTitle" xml:space="preserve">
+    <value>تفاصيل دفعة المورد</value>
+  </data>
+  <data name="DetailPfCardIdentification" xml:space="preserve">
+    <value>التعريف</value>
+  </data>
+  <data name="DetailPfLabelCredit" xml:space="preserve">
+    <value>رقم القرض</value>
+  </data>
+  <data name="DetailPfLabelDate" xml:space="preserve">
+    <value>تاريخ الدفع</value>
+  </data>
+  <data name="DetailPfLabelMode" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="DetailPfLabelEmploye" xml:space="preserve">
+    <value>الموظف المسؤول</value>
+  </data>
+  <data name="DetailPfCardMontant" xml:space="preserve">
+    <value>المبلغ المدفوع</value>
+  </data>
+  <data name="DetailPfLabelMontant" xml:space="preserve">
+    <value>المبلغ</value>
+  </data>
+  <data name="DetailPfMontantSub" xml:space="preserve">
+    <value>المبلغ المُصرَف</value>
+  </data>
+  <data name="DetailPfCardReference" xml:space="preserve">
+    <value>المرجع والملف</value>
+  </data>
+  <data name="DetailPfLabelReference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="DetailPfLabelFichier" xml:space="preserve">
+    <value>الملف المرفق</value>
+  </data>
+  <data name="DetailPfCardAudit" xml:space="preserve">
+    <value>المراجعة والملاحظة</value>
+  </data>
+  <data name="DetailPfLabelAjoutePar" xml:space="preserve">
+    <value>أضافه</value>
+  </data>
+  <data name="DetailPfLabelDateCreation" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+  <data name="DetailPfLabelModifiePar" xml:space="preserve">
+    <value>عدّله</value>
+  </data>
+  <data name="DetailPfLabelDateModification" xml:space="preserve">
+    <value>آخر تعديل</value>
+  </data>
+  <data name="DetailPfLabelNote" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="DetailPfClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DetailPfEdit" xml:space="preserve">
+    <value>  تعديل</value>
+  </data>
+
   <!-- ═══════════ Achats section ═══════════ -->
   <!-- Hub card -->
   <data name="InfraAchats" xml:space="preserve">
@@ -1759,6 +2186,9 @@
   </data>
   <data name="NouveauAchatCancel" xml:space="preserve">
     <value>إلغاء</value>
+  </data>
+  <data name="NouveauAchatModePaiement" xml:space="preserve">
+    <value>طريقة الدفع</value>
   </data>
 
   <!-- ── NouveauVoyage popup ── -->
@@ -2152,6 +2582,9 @@
   </data>
   <data name="EditAchatValidationProduit" xml:space="preserve">
     <value>يرجى اختيار منتج.</value>
+  </data>
+  <data name="EditAchatModePaiement" xml:space="preserve">
+    <value>طريقة الدفع</value>
   </data>
   <!-- ── DetailVoyageDialog popup ── -->
   <data name="DetailVoyageTitle" xml:space="preserve">

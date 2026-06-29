@@ -186,6 +186,15 @@ public class NouveauVoyageViewModel : ObservableObject
         set => SetProperty(ref _kilometrageFinal, value);
     }
 
+    private string _statut = "InProgress";
+    public string Statut
+    {
+        get => _statut;
+        set => SetProperty(ref _statut, value);
+    }
+
+    public IReadOnlyList<string> Statuts { get; } = ["InProgress", "Completed", "Cancelled"];
+
     // ── Stock tab form
 
     private ProduitDto? _stockProduit;
@@ -571,7 +580,17 @@ public class NouveauVoyageViewModel : ObservableObject
         {
             if (t.ProduitId is null || t.Quantite is null) continue;
             var row = StockRestantItems.FirstOrDefault(r => r.ProduitId == t.ProduitId.Value);
-            if (row is null) continue;
+            if (row is null)
+            {
+                row = new StockRestantItem
+                {
+                    ProduitId        = t.ProduitId.Value,
+                    ProduitNom       = t.ProduitNom ?? t.ProduitId.Value.ToString(),
+                    QuantiteInitiale = 0,
+                    QuantiteRestante = 0
+                };
+                StockRestantItems.Add(row);
+            }
 
             row.QuantiteRestante += t.Type switch
             {
@@ -761,7 +780,7 @@ public class NouveauVoyageViewModel : ObservableObject
                 LieuTerminal      = NullIfBlank(LieuTerminal),
                 KilometrageDepart = KilometrageDepart,
                 KilometrageFinal  = KilometrageFinal,
-                Statut            = "InProgress"
+                Statut            = Statut
             };
 
             var createdVoyage = await _voyageService.CreateVoyageAsync(voyageDto);

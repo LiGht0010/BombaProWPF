@@ -340,13 +340,22 @@
                             </Grid>
 
                             <!-- Prix achat unitaire -->
-                            <StackPanel>
+                            <StackPanel Margin="0,0,0,12">
                                 <TextBlock Text="{Binding [NouveauAchatPrixUnitaire], Source={x:Static loc:LanguageManager.Instance}}"
                                            Style="{StaticResource DlgLabelStyle}" />
                                 <Border Style="{StaticResource DlgInputBorderStyle}">
                                     <TextBox Text="{Binding PrixAchatUnitaire, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
                                              Style="{StaticResource DlgTextBoxStyle}" />
                                 </Border>
+                            </StackPanel>
+
+                            <!-- Mode de paiement -->
+                            <StackPanel>
+                                <TextBlock Text="{Binding [NouveauAchatModePaiement], Source={x:Static loc:LanguageManager.Instance}}"
+                                           Style="{StaticResource DlgLabelStyle}" />
+                                <ComboBox ItemsSource="{Binding ModePaiementOptions}"
+                                          SelectedItem="{Binding ModePaiement, Mode=TwoWay}"
+                                          Style="{DynamicResource NeuComboBoxStyle}" />
                             </StackPanel>
                         </StackPanel>
                     </Border>

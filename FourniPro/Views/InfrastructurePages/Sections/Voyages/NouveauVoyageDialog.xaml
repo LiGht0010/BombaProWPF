@@ -626,6 +626,12 @@
                                         </Border>
                                     </StackPanel>
                                 </Grid>
+
+                                <!-- Statut -->
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock Text="{Binding [EditVoyageLabelStatut], Source={x:Static loc:LanguageManager.Instance}}" Style="{StaticResource DlgFieldLabelStyle}" />
+                                    <ComboBox Style="{DynamicResource NeuComboBoxStyle}" MinWidth="0" ItemsSource="{Binding Statuts}" SelectedItem="{Binding Statut}" />
+                                </StackPanel>
                             </StackPanel>
                         </Border>
 

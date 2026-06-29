@@ -90,7 +90,7 @@ namespace FourniPro
                 view = item.Key switch
                 {
                     "operations"  => new InfrastructureView(["ventes", "achats", "voyages", "credits", "paiements-credit", "avoirs"], navKey: "Operations"),
-                    "partenaires" => new InfrastructureView(["clients", "fournisseurs", "chauffeurs", "employes"],                    navKey: "Partenaires"),
+                    "partenaires" => new InfrastructureView(["clients", "fournisseurs", "chauffeurs", "employes", "credits-fournisseur", "paiements-fournisseur"], navKey: "Partenaires"),
                     "ressources"  => new InfrastructureView(["produits", "camions", "citernes"],                                      navKey: "Ressources"),
                     "parametres"  => new ParametresView(),
                     // TODO: add remaining page views as they are built.

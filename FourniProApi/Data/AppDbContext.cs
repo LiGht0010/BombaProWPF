@@ -18,6 +18,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Vente> Ventes => Set<Vente>();
     public DbSet<Credit> Credits => Set<Credit>();
     public DbSet<PaiementCredit> PaiementsCredit => Set<PaiementCredit>();
+    public DbSet<CreditFournisseur> CreditsFournisseur => Set<CreditFournisseur>();
+    public DbSet<PaiementFournisseur> PaiementsFournisseur => Set<PaiementFournisseur>();
     public DbSet<Avoir> Avoirs => Set<Avoir>();
     public DbSet<Employe> Employes => Set<Employe>();
     public DbSet<Voyage> Voyages => Set<Voyage>();
@@ -111,6 +113,36 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(a => a.Employe)
             .WithMany(e => e.Avoirs)
             .HasForeignKey(a => a.EmployeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<CreditFournisseur>()
+            .HasOne(c => c.Achat)
+            .WithMany(a => a.CreditsFournisseur)
+            .HasForeignKey(c => c.AchatId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<CreditFournisseur>()
+            .HasOne(c => c.Fournisseur)
+            .WithMany(f => f.CreditsFournisseur)
+            .HasForeignKey(c => c.FournisseurId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<CreditFournisseur>()
+            .HasOne(c => c.Employe)
+            .WithMany(e => e.CreditsFournisseur)
+            .HasForeignKey(c => c.EmployeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<PaiementFournisseur>()
+            .HasOne(p => p.CreditFournisseur)
+            .WithMany(c => c.PaiementsFournisseur)
+            .HasForeignKey(p => p.CreditFournisseurId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PaiementFournisseur>()
+            .HasOne(p => p.Employe)
+            .WithMany(e => e.PaiementsFournisseur)
+            .HasForeignKey(p => p.EmployeId)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<StockVoyage>()

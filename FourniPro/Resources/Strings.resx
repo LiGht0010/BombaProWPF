@@ -1602,6 +1602,433 @@
     <value>Erreur lors de l'enregistrement du paiement.</value>
   </data>
 
+  <!-- ── CréditsFournisseur section ── -->
+  <data name="InfraCreditsFournisseur" xml:space="preserve">
+    <value>Crédits Fournisseur</value>
+  </data>
+  <data name="InfraCardDescCreditsFournisseur" xml:space="preserve">
+    <value>Gérer les crédits fournisseurs</value>
+  </data>
+  <data name="CreditFournisseurBreadcrumb" xml:space="preserve">
+    <value>Crédits Fournisseur</value>
+  </data>
+  <data name="CreditFournisseurPageSubtitle" xml:space="preserve">
+    <value>Liste de tous les crédits fournisseurs enregistrés</value>
+  </data>
+  <data name="CreditFournisseurAddButton" xml:space="preserve">
+    <value>Nouveau crédit fournisseur</value>
+  </data>
+  <data name="CreditFournisseurTableTitle" xml:space="preserve">
+    <value>Crédits Fournisseur</value>
+  </data>
+  <data name="CreditFournisseurTableSubtitle" xml:space="preserve">
+    <value>Historique des crédits fournisseurs</value>
+  </data>
+  <data name="CreditFournisseurColNumero" xml:space="preserve">
+    <value>NUMÉRO</value>
+  </data>
+  <data name="CreditFournisseurColDate" xml:space="preserve">
+    <value>DATE</value>
+  </data>
+  <data name="CreditFournisseurColFournisseur" xml:space="preserve">
+    <value>FOURNISSEUR</value>
+  </data>
+  <data name="CreditFournisseurColAchat" xml:space="preserve">
+    <value>ACHAT</value>
+  </data>
+  <data name="CreditFournisseurColMontant" xml:space="preserve">
+    <value>MONTANT</value>
+  </data>
+  <data name="CreditFournisseurColStatut" xml:space="preserve">
+    <value>STATUT</value>
+  </data>
+  <data name="CreditFournisseurColEmploye" xml:space="preserve">
+    <value>EMPLOYÉ</value>
+  </data>
+  <data name="CreditFournisseurColCheque" xml:space="preserve">
+    <value>CHÈQUE</value>
+  </data>
+  <data name="CreditFournisseurColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="CreditFournisseurCountBadge" xml:space="preserve">
+    <value>crédits</value>
+  </data>
+  <data name="CreditFournisseurDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="CreditFournisseurEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="CreditFournisseurDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="CreditFournisseurEmpty" xml:space="preserve">
+    <value>Aucun crédit fournisseur enregistré.</value>
+  </data>
+
+  <!-- ── PaiementsFournisseur section ── -->
+  <data name="InfraPaiementsFournisseur" xml:space="preserve">
+    <value>Paiements Fournisseur</value>
+  </data>
+  <data name="InfraCardDescPaiementsFournisseur" xml:space="preserve">
+    <value>Gérer les paiements des crédits fournisseurs</value>
+  </data>
+  <data name="PaiementFournisseurBreadcrumb" xml:space="preserve">
+    <value>Paiements Fournisseur</value>
+  </data>
+  <data name="PaiementFournisseurPageSubtitle" xml:space="preserve">
+    <value>Liste de tous les paiements fournisseurs enregistrés</value>
+  </data>
+  <data name="PaiementFournisseurAddButton" xml:space="preserve">
+    <value>Nouveau paiement fournisseur</value>
+  </data>
+  <data name="PaiementFournisseurTableTitle" xml:space="preserve">
+    <value>Paiements Fournisseur</value>
+  </data>
+  <data name="PaiementFournisseurTableSubtitle" xml:space="preserve">
+    <value>Historique des paiements fournisseurs</value>
+  </data>
+  <data name="PaiementFournisseurColNumero" xml:space="preserve">
+    <value>N° CRÉDIT</value>
+  </data>
+  <data name="PaiementFournisseurColDate" xml:space="preserve">
+    <value>DATE</value>
+  </data>
+  <data name="PaiementFournisseurColMontant" xml:space="preserve">
+    <value>MONTANT</value>
+  </data>
+  <data name="PaiementFournisseurColMethode" xml:space="preserve">
+    <value>MÉTHODE</value>
+  </data>
+  <data name="PaiementFournisseurColReference" xml:space="preserve">
+    <value>RÉFÉRENCE</value>
+  </data>
+  <data name="PaiementFournisseurColEmploye" xml:space="preserve">
+    <value>EMPLOYÉ</value>
+  </data>
+  <data name="PaiementFournisseurColActions" xml:space="preserve">
+    <value>ACTIONS</value>
+  </data>
+  <data name="PaiementFournisseurCountBadge" xml:space="preserve">
+    <value>paiements</value>
+  </data>
+  <data name="PaiementFournisseurDetailTooltip" xml:space="preserve">
+    <value>Voir les détails</value>
+  </data>
+  <data name="PaiementFournisseurEditTooltip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="PaiementFournisseurDeleteTooltip" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="PaiementFournisseurEmpty" xml:space="preserve">
+    <value>Aucun paiement fournisseur enregistré.</value>
+  </data>
+
+  <!-- ── NouveauCreditFournisseur dialog popup ── -->
+  <data name="NouveauCreditFournisseurTitle" xml:space="preserve">
+    <value>Nouveau crédit fournisseur</value>
+  </data>
+  <data name="NouveauCreditFournisseurCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="NouveauCreditFournisseurNumero" xml:space="preserve">
+    <value>Numéro</value>
+  </data>
+  <data name="NouveauCreditFournisseurDate" xml:space="preserve">
+    <value>Date du crédit</value>
+  </data>
+  <data name="NouveauCreditFournisseurStatutBadge" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="NouveauCreditFournisseurCardCommercial" xml:space="preserve">
+    <value>Informations fournisseur</value>
+  </data>
+  <data name="NouveauCreditFournisseurFournisseur" xml:space="preserve">
+    <value>Fournisseur</value>
+  </data>
+  <data name="NouveauCreditFournisseurAchat" xml:space="preserve">
+    <value>Achat (crédit)</value>
+  </data>
+  <data name="NouveauCreditFournisseurEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
+  </data>
+  <data name="NouveauCreditFournisseurCardFinancier" xml:space="preserve">
+    <value>Données financières</value>
+  </data>
+  <data name="NouveauCreditFournisseurMontantTotal" xml:space="preserve">
+    <value>Montant total (depuis achat)</value>
+  </data>
+  <data name="NouveauCreditFournisseurCardInformations" xml:space="preserve">
+    <value>Informations &amp; Chèque</value>
+  </data>
+  <data name="NouveauCreditFournisseurChequeReference" xml:space="preserve">
+    <value>Référence du chèque</value>
+  </data>
+  <data name="NouveauCreditFournisseurStatutCheque" xml:space="preserve">
+    <value>Statut du chèque</value>
+  </data>
+  <data name="NouveauCreditFournisseurNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="NouveauCreditFournisseurCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="NouveauCreditFournisseurSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauCreditFournisseurValidationFournisseur" xml:space="preserve">
+    <value>Veuillez sélectionner un fournisseur.</value>
+  </data>
+  <data name="NouveauCreditFournisseurValidationAchat" xml:space="preserve">
+    <value>Veuillez sélectionner un achat.</value>
+  </data>
+  <data name="NouveauCreditFournisseurSaveError" xml:space="preserve">
+    <value>Erreur lors de l'enregistrement du crédit fournisseur.</value>
+  </data>
+  <data name="NouveauCreditFournisseurLoadError" xml:space="preserve">
+    <value>Impossible de charger les données. Vérifiez la connexion au serveur.</value>
+  </data>
+
+  <!-- ── EditCreditFournisseur dialog popup ── -->
+  <data name="EditCfTitle" xml:space="preserve">
+    <value>Modifier le crédit fournisseur</value>
+  </data>
+  <data name="EditCfSave" xml:space="preserve">
+    <value>Enregistrer les modifications</value>
+  </data>
+  <data name="EditCfStatut" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="EditCfStatutCheque" xml:space="preserve">
+    <value>Statut du chèque</value>
+  </data>
+  <data name="EditCfValidationFournisseur" xml:space="preserve">
+    <value>Veuillez sélectionner un fournisseur.</value>
+  </data>
+  <data name="EditCfValidationAchat" xml:space="preserve">
+    <value>Veuillez sélectionner un achat.</value>
+  </data>
+  <data name="EditCfSaveError" xml:space="preserve">
+    <value>Erreur lors de la mise à jour du crédit fournisseur.</value>
+  </data>
+  <data name="EditCfLoadError" xml:space="preserve">
+    <value>Impossible de charger les données. Vérifiez la connexion au serveur.</value>
+  </data>
+
+  <!-- ── DetailCreditFournisseur dialog popup ── -->
+  <data name="DetailCfTitle" xml:space="preserve">
+    <value>Détail du crédit fournisseur</value>
+  </data>
+  <data name="DetailCfCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="DetailCfLabelNumero" xml:space="preserve">
+    <value>N° Crédit</value>
+  </data>
+  <data name="DetailCfLabelDate" xml:space="preserve">
+    <value>Date du crédit</value>
+  </data>
+  <data name="DetailCfLabelStatut" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="DetailCfLabelAchat" xml:space="preserve">
+    <value>Achat lié</value>
+  </data>
+  <data name="DetailCfCardMontant" xml:space="preserve">
+    <value>Montant total</value>
+  </data>
+  <data name="DetailCfLabelMontant" xml:space="preserve">
+    <value>Montant</value>
+  </data>
+  <data name="DetailCfMontantSub" xml:space="preserve">
+    <value>Montant dû au fournisseur</value>
+  </data>
+  <data name="DetailCfCardCommercial" xml:space="preserve">
+    <value>Fournisseur &amp; Employé</value>
+  </data>
+  <data name="DetailCfLabelFournisseur" xml:space="preserve">
+    <value>Fournisseur</value>
+  </data>
+  <data name="DetailCfLabelEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
+  </data>
+  <data name="DetailCfCardAudit" xml:space="preserve">
+    <value>Chèque, Audit &amp; Note</value>
+  </data>
+  <data name="DetailCfLabelChequeReference" xml:space="preserve">
+    <value>Référence chèque</value>
+  </data>
+  <data name="DetailCfLabelStatutCheque" xml:space="preserve">
+    <value>Statut chèque</value>
+  </data>
+  <data name="DetailCfLabelAjoutePar" xml:space="preserve">
+    <value>Ajouté par</value>
+  </data>
+  <data name="DetailCfLabelDateCreation" xml:space="preserve">
+    <value>Date de création</value>
+  </data>
+  <data name="DetailCfLabelModifiePar" xml:space="preserve">
+    <value>Modifié par</value>
+  </data>
+  <data name="DetailCfLabelDateModification" xml:space="preserve">
+    <value>Dernière modification</value>
+  </data>
+  <data name="DetailCfLabelNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="DetailCfClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailCfEdit" xml:space="preserve">
+    <value>  Modifier</value>
+  </data>
+
+  <!-- ── NouveauPaiementFournisseur dialog popup ── -->
+  <data name="NouveauPfTitle" xml:space="preserve">
+    <value>Nouveau paiement fournisseur</value>
+  </data>
+  <data name="NouveauPfCardCredit" xml:space="preserve">
+    <value>Crédit &amp; Date</value>
+  </data>
+  <data name="NouveauPfCredit" xml:space="preserve">
+    <value>Crédit fournisseur concerné</value>
+  </data>
+  <data name="NouveauPfDate" xml:space="preserve">
+    <value>Date du paiement</value>
+  </data>
+  <data name="NouveauPfCardPaiement" xml:space="preserve">
+    <value>Détails du paiement</value>
+  </data>
+  <data name="NouveauPfMontant" xml:space="preserve">
+    <value>Montant</value>
+  </data>
+  <data name="NouveauPfMode" xml:space="preserve">
+    <value>Mode de paiement</value>
+  </data>
+  <data name="NouveauPfCardEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
+  </data>
+  <data name="NouveauPfEmploye" xml:space="preserve">
+    <value>Employé</value>
+  </data>
+  <data name="NouveauPfCardInfo" xml:space="preserve">
+    <value>Référence &amp; Note</value>
+  </data>
+  <data name="NouveauPfReference" xml:space="preserve">
+    <value>Référence</value>
+  </data>
+  <data name="NouveauPfReferenceFile" xml:space="preserve">
+    <value>Fichier de référence</value>
+  </data>
+  <data name="NouveauPfNoFile" xml:space="preserve">
+    <value>Aucun fichier sélectionné</value>
+  </data>
+  <data name="NouveauPfNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="NouveauPfCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="NouveauPfSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="NouveauPfValidationCredit" xml:space="preserve">
+    <value>Veuillez sélectionner un crédit fournisseur.</value>
+  </data>
+  <data name="NouveauPfValidationMontant" xml:space="preserve">
+    <value>Le montant doit être supérieur à zéro.</value>
+  </data>
+  <data name="NouveauPfSaveError" xml:space="preserve">
+    <value>Erreur lors de l'enregistrement du paiement fournisseur.</value>
+  </data>
+  <data name="NouveauPfLoadError" xml:space="preserve">
+    <value>Impossible de charger les données. Vérifiez la connexion au serveur.</value>
+  </data>
+
+  <!-- ── EditPaiementFournisseur dialog popup ── -->
+  <data name="EditPfTitle" xml:space="preserve">
+    <value>Modifier le paiement fournisseur</value>
+  </data>
+  <data name="EditPfSave" xml:space="preserve">
+    <value>Enregistrer les modifications</value>
+  </data>
+  <data name="EditPfValidationCredit" xml:space="preserve">
+    <value>Veuillez sélectionner un crédit fournisseur.</value>
+  </data>
+  <data name="EditPfValidationMontant" xml:space="preserve">
+    <value>Le montant doit être supérieur à zéro.</value>
+  </data>
+  <data name="EditPfSaveError" xml:space="preserve">
+    <value>Erreur lors de la mise à jour du paiement fournisseur.</value>
+  </data>
+  <data name="EditPfLoadError" xml:space="preserve">
+    <value>Impossible de charger les données. Vérifiez la connexion au serveur.</value>
+  </data>
+
+  <!-- ── DetailPaiementFournisseur dialog popup ── -->
+  <data name="DetailPfTitle" xml:space="preserve">
+    <value>Détail du paiement fournisseur</value>
+  </data>
+  <data name="DetailPfCardIdentification" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="DetailPfLabelCredit" xml:space="preserve">
+    <value>Crédit N°</value>
+  </data>
+  <data name="DetailPfLabelDate" xml:space="preserve">
+    <value>Date de paiement</value>
+  </data>
+  <data name="DetailPfLabelMode" xml:space="preserve">
+    <value>Mode de paiement</value>
+  </data>
+  <data name="DetailPfLabelEmploye" xml:space="preserve">
+    <value>Employé responsable</value>
+  </data>
+  <data name="DetailPfCardMontant" xml:space="preserve">
+    <value>Montant versé</value>
+  </data>
+  <data name="DetailPfLabelMontant" xml:space="preserve">
+    <value>Montant</value>
+  </data>
+  <data name="DetailPfMontantSub" xml:space="preserve">
+    <value>Montant décaissé</value>
+  </data>
+  <data name="DetailPfCardReference" xml:space="preserve">
+    <value>Référence &amp; Fichier</value>
+  </data>
+  <data name="DetailPfLabelReference" xml:space="preserve">
+    <value>Référence</value>
+  </data>
+  <data name="DetailPfLabelFichier" xml:space="preserve">
+    <value>Fichier joint</value>
+  </data>
+  <data name="DetailPfCardAudit" xml:space="preserve">
+    <value>Audit &amp; Note</value>
+  </data>
+  <data name="DetailPfLabelAjoutePar" xml:space="preserve">
+    <value>Ajouté par</value>
+  </data>
+  <data name="DetailPfLabelDateCreation" xml:space="preserve">
+    <value>Date de création</value>
+  </data>
+  <data name="DetailPfLabelModifiePar" xml:space="preserve">
+    <value>Modifié par</value>
+  </data>
+  <data name="DetailPfLabelDateModification" xml:space="preserve">
+    <value>Dernière modification</value>
+  </data>
+  <data name="DetailPfLabelNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="DetailPfClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="DetailPfEdit" xml:space="preserve">
+    <value>  Modifier</value>
+  </data>
+
   <data name="InfraAchats" xml:space="preserve">
     <value>Achats</value>
   </data>
@@ -1727,6 +2154,9 @@
   </data>
   <data name="NouveauAchatCancel" xml:space="preserve">
     <value>Annuler</value>
+  </data>
+  <data name="NouveauAchatModePaiement" xml:space="preserve">
+    <value>Mode de paiement</value>
   </data>
 
   <!-- ── NouveauVoyage popup ── -->
@@ -2052,6 +2482,9 @@
   </data>
   <data name="EditAchatValidationProduit" xml:space="preserve">
     <value>Veuillez sélectionner un produit.</value>
+  </data>
+  <data name="EditAchatModePaiement" xml:space="preserve">
+    <value>Mode de paiement</value>
   </data>
   <!-- ── DetailVente popup ── -->
   <data name="DetailVenteTitle" xml:space="preserve">

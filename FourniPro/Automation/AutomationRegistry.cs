@@ -17,6 +17,7 @@ public static class AutomationRegistry
     private static List<IAutomation> Build() =>
     [
         new AchatStockUpdateAutomation(),
+        new AchatCreditFournisseurAutomation(),
         new VoyageStockDeductionAutomation(),
         new VoyageKmSyncAutomation(),
         new VenteStockDeductionAutomation(),

@@ -450,16 +450,18 @@ public class EditVoyageViewModel : ObservableObject
     public bool Saved { get; private set; }
 
     // ── Commands ──────────────────────────────────────────────────────────────
-    public IRelayCommand                          AddStockCommand          { get; }
-    public IRelayCommand<VoyageStockItem>         RemoveStockCommand       { get; }
-    public IRelayCommand<VoyageStockItem>         EditStockCommand         { get; }
-    public IRelayCommand                          AddVenteCommand          { get; }
-    public IRelayCommand                          AddCreditCommand         { get; }
-    public IRelayCommand                          AddAchatCommand          { get; }
-    public IRelayCommand                          AddFraisCommand          { get; }
-    public IRelayCommand<VoyageTransactionItem>   RemoveTransactionCommand { get; }
-    public IRelayCommand<VoyageTransactionItem>   EditTransactionCommand   { get; }
-    public IAsyncRelayCommand                     SaveCommand              { get; }
+    public IRelayCommand                          AddStockCommand                { get; }
+    public IRelayCommand<VoyageStockItem>         RemoveStockCommand             { get; }
+    public IRelayCommand<VoyageStockItem>         EditStockCommand               { get; }
+    public IRelayCommand                          CancelStockEditCommand         { get; }
+    public IRelayCommand                          AddVenteCommand                { get; }
+    public IRelayCommand                          AddCreditCommand               { get; }
+    public IRelayCommand                          AddAchatCommand                { get; }
+    public IRelayCommand                          AddFraisCommand                { get; }
+    public IRelayCommand<VoyageTransactionItem>   RemoveTransactionCommand       { get; }
+    public IRelayCommand<VoyageTransactionItem>   EditTransactionCommand         { get; }
+    public IRelayCommand                          CancelTransactionEditCommand   { get; }
+    public IAsyncRelayCommand                     SaveCommand                    { get; }
 
     /// <summary>
     /// Raised when a transaction row's Edit button is clicked.
@@ -487,24 +489,26 @@ public class EditVoyageViewModel : ObservableObject
             ? DateTime.SpecifyKind(voyage.DateFinal.Value, DateTimeKind.Utc)
             : null;
 
-        AddStockCommand          = new RelayCommand(AddOrUpdateStock);
-        RemoveStockCommand       = new AsyncRelayCommand<VoyageStockItem>(RemoveStockAsync);
-        EditStockCommand         = new RelayCommand<VoyageStockItem>(item =>
+        AddStockCommand              = new RelayCommand(AddOrUpdateStock);
+        RemoveStockCommand           = new AsyncRelayCommand<VoyageStockItem>(RemoveStockAsync);
+        EditStockCommand             = new RelayCommand<VoyageStockItem>(item =>
         {
             BeginEditStock(item);
             EditStockRequested?.Invoke();
         });
-        AddVenteCommand          = new AsyncRelayCommand(AddOrUpdateVenteAsync);
-        AddCreditCommand         = new AsyncRelayCommand(AddOrUpdateCreditAsync);
-        AddAchatCommand          = new AsyncRelayCommand(AddOrUpdateAchatAsync);
-        AddFraisCommand          = new AsyncRelayCommand(AddOrUpdateFraisAsync);
-        RemoveTransactionCommand = new AsyncRelayCommand<VoyageTransactionItem>(RemoveTransactionAsync);
-        EditTransactionCommand   = new RelayCommand<VoyageTransactionItem>(item =>
+        CancelStockEditCommand       = new RelayCommand(() => CancelStockEdit());
+        AddVenteCommand              = new AsyncRelayCommand(AddOrUpdateVenteAsync);
+        AddCreditCommand             = new AsyncRelayCommand(AddOrUpdateCreditAsync);
+        AddAchatCommand              = new AsyncRelayCommand(AddOrUpdateAchatAsync);
+        AddFraisCommand              = new AsyncRelayCommand(AddOrUpdateFraisAsync);
+        RemoveTransactionCommand     = new AsyncRelayCommand<VoyageTransactionItem>(RemoveTransactionAsync);
+        EditTransactionCommand       = new RelayCommand<VoyageTransactionItem>(item =>
         {
             int tab = BeginEditTransaction(item);
             EditTransactionRequested?.Invoke(tab);
         });
-        SaveCommand              = new AsyncRelayCommand(SaveVoyageHeaderAsync);
+        CancelTransactionEditCommand = new RelayCommand(() => CancelTransactionEdit());
+        SaveCommand                  = new AsyncRelayCommand(SaveVoyageHeaderAsync);
     }
 
     // ── Lookups + initial data load ───────────────────────────────────────────
@@ -665,7 +669,17 @@ public class EditVoyageViewModel : ObservableObject
         {
             if (t.ProduitId is null || t.Quantite is null) continue;
             var row = StockRestantItems.FirstOrDefault(r => r.ProduitId == t.ProduitId.Value);
-            if (row is null) continue;
+            if (row is null)
+            {
+                row = new StockRestantItem
+                {
+                    ProduitId        = t.ProduitId.Value,
+                    ProduitNom       = t.ProduitNom ?? t.ProduitId.Value.ToString(),
+                    QuantiteInitiale = 0,
+                    QuantiteRestante = 0
+                };
+                StockRestantItems.Add(row);
+            }
 
             row.QuantiteRestante += t.Type switch
             {
@@ -825,6 +839,7 @@ public class EditVoyageViewModel : ObservableObject
         StockProduit      = null;
         StockQuantite     = null;
     }
+
 
     private async Task RemoveStockAsync(VoyageStockItem? item)
     {

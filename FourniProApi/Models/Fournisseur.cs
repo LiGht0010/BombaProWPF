@@ -38,6 +38,10 @@ public class Fournisseur
     [StringLength(50)]
     public string Statut { get; set; } = "Actif";
 
+    // ── Navigation ────────────────────────────────────────────────────────────
+
+    public virtual ICollection<CreditFournisseur> CreditsFournisseur { get; set; } = [];
+
     // Audit
     public int? AjoutePar { get; set; }
     public DateTime? DateCreation { get; set; }

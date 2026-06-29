@@ -648,6 +648,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
@@ -673,13 +674,43 @@
                                     <Border Grid.Column="2" Style="{StaticResource DlgInputBorderStyle}">
                                         <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding StockQuantite, UpdateSourceTrigger=PropertyChanged}" />
                                     </Border>
-                                    <Button Grid.Column="4" Style="{StaticResource SmallAddBtnStyle}" Width="40" Padding="10,0" Height="34"
+                                    <Button Grid.Column="4" Style="{StaticResource SmallAddBtnStyle}" Width="34" Height="34"
                                             Command="{Binding AddStockCommand}">
-                                        <TextBlock Text="{Binding StockFormButtonLabel}" FontSize="20" MinWidth="14" VerticalAlignment="Center" />
+                                        <ui:SymbolIcon FontSize="14">
+                                            <ui:SymbolIcon.Style>
+                                                <Style TargetType="ui:SymbolIcon">
+                                                    <Setter Property="Symbol" Value="Add24" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsEditingStock}" Value="True">
+                                                            <Setter Property="Symbol" Value="Edit24" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ui:SymbolIcon.Style>
+                                        </ui:SymbolIcon>
                                     </Button>
                                 </Grid>
+                                <!-- Cancel stock edit (visible only while editing) -->
+                                <Button Grid.Row="2" HorizontalAlignment="Right"
+                                        Padding="10,6" FontSize="11" Margin="0,-4,0,6"
+                                        Command="{Binding CancelStockEditCommand}">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource DlgSecondaryButtonStyle}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEditingStock}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Dismiss24" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                        <TextBlock Text="Annuler" FontSize="11" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
                                 <!-- List -->
-                                <ScrollViewer Grid.Row="2" MaxHeight="260" VerticalScrollBarVisibility="Auto">
+                                <ScrollViewer Grid.Row="3" MaxHeight="260" VerticalScrollBarVisibility="Auto">
                                     <ItemsControl ItemsSource="{Binding StockItems}" ItemTemplate="{StaticResource StockItemTemplate}" />
                                 </ScrollViewer>
                             </Grid>
@@ -782,9 +813,39 @@
                                         <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
                                             <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding VenteNote, UpdateSourceTrigger=PropertyChanged}" />
                                         </Border>
-                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="Auto" Padding="12,0" Height="34" Command="{Binding AddVenteCommand}">
-                                            <TextBlock Text="{Binding TransactionFormButtonLabel}" FontSize="12" VerticalAlignment="Center" />
-                                        </Button>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Padding="10,6" FontSize="11" Margin="0,0,6,0"
+                                                    Command="{Binding CancelTransactionEditCommand}">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource DlgSecondaryButtonStyle}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsEditingTx}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Dismiss24" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                    <TextBlock Text="Annuler" FontSize="11" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Style="{StaticResource SmallAddBtnStyle}" Width="34" Height="34" Command="{Binding AddVenteCommand}">
+                                                <ui:SymbolIcon FontSize="14">
+                                                    <ui:SymbolIcon.Style>
+                                                        <Style TargetType="ui:SymbolIcon">
+                                                            <Setter Property="Symbol" Value="Add24" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsEditingTx}" Value="True">
+                                                                    <Setter Property="Symbol" Value="Edit24" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ui:SymbolIcon.Style>
+                                                </ui:SymbolIcon>
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
 
                                     <!-- CREDIT -->
@@ -859,9 +920,39 @@
                                         <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
                                             <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding CreditNote, UpdateSourceTrigger=PropertyChanged}" />
                                         </Border>
-                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="Auto" Padding="12,0" Height="34" Command="{Binding AddCreditCommand}">
-                                            <TextBlock Text="{Binding TransactionFormButtonLabel}" FontSize="12" VerticalAlignment="Center" />
-                                        </Button>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Padding="10,6" FontSize="11" Margin="0,0,6,0"
+                                                    Command="{Binding CancelTransactionEditCommand}">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource DlgSecondaryButtonStyle}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsEditingTx}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Dismiss24" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                    <TextBlock Text="Annuler" FontSize="11" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Style="{StaticResource SmallAddBtnStyle}" Width="34" Height="34" Command="{Binding AddCreditCommand}">
+                                                <ui:SymbolIcon FontSize="14">
+                                                    <ui:SymbolIcon.Style>
+                                                        <Style TargetType="ui:SymbolIcon">
+                                                            <Setter Property="Symbol" Value="Add24" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsEditingTx}" Value="True">
+                                                                    <Setter Property="Symbol" Value="Edit24" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ui:SymbolIcon.Style>
+                                                </ui:SymbolIcon>
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
 
                                     <!-- ACHAT -->
@@ -917,9 +1008,39 @@
                                         <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
                                             <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding AchatDescription, UpdateSourceTrigger=PropertyChanged}" />
                                         </Border>
-                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="Auto" Padding="12,0" Height="34" Command="{Binding AddAchatCommand}">
-                                            <TextBlock Text="{Binding TransactionFormButtonLabel}" FontSize="12" VerticalAlignment="Center" />
-                                        </Button>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Padding="10,6" FontSize="11" Margin="0,0,6,0"
+                                                    Command="{Binding CancelTransactionEditCommand}">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource DlgSecondaryButtonStyle}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsEditingTx}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Dismiss24" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                    <TextBlock Text="Annuler" FontSize="11" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Style="{StaticResource SmallAddBtnStyle}" Width="34" Height="34" Command="{Binding AddAchatCommand}">
+                                                <ui:SymbolIcon FontSize="14">
+                                                    <ui:SymbolIcon.Style>
+                                                        <Style TargetType="ui:SymbolIcon">
+                                                            <Setter Property="Symbol" Value="Add24" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsEditingTx}" Value="True">
+                                                                    <Setter Property="Symbol" Value="Edit24" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ui:SymbolIcon.Style>
+                                                </ui:SymbolIcon>
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
 
                                     <!-- FRAIS -->
@@ -941,9 +1062,39 @@
                                         <Border Style="{StaticResource DlgInputBorderStyle}" Margin="0,0,0,10">
                                             <TextBox Style="{StaticResource DlgInputTextBoxStyle}" Text="{Binding FraisDescription, UpdateSourceTrigger=PropertyChanged}" />
                                         </Border>
-                                        <Button HorizontalAlignment="Right" Style="{StaticResource SmallAddBtnStyle}" Width="Auto" Padding="12,0" Height="34" Command="{Binding AddFraisCommand}">
-                                            <TextBlock Text="{Binding TransactionFormButtonLabel}" FontSize="12" VerticalAlignment="Center" />
-                                        </Button>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Padding="10,6" FontSize="11" Margin="0,0,6,0"
+                                                    Command="{Binding CancelTransactionEditCommand}">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource DlgSecondaryButtonStyle}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsEditingTx}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Dismiss24" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                    <TextBlock Text="Annuler" FontSize="11" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Style="{StaticResource SmallAddBtnStyle}" Width="34" Height="34" Command="{Binding AddFraisCommand}">
+                                                <ui:SymbolIcon FontSize="14">
+                                                    <ui:SymbolIcon.Style>
+                                                        <Style TargetType="ui:SymbolIcon">
+                                                            <Setter Property="Symbol" Value="Add24" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsEditingTx}" Value="True">
+                                                                    <Setter Property="Symbol" Value="Edit24" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ui:SymbolIcon.Style>
+                                                </ui:SymbolIcon>
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
                                 </Grid>
                             </Grid>

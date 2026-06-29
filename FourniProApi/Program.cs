@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseWindowsService();
+
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(UserProfile));
 
@@ -27,6 +29,29 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Auto-create DB and apply all pending migrations on startup.
+// Safe to run every time — skips if already up to date.
+using (var scope = app.Services.CreateScope())
+{
+    var db     = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<AppDbContext>>();
+
+    var dbName = db.Database.GetDbConnection().Database;
+
+    if (await db.Database.CanConnectAsync())
+    {
+        logger.LogInformation("Connecting to database: {DbName}", dbName);
+    }
+    else
+    {
+        logger.LogInformation("Creating database: {DbName}", dbName);
+    }
+
+    await db.Database.MigrateAsync();
+
+    logger.LogInformation("Database ready: {DbName}", dbName);
+}
 
 if (app.Environment.IsDevelopment())
 {

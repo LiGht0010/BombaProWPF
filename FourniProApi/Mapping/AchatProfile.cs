@@ -17,8 +17,9 @@ public class AchatProfile : Profile
             .ForMember(d => d.ModifieParNom,  opt => opt.Ignore());
 
         CreateMap<AchatDto, Achat>()
-            .ForMember(d => d.AchatId, opt => opt.Ignore())
-            .ForMember(d => d.Voyage,  opt => opt.Ignore())
-            .ForMember(d => d.Employe, opt => opt.Ignore());
+            .ForMember(d => d.AchatId,           opt => opt.Ignore())
+            .ForMember(d => d.Voyage,             opt => opt.Ignore())
+            .ForMember(d => d.Employe,            opt => opt.Ignore())
+            .ForMember(d => d.CreditsFournisseur, opt => opt.Ignore());
     }
 }

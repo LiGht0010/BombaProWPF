@@ -33,6 +33,10 @@ namespace FourniProApi.Migrations
                     b.Property<int?>("AjoutePar")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ChequeReference")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<decimal?>("Cout")
                         .HasColumnType("decimal(18,2)");
 
@@ -58,8 +62,15 @@ namespace FourniProApi.Migrations
                     b.Property<bool?>("LivraisonDefectueuse")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ModePaiement")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<int?>("ModifiePar")
                         .HasColumnType("integer");
+
+                    b.Property<decimal?>("MontantPaye")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Numero")
                         .HasMaxLength(30)
@@ -73,6 +84,14 @@ namespace FourniProApi.Migrations
 
                     b.Property<int?>("Quantite")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Statut")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("StatutCheque")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int?>("VoyageID")
                         .HasColumnType("integer");
@@ -419,6 +438,71 @@ namespace FourniProApi.Migrations
                     b.ToTable("Credits");
                 });
 
+            modelBuilder.Entity("FourniProApi.Models.CreditFournisseur", b =>
+                {
+                    b.Property<int>("CreditFournisseurId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CreditFournisseurId"));
+
+                    b.Property<int?>("AchatId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("AjoutePar")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ChequeReference")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("DateCreation")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("DateCredit")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("DateModification")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("EmployeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("FournisseurId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ModifiePar")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal?>("MontantTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroCreditF")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("Statut")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("StatutCheque")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("CreditFournisseurId");
+
+                    b.HasIndex("AchatId");
+
+                    b.HasIndex("EmployeId");
+
+                    b.HasIndex("FournisseurId");
+
+                    b.ToTable("CreditsFournisseur");
+                });
+
             modelBuilder.Entity("FourniProApi.Models.Employe", b =>
                 {
                     b.Property<int>("EmployeId")
@@ -622,6 +706,62 @@ namespace FourniProApi.Migrations
                     b.HasIndex("EmployeId");
 
                     b.ToTable("PaiementsCredit");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.PaiementFournisseur", b =>
+                {
+                    b.Property<int>("PaiementFournisseurId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PaiementFournisseurId"));
+
+                    b.Property<int?>("AjoutePar")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CreditFournisseurId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("DateCreation")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateModification")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("DatePaiement")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("EmployeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ModifiePar")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal?>("Montant")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ReferenceFile")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.HasKey("PaiementFournisseurId");
+
+                    b.HasIndex("CreditFournisseurId");
+
+                    b.HasIndex("EmployeId");
+
+                    b.ToTable("PaiementsFournisseur");
                 });
 
             modelBuilder.Entity("FourniProApi.Models.Permission", b =>
@@ -1004,6 +1144,30 @@ namespace FourniProApi.Migrations
                     b.Navigation("Voyage");
                 });
 
+            modelBuilder.Entity("FourniProApi.Models.CreditFournisseur", b =>
+                {
+                    b.HasOne("FourniProApi.Models.Achat", "Achat")
+                        .WithMany("CreditsFournisseur")
+                        .HasForeignKey("AchatId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("FourniProApi.Models.Employe", "Employe")
+                        .WithMany("CreditsFournisseur")
+                        .HasForeignKey("EmployeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("FourniProApi.Models.Fournisseur", "Fournisseur")
+                        .WithMany("CreditsFournisseur")
+                        .HasForeignKey("FournisseurId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Achat");
+
+                    b.Navigation("Employe");
+
+                    b.Navigation("Fournisseur");
+                });
+
             modelBuilder.Entity("FourniProApi.Models.FraisVoyage", b =>
                 {
                     b.HasOne("FourniProApi.Models.Voyage", "Voyage")
@@ -1029,6 +1193,24 @@ namespace FourniProApi.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Credit");
+
+                    b.Navigation("Employe");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.PaiementFournisseur", b =>
+                {
+                    b.HasOne("FourniProApi.Models.CreditFournisseur", "CreditFournisseur")
+                        .WithMany("PaiementsFournisseur")
+                        .HasForeignKey("CreditFournisseurId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FourniProApi.Models.Employe", "Employe")
+                        .WithMany("PaiementsFournisseur")
+                        .HasForeignKey("EmployeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("CreditFournisseur");
 
                     b.Navigation("Employe");
                 });
@@ -1110,11 +1292,21 @@ namespace FourniProApi.Migrations
                     b.Navigation("Citerne");
                 });
 
+            modelBuilder.Entity("FourniProApi.Models.Achat", b =>
+                {
+                    b.Navigation("CreditsFournisseur");
+                });
+
             modelBuilder.Entity("FourniProApi.Models.Credit", b =>
                 {
                     b.Navigation("Avoirs");
 
                     b.Navigation("PaiementsCredit");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.CreditFournisseur", b =>
+                {
+                    b.Navigation("PaiementsFournisseur");
                 });
 
             modelBuilder.Entity("FourniProApi.Models.Employe", b =>
@@ -1125,9 +1317,18 @@ namespace FourniProApi.Migrations
 
                     b.Navigation("Credits");
 
+                    b.Navigation("CreditsFournisseur");
+
                     b.Navigation("PaiementsCredit");
 
+                    b.Navigation("PaiementsFournisseur");
+
                     b.Navigation("Ventes");
+                });
+
+            modelBuilder.Entity("FourniProApi.Models.Fournisseur", b =>
+                {
+                    b.Navigation("CreditsFournisseur");
                 });
 
             modelBuilder.Entity("FourniProApi.Models.Permission", b =>

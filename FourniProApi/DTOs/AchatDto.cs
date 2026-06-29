@@ -21,6 +21,13 @@ public class AchatDto
 
     public bool? LivraisonDefectueuse { get; set; }
     public string? Description { get; set; }
+    public string? ModePaiement { get; set; }
+
+    // ── Payment tracking (Crédit mode) ────────────────────────────────────────
+    public decimal? MontantPaye { get; set; }
+    public string? Statut { get; set; }
+    public string? ChequeReference { get; set; }
+    public string? StatutCheque { get; set; }
 
     public int? EmployeId { get; set; }
     public string? EmployeNom { get; set; }

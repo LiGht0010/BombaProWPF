@@ -21,6 +21,7 @@ public class AchatDto
 
     public bool? LivraisonDefectueuse { get; set; }
     public string? Description { get; set; }
+    public string? ModePaiement { get; set; }
 
     public int? AjoutePar { get; set; }
     public string? AjouteParNom { get; set; }

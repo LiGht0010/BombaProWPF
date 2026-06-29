@@ -46,4 +46,10 @@ public enum AutomationTrigger
     /// Context type: <see cref="Vente.VenteDeletedContext"/>.
     /// </summary>
     VenteDeleted,
+
+    /// <summary>
+    /// Fired after an Achat is created or updated.
+    /// Context type: <see cref="Achat.AchatSavedContext"/>.
+    /// </summary>
+    AchatSaved,
 }

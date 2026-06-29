@@ -36,6 +36,8 @@ public class Employe
     public virtual ICollection<Credit> Credits { get; set; } = [];
     public virtual ICollection<PaiementCredit> PaiementsCredit { get; set; } = [];
     public virtual ICollection<Avoir> Avoirs { get; set; } = [];
+    public virtual ICollection<CreditFournisseur> CreditsFournisseur { get; set; } = [];
+    public virtual ICollection<PaiementFournisseur> PaiementsFournisseur { get; set; } = [];
 
     // ── Audit ─────────────────────────────────────────────────────────────────
 

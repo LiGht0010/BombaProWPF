@@ -6,7 +6,9 @@ using FourniPro.Views.InfrastructurePages.Sections.Citernes;
 using FourniPro.Views.InfrastructurePages.Sections.Chauffeurs;
 using FourniPro.Views.InfrastructurePages.Sections.Clients;
 using FourniPro.Views.InfrastructurePages.Sections.Credits;
+using FourniPro.Views.InfrastructurePages.Sections.CreditsFournisseur;
 using FourniPro.Views.InfrastructurePages.Sections.PaiementsCredit;
+using FourniPro.Views.InfrastructurePages.Sections.PaiementsFournisseur;
 using FourniPro.Views.InfrastructurePages.Sections.Fournisseurs;
 using FourniPro.Views.InfrastructurePages.Sections.Ventes;
 using FourniPro.Views.InfrastructurePages.Sections.Produits;
@@ -150,8 +152,10 @@ public partial class InfrastructureView : UserControl
                 "achats"        => new AchatsSection(),
                 "ventes"        => new VentesSection(),
                 "employes"      => new EmployesSection(),
-                "credits"       => new CreditsSection(),
-                "paiements-credit" => new PaiementsCreditSection(),
+                "credits"             => new CreditsSection(),
+                "credits-fournisseur"  => new CreditsFournisseurSection(),
+                "paiements-credit"     => new PaiementsCreditSection(),
+                "paiements-fournisseur" => new PaiementsFournisseurSection(),
                 "avoirs"           => new AvoirsSection(),
                 "voyages"       => new VoyagesSection(),
                 _ => throw new ArgumentOutOfRangeException(nameof(key), key, "Unknown infrastructure section.")
@@ -191,8 +195,14 @@ public partial class InfrastructureView : UserControl
         if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.CreditsSectionViewModel crvm })
             return crvm.EnsureLoadedAsync();
 
+        if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.CreditsFournisseurSectionViewModel cfvm })
+            return cfvm.EnsureLoadedAsync();
+
         if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.PaiementsCreditSectionViewModel pcvm })
             return pcvm.EnsureLoadedAsync();
+
+        if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.PaiementsFournisseurSectionViewModel pfvm })
+            return pfvm.EnsureLoadedAsync();
 
         if (SectionHost.Content is FrameworkElement { DataContext: ViewModels.AvoirsSectionViewModel avvm })
             return avvm.EnsureLoadedAsync();

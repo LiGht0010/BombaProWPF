@@ -7,7 +7,7 @@ namespace FourniPro.Services;
 /// </summary>
 public static class ApiConfig
 {
-    private static string _baseUrl = "http://localhost:5007/api";
+    private static string _baseUrl = "http://localhost:5006/api";
 
     private static readonly string SettingsFilePath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -52,8 +52,12 @@ public static class ApiConfig
     public static string Employes => $"{_baseUrl}/Employes";
 
     /// <summary>Endpoint for credit management.</summary>
-    public static string Credits        => $"{_baseUrl}/Credits";
-    public static string PaiementsCredit => $"{_baseUrl}/PaiementsCredit";
+    public static string Credits             => $"{_baseUrl}/Credits";
+    public static string PaiementsCredit     => $"{_baseUrl}/PaiementsCredit";
+
+    /// <summary>Endpoint for crédit fournisseur management.</summary>
+    public static string CreditsFournisseur    => $"{_baseUrl}/CreditsFournisseur";
+    public static string PaiementsFournisseur  => $"{_baseUrl}/PaiementsFournisseur";
 
     /// <summary>Endpoint for avoir (credit note) management.</summary>
     public static string Avoirs => $"{_baseUrl}/Avoirs";

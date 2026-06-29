@@ -108,6 +108,15 @@ public class NouveauAchatViewModel : ObservableObject
         set => SetProperty(ref _selectedEmploye, value);
     }
 
+    public IReadOnlyList<string> ModePaiementOptions { get; } = ["Immédiat", "Crédit"];
+
+    private string _modePaiement = "Immédiat";
+    public string ModePaiement
+    {
+        get => _modePaiement;
+        set => SetProperty(ref _modePaiement, value);
+    }
+
     // ── State ─────────────────────────────────────────────────────────────────
 
     private bool _isLoading;
@@ -195,7 +204,8 @@ public class NouveauAchatViewModel : ObservableObject
                 Cout                 = Cout,
                 PrixAchatUnitaire    = PrixAchatUnitaire,
                 LivraisonDefectueuse = LivraisonDefectueuse,
-                Description          = NullIfBlank(Description)
+                Description          = NullIfBlank(Description),
+                ModePaiement         = ModePaiement
             };
 
             var result = await _achatService.CreateAchatAsync(dto);
@@ -206,6 +216,17 @@ public class NouveauAchatViewModel : ObservableObject
                     await _automationRunner.RunAsync(
                         AutomationTrigger.AchatProduitChanged,
                         new AchatStockContext(SelectedProduit.ProduitId, 0, Quantite.Value));
+
+                // AutomationHook: credit-fournisseur creation is handled by AchatCreditFournisseurAutomation
+                await _automationRunner.RunAsync(
+                    AutomationTrigger.AchatSaved,
+                    new AchatSavedContext(
+                        AchatId:       result.AchatId,
+                        FournisseurId: result.FournisseurID,
+                        EmployeId:     result.EmployeId,
+                        ModePaiement:  result.ModePaiement,
+                        Cout:          result.Cout,
+                        IsNew:         true));
 
                 Saved = true;
             }
